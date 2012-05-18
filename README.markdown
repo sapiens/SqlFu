@@ -181,6 +181,33 @@ Or a more common scenario is to retrieve more than one row usually with paginati
 
 Let's see how SqlFu compaers to other micro - orms. You should take these numbers with a grain of salt since every micro/orm  has different features which affects the outcome.
 
-The numnbers are for 500 iterations with 10 iterations warm up.
+The numnbers are for 500 iterations with 10 iterations warm up on SqlServer 2008 Express
 
 #### Simple query retrieve 7 rows
+
+```sql
+select * from posts where id>3
+```
+
+SqlFu: 105 ms
+Dapper.Net: 100.8 ms
+PetaPoco: 103 ms
+ServiceStack.OrmLite: 149,88 ms
+FluentData: 491,99 ms
+
+Now, in fairness running the benchmark multiple times gave me different results for the top 3: it was either SqlFu, either Dapper.Net, either PetaPoco with a difference between 1-10ms.
+I say 5-10ms (for 500 queries) is not a differnce which will matter in real world usage.
+
+#### Paged query to retrieve 5 rows
+
+```sql
+select * from posts where id>3 limit 0,5
+```
+Other micro orms don't support pagination directly or I haven't found the way to enable it.
+
+SqlFu: 188,474 ms
+PetaPoco: 189,1739 ms
+
+Again, running it multiple times gave me different results, sometimes the difference was quite high (around 20-50ms) but there was no consistent winner.
+I call it a tie, both are equally fast 
+
