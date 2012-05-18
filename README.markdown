@@ -1,12 +1,13 @@
 #Welcome to SqlFu
 
-SqlFu is a  dapper fast micro-orm (like dapper.net, peta poco , massive etc) for .Net 4.  
+SqlFu is a versatile dapper-fast micro-orm (like dapper.net, peta poco , massive etc) for .Net 4.  
 
 ## Why should you use it
 The main USP (unique selling proposition - advantage) of SqlFu  is  **Versatility**. This is the reason I've developed it. I need it more flexibility and the micro-orm I was using (peta poco) didn't have it and if other micro-orms had it, they were too slow (FluentData). 
 
 I've designed SqlFu based on three equally important principles:
- User Friendliness (intuitivity) | Versatility |  Performance
+ 
+ **User Friendliness** | **Versatility** |  **Performance**
  
 SqlFu supports
 * SqlServer 2005+
@@ -15,15 +16,17 @@ SqlFu supports
 * Oracle (partial, no paging)
 
   
-## User Frendly
- 
+## User Friendly
  
  ```csharp
  
 var db= new DbAccess(connection,DbType.SqlServer);
 
 //usual stuff
+db.Get<Post>(id)
+
 db.Query<Post>("select * from posts where id=@0",1);
+db.Query<dynamic>("select * from posts where id=@0",1);
 
 //you can pass ordinal params or anonymous objects
 db.Query<Post>("select * from posts where id=@id",new{id=1});
@@ -177,7 +180,7 @@ However, the second method is usually the most performant one. The SqlFu automap
 ## Performance
 
 Now that's an interesting topic. Initially I've run the dapper.net tests but those tests only measure the performance to retrieve on entity.
-Or a more common scenario is to retrieve more than one row usually with pagination involved. So, I;ve setup my own tests for this cases.
+Or a more common scenario is to retrieve more than one row usually with pagination involved. So, I've setup my own tests for this cases (you can find them in the Tests project / Benchamrk.cs).
 
 Let's see how SqlFu compaers to other micro - orms. You should take these numbers with a grain of salt since every micro/orm  has different features which affects the outcome.
 
@@ -189,14 +192,23 @@ The numnbers are for 500 iterations with 10 iterations warm up on SqlServer 2008
 select * from posts where id>3
 ```
 
-SqlFu: 105 ms
-Dapper.Net: 100.8 ms
-PetaPoco: 103 ms
-ServiceStack.OrmLite: 149,88 ms
-FluentData: 491,99 ms
+* SqlFu: 105 ms
+* Dapper.Net: 100.8 ms
+* PetaPoco: 103 ms
+* ServiceStack.OrmLite: 149,88 ms
+* FluentData: 491,99 ms
+
+--------------------------
+
+* SqlFu: 94,549 ms
+* Dapper:  101,8998 ms
+* Peta poco: 102,2589 ms
+* OrmLite: 146,5227 ms
+* FluentData: 416,2161 ms
+
 
 Now, in fairness running the benchmark multiple times gave me different results for the top 3: it was either SqlFu, either Dapper.Net, either PetaPoco with a difference between 1-10ms.
-I say 5-10ms (for 500 queries) is not a differnce which will matter in real world usage.
+I say 5-10ms (for 500 queries) is not a difference which will matter in real world usage. The only consistence was that OrmLite was always place 4th and FluentData last.
 
 #### Paged query to retrieve 5 rows
 
@@ -205,9 +217,53 @@ select * from posts where id>3 limit 0,5
 ```
 Other micro orms don't support pagination directly or I haven't found the way to enable it.
 
-SqlFu: 188,474 ms
-PetaPoco: 189,1739 ms
+* SqlFu: 188,474 ms
+* PetaPoco: 189,1739 ms
 
 Again, running it multiple times gave me different results, sometimes the difference was quite high (around 20-50ms) but there was no consistent winner.
 I call it a tie, both are equally fast 
 
+#### Complex type mapping
+Well, only another micro-orm supports the same conventional mapping as SqlFu so I've compared only those two. Dapper and PetaPoco both suport multi poco mapping, but it's a bit tricky (it's not straightforward) and it allows only up to 5 pocos to be involved.
+
+SqlFu and FluentData don't have this limitation and the syntax is as it is with any query. ServiceStack.OrmLite considers complex mapping only from a json blob so it's not applicable here.
+
+SqlFu: 80,2782 ms
+FluentData: 306,2088 ms
+
+#### Get by id
+Finally the dapper .net benchmark results modified to include SqlFu. I've left the results as they were
+
+```
+hand coded took 94ms
+Mapper Query (non-buffered) took 98ms
+Mapper Query (buffered) took 101ms
+Dynamic Mapper Query (buffered) took 101ms
+Dynamic Mapper Query (non-buffered) took 102ms
+SqlFu Query single   took 105ms
+SqlFu Get took 106ms
+SqlFu Fetch   took 106ms
+PetaPoco (Fast) took 107ms
+Dapper.Cotrib took 112ms
+Dynamic Massive ORM Query took 115ms
+PetaPoco (Normal) took 115ms
+OrmLite QueryById took 119ms
+BLToolkit took 152ms
+OrmLite QuerySingle took 161ms
+Linq 2 SQL Compiled took 182ms
+Simple.Data took 183ms
+SubSonic Coding Horror took 225ms
+Entity framework CompiledQuery took 247ms
+NHibernate SQL took 249ms
+NHibernate Session.Get took 269ms
+NHibernate HQL took 280ms
+NHibernate Criteria took 348ms
+Linq 2 SQL ExecuteQuery took 406ms
+Entity framework ExecuteStoreQuery took 1179ms
+Linq 2 SQL took 1186ms
+NHibernate LINQ took 1322ms
+Entity framework ESQL took 1342ms
+Entity framework No Tracking took 1741ms
+Entity framework took 1773ms
+SubSonic ActiveRecord.SingleOrDefault took 7448ms
+```
