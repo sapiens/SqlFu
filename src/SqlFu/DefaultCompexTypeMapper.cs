@@ -57,7 +57,7 @@ namespace SqlFu
             return rez;
         }
 
-        public void MapType<T>(T poco,IDataReader rd,int idx)
+        public virtual void MapType<T>(T poco,IDataReader rd,int idx)
         {
             
             throw new Exception("Using generated IL");
@@ -95,13 +95,13 @@ namespace SqlFu
             p.SetValueFast(currObj, rd[idx]);
         }
 
-        public void DeclareILVariables(ILGenerator il)
+        public virtual void DeclareILVariables(ILGenerator il)
         {
             il.DeclareLocal(typeof(object));
         }
 
 
-        public bool EmitMapping(ILGenerator il, Type poco, IDataReader rd,int idx)
+        public virtual bool EmitMapping(ILGenerator il, Type poco, IDataReader rd,int idx)
         {
             var name = rd.GetName(idx);
             var props = GetProperties(poco, name);

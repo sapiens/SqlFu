@@ -1,4 +1,5 @@
-﻿#define ONLY_TESTS
+﻿//#define ONLY_TESTS
+
 using System.Data.Common;
 using FluentData;
 using PetaPoco;
@@ -12,8 +13,7 @@ using System.Linq;
 using Dapper;
 using IDbCommand = System.Data.IDbCommand;
 
-
-namespace Tests.Helpers
+namespace Tests
 {
     public class Benchmark:IDisposable
     {
@@ -45,9 +45,9 @@ namespace Tests.Helpers
         [Fact]
         public void run_all_query()
         {
-            peta_query();
             sqlfu_query();
             dapper_query();
+            peta_query();
             ormlite_query();
             fluent_data_query();
         }

@@ -1,4 +1,5 @@
 ﻿using CavemanTools.Model;
+using CavemanTools.Model.ValueObjects;
 using SqlFu;
 using Xunit;
 using System;
@@ -141,6 +142,10 @@ namespace Tests.Helpers
                                               });
             Assert.Equal(0,_db.ExecuteScalar<int>("select 1"));
             Assert.True(c);
+
+            PocoFactory.RegisterConverterFor<Email>(o=> new Email(o.ToString()));
+            var em=_db.ExecuteScalar<Email>("select 'mike@test.com'");
+            Assert.Equal("mike@test.com",em.Value);
 
         }
 

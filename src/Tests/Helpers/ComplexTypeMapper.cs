@@ -38,7 +38,7 @@ namespace Tests.Helpers
             var pv=_db.Query<PostViewModel>("select 1 as Id, 'test' as Title, 3 as Author_Id").First();
             Assert.Equal(1,pv.Id);
             Assert.Equal("test",pv.Author.Name);
-
+            
         }
 
         private void Write(string format, params object[] param)

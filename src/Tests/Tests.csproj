@@ -71,7 +71,7 @@
   <ItemGroup>
     <Compile Include="class Post.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="Helpers\Benchamrk.cs" />
+    <Compile Include="Benchamrk.cs" />
     <Compile Include="Helpers\ComplexTypeMapper.cs" />
     <Compile Include="Helpers\HelpersTests.cs" />
     <Compile Include="Helpers\ProvidersTests.cs" />
