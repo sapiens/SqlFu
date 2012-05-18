@@ -12,6 +12,38 @@ I've designed SqlFu based on three equally important principles:
  
  **What SqlFu is NOT**: A replacement for any ORM abstracting sql or generating DDL for you. 
  
- ## User Frendly
+  ## User Frendly
+ 
+ ```csharp
+ 
+var db= new DbAccess(connection,DbType.SqlServer);
+
+//usual stuff
+db.Query<Post>("select * from posts where id=@0",1);
+
+//you can pass ordinal params or anoonymous objects
+db.Query<Post>("select * from posts where id=@id",new{id=1});
+
+db.ExecuteScalar<int>("select count(*) from posts")
+
+//insert 
+var p= new Post{ Id=1, Title="Test"};
+db.Insert(p);
+p.Title="changed title";
+db.Update<Post>(p);
+
+//paged queries , result contains Count and Items properties
+var result=db.PagedQuery<Post>(0,5,"select * from post order by id desc");
+
+//complex type mapping similar to EF
+
+
+
+ ````
+  
+All the parameters in sql msut be prefixed with '@' . The specific db provider will replace it with the proper prefix.
+ 
+
+ 
  
 
