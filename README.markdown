@@ -36,28 +36,33 @@ db.Update<Post>(p);
 //paged queries , result contains Count and Items properties
 var result=db.PagedQuery<Post>(0,5,"select * from post order by id desc");
 
-//complex type mapping similar to EF
 
-public class IdName
-{
-    public int Id {get;set;}
-    public string Name {get;set;}    
-}
+//Complex type mapping similar to EF, no special setup
 
 public class PostView
 {
     public int Id {get;set}
     public string Title {get;set;}
-    public IdName Author {get;set;}
+    public IdName Author {get;set;} 
 }
 
-//Author is automatically instantiated and populated with data. The convention is to use [Property]_[Property]
-var posts=db.Query<PostView>(@"
+public class IdName
+{
+    public int Id {get;set;} // <- Auhtor_Id
+    public string Name {get;set;} // <- Author_Name
+}
+
+//'Author' is automatically instantiated and populated with data. The convention is to use [Property]_[Property]
+var sql=@"
 select p.Id, p.Title, p.AuthorId as Author_Id, u.Name as Author_Name 
 from posts p inner join Users u on u.Id=p.AuthorId
-where p.Id=@0",3)
+where p.Id=@0";
+var posts=db.Query<PostView>(sql,3);
 
- ````
+//complex type mapping AND pagination with no special setup
+result=db.PagedQuery<PostView>(0,10,sql,3)
+
+````
 
 #### Traits
 * All the parameters in sql must be prefixed with '@' . The specific db provider will replace it with the proper prefix.
@@ -73,7 +78,7 @@ where p.Id=@0",3)
 //custom sql for those special cases
 db.WithSql("select * from posts").ExecuteQuery<Post>(reader=>{ /* mapping by hand */  })
 
-db.WithSql("select item from myTable where id=@0",3).ExecuteScalar<myStruct>(result=> new myStruct(result.ConvertTo<string>()))
+db.WithSql("select item from myTable where id=@0",3).ExecuteScalar<myStruct>(result=> /* conversion by hand */)
 
 //want to always use that mapper for every query
 PocoFactory.RegisterMapperFor<MyType>(reader=> {/* do mapping */});
@@ -84,7 +89,11 @@ PocoFactory.RegisterConverterFor<myStruct>(obj=>{ /* do conversion */})
 
 //or for value objects
 PocoFactory.RegisterConverterFor<EmailValueObject>(obj=> new EmailValueObject(obj.ToString()))
-
 db.ExecuteScalar<Email>("select email from users where id=@0",8)
+
+//execute some command processing before query
+db.WithSql(sql,args).ApplyToCommand(cmd=> { /* modify DbCommand */}.Query<MyType>()
+
+
 ```
 
