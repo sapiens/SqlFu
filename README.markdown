@@ -1,6 +1,6 @@
 #Welcome to SqlFu
 
-SqlFu is a versatile dapper-fast micro-orm (like dapper.net, peta poco , massive etc) for .Net 4.  
+SqlFu is a **_versatile_** micro-orm (like dapper.net, peta poco , massive etc) for .Net 4.  
 
 ## Why should you use it
 The main USP (unique selling proposition - advantage) of SqlFu  is  **Versatility**. This is the reason I've developed it. I need it more flexibility and the micro-orm I was using (peta poco) didn't have it and if other micro-orms had it, they were too slow (FluentData). 
