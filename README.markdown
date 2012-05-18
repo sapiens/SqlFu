@@ -144,7 +144,7 @@ public class ViewModel
  public Address Address {get;set;}
 }
 
-db.Query<ViewModel>('select u.* , addr.Street as Address_Street, addr.Country as Address_Country from users u, addresses addr where u.Id=4')
+db.Query<ViewModel>("select u.* , addr.Street as Address_Street, addr.Country as Address_Country from users u, addresses addr where u.Id=4")
 
 ```
 
@@ -199,6 +199,7 @@ select * from posts where id>3
 * FluentData: 491,99 ms
 
 --------------------------
+Another round
 
 * SqlFu: 94,549 ms
 * Dapper:  101,8998 ms
