@@ -1,13 +1,13 @@
 #Welcome to SqlFu
 
-SqlFu is a **_versatile_** micro-orm (like dapper.net, peta poco , massive etc) for .Net 4.  
+SqlFu is a **_versatile_** micro-orm (like dapper.net, peta poco , massive etc) for .Net 4.  SqlFu is Apache licensed.
 
 ## Why should you use it
 The main USP (unique selling proposition - advantage) of SqlFu  is  **Versatility**. This is the reason I've developed it. I need it more flexibility and the micro-orm I was using (peta poco) didn't have it and if other micro-orms had it, they were too slow (FluentData). 
 
 I've designed SqlFu based on three equally important principles:
  
- **User Friendliness** | **Versatility** |  **Performance**
+ **User Friendliness** - **Versatility** -  **Performance**
  
 SqlFu supports
 * SqlServer 2005+
@@ -229,8 +229,8 @@ Well, only another micro-orm supports the same conventional mapping as SqlFu so 
 
 SqlFu and FluentData don't have this limitation and the syntax is as it is with any query. ServiceStack.OrmLite considers complex mapping only from a json blob so it's not applicable here.
 
-SqlFu: 80,2782 ms
-FluentData: 306,2088 ms
+* SqlFu: 80,2782 ms
+* FluentData: 306,2088 ms
 
 #### Get by id
 Finally the dapper .net benchmark results modified to include SqlFu. I've left the results as they were
