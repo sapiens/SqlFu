@@ -12,7 +12,7 @@ I've designed SqlFu based on three equally important principles:
  
  **What SqlFu is NOT**: A replacement for any ORM abstracting sql or generating DDL for you. 
  
-  ## User Frendly
+ ## User Frendly
  
  ```csharp
  
@@ -37,12 +37,34 @@ var result=db.PagedQuery<Post>(0,5,"select * from post order by id desc");
 
 //complex type mapping similar to EF
 
+public class IdName
+{
+    public int Id {get;set;}
+    public string Name {get;set;}    
+}
 
+public class PostView
+{
+    public int Id {get;set}
+    public string Title {get;set;}
+    public IdName Author {get;set;}
+}
+
+var posts=db.Query<PostView>(@"
+select p.Id, p.Title, p.AuthorId as Author_Id, u.Name as Author_Name 
+from posts p inner join Users u on u.Id=p.AuthorId
+where p.Id=@0",3)
+
+//Author is automatically instantiated and populated with data. The convention is to use [Property]_[Property]
 
  ````
-  
-All the parameters in sql msut be prefixed with '@' . The specific db provider will replace it with the proper prefix.
- 
+
+#### Traits
+* All the parameters in sql msut be prefixed with '@' . The specific db provider will replace it with the proper prefix.
+* _Enums_ are automatically handled from int or string when querying. When insert/update they are treated as ints.
+* Complex type mapping is done automatically if a column name has '_'.
+* Any property/column which can't be mapped is ignored
+** However an exception is thrown if you want to assign a value to an object type for example, or null to a non nullable
 
  
  
