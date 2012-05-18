@@ -8,9 +8,12 @@ The main USP (unique selling proposition - advantage) of SqlFu  is  **Versatilit
 I've designed SqlFu based on three equally important principles:
  User Friendliness (intuitivity) | Versatility |  Performance
  
- **What SqlFu is**:  Fast library built on top of Ado.Net to help you reduce the amount of coding by hand. You still have to write Sql, but you won't have to deal with repetitive chores.
- 
- **What SqlFu is NOT**: A replacement for any ORM abstracting sql or generating DDL for you. 
+SqlFu supports
+* SqlServer 2005+
+* MySql
+* Postgresql
+* Oracle (partial, no paging)
+
   
 ## User Frendly
  
@@ -64,9 +67,10 @@ result=db.PagedQuery<PostView>(0,10,sql,3)
 
 ````
 
-#### Traits
+#### Rules
 * All the parameters in sql must be prefixed with '@' . The specific db provider will replace it with the proper prefix.
-* _Enums_ are automatically handled from int or string when querying. When insert/update they are treated as ints.
+* _Enums_ are automatically handled from int or string when querying. When insert/update they are treated as ints. 
+ * Use the [InsertAsStringAttribute] to save it as string
 * Complex type mapping is done automatically if a column name has '_'.
 * Any property/column which can't be mapped is ignored
 * However an exception is thrown if you want to assign a value to an object type for example, or null to a non-nullable
@@ -81,7 +85,8 @@ public class Post
  public int Id {get;set;}
  [QueryOnly]
  public string ReadOnly {get;set;} //any property marked as QueryOnly will not be used for insert/update
- public MyEnum Type {get;set;}
+ [InsertAsString]
+ public MyEnum Type {get;set;}// any property with this attribute will be converted to string
 }
 
 ```
@@ -162,5 +167,10 @@ PocoFactory.ComplexTypeMapper= new MyComplexMapper();
 
 ```
 
-Note that the mapper should act as a singleton so it has to be thread safe.
-//todo interface
+Note that the mapper should act as a singleton so it has to be thread safe. 
+When implementing a complex mapper you have 2 ways to do it: in the _MapType<T>_ method or in the _EmitMapping_ method.
+The first method is for normal people, the second involves emitting IL code with Reflection.Emit so it's aimed at the hardcore masochists. 
+However, the second method is usually the most performant one. The SqlFu automapper will try to use the EmitMapping method first, but if it returns false, it will call the MapType method instead.
+
+**Hint** if you go for the first method and you want to set a property via reflection, use the _SetValueFast_ extension method defined in CavemanTools (used by SqlFu) and the same for the getters.
+
