@@ -99,14 +99,15 @@ namespace SqlFu
                                                  typeof(PocoFactory),true);
                     var il = meth.GetILGenerator();
                 
-                    if (poco.IsValueType)
+                    
+                    if (poco.IsCustomObjectType())
                     {
+                        EmitPocoMapper(il, poco, rd);   
                         
-                        EmitValueMapper(il, poco);
                     }
                     else
                     {
-                        EmitPocoMapper(il, poco,rd);
+                        EmitValueMapper(il, poco);
                     }
 
                 rez = meth.CreateDelegate(typeof(Func<IDataReader, T>));                 

@@ -26,12 +26,16 @@ namespace SqlFu.Providers
 
         public override void SetupParameter(IDbDataParameter param, string name, object value)
         {
-            base.SetupParameter(param, name, value);
-            var tp = value.GetType();
-            if (tp.IsEnum)	
+            if (value!=null)
             {
-                param.Value = (int)value;
+                var tp = value.GetType();
+                if (tp.IsEnum)
+                {
+                    value = (int)value;
+                }
             }
+            
+            base.SetupParameter(param, name, value);            
         }
 
         public override LastInsertId ExecuteInsert(SqlStatement sql, string idKey)

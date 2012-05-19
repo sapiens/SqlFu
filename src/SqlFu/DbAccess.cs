@@ -192,18 +192,25 @@ namespace SqlFu
         #region Transaction support
         private int _tLevel = 0;
 
+        
+        public int TransactionDepth
+        {
+            get { return _tLevel; }
+        }
+
         private IDbTransaction _trans = null;
 
         private string _cnxString;
 
         public IDbTransaction BeginTransaction()
         {
-            if (_tLevel == 0)
+            _tLevel++;
+            if (_tLevel == 1)
             {
-                _tLevel++;
                 _trans = Connection.BeginTransaction();
-                OnBeginTransaction(this);
+                
             }
+            OnBeginTransaction(this);
             return new MyTransactionWrapper(this);
         }
 
@@ -214,10 +221,9 @@ namespace SqlFu
             if (_tLevel == 0)
             {
                 _trans.Commit();
-                _trans = null;
-                OnEndTransaction(this,true);
+                _trans = null;               
             }
-
+            OnEndTransaction(this, true);
         }
 
         private void Rollback()
@@ -312,7 +318,7 @@ namespace SqlFu
             }
         }
 
-        public T Get<T>(object id)
+        public T Get<T>(object id,string additionalPredicate=null,params object[] args)
         {
             id.MustNotBeNull("id");
             var tp = typeof (T);
@@ -331,12 +337,19 @@ namespace SqlFu
 
                 sb.AppendFormat(" from {0}", Provider.EscapeName(ti.Name));
                 sb.AppendFormat(" where {0}=@0", Provider.EscapeName(ti.PrimaryKey));
+                if (!string.IsNullOrEmpty(additionalPredicate))
+                {
+                    sb.AppendFormat(" {0}", additionalPredicate);
+                }
                 ti.SelectSingleSql = sb.ToString();
             }
             var rez = default(T);
+            var fargs = new List<object>(args.Length + 1);
+            fargs.Add(id);
+            fargs.AddRange(args);
             using(var st=new SqlStatement(this))
             {
-                st.SetSql(ti.SelectSingleSql,id);
+                st.SetSql(ti.SelectSingleSql,fargs.ToArray());
                 
                 using(var rd=st.GetReader())
                 {

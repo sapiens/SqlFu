@@ -24,6 +24,18 @@ namespace SqlFu.Providers
             }        
         }
 
+        public override void SetupParameter(IDbDataParameter param, string name, object value)
+        {
+            if (value != null)
+            {
+                if (value.GetType().IsEnum)
+                {
+                    value = (int)value;
+                }
+            }
+            base.SetupParameter(param, name, value);
+        }
+
         public override void MakePaged(string sql, out string selecSql, out string countSql)
         {
             int formidx;
