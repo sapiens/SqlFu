@@ -138,8 +138,9 @@ namespace SqlFu
             if (args.Length == 1)
             {
                 var poco = args[0];
-                if (poco != null)
+                if (poco != null && !poco.IsListParam())
                 {
+                    
                     if (Type.GetTypeCode(poco.GetType()) == TypeCode.Object)
                     {
                         d = poco.ToDictionary();

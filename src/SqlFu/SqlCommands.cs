@@ -8,6 +8,12 @@ namespace SqlFu
 {
     public static class SqlCommands
     {
+        
+        public static T FirstOrDefault<T>(this DbAccess db,string sql,params object[] args)
+        {
+            return db.Query<T>(sql,args).FirstOrDefault();
+        }
+        
         #region Insert
 
         public static LastInsertId Insert(this DbAccess db, string table, object data)

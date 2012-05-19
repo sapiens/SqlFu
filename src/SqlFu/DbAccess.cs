@@ -20,6 +20,14 @@ namespace SqlFu
             Init(cnx.ConnectionString,ProviderFactory.GetProviderByName(cnx.ProviderName));
         }
 
+        public DbAccess(string connectionStringName)
+        {
+            var cnx = ConfigurationManager.ConnectionStrings[connectionStringName];
+            if (cnx == null) throw new InvalidOperationException("I need a connection!!!");
+
+            Init(cnx.ConnectionString, ProviderFactory.GetProviderByName(cnx.ProviderName));
+        }
+
         public DbAccess(string cnxString,string provider)
         {
             Init(cnxString,ProviderFactory.GetProviderByName(provider));
