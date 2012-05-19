@@ -18,6 +18,8 @@ SqlFu supports
   
 ## User Friendly
  
+ Intuitive usage and automatic complex type (multi poco) mapping by convention, similar to EF. Complex type mapping automatically works with pagination without any special setup.
+ 
  ```csharp
  
 var db= new DbAccess(connection,DbType.SqlServer);
