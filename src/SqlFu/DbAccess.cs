@@ -172,7 +172,8 @@ namespace SqlFu
         {
             if (_conex != null)
             {
-                if (KeepAlive && !forceClose) return;
+                if (!forceClose && (KeepAlive ||(_trans!=null))) return;
+
                 _conex.Close();
                 OnCloseConnection(this);
                 _conex = null;

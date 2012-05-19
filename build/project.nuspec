@@ -3,12 +3,12 @@
   <metadata>
     <id>SqlFu</id>
     <version></version>
-    <title>SqlFu micro-orm</title>
+    <title>SqlFu</title>
     <authors>Mihai Mogosanu</authors>
     <owners>Mihai Mogosanu</owners>
     <projectUrl>https://github.com/sapiens/SqlFu</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Dapper fast, versatile Micro-Orm</description>
+    <description>dapper fast, versatile micro-orm designed for flexibility and ease of use. It supports complex type mapping (multi poco mapping) by convention and pagination out of the box.</description>
     <language>en-US</language>
     <tags>micro-orm sql orm database</tags>
 	<dependencies>
