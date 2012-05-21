@@ -1,6 +1,7 @@
 #Welcome to SqlFu
 
 SqlFu is a **_versatile_** micro-orm (like dapper.net, peta poco , massive etc) for .Net 4.  SqlFu is Apache licensed.
+If you're wondering if there's a reason for yet another micro-orm [read this](http://www.sapiensworks.com/blog/post/2012/05/19/SqlFu-My-Versatile-Micro-Orm.aspx)
 
 ## Why should you use it
 The main USP (unique selling proposition - advantage) of SqlFu  is  **Versatility**. This is the reason I've developed it. I need it more flexibility and the micro-orm I was using (peta poco) didn't have it and if other micro-orms had it, they were too slow (FluentData). 
@@ -182,7 +183,7 @@ However, the second method is usually the most performant one. The SqlFu automap
 ## Performance
 
 Now that's an interesting topic. Initially I've run the dapper.net tests but those tests only measure the performance to retrieve on entity.
-Or a more common scenario is to retrieve more than one row usually with pagination involved. So, I've setup my own tests for this cases (you can find them in the Tests project / Benchamrk.cs).
+Or a more common scenario is to retrieve more than one row usually with pagination involved. So, I've setup my own tests for this cases (you can find an extended version in the Benchmark project).
 
 Let's see how SqlFu compaers to other micro - orms. You should take these numbers with a grain of salt since every micro/orm  has different features which affects the outcome.
 
