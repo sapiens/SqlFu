@@ -18,7 +18,7 @@ SqlFu supports
   
 ## User Friendly
  
- Intuitive usage and automatic complex type (multi poco) mapping by convention, similar to EF. Complex type mapping automatically works with pagination without any special setup.
+ Intuitive usage and automatic multi poco mapping by convention, similar to EF. Multi poco mapping automatically works with pagination without any special setup.
  
  ```csharp
  
@@ -45,7 +45,7 @@ db.Update<Post>(p);
 var result=db.PagedQuery<Post>(0,5,"select * from post order by id desc");
 
 
-//Complex type mapping by convention similar to EF, no special setup
+//Multi poco mapping by convention similar to EF, no special setup
 
 public class PostView
 {
@@ -56,7 +56,7 @@ public class PostView
 
 public class IdName
 {
-    public int Id {get;set;} // <- Auhtor_Id
+    public int Id {get;set;} // <- Author_Id
     public string Name {get;set;} // <- Author_Name
 }
 
@@ -76,7 +76,7 @@ result=db.PagedQuery<PostView>(0,10,sql,3)
 * All the parameters in sql must be prefixed with '@' . The specific db provider will replace it with the proper prefix.
 * _Enums_ are automatically handled from int or string when querying. When insert/update they are treated as ints. 
  * Use the [InsertAsStringAttribute] to save it as string
-* Complex type mapping is done automatically if a column name has '_'.
+* Multi poco mapping is done automatically if a column name has '_'.
 * Any property/column which can't be mapped is ignored
 * However an exception is thrown if you want to assign a value to an object type for example, or null to a non-nullable
 
@@ -119,7 +119,7 @@ db.ExecuteScalar<Email>("select email from users where id=@0",8)
 db.WithSql(sql,args).ApplyToCommand(cmd=> { /* modify DbCommand */}.Query<MyType>()
 
 ```
-### Complex Type Mapping (aka Multi Poco mapping)
+### Multi Poco mapping
 As shown above, the only thing you need to do is to name the column according tot the [Property]_[Property] format. 
 This feature is designed to be used for populating View Models where every object is a Poco with a parameterless constructor.
 
@@ -226,7 +226,7 @@ Other micro orms don't support pagination directly or I haven't found the way to
 Again, running it multiple times gave me different results, sometimes the difference was quite high (around 20-50ms) but there was no consistent winner.
 I call it a tie, both are equally fast 
 
-#### Complex type mapping
+#### Multi poco mapping
 Well, only another micro-orm supports the same conventional mapping as SqlFu so I've compared only those two. Dapper and PetaPoco both suport multi poco mapping, but it's a bit tricky (it's not straightforward) and it allows only up to 5 pocos to be involved.
 
 SqlFu and FluentData don't have this limitation and the syntax is as it is with any query. ServiceStack.OrmLite considers complex mapping only from a json blob so it's not applicable here.
