@@ -608,6 +608,13 @@
             <param name="size">Maximum string length</param>
             <returns></returns>
         </member>
+        <member name="M:System.StringUtils.RemoveLast(System.Text.StringBuilder)">
+            <summary>
+            Removes last character from builder
+            </summary>
+            <param name="sb"></param>
+            <returns></returns>
+        </member>
         <member name="M:System.EncryptionUtils.Sha256(System.String)">
             <summary>
             Hash a string using the SHA256 algorithm. 32 bytes (hex): 64 unicode chars, 128 bytes
@@ -986,6 +993,11 @@
             <typeparam name="T">Type</typeparam>
             <param name="property">Lambda returning the property</param>
             <returns></returns>
+        </member>
+        <member name="T:CavemanTools.Data.JsonMessageStruct">
+            <summary>
+            
+            </summary>
         </member>
         <member name="M:System.Xml.Xml.IsComment(System.Xml.XmlNode)">
             <summary>
@@ -2188,11 +2200,6 @@
             </summary>
             <param name="t">Type</param>
             <returns></returns>
-        </member>
-        <member name="T:CavemanTools.Data.JsonMessageStruct">
-            <summary>
-            
-            </summary>
         </member>
     </members>
 </doc>

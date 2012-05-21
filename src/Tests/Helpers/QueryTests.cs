@@ -156,7 +156,7 @@ namespace Tests.Helpers
 
         public void Dispose()
         {
-            Config.EmptyTable();
+           Config.EmptyTable();
         }
     }
 }

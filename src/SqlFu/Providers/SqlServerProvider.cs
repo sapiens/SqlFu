@@ -71,8 +71,7 @@ sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})",orderBy,columns,body,
             info=new PagingInfo();
             info.countString = countSql;
             info.selectString = selecSql;
-            _pagingCache.TryAdd(key, info);
-            Console.WriteLine("Cache miss");
+            _pagingCache.TryAdd(key, info);            
         }
 
         public override void SetupParameter(IDbDataParameter param, string name, object value)
