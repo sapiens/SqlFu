@@ -91,7 +91,7 @@ namespace SqlFu
                 var provider = _db.Provider;
                 var paramDict = CreateParamsDictionary(args);
                 var allp = _cmd.Parameters;
-                _paramNames = paramDict.Keys.ToArray();
+                List<string> pnames=new List<string>();
                 var sb = new StringBuilder();
                 var lastParamCount = args.Length;
                 
@@ -109,25 +109,31 @@ namespace SqlFu
                             p = _cmd.CreateParameter();
 
                             sb.Append("@" + lastParamCount + ",");
+                            pnames.Add(lastParamCount.ToString());
                             provider.SetupParameter(p, lastParamCount.ToString(), val);
                             allp.Add(p);
                             lastParamCount++;
                         }
                         sb.Remove(sb.Length - 1, 1);
                         sql=sql.Replace("@" + kv.Key, sb.ToString());
+                        
                     }
                     else
                     {
                         p = _cmd.CreateParameter();
                         provider.SetupParameter(p, kv.Key, kv.Value);
+                        pnames.Add(kv.Key.ToString());
                         allp.Add(p);
                     }
                 }
+
+                _paramNames = pnames.ToArray();
             }
             else
             {
                 _paramNames = new string[0];
             }
+            
             _cmd.CommandText = sql;
         }
 
