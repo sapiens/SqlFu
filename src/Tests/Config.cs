@@ -11,6 +11,7 @@ namespace Tests
         public const int Iterations = 500;
         public const int WarmUp = 10;
         public const string SqlServerProviderName = "System.Data.SqlClient";
+        
         static Config()
         {
             EnsureDb();
@@ -39,8 +40,8 @@ namespace Tests
            if (!noLog)
            {
                d.OnCommand = cmd => Console.WriteLine(cmd.FormatCommand());
-               d.OnOpenConnection = cmd => Console.WriteLine("Cnnection opened");
-               d.OnCloseConnection = cmd => Console.WriteLine("Cnnection closed");
+               d.OnOpenConnection = cmd => Console.WriteLine("Connection opened");
+               d.OnCloseConnection = cmd => Console.WriteLine("Connection closed");
                d.OnException = (s, ex) =>
                {
                    Console.WriteLine(s.ExecutedSql);
@@ -75,7 +76,7 @@ ON [PRIMARY]
 ";
         public static void EmptyTable()
         {
-            using (var db= GetDb())
+            using (var db = GetDb())
             {
                 db.ExecuteCommand("truncate table Posts;DBCC CHECKIDENT ('dbo.Posts', reseed, 1)");
             }
