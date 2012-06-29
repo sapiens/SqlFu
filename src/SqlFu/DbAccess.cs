@@ -202,13 +202,12 @@ namespace SqlFu
 
         private string _cnxString;
 
-        public IDbTransaction BeginTransaction()
+        public IDbTransaction BeginTransaction(IsolationLevel? isolationLevel = null)
         {
             _tLevel++;
             if (_tLevel == 1)
             {
-                _trans = Connection.BeginTransaction();
-                
+                _trans = isolationLevel.HasValue ? Connection.BeginTransaction(isolationLevel.Value) : Connection.BeginTransaction();
             }
             OnBeginTransaction(this);
             return new MyTransactionWrapper(this);
