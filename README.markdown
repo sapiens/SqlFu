@@ -15,6 +15,8 @@ SqlFu supports
 * MySql
 * Postgresql
 * Oracle (partial, no paging)
+* SqlServerCE 4 (new in SqlFu 1.1)
+* Sqlite (new in SqlFu 1.1)
 
   
 ## User Friendly
