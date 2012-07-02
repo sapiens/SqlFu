@@ -14,6 +14,7 @@ namespace SqlFu
                 case PostgresProvider.ProviderName:return new PostgresProvider();
                 case OracleProvider.ProviderName:return new OracleProvider();
                 case SqlServerCEProvider.ProviderName:return new SqlServerCEProvider();
+                case SqliteProvider.ProviderName:return new SqliteProvider();
             }
             throw new Exception("Unkown provider");
         }
@@ -27,6 +28,7 @@ namespace SqlFu
                 case DBType.MySql: return new MySqlProvider();
                 case DBType.PostgreSQL:return new PostgresProvider();
                 case DBType.Oracle:return new OracleProvider();
+                case DBType.SQLite:return new SqliteProvider();
             }
             throw new Exception("Unkown provider");
         }

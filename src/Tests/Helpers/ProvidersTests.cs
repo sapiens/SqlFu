@@ -52,6 +52,18 @@ namespace Tests.Helpers
             Assert.Equal(string.Format("select * from test OFFSET @{0} ROWS FETCH NEXT @{1} ROWS ONLY", PagedSqlStatement.SkipParameterName, PagedSqlStatement.TakeParameterName), sel);
         }
 
+
+        [Fact]
+        public void sqlite_test_pagination_strings()
+        {
+            var m = new SqliteProvider(Config.SqlServerProviderName);
+            string cnt;
+            string sel;
+            m.MakePaged("select * from test", out sel, out cnt);
+            Assert.Equal("select count(*) from test", cnt);
+            Assert.Equal(string.Format("select * from test limit @{0},@{1}", PagedSqlStatement.SkipParameterName, PagedSqlStatement.TakeParameterName), sel);
+        }
+
         private void Write(string format, params object[] param)
         {
             Console.WriteLine(format, param);

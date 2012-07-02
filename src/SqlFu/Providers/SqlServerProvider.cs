@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Data;
-using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace SqlFu.Providers
