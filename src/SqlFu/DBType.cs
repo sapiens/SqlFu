@@ -3,10 +3,10 @@ namespace SqlFu
     public enum DBType
     {
         SqlServer,
-      //  SqlServerCE,
+        SqlServerCE,
         MySql,
         PostgreSQL,
         Oracle,
-        //SQLite
+        SQLite
     }
 }

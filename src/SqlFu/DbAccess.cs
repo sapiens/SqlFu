@@ -494,6 +494,12 @@ namespace SqlFu
         {
             _val = o;
         }
+
+        public bool IsEmpty
+        {
+            get { return _val == null; }
+        }
+
         public T InsertedId<T>()
         {
             return _val.ConvertTo<T>();

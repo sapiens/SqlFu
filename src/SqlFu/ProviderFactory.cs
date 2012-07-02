@@ -13,6 +13,7 @@ namespace SqlFu
                 case MySqlProvider.ProviderName:return new MySqlProvider();
                 case PostgresProvider.ProviderName:return new PostgresProvider();
                 case OracleProvider.ProviderName:return new OracleProvider();
+                case SqlServerCEProvider.ProviderName:return new SqlServerCEProvider();
             }
             throw new Exception("Unkown provider");
         }
@@ -22,6 +23,7 @@ namespace SqlFu
             switch (type)
             {
                 case DBType.SqlServer: return new SqlServerProvider();
+                case DBType.SqlServerCE: return new SqlServerCEProvider();
                 case DBType.MySql: return new MySqlProvider();
                 case DBType.PostgreSQL:return new PostgresProvider();
                 case DBType.Oracle:return new OracleProvider();

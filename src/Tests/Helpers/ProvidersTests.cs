@@ -39,7 +39,18 @@ namespace Tests.Helpers
             Assert.Equal("select count(*) from test", cnt);
             Assert.Equal(string.Format("select * from test limit @{0} offset @{1}", PagedSqlStatement.TakeParameterName,PagedSqlStatement.SkipParameterName), sel);
             
-            }
+        }
+
+        [Fact]
+        public void sqlserverce_pagination_strings()
+        {
+            var ce = new SqlServerCEProvider();
+            string cnt;
+            string sel;
+            ce.MakePaged("select * from test", out sel, out cnt);
+            Assert.Equal("select count(*) from test", cnt);
+            Assert.Equal(string.Format("select * from test OFFSET @{0} ROWS FETCH NEXT @{1} ROWS ONLY", PagedSqlStatement.SkipParameterName, PagedSqlStatement.TakeParameterName), sel);
+        }
 
         private void Write(string format, params object[] param)
         {

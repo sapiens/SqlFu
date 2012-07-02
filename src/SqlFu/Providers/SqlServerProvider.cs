@@ -100,7 +100,7 @@ sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})",orderBy,columns,body,
 
         public override LastInsertId ExecuteInsert(SqlStatement sql, string idKey)
         {
-            sql.Sql += ";Select SCOPE_IDENTITY() AS NewID";
+            sql.Sql += ";Select SCOPE_IDENTITY() as id";
            
             using(sql)
             {
