@@ -1,21 +1,13 @@
 ﻿namespace SqlFu.Providers
 {
-    public class SqlServerCEProvider:AbstractProvider
+    public class SqlServerCEProvider:SqlServerProvider
     {
         public const string ProviderName = "System.Data.SqlServerCe.4.0";
         public SqlServerCEProvider() : base(ProviderName)
         {
         }
 
-        public override string FormatSql(string sql, params string[] paramNames)
-        {
-            return sql;
-        }
-
-        public override string EscapeName(string s)
-        {
-            return "[" + s + "]";
-        }
+    
 
         public override LastInsertId ExecuteInsert(SqlStatement sql, string idKey)
         {
@@ -28,12 +20,7 @@
             }          
         }
 
-        public override string ParamPrefix
-        {
-            get { return "@"; }
-        }
-
-        public override void MakePaged(string sql, out string selecSql, out string countSql)
+      public override void MakePaged(string sql, out string selecSql, out string countSql)
         {
             int formidx;
             var body = GetPagingBody(sql, out formidx);

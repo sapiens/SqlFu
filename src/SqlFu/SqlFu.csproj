@@ -50,6 +50,7 @@
     <Compile Include="InsertAsStringAttribute.cs" />
     <Compile Include="InvalidPagedSqlException.cs" />
     <Compile Include="PagedSqlStatement.cs" />
+    <Compile Include="Providers\SQLiteProvider.cs" />
     <Compile Include="Providers\SqlServerCEProvider.cs" />
     <Compile Include="QueryOnlyAttribute.cs" />
     <Compile Include="SqlCommands.cs" />

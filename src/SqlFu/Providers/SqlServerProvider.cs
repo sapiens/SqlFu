@@ -14,6 +14,12 @@ namespace SqlFu.Providers
            public string selectString;
        }
         public const string ProviderName = "System.Data.SqlClient";
+        
+        internal SqlServerProvider(string provider):base(provider)
+        {
+            
+        }
+
         public SqlServerProvider():base(ProviderName)
         {
             
