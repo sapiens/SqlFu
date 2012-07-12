@@ -1,4 +1,7 @@
-﻿namespace SqlFu.Providers
+﻿using System;
+using System.Data;
+
+namespace SqlFu.Providers
 {
     public class SqliteProvider:AbstractProvider
     {
@@ -6,6 +9,21 @@
 
         public SqliteProvider():this(ProviderName)
         {
+            
+        }
+
+        public override void SetupParameter(System.Data.IDbDataParameter param, string name, object value)
+        {
+            base.SetupParameter(param, name, value);
+            if (value != null)
+            {
+                if (value.GetType() == typeof(Guid))
+                {
+                    param.DbType = DbType.String;
+                    value = value.ToString();
+                    param.Size = 32;
+                }
+            }
             
         }
 
