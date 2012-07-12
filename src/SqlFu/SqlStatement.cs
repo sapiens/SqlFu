@@ -147,7 +147,7 @@ namespace SqlFu
                 if (poco != null && !poco.IsListParam())
                 {
                     
-                    if (Type.GetTypeCode(poco.GetType()) == TypeCode.Object)
+                    if (poco.GetType().IsCustomObjectType())
                     {
                         d = poco.ToDictionary();
                         return d;
