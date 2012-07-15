@@ -141,7 +141,14 @@ namespace SqlFu
                 }
                 if (ti.Excludes.Any(c => c == k.Key)) continue;
                 sb.AppendFormat(" {0}={1},", db.Provider.EscapeName(k.Key), db.Provider.ParamPrefix + i);
-                args.Add(k.Value);
+                if (ti.ConvertToString.Any(s=>s==k.Key))
+                {
+                    args.Add(k.Value.ToString());
+                }
+                else
+                {
+                    args.Add(k.Value);
+                }                
                 i++;
             }
             sb.Remove(sb.Length - 1, 1);
