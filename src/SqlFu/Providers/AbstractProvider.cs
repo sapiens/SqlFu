@@ -78,5 +78,7 @@ namespace SqlFu.Providers
         {
             
         }
+
+        public abstract DBType ProviderType { get; }
     }
 }

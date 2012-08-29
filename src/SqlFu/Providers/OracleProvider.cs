@@ -22,7 +22,12 @@ namespace SqlFu.Providers
 
         }
 
-        public override LastInsertId ExecuteInsert(SqlStatement sql, string idKey)
+       public override DBType ProviderType
+       {
+           get { return DBType.Oracle;}
+       }
+
+       public override LastInsertId ExecuteInsert(SqlStatement sql, string idKey)
         {
             IDbDataParameter param=null;
             if (!string.IsNullOrEmpty(idKey))

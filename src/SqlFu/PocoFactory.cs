@@ -128,7 +128,12 @@ namespace SqlFu
             ComplexTypeMapper.DeclareILVariables(il);
             var c = poco.GetConstructor(BindingFlags.CreateInstance | BindingFlags.NonPublic | BindingFlags.Public, null,
                                         Type.EmptyTypes, null);
-            il.Emit(OpCodes.Newobj,poco.GetConstructor(Type.EmptyTypes));            
+            var cinfo = poco.GetConstructor(Type.EmptyTypes);
+            if (cinfo==null)
+            {
+                throw new MissingMemberException("A public parameterless constructor is required for type "+poco);
+            }
+            il.Emit(OpCodes.Newobj,cinfo);            
             il.Emit(OpCodes.Stloc_0);//saved at loc 0
            
            
@@ -152,7 +157,10 @@ namespace SqlFu
                 
                 var prop = allp.FirstOrDefault(d => d.Name.ToUpperInvariant() == name.ToUpperInvariant());
                 if (prop==null) continue;
-                if (prop.PropertyType.IsCustomObjectType()) continue;
+                if (prop.PropertyType.IsCustomObjectType())
+                {
+                    if (!prop.PropertyType.Implements<IEnumerable>()) continue;
+                }
                 
                     //throw new InvalidCastException(string.Format("Can't convert {0} to {1} ",rd.GetFieldType(i).ToString(),prop.PropertyType.ToString()));
                 il.Emit(OpCodes.Ldloc_0);//poco

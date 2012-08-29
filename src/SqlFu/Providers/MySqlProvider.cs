@@ -36,6 +36,11 @@ namespace SqlFu.Providers
             base.SetupParameter(param, name, value);
         }
 
+        public override DBType ProviderType
+        {
+            get { return DBType.MySql;}
+        }
+
         public override void MakePaged(string sql, out string selecSql, out string countSql)
         {
             int formidx;

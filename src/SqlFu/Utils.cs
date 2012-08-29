@@ -44,7 +44,7 @@ namespace SqlFu
 
         public static bool IsCustomObjectType(this Type t)
         {
-            return t.IsClass && Type.GetTypeCode(t) == TypeCode.Object;
+            return t.IsClass && (Type.GetTypeCode(t) == TypeCode.Object);
         }
     }
 }

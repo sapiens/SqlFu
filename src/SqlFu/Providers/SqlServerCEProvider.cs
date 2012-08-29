@@ -28,5 +28,13 @@
             selecSql = string.Format("{0} OFFSET @{1} ROWS FETCH NEXT @{2} ROWS ONLY", sql, PagedSqlStatement.SkipParameterName,
                                      PagedSqlStatement.TakeParameterName);
         }
+
+      public override DBType ProviderType
+      {
+          get
+          {
+              return DBType.SqlServerCE;
+          }
+      }
     }
 }

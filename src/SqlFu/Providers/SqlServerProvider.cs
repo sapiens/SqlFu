@@ -28,6 +28,11 @@ namespace SqlFu.Providers
             return sql;
         }
 
+        public override DBType ProviderType
+        {
+            get { return DBType.SqlServer;}
+        }
+
         public override string EscapeName(string s)
         {
             return "[" + s + "]";
