@@ -31,7 +31,7 @@ namespace Tests.Helpers
         [Fact]
         public void custom_instnatiator()
         {
-            DefaultCompexTypeMapper.ToCreate<IdName>(p=>
+            DefaultComplexTypeMapper.ToCreate<IdName>(p=>
                                                          {
                                                              return new IdName(){Name=p.Title};
                                                          });

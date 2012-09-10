@@ -6,7 +6,7 @@ using System.Reflection.Emit;
 
 namespace SqlFu
 {
-    public class DefaultCompexTypeMapper:IMapComplexType
+    public class DefaultComplexTypeMapper:IMapComplexType
     {
         public bool IsComplex(string value)
         {
@@ -141,7 +141,7 @@ namespace SqlFu
                 else
                 {
                     il.EmitPushType(p.PropertyType);
-                    il.Emit(OpCodes.Call, typeof(DefaultCompexTypeMapper).GetMethod("GetCreatorFor", BindingFlags.NonPublic | BindingFlags.Static));
+                    il.Emit(OpCodes.Call, typeof(DefaultComplexTypeMapper).GetMethod("GetCreatorFor", BindingFlags.NonPublic | BindingFlags.Static));
                     
                     il.EmitLoadLocal(0);//load poco
                     il.Emit(OpCodes.Call,typeof(Func<dynamic,object>).GetMethod("Invoke"));                    

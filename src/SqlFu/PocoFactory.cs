@@ -45,7 +45,7 @@ namespace SqlFu
                        };
         }
 
-        public static IMapComplexType ComplexTypeMapper= new DefaultCompexTypeMapper();
+        public static IMapComplexType ComplexTypeMapper= new DefaultComplexTypeMapper();
 
 
        #region Poco Mapping
