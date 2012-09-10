@@ -35,6 +35,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\CavemanTools.dll</HintPath>
     </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -50,6 +53,7 @@
   <ItemGroup>
     <Compile Include="CavemanBusTests\SqlProviderTests.cs" />
     <Compile Include="class Post.cs" />
+    <Compile Include="ComplexMapperTests.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Benchamrk.cs" />
     <Compile Include="Helpers\ComplexTypeMapper.cs" />

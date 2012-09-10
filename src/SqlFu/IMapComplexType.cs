@@ -9,6 +9,7 @@ namespace SqlFu
         bool IsComplex(string value);
 
         /// <summary>
+        /// Emits IL to map a complex type from reader
         /// Instance of poco is already pushed on the stack
         /// </summary>
         /// <param name="il"></param>
@@ -17,6 +18,13 @@ namespace SqlFu
         /// <returns></returns>
         bool EmitMapping(ILGenerator il, Type poco,IDataReader rd, int i);
 
+        /// <summary>
+        /// Maps a complex type from reader
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="poco"></param>
+        /// <param name="rd"></param>
+        /// <param name="idx"></param>
         void MapType<T>(T poco,IDataReader rd,int idx);
         void DeclareILVariables(ILGenerator il);
     }

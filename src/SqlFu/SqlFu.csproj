@@ -46,7 +46,7 @@
   <ItemGroup>
     <Compile Include="DbAccess.cs" />
     <Compile Include="DBType.cs" />
-    <Compile Include="DefaultCompexTypeMapper.cs" />
+    <Compile Include="DefaultComplexTypeMapper.cs" />
     <Compile Include="InsertAsStringAttribute.cs" />
     <Compile Include="InvalidPagedSqlException.cs" />
     <Compile Include="PagedSqlStatement.cs" />

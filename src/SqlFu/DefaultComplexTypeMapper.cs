@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.Data;
+using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -52,15 +54,29 @@ namespace SqlFu
             }
             p = currType.GetProperty(all[all.Length - 1]);
             if (p == null) return null;
-            if (Type.GetTypeCode(p.PropertyType) == TypeCode.Object) return null;
+            
+            if (Type.GetTypeCode(p.PropertyType) == TypeCode.Object)
+            {
+                if (!p.PropertyType.IsNullable())
+                {
+                    var convertibleTypes = new[] {typeof (Guid), typeof (TimeSpan),typeof(CultureInfo)};
+                    if (!p.PropertyType.IsEnum && !convertibleTypes.Any(t=>t.Equals(p.PropertyType)))
+                    {
+                        return null;                        
+                    }
+                }
+                //if(Nullable.GetUnderlyingType(p.PropertyType) == null && p.PropertyType != typeof(Guid)) return null;
+            }
             rez[all.Length - 1] = p;
             return rez;
         }
 
         public virtual void MapType<T>(T poco,IDataReader rd,int idx)
         {
-            
-            throw new Exception("Using generated IL");
+#if !DEBUG
+	throw new Exception("Using generated IL");
+#endif
+
             var name = rd.GetName(idx);
             var currType = typeof (T);
             var props = GetProperties(currType, name);
@@ -75,7 +91,12 @@ namespace SqlFu
 
                 if (val == null)
                 {
-                    val = GetCreatorFor(p.PropertyType)(poco);
+                    var creator = GetCreatorFor(p.PropertyType);
+                    if (creator == null) val = Activator.CreateInstance(p.PropertyType);
+                    else
+                    {
+                        val = creator(poco);
+                    }
                     p.SetValueFast(currObj, val);
                 }
                 currObj = val;
@@ -88,11 +109,10 @@ namespace SqlFu
                 if (p.PropertyType.IsValueType && !p.PropertyType.IsNullable())
                 {
                     throw new InvalidCastException();
-                }
-                return;                
+                }               
             }
 
-            p.SetValueFast(currObj, rd[idx]);
+            p.SetValueFast(currObj,rd[idx].ConvertTo(p.PropertyType));
         }
 
         public virtual void DeclareILVariables(ILGenerator il)

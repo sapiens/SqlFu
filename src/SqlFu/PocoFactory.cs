@@ -238,8 +238,7 @@ namespace SqlFu
             il.MarkLabel(end);//stack contains converted value
         }
 
-        //private static readonly MethodInfo _converterInfo = typeof (ObjectExtend).GetMethod("ConvertTo",
-        //                                                                          new[]{typeof(object),typeof(Type)});
+        
 
         private static readonly MethodInfo _rdGetValueInfo = typeof (IDataRecord).GetMethod("GetValue", new[] {typeof (Int32)});
         private static readonly MethodInfo _rdIsDbNullInfo = typeof (IDataRecord).GetMethod("IsDBNull", new[] {typeof (Int32)});
@@ -255,15 +254,17 @@ namespace SqlFu
 
 	#endregion
 
-       
+        #region Ignore
+        //private static readonly MethodInfo _converterInfo = typeof (ObjectExtend).GetMethod("ConvertTo",
+        //                                                                          new[]{typeof(object),typeof(Type)});
 
-      //  #region Parameter Mapping
+        //  #region Parameter Mapping
         //public delegate string[] ParamMapperDelegate(IDbCommand cmd, IHaveDbProviderConfig provider, object poco);
- 
-        
+
+
         //private static ConcurrentDictionary<int, ParamMapperDelegate> _paramCache =
         // new ConcurrentDictionary<int, ParamMapperDelegate>();
-    
+
         //static ParamMapperDelegate _expandoMapper = (c, p, dt) =>
         //                                                 {
         //                                                     var d = dt as IDictionary<string, object>;
@@ -402,6 +403,7 @@ namespace SqlFu
         //    }
         //    return rez;
         //}
-      //  #endregion
+        //  #endregion 
+        #endregion
     }
 }
