@@ -100,6 +100,8 @@ public class Post
 ```
 
 ## Versatility
+* SqlFu knows how to map by default Nullable(T),Guid, TimeSpan, Enum and CultureInfo
+* Allows manual mapping when you need it
 
 ``` csharp
 //custom sql for those special cases
