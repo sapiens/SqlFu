@@ -36,7 +36,7 @@ namespace Benchmark
 
         public static DbAccess GetDb()
         {
-            var d = new DbAccess(Connex, DBType.SqlServer);
+            var d = new DbAccess(Connex, DbEngine.SqlServer);
             return d;
         }
 

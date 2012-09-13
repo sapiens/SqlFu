@@ -4,11 +4,6 @@
         <name>CavemanTools</name>
     </assembly>
     <members>
-        <member name="T:CavemanTools.Data.JsonMessageStruct">
-            <summary>
-            
-            </summary>
-        </member>
         <member name="T:System.EventArgs`1">
             <summary>
             Generic event args
@@ -62,6 +57,38 @@
             Aprox, 1.3x faster than Activator, almost as fast a manual if you cache and reuse the delegate
             </summary>
             <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.IQueueCommands.Queue(CavemanTools.Infrastructure.MessagesBus.ICommand)">
+            <summary>
+            Queue the command to be executed asap
+            </summary>
+            <param name="cmd"></param>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.IQueueCommands.Queue(CavemanTools.Infrastructure.MessagesBus.ICommand,System.TimeSpan)">
+            <summary>
+            Queue the command to be executed after the specified interval
+            </summary>
+            <param name="cmd"></param>
+            <param name="afterInterval"></param>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.IQueueCommands.Queue(CavemanTools.Infrastructure.MessagesBus.ICommand,System.DateTime)">
+            <summary>
+            Queue item to be executed at the specified UTC time
+            </summary>
+            <param name="command"></param>
+            <param name="when">UTC date</param>
+        </member>
+        <member name="P:CavemanTools.Infrastructure.CommandsQueue.PollingInterval">
+            <summary>
+            Time period to check for new items
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.ISaveQueueState.GetItems(System.DateTime)">
+            <summary>
+            Gets items with execution date older than date
+            </summary>
+            <param name="date"></param>
             <returns></returns>
         </member>
         <member name="M:CavemanTools.Infrastructure.MessagesBus.ICommand.Enrol(CavemanTools.Infrastructure.MessagesBus.IEvent)">
@@ -124,10 +151,25 @@
             Do message store cleanup
             </summary>
         </member>
+        <member name="M:CavemanTools.Infrastructure.MessagesBus.Internals.MessageHandlerDiscoverer.GetImplementedInterfaces(System.Type,System.Type)">
+            <summary>
+            Returns the interfaces types usable by the message bus.
+            </summary>
+            <param name="handlerType"></param>
+            <param name="msgType">Only interfaces handling this message type</param>
+            <returns></returns>
+        </member>
         <member name="M:CavemanTools.Infrastructure.MessagesBus.MessageBusFactoryExtensions.UseDefaultTypeActivator(CavemanTools.Infrastructure.MessagesBus.IConfigureMessageBusFactory)">
             <summary>
             Configures the message bus factory to use the default type activator as the dependency resolver.
             It is STRONGLY suggested that you use a real DI Container in production.
+            </summary>
+            <param name="config"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.MessagesBus.MessageBusFactoryExtensions.WithNoPersistence(CavemanTools.Infrastructure.MessagesBus.IConfigureMessageBusFactory)">
+            <summary>
+            The bus will work faster but you'll lose the recovery feature
             </summary>
             <param name="config"></param>
             <returns></returns>
@@ -137,6 +179,11 @@
             Publishes asynchronously the events
             </summary>
             <param name="events"></param>
+        </member>
+        <member name="P:CavemanTools.Infrastructure.QueueItem.ExecuteAt">
+            <summary>
+            Gets or sets the UTC time to execute the command
+            </summary>
         </member>
         <member name="T:System.Collections.KeyValueDataStore">
             <summary>
@@ -748,6 +795,12 @@
             <param name="memberInfo">Custom Attribute provider</param>
             <returns></returns>
         </member>
+        <member name="M:CavemanTools.Percentage.#ctor(System.Decimal)">
+            <summary>
+            
+            </summary>
+            <param name="value">Percentage amount</param>
+        </member>
         <member name="T:System.Reflection.ObjectCreator">
             <summary>
             Create an object from type using the parameterless constructor.
@@ -955,7 +1008,8 @@
             <summary>
             Gets groups contexts. If a group doesn't exist, it must return an empty object
             </summary>
-            <param name="ids"></param>
+            <param name="ids">list of ids of groups</param>
+            <param name="userId">user id from current request</param>
             <returns></returns>
         </member>
         <member name="M:CavemanTools.Web.Security.IUserRightsRepository.GetDefaultGroup">

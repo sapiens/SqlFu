@@ -33,7 +33,7 @@ namespace Tests.CavemanBusTests
         {
            LogHelper.Remove("dev");
             LogHelper.Register(new ConsoleLogger(), "dev");
-            _store = new MessageBusSqlStorage(Config.Connex,DBType.SqlServer);
+            _store = new MessageBusSqlStorage(Config.Connex,DbEngine.SqlServer);
         }
 
         [Fact]

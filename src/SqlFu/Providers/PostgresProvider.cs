@@ -15,9 +15,9 @@ namespace SqlFu.Providers
             return sql;
         }
 
-        public override DBType ProviderType
+        public override DbEngine ProviderType
         {
-            get { return DBType.PostgreSQL;}
+            get { return DbEngine.PostgreSQL;}
         }
 
         public override void MakePaged(string sql, out string selecSql, out string countSql)

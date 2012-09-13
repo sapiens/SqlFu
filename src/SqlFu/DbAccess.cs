@@ -33,7 +33,7 @@ namespace SqlFu
             Init(cnxString,ProviderFactory.GetProviderByName(provider));
         }
 
-        public DbAccess(string cnxString,DBType provider)
+        public DbAccess(string cnxString,DbEngine provider)
         {
           Init(cnxString,ProviderFactory.GetProvider(provider)); 
         }

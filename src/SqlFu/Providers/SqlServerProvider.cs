@@ -28,9 +28,9 @@ namespace SqlFu.Providers
             return sql;
         }
 
-        public override DBType ProviderType
+        public override DbEngine ProviderType
         {
-            get { return DBType.SqlServer;}
+            get { return DbEngine.SqlServer;}
         }
 
         public override string EscapeName(string s)

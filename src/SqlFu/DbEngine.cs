@@ -1,6 +1,6 @@
 namespace SqlFu
 {
-    public enum DBType
+    public enum DbEngine
     {
         SqlServer,
         SqlServerCE,

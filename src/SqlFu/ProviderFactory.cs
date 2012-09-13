@@ -19,16 +19,16 @@ namespace SqlFu
             throw new Exception("Unkown provider");
         }
 
-        public static IHaveDbProvider GetProvider(DBType type)
+        public static IHaveDbProvider GetProvider(DbEngine engine)
         {
-            switch (type)
+            switch (engine)
             {
-                case DBType.SqlServer: return new SqlServerProvider();
-                case DBType.SqlServerCE: return new SqlServerCEProvider();
-                case DBType.MySql: return new MySqlProvider();
-                case DBType.PostgreSQL:return new PostgresProvider();
-                case DBType.Oracle:return new OracleProvider();
-                case DBType.SQLite:return new SqliteProvider();
+                case DbEngine.SqlServer: return new SqlServerProvider();
+                case DbEngine.SqlServerCE: return new SqlServerCEProvider();
+                case DbEngine.MySql: return new MySqlProvider();
+                case DbEngine.PostgreSQL:return new PostgresProvider();
+                case DbEngine.Oracle:return new OracleProvider();
+                case DbEngine.SQLite:return new SqliteProvider();
             }
             throw new Exception("Unkown provider");
         }

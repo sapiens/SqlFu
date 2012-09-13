@@ -13,6 +13,6 @@ namespace SqlFu
         void SetupParameter(IDbDataParameter param, string name, object value);
         string FormatSql(string sql, params string[] paramNames);
         void OnCommandExecuting(IDbCommand cmd);
-        DBType ProviderType { get; }
+        DbEngine ProviderType { get; }
     }
 }

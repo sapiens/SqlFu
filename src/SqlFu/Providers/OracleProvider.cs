@@ -22,9 +22,9 @@ namespace SqlFu.Providers
 
         }
 
-       public override DBType ProviderType
+       public override DbEngine ProviderType
        {
-           get { return DBType.Oracle;}
+           get { return DbEngine.Oracle;}
        }
 
        public override LastInsertId ExecuteInsert(SqlStatement sql, string idKey)

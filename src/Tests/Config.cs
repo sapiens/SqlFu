@@ -36,7 +36,7 @@ namespace Tests
 
        public static DbAccess GetDb(bool noLog=false)
         {
-            var d=new DbAccess(Connex, DBType.SqlServer);
+            var d=new DbAccess(Connex, DbEngine.SqlServer);
            if (!noLog)
            {
                d.OnCommand = cmd => Console.WriteLine(cmd.FormatCommand());

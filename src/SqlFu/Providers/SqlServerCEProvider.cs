@@ -29,11 +29,11 @@
                                      PagedSqlStatement.TakeParameterName);
         }
 
-      public override DBType ProviderType
+      public override DbEngine ProviderType
       {
           get
           {
-              return DBType.SqlServerCE;
+              return DbEngine.SqlServerCE;
           }
       }
     }

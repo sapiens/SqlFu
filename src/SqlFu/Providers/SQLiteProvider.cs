@@ -36,9 +36,9 @@ namespace SqlFu.Providers
             return sql;
         }
 
-        public override DBType ProviderType
+        public override DbEngine ProviderType
         {
-            get { return DBType.SQLite;}
+            get { return DbEngine.SQLite;}
         }
 
         public override LastInsertId ExecuteInsert(SqlStatement sql, string idKey)

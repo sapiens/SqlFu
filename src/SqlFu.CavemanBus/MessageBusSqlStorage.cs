@@ -173,7 +173,7 @@ CONSTRAINT [uc_message] UNIQUE ([UniqueConstraint] ASC)
             InitProvider();
         }
 
-        public MessageBusSqlStorage(string cnxString,DBType provider)
+        public MessageBusSqlStorage(string cnxString,DbEngine provider)
         {
             _db= new DbAccess(cnxString,provider);
             InitProvider();
@@ -185,9 +185,9 @@ CONSTRAINT [uc_message] UNIQUE ([UniqueConstraint] ASC)
         {
             switch(_db.Provider.ProviderType)
             {
-                case DBType.SqlServer: _provider = new SqlServerStrings(_db);
+                case DbEngine.SqlServer: _provider = new SqlServerStrings(_db);
                     break;
-                case DBType.MySql: _provider = new MySqlProvider(_db);
+                case DbEngine.MySql: _provider = new MySqlProvider(_db);
                     break;
                 default:throw new NotImplementedException("There is no provider available for this database engine");
             }

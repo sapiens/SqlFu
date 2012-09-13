@@ -11,7 +11,7 @@ namespace Benchmark.Tests
 
         public SqlFuTests()
         {
-            _db = new DbAccess(Config.Connex, DBType.SqlServer);
+            _db = new DbAccess(Config.Connex, DbEngine.SqlServer);
             _db.KeepAlive = true;
         }
         public override void FetchSingleEntity(BenchmarksContainer bc)
