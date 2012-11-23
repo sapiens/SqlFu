@@ -27,5 +27,6 @@ namespace SqlFu
         /// <param name="idx"></param>
         void MapType<T>(T poco,IDataReader rd,int idx);
         void DeclareILVariables(ILGenerator il);
+        char Separator { get; set; }
     }
 }

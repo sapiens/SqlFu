@@ -54,6 +54,19 @@ namespace Tests
         }
 
         [Fact]
+        public void different_separator()
+        {
+            var poco = new PocoA();
+            _mapper.Separator = '.';
+            var id = Guid.NewGuid();
+            _reader.Setup(d => d.GetName(0)).Returns("Item.Item.Id");
+            _reader.Setup(d => d.IsDBNull(0)).Returns(false);
+            _reader.Setup(d => d[0]).Returns(id);
+            _mapper.MapType(poco, _reader.Object, 0);
+            Assert.Equal(id, poco.Item.Item.Id);
+        }
+
+        [Fact]
         public void nullable_guids_are_handled()
         {
             var poco = new PocoA();

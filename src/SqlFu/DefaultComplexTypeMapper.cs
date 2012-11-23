@@ -10,10 +10,16 @@ namespace SqlFu
 {
     public class DefaultComplexTypeMapper:IMapComplexType
     {
+        public DefaultComplexTypeMapper()
+        {
+            Separator = '_';
+        }
         public bool IsComplex(string value)
         {
-            return value.Trim('_').IndexOf('_') > 0;
+            return value.Trim(Separator).IndexOf(Separator) > 0;
         }
+
+        public char Separator {get; set; }
 
         private static ConcurrentDictionary<Type, Func<dynamic, object>> _creators= new ConcurrentDictionary<Type, Func<dynamic, object>>();
         public static  void ToCreate<T>(Func<dynamic,object> creator)
@@ -40,7 +46,7 @@ namespace SqlFu
         /// <returns></returns>
         PropertyInfo[] GetProperties(Type poco, string name)
         {
-            var all = name.Split('_');
+            var all = name.Split(Separator);
             var currType = poco;
             PropertyInfo p = null;
             var rez = new PropertyInfo[all.Length];
