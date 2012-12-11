@@ -836,6 +836,17 @@
             <typeparam name="T">Reference type</typeparam>
             <param name="dispose">true to dispose if the type implements IDisposable</param>
         </member>
+        <member name="T:CavemanTools.SemanticVersion">
+            <summary>
+            Semantic version http://semver.org/
+            </summary>
+        </member>
+        <member name="M:CavemanTools.SemanticVersion.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="version">major.minor.patch[-preRelease][+build]</param>
+        </member>
         <member name="T:CavemanTools.Web.ContextInstance`1">
             <summary>
             Base class for types which will be used as singletons within a http request
@@ -1004,12 +1015,7 @@
             Gets a dictionary where you can store other information about the user
             </summary>
         </member>
-        <member name="M:CavemanTools.Web.Security.IUserRightsRepository.GetGroupsById(System.Collections.Generic.IEnumerable{System.Int32},CavemanTools.Web.Security.IUserIdValue)">
-            <summary>
-            Gets groups contexts. If a group doesn't exist, it must return an empty object
-            </summary>
-            <param name="ids">list of ids of groups</param>
-            <param name="userId">user id from current request</param>
+        <member name="M:CavemanTools.Web.Security.IUserRightsRepository.GetGroupsById(System.Collections.Generic.IEnumerable{System.Int32})">
             <returns></returns>
         </member>
         <member name="M:CavemanTools.Web.Security.IUserRightsRepository.GetDefaultGroup">
@@ -2204,6 +2210,14 @@
             <param name="length">maximum length</param>
             <returns></returns>
         </member>
+        <member name="M:System.StringUtils.IsNullOrEmpty(System.String,System.Boolean)">
+            <summary>
+            Returns true if the string is empty 
+            </summary>
+            <param name="data"></param>
+            <param name="checkBlancs">trim blancs</param>
+            <returns></returns>
+        </member>
         <member name="M:System.StringUtils.ConvertToEncoding(System.String,System.Text.Encoding)">
             <summary>
             Converts strings form unicode to specified encoding
@@ -2247,11 +2261,27 @@
             <param name="size">Maximum string length</param>
             <returns></returns>
         </member>
-        <member name="M:System.StringUtils.RemoveLast(System.Text.StringBuilder)">
+        <member name="M:System.Text.TextUtils.RemoveLast(System.Text.StringBuilder)">
             <summary>
             Removes last character from builder
             </summary>
             <param name="sb"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Text.TextUtils.RemoveLastIfEquals(System.Text.StringBuilder,System.Char)">
+            <summary>
+            Remove last char if matches the provided value
+            </summary>
+            <param name="sb"></param>
+            <param name="value">value to check</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Text.TextUtils.RemoveLastIfEquals(System.Text.StringBuilder,System.String)">
+            <summary>
+            Remove last char if matches the provided value
+            </summary>
+            <param name="sb"></param>
+            <param name="value">value to check</param>
             <returns></returns>
         </member>
         <member name="M:System.Xml.Xml.IsComment(System.Xml.XmlNode)">

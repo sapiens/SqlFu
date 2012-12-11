@@ -71,7 +71,7 @@ ON [PRIMARY]
         {
             var db = GetDb();
             
-            if (!db.ExecuteScalar<bool>(IfExistsDbSql))
+            if (!db.GetValue<bool>(IfExistsDbSql))
             {
                 db.ExecuteCommand(CreateTableSql);
             };
@@ -84,7 +84,7 @@ ON [PRIMARY]
             db.KeepAlive = true;
             db.OnCommand = c => { };
             
-            if (db.ExecuteScalar<int>("select count(*) from sfposts") != 15)
+            if (db.GetValue<int>("select count(*) from sfposts") != 15)
             {
                 Config.EmptyTable();
              //   Console.WriteLine("ensuring 500 posts");

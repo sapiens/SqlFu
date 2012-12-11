@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Data.Common;
 using System.Dynamic;
 using System.Linq;
 using System.Text;
 using CavemanTools.Model;
+using SqlFu.DDL;
 using SqlFu.Internals;
 
 namespace SqlFu
 {
-    public class DbAccess : IDisposable
+    public class DbAccess :IAccessDb
     {
         public DbAccess()
         {
@@ -52,9 +54,34 @@ namespace SqlFu
             KeepAlive = false;
         }
 
-        private IDbConnection _conex;
+        #region SProc
+
+         /// <summary>
+        /// Executes sproc
+        /// </summary>
+        /// <param name="sprocName"></param>
+        /// <param name="arguments">Arguments as an anonymous object, output parameters names must be prefixed with _ </param>
+        /// <example>
+        /// ExecuteStoredProcedure("sprocName",new{Id=1,_OutValue=""})
+        /// </example>
+        /// <returns></returns>
+        public StoredProcedureResult ExecuteStoredProcedure(string sprocName, object arguments=null)
+        {
+            var sql = new SProcStatement(this);
+            sql.UseStoredProcedure(sprocName, arguments);
+            return sql.Execute();
+        }
+
+        #endregion
+
+        public IDatabaseTools DatabaseTools
+        {
+            get { return Provider.GetTools(this); }
+        }
+
+        private DbConnection _conex;
         
-        public IDbConnection Connection
+        public DbConnection Connection
         {
             get
             {
@@ -77,9 +104,9 @@ namespace SqlFu
         }
 
         private IHaveDbProvider _provider;
-        private Action<IDbCommand> _onCmd = c => { };
+        private Action<DbCommand> _onCmd = c => { };
 
-        public Action<IDbCommand> OnCommand
+        public Action<DbCommand> OnCommand
         {
             get { return _onCmd; }
             set
@@ -89,9 +116,9 @@ namespace SqlFu
             }
         }
 
-        private Action<DbAccess> _onCloseConex = c => { };
+        private Action<IAccessDb> _onCloseConex = c => { };
 
-        public Action<DbAccess> OnCloseConnection
+        public Action<IAccessDb> OnCloseConnection
         {
             get { return _onCloseConex; }
             set
@@ -101,9 +128,9 @@ namespace SqlFu
             }
         }
 
-        private Action<DbAccess> _onOpenConex = c => { };
+        private Action<IAccessDb> _onOpenConex = c => { };
 
-        public Action<DbAccess> OnOpenConnection
+        public Action<IAccessDb> OnOpenConnection
         {
             get { return _onOpenConex; }
             set
@@ -113,9 +140,9 @@ namespace SqlFu
             }
         }
 
-        private Action<SqlStatement,Exception> _onException = (s,e) => { };
+        private Action<ISqlStatement,Exception> _onException = (s,e) => { };
 
-        public Action<SqlStatement,Exception> OnException
+        public Action<ISqlStatement, Exception> OnException
         {
             get { return _onException; }
             set
@@ -125,9 +152,9 @@ namespace SqlFu
             }
         }
 
-        private Action<DbAccess> _onBeginTransaction = (d) => { };
+        private Action<IAccessDb> _onBeginTransaction = (d) => { };
 
-        public Action<DbAccess> OnBeginTransaction
+        public Action<IAccessDb> OnBeginTransaction
         {
             get { return _onBeginTransaction; }
             set
@@ -137,9 +164,9 @@ namespace SqlFu
             }
         }
 
-        private Action<DbAccess,bool> _onEndTransaction = (d,s) => { };
+        private Action<IAccessDb,bool> _onEndTransaction = (d,s) => { };
 
-        public Action<DbAccess,bool> OnEndTransaction
+        public Action<IAccessDb, bool> OnEndTransaction
         {
             get { return _onEndTransaction; }
             set
@@ -149,7 +176,7 @@ namespace SqlFu
             }
         }
 
-        internal IDbCommand CreateCommand()
+        internal DbCommand CreateCommand()
         {
             var cmd = Connection.CreateCommand();
             if (_trans != null) cmd.Transaction = _trans;
@@ -162,14 +189,14 @@ namespace SqlFu
         /// <param name="sql"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public SqlStatement WithSql(string sql, params object[] args)
+        public ISqlStatement WithSql(string sql, params object[] args)
         {
             var st = new SqlStatement(this);
             st.SetSql(sql, args);
             return st;
         }
 
-        public PagedSqlStatement WithSql(long skip,int take,string sql, params object[] args)
+        public IPagedSqlStatement WithSql(long skip,int take,string sql, params object[] args)
         {
             var st = new PagedSqlStatement(this);
             st.SetSql(skip,take,sql,args);
@@ -188,6 +215,21 @@ namespace SqlFu
             }
         }
 
+
+        public static DbType Convert(Type t)
+        {
+            //if (t==typeof(int))
+            //{
+            //    return DbType.Int32;
+            //}
+            
+            //if (t==typeof(int))
+            //{
+            //    return DbType.;
+            //}
+
+            throw new NotSupportedException();
+        }
         
         #region Transaction support
         private int _tLevel = 0;
@@ -198,11 +240,11 @@ namespace SqlFu
             get { return _tLevel; }
         }
 
-        private IDbTransaction _trans = null;
+        private DbTransaction _trans = null;
 
         private string _cnxString;
 
-        public IDbTransaction BeginTransaction(IsolationLevel? isolationLevel = null)
+        public DbTransaction BeginTransaction(IsolationLevel? isolationLevel = null)
         {
             _tLevel++;
             if (_tLevel == 1)
@@ -244,7 +286,7 @@ namespace SqlFu
 
         
         #region TrnsactionClass
-        class MyTransactionWrapper : IDbTransaction
+        class MyTransactionWrapper : DbTransaction
         {
             private DbAccess _db;
 
@@ -253,7 +295,7 @@ namespace SqlFu
                 _db = db;
             }
 
-            public void Dispose()
+            protected override void Dispose(bool disposing)
             {
                 if (_db != null)
                 {
@@ -262,7 +304,7 @@ namespace SqlFu
 
             }
 
-            public void Commit()
+            public override void Commit()
             {
                 if (_db != null)
                 {
@@ -276,18 +318,18 @@ namespace SqlFu
                 }
             }
 
-            public void Rollback()
+            public override void Rollback()
             {
                 _db.Rollback();
                 _db = null;
             }
 
-            public IDbConnection Connection
+            protected override DbConnection DbConnection
             {
-                get { return _db._conex; }
+                get { return _db.Connection; }
             }
 
-            public IsolationLevel IsolationLevel
+            public override  IsolationLevel IsolationLevel
             {
                 get { return _db._trans.IsolationLevel; }
             }
@@ -308,7 +350,13 @@ namespace SqlFu
             }
         }
 
+        [Obsolete("Use GetValue method")]
         public T ExecuteScalar<T>(string sql, params object[] args)
+        {
+            return GetValue<T>(sql, args);
+        }
+
+        public T GetValue<T>(string sql, params object[] args)
         {
             using(var st= new SqlStatement(this))
             {
@@ -316,6 +364,8 @@ namespace SqlFu
                 return st.ExecuteScalar<T>();
             }
         }
+
+        
 
         public T Get<T>(object id,string additionalPredicate=null,params object[] args)
         {

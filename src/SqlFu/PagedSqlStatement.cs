@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using CavemanTools.Model;
 
 namespace SqlFu
@@ -9,7 +10,21 @@ namespace SqlFu
     {
         ResultSet<T> ExecutePagedQuery<T>(Func<IDataReader, T> mapper = null);
     }
-    public class PagedSqlStatement:SqlStatement,IPagedQueryStatement
+
+    public interface IPagedSqlStatement:IPagedQueryStatement,IDisposable
+    {
+        DbAccess Db { get; }
+
+        /// <summary>
+        /// Returns last executed sql with params
+        /// </summary>
+        string ExecutedSql { get; }
+
+        // void SetSql(string sql, params object[] args);
+        IPagedQueryStatement ApplyToCommand(Action<DbCommand> action);
+    }
+
+    public class PagedSqlStatement:SqlStatement,IPagedSqlStatement
     {
         public const string SkipParameterName = "_fuskip";
         public const string TakeParameterName = "_futake";
@@ -92,6 +107,12 @@ namespace SqlFu
 
             }
             return rez;
+        }
+
+        public new IPagedQueryStatement ApplyToCommand(Action<DbCommand> action)
+        {
+            base.ApplyToCommand(action);
+            return this;
         }
     }
 }

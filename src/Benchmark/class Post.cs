@@ -1,7 +1,6 @@
 ﻿using System;
 using CavemanTools.Model;
 using ServiceStack.DataAnnotations;
-using SqlFu;
 
 namespace Tests
 {

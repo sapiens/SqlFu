@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
+using System.Data.Common;
+using System.Dynamic;
 using System.Text;
-using CavemanTools.Model;
 
 namespace SqlFu
 {
@@ -16,10 +16,24 @@ namespace SqlFu
         IEnumerable<T> ExecuteQuery<T>(Func<IDataReader, T> mapper=null);
     }
 
-    public class SqlStatement:IDisposable, IQuerySqlStatement
+    public interface ISqlStatement:IQuerySqlStatement,IDisposable
+    {
+        DbAccess Db { get; }
+
+        /// <summary>
+        /// Returns last executed sql with params
+        /// </summary>
+        string ExecutedSql { get; }
+
+       // void SetSql(string sql, params object[] args);
+        IQuerySqlStatement ApplyToCommand(Action<DbCommand> action);
+    }
+
+
+    public class SqlStatement:ISqlStatement
     {
         protected DbAccess _db;
-        protected IDbCommand _cmd;
+        protected DbCommand _cmd;
         
         public SqlStatement(DbAccess db)
         {
@@ -84,6 +98,8 @@ namespace SqlFu
 
         //}
 
+       
+
         public void SetSql(string sql, params object[] args)
         {
             if (args.Length > 0)
@@ -137,29 +153,29 @@ namespace SqlFu
             _cmd.CommandText = sql;
         }
 
-        IDictionary<string, object> CreateParamsDictionary(params object[] args)
+        protected virtual IDictionary<string, object> CreateParamsDictionary(params object[] args)
         {
-            IDictionary<string, object> d;
-
-            if (args.Length == 1)
+            IDictionary<string, object> d=new Dictionary<string, object>();
+            if (args != null)
             {
-                var poco = args[0];
-                if (poco != null && !poco.IsListParam())
+                if (args.Length == 1)
                 {
-                    
-                    if (poco.GetType().IsCustomObjectType())
+                    var poco = args[0];
+                    if (poco != null && !poco.IsListParam())
                     {
-                        d = poco.ToDictionary();
-                        return d;
+
+                        if (poco.GetType().IsCustomObjectType())
+                        {
+                            d = poco.ToDictionary();
+                            return d;
+                        }
                     }
                 }
-            }
 
-
-            d = new Dictionary<string, object>(args.Length);
-            for (int i = 0; i < args.Length; i++)
-            {
-                d[i.ToString()] = args[i];
+                for (int i = 0; i < args.Length; i++)
+                {
+                    d[i.ToString()] = args[i];
+                }
             }
             return d;
         }
@@ -171,14 +187,14 @@ namespace SqlFu
             _cmd.Parameters.Clear();
         }
 
-        internal IDbCommand Command
+        internal DbCommand Command
         {
             get { return _cmd; }
         }
 
-        private Action<IDbCommand> _before;
+        private Action<DbCommand> _before;
 
-        public IQuerySqlStatement ApplyToCommand(Action<IDbCommand> action)
+        public IQuerySqlStatement ApplyToCommand(Action<DbCommand> action)
         {
             action.MustNotBeNull();
             _before = action;

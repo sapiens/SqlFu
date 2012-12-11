@@ -1,5 +1,7 @@
 using System;
+using SqlFu.DDL;
 using SqlFu.Providers;
+using SqlFu.Providers.SqlServer;
 
 namespace SqlFu
 {

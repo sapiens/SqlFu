@@ -62,7 +62,7 @@ namespace Benchmark.Tests
         {
             bc.Add(id =>
             {
-                _db.ExecuteScalar<int>("select authorid from sfposts where id=@0 order by id", 5);
+                _db.GetValue<int>("select authorid from sfposts where id=@0 order by id", 5);
             }, "SqlFu scalar int");
 
             //bc.Add(id =>

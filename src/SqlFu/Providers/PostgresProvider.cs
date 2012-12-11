@@ -1,4 +1,8 @@
+using System;
 using System.Data;
+using System.Linq;
+using SqlFu.DDL;
+using SqlFu.DDL.Generators.Postgresql;
 
 namespace SqlFu.Providers
 {
@@ -20,6 +24,11 @@ namespace SqlFu.Providers
             get { return DbEngine.PostgreSQL;}
         }
 
+        protected override IDatabaseTools InitTools(DbAccess db)
+        {
+            return new PostgresDatabaseTools(db);
+        }
+
         public override void MakePaged(string sql, out string selecSql, out string countSql)
         {
             int formidx;
@@ -27,6 +36,13 @@ namespace SqlFu.Providers
             countSql = "select count(*) " + body;
             selecSql = string.Format("{0} limit @{2} offset @{1}", sql, PagedSqlStatement.SkipParameterName,
                                      PagedSqlStatement.TakeParameterName);
+        }
+
+        public static string EscapeIdentifier(string s)
+        {
+            s.MustNotBeEmpty();
+            if (!s.Contains(".")) return "\"" + s + "\"";
+            return string.Join(".", s.Split('.').Select(d => "\"" + d + "\""));
         }
 
         public override void SetupParameter(IDbDataParameter param, string name, object value)

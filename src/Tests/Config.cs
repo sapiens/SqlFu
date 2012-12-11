@@ -1,13 +1,60 @@
 ﻿using System;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.IO;
 using SqlFu;
 
 namespace Tests
 {
-    public class Config
+    
+    public static class Setup
     {
         public const string Connex = "Data Source=.;Initial Catalog=tempdb;Integrated Security=True";
+        public const string SqliteConnex = @"data source={0};foreign keys=True";
+        public const string MysqlConnex = @"Server=localhost;Database=mysql;Uid=root;Pwd=;Allow User Variables=True";
+        public const string PostgresConnex = @"User ID=postgres;Password=123456;Host=localhost;Port=5432;Database=postgres;";
+
+        public static DbAccess GetDb(bool noLog = false,DbEngine engine=DbEngine.SqlServer)
+        {
+            var cnx = Connex;
+            switch(engine)
+            {
+                case DbEngine.SQLite:
+                    DirectoryInfo dd = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+                    var f = dd.Parent.Parent.FullName;
+                    cnx = string.Format(SqliteConnex, Path.Combine(f, "testdb.db"));                    
+                    //cnx = SqliteConnex;
+                    break;
+                case DbEngine.MySql:
+                    cnx = MysqlConnex;
+                    break;
+                case DbEngine.PostgreSQL:
+                    cnx = PostgresConnex;
+                    break;
+            }
+            var d = new DbAccess(cnx, engine);
+            if (!noLog)
+            {
+                d.OnCommand = cmd => Console.WriteLine(cmd.FormatCommand());
+                d.OnOpenConnection = cmd => Console.WriteLine("Connection opened");
+                d.OnCloseConnection = cmd => Console.WriteLine("Connection closed");
+                d.OnException = (s, ex) =>
+                {
+                    Console.WriteLine("Exaception:\n\t\t{0}",s.ExecutedSql);
+                };
+
+                d.OnBeginTransaction = cmd => Console.WriteLine("Begin trans");
+                d.OnEndTransaction = (cmd, s) => Console.WriteLine("End trans: {0}", s);
+            }
+
+            return d;
+        }
+    }
+
+    public class Config
+    {
+        
         public const int Iterations = 500;
         public const int WarmUp = 10;
         public const string SqlServerProviderName = "System.Data.SqlClient";
@@ -17,9 +64,14 @@ namespace Tests
             EnsureDb();
         }
 
+        public static DbAccess GetDb()
+        {
+            return Setup.GetDb();
+        }
+
         public static SqlConnection GetOpenConnection()
         {
-            var connection = new SqlConnection(Connex);
+            var connection = new SqlConnection(Setup.Connex);
             connection.Open();
             return connection;
         }
@@ -34,25 +86,7 @@ namespace Tests
             if (!warm) Console.WriteLine("{0} took {1} ms",name,timer.Elapsed.TotalMilliseconds);
         }
 
-       public static DbAccess GetDb(bool noLog=false)
-        {
-            var d=new DbAccess(Connex, DbEngine.SqlServer);
-           if (!noLog)
-           {
-               d.OnCommand = cmd => Console.WriteLine(cmd.FormatCommand());
-               d.OnOpenConnection = cmd => Console.WriteLine("Connection opened");
-               d.OnCloseConnection = cmd => Console.WriteLine("Connection closed");
-               d.OnException = (s, ex) =>
-               {
-                   Console.WriteLine(s.ExecutedSql);
-               };
-
-               d.OnBeginTransaction = cmd => Console.WriteLine("Begin trans");
-               d.OnEndTransaction = (cmd, s) => Console.WriteLine("End trans: {0}", s);    
-           }
-           
-           return d;
-        }
+      
 
         private const string IfExistsDbSql =
 //                        @"select case when EXISTS (SELECT * 
@@ -74,9 +108,10 @@ CONSTRAINT [PK__Posts__3214EC070AD2A005] PRIMARY KEY ([Id])
 )
 ON [PRIMARY]
 ";
+
         public static void EmptyTable()
         {
-            using (var db = GetDb())
+            using (var db = Setup.GetDb())
             {
                 db.ExecuteCommand("truncate table Posts;DBCC CHECKIDENT ('dbo.Posts', reseed, 1)");
             }
@@ -84,9 +119,9 @@ ON [PRIMARY]
 
         public static void EnsureDb()
         {
-            var db = GetDb();
+            var db = Setup.GetDb();
             
-            if (!db.ExecuteScalar<bool>(IfExistsDbSql))
+            if (!db.GetValue<bool>(IfExistsDbSql))
             {
                 db.ExecuteCommand(CreateTableSql);
             };
@@ -95,10 +130,10 @@ ON [PRIMARY]
 
         public static void EnsurePosts()
         {
-            var db = GetDb();
+            var db = Setup.GetDb();
             db.KeepAlive = true;
             db.OnCommand = c => { };
-            if (db.ExecuteScalar<int>("select count(*) from posts") != 10)
+            if (db.GetValue<int>("select count(*) from posts") != 10)
             {
                 Config.EmptyTable();
                 Console.WriteLine("ensuring 10 posts");

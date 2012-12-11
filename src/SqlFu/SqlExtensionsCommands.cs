@@ -6,24 +6,24 @@ using SqlFu.Internals;
 
 namespace SqlFu
 {
-    public static class SqlCommands
+    public static class SqlExtensionsCommands
     {
         
-        public static T FirstOrDefault<T>(this DbAccess db,string sql,params object[] args)
+        public static T FirstOrDefault<T>(this IAccessDb db,string sql,params object[] args)
         {
             return db.Query<T>(sql,args).FirstOrDefault();
         }
         
         #region Insert
 
-        public static LastInsertId Insert(this DbAccess db, string table, object data)
+        public static LastInsertId Insert(this IAccessDb db, string table, object data)
         {
             table.MustNotBeEmpty();
             data.MustNotBeNull();
             return Insert(db, new TableInfo(table), data);
         }
 
-        public static LastInsertId Insert<T>(this DbAccess db, T data) where T : class
+        public static LastInsertId Insert<T>(this IAccessDb db, T data) where T : class
         {
             data.MustNotBeNull();
             return Insert(db, TableInfo.ForType(typeof(T)), data);
@@ -54,7 +54,7 @@ namespace SqlFu
             return args;
         }
 
-        static LastInsertId Insert(DbAccess db, TableInfo ti, object data)
+        static LastInsertId Insert(IAccessDb db, TableInfo ti, object data)
         {
             var p = db.Provider;
             List<object> args=null;
@@ -83,7 +83,7 @@ namespace SqlFu
                 args = FillArgs(d, ti, p);
             }
 
-            var st = db.WithSql(ti.InsertSql, args.ToArray());
+            var st = db.WithSql(ti.InsertSql, args.ToArray()) as SqlStatement;
             st.ReuseCommand = true;
             LastInsertId rez;
             try
@@ -109,7 +109,7 @@ namespace SqlFu
         /// <param name="data"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static int Update(this DbAccess db, string table, object data, object id = null)
+        public static int Update(this IAccessDb db, string table, object data, object id = null)
         {
             var ti = new TableInfo(table);
             return Update(db, ti, data, id);
@@ -118,13 +118,13 @@ namespace SqlFu
         /// <summary>
         /// If both poco has id property and the Id arg is specified, the arg is used
         /// </summary>
-        public static int Update<T>(this DbAccess db, object data, object id = null)
+        public static int Update<T>(this IAccessDb db, object data, object id = null)
         {
             var ti = TableInfo.ForType(typeof(T));
             return Update(db, ti, data, id);
         }
 
-        private static int Update(DbAccess db, TableInfo ti, object data, object id = null)
+        private static int Update(IAccessDb db, TableInfo ti, object data, object id = null)
         {
             var sb = new StringBuilder();
             sb.AppendFormat("update {0} set", db.Provider.EscapeName(ti.Name));
@@ -166,7 +166,7 @@ namespace SqlFu
 
         #endregion
 
-        public static int Delete<T>(this DbAccess db, string condition, params object[] args)
+        public static int Delete<T>(this IAccessDb db, string condition, params object[] args)
         {
             var ti = TableInfo.ForType(typeof(T));
             return db.ExecuteCommand(string.Format("delete from {0} where {1}", db.Provider.EscapeName(ti.Name), condition), args);

@@ -66,8 +66,8 @@ namespace Tests.Helpers
             pst = _db.Query<Post>("select 1 as id, null as TopicId").First();
             Assert.Null(pst.TopicId);
 
-            Assert.Equal(0,_db.ExecuteScalar<int?>("select 0"));
-            Assert.Null(_db.ExecuteScalar<int?>("select null"));
+            Assert.Equal(0,_db.GetValue<int?>("select 0"));
+            Assert.Null(_db.GetValue<int?>("select null"));
         }
 
         [Fact]
@@ -140,11 +140,11 @@ namespace Tests.Helpers
                                                   c = true;
                                                   return 0;
                                               });
-            Assert.Equal(0,_db.ExecuteScalar<int>("select 1"));
+            Assert.Equal(0,_db.GetValue<int>("select 1"));
             Assert.True(c);
 
             PocoFactory.RegisterConverterFor<Email>(o=> new Email(o.ToString()));
-            var em=_db.ExecuteScalar<Email>("select 'mike@test.com'");
+            var em=_db.GetValue<Email>("select 'mike@test.com'");
             Assert.Equal("mike@test.com",em.Value);
 
         }

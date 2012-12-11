@@ -1,4 +1,6 @@
-﻿namespace SqlFu.Providers
+﻿using SqlFu.DDL.Generators.SqlServer.CE;
+
+namespace SqlFu.Providers.SqlServer
 {
     public class SqlServerCEProvider:SqlServerProvider
     {
@@ -28,6 +30,11 @@
             selecSql = string.Format("{0} OFFSET @{1} ROWS FETCH NEXT @{2} ROWS ONLY", sql, PagedSqlStatement.SkipParameterName,
                                      PagedSqlStatement.TakeParameterName);
         }
+
+      protected override SqlFu.DDL.IDatabaseTools InitTools(SqlFu.DbAccess db)
+      {
+          return new SqlServerCompactDatabaseTools(db);
+      }
 
       public override DbEngine ProviderType
       {

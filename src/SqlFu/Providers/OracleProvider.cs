@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using SqlFu.DDL;
 
 namespace SqlFu.Providers
 {
@@ -22,9 +23,19 @@ namespace SqlFu.Providers
 
         }
 
+        public static string FormatName(string s)
+        {
+            return "\"" + s + "\"";
+        }
+
        public override DbEngine ProviderType
        {
            get { return DbEngine.Oracle;}
+       }
+
+       protected override IDatabaseTools InitTools(DbAccess db)
+       {
+           throw new NotImplementedException("Oracle is not supported yet");
        }
 
        public override LastInsertId ExecuteInsert(SqlStatement sql, string idKey)

@@ -1,5 +1,6 @@
 ﻿using SqlFu;
 using SqlFu.Providers;
+using SqlFu.Providers.SqlServer;
 using Xunit;
 using System;
 using System.Diagnostics;

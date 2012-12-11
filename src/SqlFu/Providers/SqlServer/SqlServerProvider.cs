@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Concurrent;
 using System.Data;
+using System.Linq;
 using System.Text.RegularExpressions;
+using SqlFu.DDL;
+using SqlFu.DDL.Generators.SqlServer;
 
-namespace SqlFu.Providers
+namespace SqlFu.Providers.SqlServer
 {
     public class SqlServerProvider:AbstractProvider
     {
@@ -33,9 +36,22 @@ namespace SqlFu.Providers
             get { return DbEngine.SqlServer;}
         }
 
+        protected override IDatabaseTools InitTools(DbAccess db)
+        {
+            return  new SqlServerDatabaseTools(db);
+        }
+
+
         public override string EscapeName(string s)
         {
-            return "[" + s + "]";
+            return EscapeIdentifier(s);
+        }
+
+        public static string EscapeIdentifier(string s)
+        {
+            s.MustNotBeEmpty();
+            if (!s.Contains(".")) return "[" + s + "]";
+            return string.Join(".", s.Split('.').Select(d => "[" + d + "]"));
         }
 
         static Regex rxOrderBy = new Regex(@"\bORDER\s+BY\s+(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\w\(\)\.])+(?:\s+(?:ASC|DESC))?(?:\s*,\s*(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\w\(\)\.])+(?:\s+(?:ASC|DESC))?)*", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Singleline | RegexOptions.Compiled);
@@ -61,7 +77,7 @@ namespace SqlFu.Providers
             var body = GetPagingBody(sql,out fromidx);
             selecSql = sql;
             var all = rxOrderBy.Matches(body);
-            string orderBy = "select null";
+            string orderBy = "order by (select null)";
             if (all.Count>0)
             {
                 var m = all[all.Count-1];
@@ -94,6 +110,18 @@ sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})",orderBy,columns,body,
                 param.Size = Math.Max((value as string).Length + 1, 4000);
             }
 
+            //else
+            //{
+            //    if (tp==typeof(DateTime))
+            //    {
+            //        var date = (DateTime) value;
+            //        if (date<new DateTime(1753,1,1))
+            //        {
+                        
+            //        }
+            //    }
+            //}
+
             if (tp.Name == "SqlGeography") //SqlGeography is a CLR Type
             {
                 dynamic p = param;
@@ -119,9 +147,11 @@ sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})",orderBy,columns,body,
             }                        
         }
 
+        public const string ParameterPrefix = "@";
+
         public override string ParamPrefix
         {
-            get { return "@"; }
+            get { return ParameterPrefix; }
         }
     }
 }

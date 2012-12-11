@@ -1,4 +1,6 @@
 using System.Data;
+using System.Data.Common;
+using SqlFu.DDL;
 
 namespace SqlFu
 {
@@ -6,7 +8,7 @@ namespace SqlFu
     {
         string EscapeName(string s);
         LastInsertId ExecuteInsert(SqlStatement sql, string idKey);
-        IDbConnection CreateConnection();
+        DbConnection CreateConnection();
         string ParamPrefix { get; }
         void MakePaged(string sql, out string selecSql, out string countSql);
 
@@ -14,5 +16,6 @@ namespace SqlFu
         string FormatSql(string sql, params string[] paramNames);
         void OnCommandExecuting(IDbCommand cmd);
         DbEngine ProviderType { get; }
+        IDatabaseTools GetTools(DbAccess db);
     }
 }

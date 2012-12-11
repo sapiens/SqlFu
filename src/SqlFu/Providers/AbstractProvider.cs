@@ -3,6 +3,7 @@ using System.Collections;
 using System.Data;
 using System.Data.Common;
 using System.Reflection;
+using SqlFu.DDL;
 
 namespace SqlFu.Providers
 {
@@ -23,7 +24,7 @@ namespace SqlFu.Providers
         public abstract LastInsertId ExecuteInsert(SqlStatement sql, string idKey);
 
 
-        public IDbConnection CreateConnection()
+        public DbConnection CreateConnection()
         {
             return _factory.CreateConnection();
         }
@@ -80,5 +81,18 @@ namespace SqlFu.Providers
         }
 
         public abstract DbEngine ProviderType { get; }
+        private IDatabaseTools _tools;
+        public IDatabaseTools GetTools(DbAccess db)
+        {
+        
+                if (_tools==null)
+                {
+                    _tools = InitTools(db);
+                }
+                return _tools;
+         
+        }
+
+        protected abstract IDatabaseTools InitTools(DbAccess db);
     }
 }

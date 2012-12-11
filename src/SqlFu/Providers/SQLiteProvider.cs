@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Data;
+using SqlFu.DDL;
+using SqlFu.DDL.Generators.Sqlite;
 
 namespace SqlFu.Providers
 {
@@ -39,6 +41,16 @@ namespace SqlFu.Providers
         public override DbEngine ProviderType
         {
             get { return DbEngine.SQLite;}
+        }
+
+        protected override IDatabaseTools InitTools(DbAccess db)
+        {
+            return new SqliteDatabaseTools(db);
+        }
+
+        public static string EscapeIdentifier(string name)
+        {
+            return "\"" + name + "\"";
         }
 
         public override LastInsertId ExecuteInsert(SqlStatement sql, string idKey)

@@ -1,4 +1,8 @@
+using System;
 using System.Data;
+using System.Linq;
+using SqlFu.DDL;
+using SqlFu.DDL.Generators.MySql;
 
 namespace SqlFu.Providers
 {
@@ -11,9 +15,17 @@ namespace SqlFu.Providers
 
         public override string EscapeName(string s)
         {
-            return "`" + s + "`";
+            return EscapeIdentifier(s);
         }
         
+        public static string EscapeIdentifier(string s)
+        {
+            s.MustNotBeEmpty();
+            return "`" + s + "`";
+            //if (!s.Contains(".")) 
+            //return string.Join(".", s.Split('.').Select(d => "`" + d + "`"));            
+        }
+
         public override LastInsertId ExecuteInsert(SqlStatement sql, string idKey)
         {
             sql.Sql += ";SELECT LAST_INSERT_ID()";
@@ -39,6 +51,11 @@ namespace SqlFu.Providers
         public override DbEngine ProviderType
         {
             get { return DbEngine.MySql;}
+        }
+
+        protected override IDatabaseTools InitTools(DbAccess db)
+        {
+            return new MysqlDatabaseTools(db);
         }
 
         public override void MakePaged(string sql, out string selecSql, out string countSql)
