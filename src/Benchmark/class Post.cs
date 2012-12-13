@@ -1,6 +1,7 @@
 ﻿using System;
 using CavemanTools.Model;
 using ServiceStack.DataAnnotations;
+using SqlFu;
 
 namespace Tests
 {
@@ -9,7 +10,7 @@ namespace Tests
         Post,
         Page
     }
-    //[Table("sfPosts")]
+    [Table("sfPosts")]
     [PetaPoco.PrimaryKey("Id", autoIncrement = true)]
     class sfPosts
     {

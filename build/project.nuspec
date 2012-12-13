@@ -8,9 +8,9 @@
     <owners>Mihai Mogosanu</owners>
     <projectUrl>https://github.com/sapiens/SqlFu</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>dapper fast, versatile micro-orm designed for flexibility and ease of use. It supports multi poco mapping by convention, database migration , DDL builder and pagination out of the box.</description>
+    <description>Fast, versatile micro-orm designed for flexibility and ease of use. Featuring Multi Poco Mapping by convention, Database Migration support, DDL Fluent Builder and Query Pagination out of the box.</description>
     <language>en-US</language>
-    <tags>micro-orm sql orm database migration ddl</tags>
+    <tags>micro-orm sql orm database migration ddl builder query pagination</tags>
 	<releaseNotes>New: Database migration support, DDL Builder, StoredProcedure support</releaseNotes>
 	<dependencies>
 		<dependency id="CavemanTools" version="" />

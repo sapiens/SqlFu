@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>DbExtensions</id>
+    <version>4.0.0</version>
+    <authors>Max Toro Q.</authors>
+    <owners>Max Toro Q.</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>https://github.com/maxtoroq/DbExtensions</projectUrl>
+    <iconUrl>http://dbextensions.sourceforge.net/nuget/icon_nuget.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Extension methods for ADO.NET, CRUD and dynamic SQL components.</description>
+    <releaseNotes>- New SqlSet API for making queries
+         - DataAccessObject split into Database, DatabaseConfiguration and SqlTable
+         - IDataRecord.Get{TypeName}(string) extension methods
+         - MapXml methods now return XmlReader, and take XmlMappingSettings parameter
+         - Unified extension methods class</releaseNotes>
+    <copyright>© 2009-2012 Max Toro Q.</copyright>
+    <tags>ado.net orm micro-orm extension-methods sql</tags>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Core" targetFramework="" />
+      <frameworkAssembly assemblyName="System.Data" targetFramework="" />
+      <frameworkAssembly assemblyName="System.Data.Linq" targetFramework="" />
+    </frameworkAssemblies>
+  </metadata>
+</package>

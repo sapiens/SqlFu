@@ -29,6 +29,7 @@ _ReSharper*/
 [Tt]est[Rr]esult*
 [Tt]emp
 *.nupkg
+nugets
 =======
 # Build Folders (you can keep bin if you'd like, to store dlls and pdbs)
 bin
