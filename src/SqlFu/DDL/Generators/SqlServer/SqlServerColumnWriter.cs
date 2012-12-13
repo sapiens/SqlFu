@@ -64,7 +64,7 @@ namespace SqlFu.DDL.Generators.SqlServer
 
         protected override string Binary(string size)
         {
-            if (size.IsNullOrEmpty()) size = "1";
+            if (size.IsNullOrEmpty()) size = "max";
             return "varbinary(" + size + ")";
         }
 

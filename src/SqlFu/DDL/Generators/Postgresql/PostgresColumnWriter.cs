@@ -95,7 +95,7 @@ namespace SqlFu.DDL.Generators.Postgresql
 
         protected override string Binary(string size)
         {
-            if (size.IsNullOrEmpty()) return "bytea";
+            if (size.IsNullOrEmpty() || size.Equals("max")) return "bytea";
             return "bytea(" + size + ")";
         }
 
