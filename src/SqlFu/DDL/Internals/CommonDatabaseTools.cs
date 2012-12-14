@@ -48,7 +48,7 @@ namespace SqlFu.DDL.Internals
 
         protected abstract IGenerateDDL GetDDLWriter();
 
-        public IModifyTable GetAlterTableBuidler(string name)
+        public IModifyTable GetAlterTableBuilder(string name)
         {
             return new ModifyTableBuilder(Db,GetDDLWriter(),name);
         }

@@ -17,7 +17,7 @@ namespace Tests.DDL
         {
             Db = Setup.GetDb(engine: Engine);
             SetupTable();
-            Table = Db.DatabaseTools.GetAlterTableBuidler(TableName);
+            Table = Db.DatabaseTools.GetAlterTableBuilder(TableName);
         }
 
         void SetupTable()
@@ -94,7 +94,7 @@ namespace Tests.DDL
         {
             Table.Constraints.AddForeignKeyOn("ParentId", "users2", "Id", keyName: "fk_users");
             Table.ExecuteDDL();
-            Table = Db.DatabaseTools.GetAlterTableBuidler(TableName);
+            Table = Db.DatabaseTools.GetAlterTableBuilder(TableName);
             Table.Constraints.Drop("fk_users").WithoutOptions().ExecuteDDL();
             Assert.False(Db.DatabaseTools.ConstraintExists("fk_users"));
         }

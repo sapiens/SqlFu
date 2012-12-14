@@ -30,6 +30,11 @@ namespace SqlFu.DDL
 
     public interface ISupportSpecificConstraintsOptions
     {
+        /// <summary>
+        /// Customize options for a specific db engine
+        /// </summary>
+        /// <param name="engine"></param>
+        /// <returns></returns>
         IDefineSpecificConstraintsOptions IfDatabaseIs(DbEngine engine);
     }
 
@@ -38,7 +43,17 @@ namespace SqlFu.DDL
     {
         IDefineSpecificConstraintsOptions PrimaryKeyOptions(params DbSpecificOption[] options);
         IDefineSpecificConstraintsOptions UniqueOptions(string keyName, params DbSpecificOption[] options);
+        /// <summary>
+        /// Adds a new constraint when the specified db engine is used
+        /// </summary>
+        /// <param name="definition">Constraint definition ddl</param>
+        /// <returns></returns>
         IDefineSpecificConstraintsOptions AddConstraint(string definition);
+        /// <summary>
+        /// Redefine the constraint for the specific db engine
+        /// </summary>
+        /// <param name="definition">Constraint definition ddl</param>
+        /// <returns></returns>
         IDefineSpecificConstraintsOptions Redefine(string definition);
     }
 }

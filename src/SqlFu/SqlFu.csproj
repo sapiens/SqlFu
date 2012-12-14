@@ -49,7 +49,6 @@
     <Compile Include="DDL\Generators\AbstractCheckWriter.cs" />
     <Compile Include="DDL\Generators\AbstractColumnChangesWriter.cs" />
     <Compile Include="DDL\Generators\AbstractChangedColumnsManager.cs" />
-    <Compile Include="DDL\Generators\ConstraintsWriterManager.cs" />
     <Compile Include="DDL\Generators\AbstractConstraintWriter.cs" />
     <Compile Include="DDL\Generators\AbstractDropColumnWriter.cs" />
     <Compile Include="DDL\Generators\AbstractDropConstraintWriter.cs" />
