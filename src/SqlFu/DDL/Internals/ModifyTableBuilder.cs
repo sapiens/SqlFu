@@ -32,7 +32,12 @@ namespace SqlFu.DDL.Internals
 
         public void ExecuteDDL()
         {
-            _db.ExecuteCommand(GetSql());
+            using (var t = _db.BeginTransaction())
+            {
+                _db.ExecuteCommand(GetSql());
+                t.Commit();
+            }
+            
         }
 
         //public ISupportSpecificTableOptions SetOptionsFor(DbEngine engine, params string[] options)
