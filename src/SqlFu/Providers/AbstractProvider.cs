@@ -46,6 +46,8 @@ namespace SqlFu.Providers
             return sql.Substring(fromidx);
         }
 
+        
+
         public abstract void MakePaged(string sql, out string selecSql, out string countSql);
 
         public virtual void SetupParameter(IDbDataParameter param, string name, object value)

@@ -90,7 +90,7 @@ namespace SqlFu.Providers.SqlServer
             var columns = sql.Substring(sidx+7, fromidx-sidx-7);
             selecSql =
                 string.Format(
-                    @"SELECT * FROM 
+                    @"SELECT {1} FROM 
 (SELECT ROW_NUMBER() OVER ({0}) sqlfu_rn, {1} {2}) 
 sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})",orderBy,columns,body,PagedSqlStatement.SkipParameterName,PagedSqlStatement.TakeParameterName);
             //cache it

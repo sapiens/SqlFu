@@ -70,6 +70,10 @@ namespace SqlFu
             return d;
         };
 
+        static Func<IDataReader, byte[]> _pocoByteArray = rd =>
+            {
+                return (byte[])rd[0];
+            };
 
         internal static Func<IDataReader,T> GetPocoMapper<T>(IDataReader rd,string sql)
         {
@@ -82,6 +86,11 @@ namespace SqlFu
                  return (Func<IDataReader, T>)(object)_dynamicPoco;
              }
              
+            if (poco == typeof (byte[]))
+            {
+                return (Func<IDataReader, T>) (object) _pocoByteArray;
+            }
+
             //try custom mappers
              object rez;
             if (_customMappers.TryGetValue(poco,out rez))
