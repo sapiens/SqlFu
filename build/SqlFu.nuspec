@@ -12,11 +12,6 @@
     <language>en-US</language>
     <tags>micro-orm sql orm database migration ddl builder query pagination</tags>
 	<releaseNotes>New: Database migration support, DDL Builder, StoredProcedure support</releaseNotes>
-	<dependencies>
-		<dependency id="CavemanTools" version="" />
-	</dependencies>
-
-	
      </metadata>
 
 </package>
