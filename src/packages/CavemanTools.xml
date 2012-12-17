@@ -59,6 +59,11 @@
             <param name="t"></param>
             <returns></returns>
         </member>
+        <member name="M:CavemanTools.Infrastructure.DependencyContainerWrapper.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
         <member name="M:CavemanTools.Infrastructure.IQueueCommands.Queue(CavemanTools.Infrastructure.MessagesBus.ICommand)">
             <summary>
             Queue the command to be executed asap
@@ -84,11 +89,12 @@
             Time period to check for new items
             </summary>
         </member>
-        <member name="M:CavemanTools.Infrastructure.ISaveQueueState.GetItems(System.DateTime)">
+        <member name="M:CavemanTools.Infrastructure.ISaveQueueState.GetItems(System.DateTime,System.Int32)">
             <summary>
             Gets items with execution date older than date
             </summary>
             <param name="date"></param>
+            <param name="maxItems"></param>
             <returns></returns>
         </member>
         <member name="M:CavemanTools.Infrastructure.MessagesBus.ICommand.Enrol(CavemanTools.Infrastructure.MessagesBus.IEvent)">
@@ -112,6 +118,14 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="constructor"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.MessagesBus.IConfigureMessageBus.RegisterHandlerType(System.Type,System.Type)">
+            <summary>
+            The handler class must have public visibility
+            </summary>
+            <param name="msgType"></param>
+            <param name="handlerType"></param>
             <returns></returns>
         </member>
         <member name="M:CavemanTools.Infrastructure.MessagesBus.IDispatchMessages.PublishAsync(CavemanTools.Infrastructure.MessagesBus.IEvent[])">
@@ -152,6 +166,16 @@
             Do message store cleanup
             </summary>
         </member>
+        <member name="M:CavemanTools.Infrastructure.MessagesBus.Internals.HandlerTypeInvoker.ContainerBasedInstance.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.MessagesBus.Internals.HandlerInstanceInvoker.DisposableHandlerInstance.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
         <member name="M:CavemanTools.Infrastructure.MessagesBus.Internals.MessageHandlerDiscoverer.GetImplementedInterfaces(System.Type,System.Type)">
             <summary>
             Returns the interfaces types usable by the message bus.
@@ -160,11 +184,26 @@
             <param name="msgType">Only interfaces handling this message type</param>
             <returns></returns>
         </member>
+        <member name="M:CavemanTools.Infrastructure.MessagesBus.MessageBusFactoryExtensions.UseInMemoryPersistence(CavemanTools.Infrastructure.MessagesBus.IConfigureMessageBusFactory)">
+            <summary>
+            Just for testing purposes
+            </summary>
+            <param name="config"></param>
+            <returns></returns>
+        </member>
         <member name="M:CavemanTools.Infrastructure.MessagesBus.MessageBusFactoryExtensions.UseDefaultTypeActivator(CavemanTools.Infrastructure.MessagesBus.IConfigureMessageBusFactory)">
             <summary>
             Configures the message bus factory to use the default type activator as the dependency resolver.
             It is STRONGLY suggested that you use a real DI Container in production.
             </summary>
+            <param name="config"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.MessagesBus.MessageBusFactoryExtensions.UseHandlersFrom``1(CavemanTools.Infrastructure.MessagesBus.IConfigureMessageBusFactory)">
+            <summary>
+            Register the provided type as a handler. The handler must handle at least one message type
+            </summary>
+            <typeparam name="T"></typeparam>
             <param name="config"></param>
             <returns></returns>
         </member>
@@ -180,6 +219,44 @@
             Publishes asynchronously the events
             </summary>
             <param name="events"></param>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.MessagesBus.Internals.SubscriptionManager.GetEventExecutor(System.Type)">
+            <summary>
+            Creates one new if not found
+            </summary>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.MessagesBus.Saga.IFindSaga`1.Using`1.FindSaga(`1)">
+            <summary>
+            If saga is not found, a new instance must be returned
+            </summary>
+            <param name="evnt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.MessagesBus.Saga.IGenericSagaRepository.GetSaga(System.String,System.Type)">
+            <summary>
+            If saga doesn't exists then return a new instance of saga.
+            THe new instance must have the saga id and correlation id set
+            </summary>
+            <param name="correlationId"></param>
+            <param name="sagaType"></param>
+            <returns></returns>
+        </member>
+        <member name="P:CavemanTools.Infrastructure.MessagesBus.Saga.IIdentifySaga.SagaCorrelationId">
+            <summary>
+            When using the generic saga repository, this must have a value which identifies the correct saga
+            </summary>
+        </member>
+        <member name="P:CavemanTools.Infrastructure.MessagesBus.Saga.Saga`1.Data">
+            <summary>
+            Gets or sets the saga state
+            </summary>
+        </member>
+        <member name="P:CavemanTools.Infrastructure.MessagesBus.Saga.Saga`1.Bus">
+            <summary>
+            Bus for sending commands
+            </summary>
         </member>
         <member name="P:CavemanTools.Infrastructure.QueueItem.ExecuteAt">
             <summary>
@@ -2196,7 +2273,7 @@
         </member>
         <member name="M:System.Reflection.ReflectionUtils.GetFullTypeName(System.Type)">
             <summary>
-            Returns the full name of type, including assembly, i.e: namespace.type, assembly
+            Returns the full name of type, including assembly but not version, public key etc, i.e: namespace.type, assembly
             </summary>
             <param name="t">Type</param>
             <returns></returns>
