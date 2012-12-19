@@ -45,7 +45,7 @@ namespace Tests
                 };
 
                 d.OnBeginTransaction = cmd => Console.WriteLine("Begin trans");
-                d.OnEndTransaction = (cmd, s) => Console.WriteLine("End trans: {0}", s);
+                d.OnEndTransaction = (cmd, s) => Console.WriteLine("End trans: {0} . Transaction level :{1}", s?"Committed":"Rollback",cmd.TransactionDepth);
             }
 
             return d;

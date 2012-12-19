@@ -3,7 +3,7 @@ using CavemanTools;
 
 namespace SqlFu.Migrations
 {
-    public abstract class AbstractMigrationTask:IMigrateDatabase
+    public abstract class AbstractMigrationTask:IMigrationTask
     {
         public AbstractMigrationTask()
         {
@@ -12,10 +12,14 @@ namespace SqlFu.Migrations
             {
                 CurrentVersion = attr.From;
                 NextVersion = attr.To;
+                SchemaName = attr.SchemaName;
+                Priority = attr.Priority;
             }
         }
         public SemanticVersion CurrentVersion { get; private set; }
         public SemanticVersion NextVersion { get; private set; }
-        public abstract void Execute(IAccessDb db);    
+        public string SchemaName { get; private set; }
+        public abstract void Execute(IAccessDb db);
+        public int Priority { get; private set; }
     }
 }

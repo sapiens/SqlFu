@@ -59,6 +59,20 @@
             <param name="t"></param>
             <returns></returns>
         </member>
+        <member name="M:CavemanTools.Infrastructure.IResolveDependencies.ResolveOptional(System.Type)">
+            <summary>
+            If type is not registered return null
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.DependencyContainerWrapper.ResolveOptional(System.Type)">
+            <summary>
+            If type is not registered return null
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
         <member name="M:CavemanTools.Infrastructure.DependencyContainerWrapper.Dispose">
             <summary>
             Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -118,6 +132,27 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="constructor"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.MessagesBus.IConfigureMessageBusFactory.SetGlobalErrorHandler(System.Action{System.Exception})">
+            <summary>
+            All unhandled exceptions go there
+            </summary>
+            <param name="errorHandler"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.MessagesBus.IConfigureMessageBusFactory.ScanForHandlers(System.Reflection.Assembly[])">
+            <summary>
+            Autoregister message handlers from the specified assemblies
+            </summary>
+            <param name="assemblies"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.MessagesBus.IConfigureMessageBusFactory.UseHandlersFrom(System.Type[])">
+            <summary>
+            Specified tyeps contain message handlers
+            </summary>
+            <param name="types"></param>
             <returns></returns>
         </member>
         <member name="M:CavemanTools.Infrastructure.MessagesBus.IConfigureMessageBus.RegisterHandlerType(System.Type,System.Type)">
@@ -214,6 +249,14 @@
             <param name="config"></param>
             <returns></returns>
         </member>
+        <member name="M:CavemanTools.Infrastructure.MessagesBus.MessageBusFactoryExtensions.UseResolverToPopulateDependencies(CavemanTools.Infrastructure.MessagesBus.IConfigureMessageBusFactory,CavemanTools.Infrastructure.IContainerScope)">
+            <summary>
+            Implementations of <see cref="T:CavemanTools.Logging.ILogWriter"/> and <see cref="T:CavemanTools.Infrastructure.MessagesBus.IStoreMessageBusState"/> must be registered in the container
+            </summary>
+            <param name="config"></param>
+            <param name="resolver"></param>
+            <returns></returns>
+        </member>
         <member name="M:CavemanTools.Infrastructure.MessagesBus.LocalMessageBus.PublishAsync(CavemanTools.Infrastructure.MessagesBus.IEvent[])">
             <summary>
             Publishes asynchronously the events
@@ -226,6 +269,11 @@
             </summary>
             <param name="t"></param>
             <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.MessagesBus.Internals.SubscriptionManager.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
         </member>
         <member name="M:CavemanTools.Infrastructure.MessagesBus.Saga.IFindSaga`1.Using`1.FindSaga(`1)">
             <summary>
@@ -846,12 +894,13 @@
             <param name="source">Function to execute</param>
             <returns></returns>
         </member>
-        <member name="M:System.Reflection.AssemblyExtensions.GetTypesImplementing``1(System.Reflection.Assembly)">
+        <member name="M:System.Reflection.AssemblyExtensions.GetTypesImplementing``1(System.Reflection.Assembly,System.Boolean)">
             <summary>
             Returns public types implementing T
             </summary>
             <typeparam name="T"></typeparam>
             <param name="asm"></param>
+            <param name="instantiable">True to return only types that can be instantiated i.e no interfaces and no abstract classes</param>
             <returns></returns>
         </member>
         <member name="M:System.Reflection.AttributeUtils.GetCustomAttributes``1(System.Reflection.ICustomAttributeProvider)">

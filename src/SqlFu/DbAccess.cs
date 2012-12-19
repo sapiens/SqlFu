@@ -255,7 +255,7 @@ namespace SqlFu
             return new MyTransactionWrapper(this);
         }
 
-        private void Commit()
+        internal void Commit()
         {
             EnsureTransaction();
             _tLevel--;
@@ -267,7 +267,7 @@ namespace SqlFu
             OnEndTransaction(this, true);
         }
 
-        private void Rollback()
+        internal void Rollback()
         {
             if (_trans != null)
             {

@@ -2,7 +2,7 @@ using CavemanTools;
 
 namespace SqlFu.Migrations
 {
-    public interface IMigrateDatabase
+    public interface IMigrationTask
     {
         /// <summary>
         /// Gets semantic version to upgrade from
@@ -12,6 +12,13 @@ namespace SqlFu.Migrations
         /// Gets semantic version to upgrade to
         /// </summary>
         SemanticVersion NextVersion { get; }
+
+        string SchemaName { get; }
+        /// <summary>
+        /// Task is executed automatically in a transaction
+        /// </summary>
+        /// <param name="db"></param>
         void Execute(IAccessDb db);
+        int Priority { get; }
     }
 }

@@ -82,6 +82,7 @@
     <Compile Include="class Post.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FakeTransaction.cs" />
     <Compile Include="ComplexMapperTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -133,8 +134,16 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Migrations\AutomaticMigrationTests.cs" />
+    <Compile Include="Migrations\Data\InstallerTask.cs" />
+    <Compile Include="Migrations\Data\Migration1.cs" />
+    <Compile Include="Migrations\Data\Migration2.cs" />
+    <Compile Include="Migrations\FakeRunner.cs" />
+    <Compile Include="Migrations\MigrationMiscTests.cs" />
     <Compile Include="Migrations\MIgrationsConfigTests.cs" />
-    <Compile Include="Migrations\MigrationTests.cs" />
+    <Compile Include="Migrations\MigrationsManagerTests.cs" />
+    <Compile Include="Migrations\MigrationTaskRunnerTests.cs" />
+    <Compile Include="Migrations\SchemaMigrationExecutorTests.cs" />
+    <Compile Include="Migrations\Data\OtherMigration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Reflection;
+using CavemanTools.Infrastructure;
 using CavemanTools.Logging;
 using Moq;
 using SqlFu;
@@ -21,13 +22,34 @@ namespace Tests.Migrations
             _db = db.Object;
         }
 
-        [Fact]
-        public void migration_config()
+        IManageMigrations BuildManager()
         {
-            var runner=DatabaseMigration.ConfigureFor(_db)
+            return DatabaseMigration.ConfigureFor(_db)
                 .SearchAssembly(Assembly.GetExecutingAssembly())
-                .UseLogger(new ConsoleLogger()).Build();
-            Assert.Equal(3,(runner as MigrationsRunner).Tasks.Count());
+                .WithLogger(new ConsoleLogger())
+                .WithResolver(ActivatorContainer.Instance)
+                .Build();
+        }
+
+        [Fact]
+        public void two_schemas_found()
+        {
+            var manager = BuildManager();
+            Assert.Equal(2,manager.Schemas.Count());
+        }
+
+        [Fact]
+        public void testschema_has_three_tasks()
+        {
+            var test = BuildManager().GetSchemaMigrator("TestSchema") as SchemaMigrationExecutor;
+            Assert.Equal(3, test.Tasks.Count());
+        }
+
+        [Fact]
+        public void other_has_three_tasks()
+        {
+            var other = BuildManager().GetSchemaMigrator("Other") as SchemaMigrationExecutor;
+            Assert.Equal(1, other.Tasks.Count());
         }
 
         [Fact]
@@ -36,7 +58,9 @@ namespace Tests.Migrations
             Assert.Throws<MigrationNotFoundException>(
                 ()=>DatabaseMigration.ConfigureFor(_db)
                 .SearchAssembly(Assembly.GetCallingAssembly())
-                .UseLogger(new ConsoleLogger()).Build());
+                .WithLogger(new ConsoleLogger())
+                .WithResolver(ActivatorContainer.Instance)
+                .Build());
         }
 
         private void Write(string format, params object[] param)

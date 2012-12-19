@@ -44,6 +44,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DatabaseUnitOfWork.cs" />
     <Compile Include="DbAccess.cs" />
     <Compile Include="DbEngine.cs" />
     <Compile Include="DDL\Generators\AbstractCheckWriter.cs" />
@@ -165,13 +166,20 @@
     <Compile Include="InsertAsStringAttribute.cs" />
     <Compile Include="InvalidPagedSqlException.cs" />
     <Compile Include="Migrations\AbstractMigrationTask.cs" />
-    <Compile Include="Migrations\AutomaticMigration.cs" />
+    <Compile Include="Migrations\Automatic\AutomaticMigration.cs" />
+    <Compile Include="Migrations\Automatic\AutomaticMigrationSetupTask.cs" />
+    <Compile Include="Migrations\Automatic\IAutomaticMigration.cs" />
+    <Compile Include="Migrations\Automatic\MigrationTrack.cs" />
     <Compile Include="Migrations\DatabaseMigration.cs" />
     <Compile Include="Migrations\IConfigureMigrationsRunner.cs" />
-    <Compile Include="Migrations\IMigrateDatabase.cs" />
+    <Compile Include="Migrations\IManageMigrations.cs" />
+    <Compile Include="Migrations\IMigrationTask.cs" />
+    <Compile Include="Migrations\IMigrateSchema.cs" />
     <Compile Include="Migrations\IRunMigrations.cs" />
     <Compile Include="Migrations\MigrationNotFound.cs" />
-    <Compile Include="Migrations\MigrationsRunner.cs" />
+    <Compile Include="Migrations\MigrationsManager.cs" />
+    <Compile Include="Migrations\MigrationTaskRunner.cs" />
+    <Compile Include="Migrations\SchemaMigrationExecutor.cs" />
     <Compile Include="Migrations\MigrationAttribute.cs" />
     <Compile Include="PagedSqlStatement.cs" />
     <Compile Include="DDL\Generators\CommonDDLWriter.cs" />

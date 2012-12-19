@@ -1,11 +1,10 @@
+﻿using CavemanTools.Infrastructure.MessagesBus;
+
 namespace SqlFu.Migrations
 {
     public interface IRunMigrations
     {
-        void Run(params IMigrateDatabase[] tasks);
-        void Migrate(string currentVersion, string nextVersion);
-        void MigrateToLatestFrom(string currentVersion);
-        string LatestVersionAvailable { get; }
-        void InstallSchema();                                              
+        void Run(params IMigrationTask[] tasks);
+        IUnitOfWork StartUnitOfWork();
     }
 }
