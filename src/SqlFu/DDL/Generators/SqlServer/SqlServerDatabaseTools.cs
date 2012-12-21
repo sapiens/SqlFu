@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SqlFu.DDL.Internals;
 using SqlFu.Providers.SqlServer;
-using System;
 
 namespace SqlFu.DDL.Generators.SqlServer
 {
@@ -24,7 +24,7 @@ namespace SqlFu.DDL.Generators.SqlServer
                     @"SELECT
     count(*)
     FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS 
-    WHERE CONSTRAINT_NAME =@0 and constraint_schema=@1",name,schema??"dbo");
+    WHERE CONSTRAINT_NAME =@0 and constraint_schema=@1", name, schema ?? "dbo");
         }
 
         public override bool IndexExists(string name, string table, string schema = null)
@@ -36,7 +36,6 @@ namespace SqlFu.DDL.Generators.SqlServer
     count(*)
     FROM sys.indexes
     WHERE name=@0", name);
-            
         }
 
         public override bool TableHasColumn(string table, string column, string schema = null)
@@ -44,7 +43,9 @@ namespace SqlFu.DDL.Generators.SqlServer
             table.MustNotBeEmpty();
             column.MustNotBeEmpty();
             return
-                Db.GetValue<bool>(@"select count(*) from information_schema.columns where table_schema=@0 and table_name=@1 and column_name=@2",schema??"dbo",table,column);
+                Db.GetValue<bool>(
+                    @"select count(*) from information_schema.columns where table_schema=@0 and table_name=@1 and column_name=@2",
+                    schema ?? "dbo", table, column);
         }
 
         public override bool TableHasPrimaryKey(string table, string schema = null)
@@ -56,7 +57,7 @@ FROM    sys.indexes AS i INNER JOIN
         sys.index_columns AS ic ON  i.OBJECT_ID = ic.OBJECT_ID
                                 AND i.index_id = ic.index_id
 where  i.is_primary_key = 1 and OBJECT_NAME(ic.OBJECT_ID)=@0
-",table);
+", table);
         }
 
         public override string GetPrimaryKeyName(string tableName, string schema = null)
@@ -72,6 +73,7 @@ where  i.is_primary_key = 1 and OBJECT_NAME(ic.OBJECT_ID)=@0
         }
 
         #region Maybe useful sql
+
         /*
          * 
          * SELECT  count(*)i.name AS IndexName,
@@ -82,14 +84,13 @@ FROM    sys.indexes AS i INNER JOIN
                                 AND i.index_id = ic.index_id
 where  i.is_primary_key = 1 and OBJECT_NAME(ic.OBJECT_ID)='Shops'
          */
-        
+
         #endregion
 
         public override void DropTable(string tableName)
         {
             if (TableExists(tableName)) base.DropTable(tableName);
         }
-
 
 
         public override bool TableExists(string name, string schema = null)
@@ -120,4 +121,4 @@ where  i.is_primary_key = 1 and OBJECT_NAME(ic.OBJECT_ID)='Shops'
             return new SqlServerDDLWriter(Db);
         }
     }
-} 
+}

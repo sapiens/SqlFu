@@ -2,7 +2,7 @@ namespace SqlFu.DDL
 {
     public class KeyValueOption : DbSpecificOption
     {
-        public KeyValueOption(string name,object value, DbEngine engine) : base(name, engine)
+        public KeyValueOption(string name, object value, DbEngine engine) : base(name, engine)
         {
             Symbol = " ";
             Value = value;

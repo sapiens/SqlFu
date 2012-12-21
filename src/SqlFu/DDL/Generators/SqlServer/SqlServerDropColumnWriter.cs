@@ -3,7 +3,7 @@ using SqlFu.Providers.SqlServer;
 
 namespace SqlFu.DDL.Generators.SqlServer
 {
-    internal class SqlServerDropColumnWriter:AbstractDropColumnWriter
+    internal class SqlServerDropColumnWriter : AbstractDropColumnWriter
     {
         public SqlServerDropColumnWriter(StringBuilder builder) : base(builder, DbEngine.SqlServer)
         {

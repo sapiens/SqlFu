@@ -1,5 +1,4 @@
 using System.Text;
-using SqlFu.DDL.Internals;
 using SqlFu.Providers.SqlServer;
 
 namespace SqlFu.DDL.Generators.SqlServer
@@ -9,13 +8,11 @@ namespace SqlFu.DDL.Generators.SqlServer
         public SqlServerForeignKeyWriter(StringBuilder builder)
             : base(builder, DbEngine.SqlServer)
         {
-
         }
 
         public SqlServerForeignKeyWriter(StringBuilder builder, DbEngine engine)
             : base(builder, engine)
         {
-
         }
 
 
@@ -29,7 +26,7 @@ namespace SqlFu.DDL.Generators.SqlServer
             return SqlServerProvider.EscapeIdentifier(name);
         }
 
-       protected override void WriteColumnsNames(string columns, StringBuilder builder)
+        protected override void WriteColumnsNames(string columns, StringBuilder builder)
         {
             SqlServerDDLWriter.WriteColumnsNames(columns, Builder);
         }

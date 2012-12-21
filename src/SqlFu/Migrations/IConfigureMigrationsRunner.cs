@@ -1,4 +1,3 @@
-using System;
 using System.Reflection;
 using CavemanTools.Infrastructure;
 using CavemanTools.Logging;
@@ -15,12 +14,12 @@ namespace SqlFu.Migrations
         IManageMigrations Build();
 
         IAutomaticMigration BuildAutomaticMigrator();
+
         /// <summary>
         /// Tries to install/update all the specified schemas.
         /// If no schema is specified it tries to process all schemas found
         /// </summary>
         /// <param name="schemas"></param>
         void PerformAutomaticMigrations(params string[] schemas);
-        
     }
 }

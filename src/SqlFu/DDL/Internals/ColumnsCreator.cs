@@ -3,7 +3,7 @@ using System.Data;
 
 namespace SqlFu.DDL.Internals
 {
-    class ColumnsCreator : IDefineSpecificColumnsOptions,IConfigureColumns
+    internal class ColumnsCreator : IDefineSpecificColumnsOptions, IConfigureColumns
     {
         private readonly TableSchema _table;
 
@@ -13,6 +13,7 @@ namespace SqlFu.DDL.Internals
         }
 
         private DbEngine? _curentEngine;
+
         public IDefineSpecificColumnsOptions IfDatabaseIs(DbEngine engine)
         {
             _curentEngine = engine;
@@ -20,18 +21,20 @@ namespace SqlFu.DDL.Internals
         }
 
         private ColumnDefinition _currentColumn;
-        public IConfigureColumns Add(string name, DbType type, string size = "", bool isNullable = true, string defaultValue = "", string collation = "", bool autoIncrement = false)
+
+        public IConfigureColumns Add(string name, DbType type, string size = "", bool isNullable = true,
+                                     string defaultValue = "", string collation = "", bool autoIncrement = false)
         {
-            var col = new ColumnDefinition()
-            {
-                Name = name,
-                Type = type,
-                Size = size,
-                DefaultValue = defaultValue,
-                IsNullable = isNullable,
-                IsIdentity = autoIncrement,
-                Collate = collation
-            };
+            var col = new ColumnDefinition
+                {
+                    Name = name,
+                    Type = type,
+                    Size = size,
+                    DefaultValue = defaultValue,
+                    IsNullable = isNullable,
+                    IsIdentity = autoIncrement,
+                    Collate = collation
+                };
             _currentColumn = col;
             _table.Columns.AddColumn(col);
             return this;
@@ -40,7 +43,7 @@ namespace SqlFu.DDL.Internals
         public IDefineSpecificColumnsOptions RedefineColumnAs(string definition)
         {
             definition.MustNotBeEmpty();
-            _currentColumn.Redefine(_curentEngine.Value,definition);
+            _currentColumn.Redefine(_curentEngine.Value, definition);
             return this;
         }
 
@@ -52,9 +55,9 @@ namespace SqlFu.DDL.Internals
 
         #region Implementation of IConfigureColumns
 
-        public IConfigureColumns AsPrimaryKey(string keyName=null)
+        public IConfigureColumns AsPrimaryKey(string keyName = null)
         {
-            _table.Constraints.SetPrimaryKey(_currentColumn.Name,keyName);
+            _table.Constraints.SetPrimaryKey(_currentColumn.Name, keyName);
             return this;
         }
 
@@ -66,19 +69,24 @@ namespace SqlFu.DDL.Internals
 
         public IConfigureColumns WithCheck(string expression, string constraintName)
         {
-            _table.Constraints.AddCheck(expression,constraintName);
+            _table.Constraints.AddCheck(expression, constraintName);
             return this;
         }
 
         public IConfigureColumns WithIndex(string idxName = null, bool unique = false)
         {
-            _table.Indexes.AddIndex(_currentColumn.Name,unique,idxName);
+            _table.Indexes.AddIndex(_currentColumn.Name, unique, idxName);
             return this;
         }
 
-        public IConfigureColumns IsForeignKeyFrom(string parentTable, string parentColumns, ForeignKeyRelationCascade onUpdate = ForeignKeyRelationCascade.NoAction, ForeignKeyRelationCascade onDelete = ForeignKeyRelationCascade.NoAction, string keyName = null)
+        public IConfigureColumns IsForeignKeyFrom(string parentTable, string parentColumns,
+                                                  ForeignKeyRelationCascade onUpdate =
+                                                      ForeignKeyRelationCascade.NoAction,
+                                                  ForeignKeyRelationCascade onDelete =
+                                                      ForeignKeyRelationCascade.NoAction, string keyName = null)
         {
-            _table.Constraints.AddForeignKey(_currentColumn.Name,parentTable,parentColumns,onUpdate,onDelete,keyName);
+            _table.Constraints.AddForeignKey(_currentColumn.Name, parentTable, parentColumns, onUpdate, onDelete,
+                                             keyName);
             return this;
         }
 

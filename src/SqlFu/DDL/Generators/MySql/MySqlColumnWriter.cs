@@ -1,20 +1,16 @@
 ﻿using System.Text;
 using SqlFu.DDL.Internals;
 using SqlFu.Providers;
-using System;
 
 namespace SqlFu.DDL.Generators.MySql
 {
-    internal class MySqlColumnWriter:AbstractColumnWriter
+    internal class MySqlColumnWriter : AbstractColumnWriter
     {
-        
-
         public MySqlColumnWriter(StringBuilder builder) : base(builder, DbEngine.MySql)
         {
-            
         }
 
-       protected override void WriteIdentity(ColumnDefinition col)
+        protected override void WriteIdentity(ColumnDefinition col)
         {
             Builder.Append(" auto_increment");
         }

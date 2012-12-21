@@ -1,9 +1,4 @@
-﻿using System.Linq;
-using System.Text;
-using SqlFu.DDL.Internals;
-using SqlFu.Providers.SqlServer;
-
-namespace SqlFu.DDL.Generators.SqlServer
+﻿namespace SqlFu.DDL.Generators.SqlServer
 {
 //    internal class SqlServerModifiedColumnsWriter
 //    {

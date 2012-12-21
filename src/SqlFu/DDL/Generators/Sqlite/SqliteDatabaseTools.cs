@@ -1,7 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using SqlFu.DDL.Internals;
 using SqlFu.Providers;
-using System;
 
 namespace SqlFu.DDL.Generators.Sqlite
 {
@@ -19,7 +19,7 @@ namespace SqlFu.DDL.Generators.Sqlite
 
         public override bool ConstraintExists(string name, string schema = null)
         {
-           throw new NotSupportedException("Sqlite ignores names of constraints");
+            throw new NotSupportedException("Sqlite ignores names of constraints");
         }
 
         public override bool IndexExists(string name, string table, string schema = null)
@@ -32,7 +32,9 @@ namespace SqlFu.DDL.Generators.Sqlite
         {
             table.MustNotBeEmpty();
             column.MustNotBeEmpty();
-            return Db.Query<dynamic>(string.Format("pragma table_info('{0}')", table)).Any(r=>column.Equals(r.name.ToUpperInvariant(),StringComparison.InvariantCultureIgnoreCase));
+            return
+                Db.Query<dynamic>(string.Format("pragma table_info('{0}')", table))
+                  .Any(r => column.Equals(r.name.ToUpperInvariant(), StringComparison.InvariantCultureIgnoreCase));
         }
 
         public override bool TableHasPrimaryKey(string table, string schema = null)

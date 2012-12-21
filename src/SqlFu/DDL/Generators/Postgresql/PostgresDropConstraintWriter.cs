@@ -3,9 +3,10 @@ using SqlFu.Providers;
 
 namespace SqlFu.DDL.Generators.Postgresql
 {
-    internal class PostgresDropConstraintWriter:AbstractDropConstraintWriter
+    internal class PostgresDropConstraintWriter : AbstractDropConstraintWriter
     {
-        public PostgresDropConstraintWriter(StringBuilder builder,IDatabaseTools tools) : base(builder, DbEngine.PostgreSQL, tools)
+        public PostgresDropConstraintWriter(StringBuilder builder, IDatabaseTools tools)
+            : base(builder, DbEngine.PostgreSQL, tools)
         {
         }
 
@@ -24,7 +25,7 @@ namespace SqlFu.DDL.Generators.Postgresql
             var c = Item.Options.Get(DropOptions.Cascade);
             if (c != null)
             {
-                Builder.AppendFormat(" " + c.ToString());
+                Builder.AppendFormat(" " + c);
             }
         }
     }

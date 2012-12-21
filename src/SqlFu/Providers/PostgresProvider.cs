@@ -9,11 +9,12 @@ namespace SqlFu.Providers
     public class PostgresProvider : AbstractProvider
     {
         public const string ProviderName = "Npgsql";
-        public PostgresProvider(string provider="Npgsql")
-            : base(provider??"Npgsql")
-        {
 
+        public PostgresProvider(string provider = "Npgsql")
+            : base(provider ?? "Npgsql")
+        {
         }
+
         public override string FormatSql(string sql, params string[] paramNames)
         {
             return sql;
@@ -21,7 +22,7 @@ namespace SqlFu.Providers
 
         public override DbEngine ProviderType
         {
-            get { return DbEngine.PostgreSQL;}
+            get { return DbEngine.PostgreSQL; }
         }
 
         protected override IDatabaseTools InitTools(DbAccess db)
@@ -47,25 +48,25 @@ namespace SqlFu.Providers
 
         public override void SetupParameter(IDbDataParameter param, string name, object value)
         {
-            if (value!=null)
+            if (value != null)
             {
-                var tp = value.GetType();
-                if (tp.IsEnum)
-                {
-                    value = (int)value;
-                }
+                //var tp = value.GetType();
+                //if (tp.IsEnum)
+                //{
+                //    value = (int) value;
+                //}
             }
-            
-            base.SetupParameter(param, name, value);            
+
+            base.SetupParameter(param, name, value);
         }
 
         public override LastInsertId ExecuteInsert(SqlStatement sql, string idKey)
         {
-           if (!string.IsNullOrEmpty(idKey))
-           {
-               sql.Sql += (" returning "+EscapeName(idKey));
-           }
-            using(sql)
+            if (!string.IsNullOrEmpty(idKey))
+            {
+                sql.Sql += (" returning " + EscapeName(idKey));
+            }
+            using (sql)
             {
                 return new LastInsertId(sql.ExecuteScalar());
             }

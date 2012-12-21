@@ -3,8 +3,8 @@ using SqlFu.DDL;
 
 namespace SqlFu.Migrations.Automatic
 {
-    [Migration("1.0.0",SchemaName = AutomaticMigration.SchemaName)]
-    public class AutomaticMigrationSetupTask:AbstractMigrationTask
+    [Migration("1.0.0", SchemaName = AutomaticMigration.SchemaName)]
+    public class AutomaticMigrationSetupTask : AbstractMigrationTask
     {
         /// <summary>
         /// Task is executed automatically in a transaction
@@ -12,7 +12,7 @@ namespace SqlFu.Migrations.Automatic
         /// <param name="db"/>
         public override void Execute(IAccessDb db)
         {
-            var tbl=db.DatabaseTools.GetCreateTableBuilder(AutomaticMigration.TableName,IfTableExists.Ignore);
+            var tbl = db.DatabaseTools.GetCreateTableBuilder(AutomaticMigration.TableName, IfTableExists.Ignore);
             tbl.Columns
                .Add("Id", DbType.Int32, isNullable: false, autoIncrement: true).AsPrimaryKey()
                .Add("SchemaName", DbType.String, "50")

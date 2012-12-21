@@ -3,7 +3,7 @@ using SqlFu.Providers.SqlServer;
 
 namespace SqlFu.DDL.Generators.SqlServer
 {
-    internal class SqlServerDropIndexWriter:AbstractDropIndexWriter
+    internal class SqlServerDropIndexWriter : AbstractDropIndexWriter
     {
         public SqlServerDropIndexWriter(StringBuilder builder) : base(builder, DbEngine.SqlServer)
         {

@@ -3,7 +3,7 @@ using SqlFu.DDL.Internals;
 
 namespace SqlFu.DDL.Generators
 {
-    abstract class AbstractUniqueKeyWriter:AbstractConstraintWriter
+    internal abstract class AbstractUniqueKeyWriter : AbstractConstraintWriter
     {
         protected AbstractUniqueKeyWriter(StringBuilder builder, DbEngine engine) : base(builder, engine)
         {
@@ -25,7 +25,7 @@ namespace SqlFu.DDL.Generators
             else
             {
                 Builder.Append("UNIQUE");
-            }           
+            }
         }
 
         protected UniqueKeyConstraint Key

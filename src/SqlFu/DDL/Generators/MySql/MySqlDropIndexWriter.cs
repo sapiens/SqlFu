@@ -2,9 +2,9 @@
 
 namespace SqlFu.DDL.Generators.MySql
 {
-    internal class MySqlDropIndexWriter:AbstractDropIndexWriter
+    internal class MySqlDropIndexWriter : AbstractDropIndexWriter
     {
-        public MySqlDropIndexWriter(StringBuilder builder) : base(builder,DbEngine.MySql)
+        public MySqlDropIndexWriter(StringBuilder builder) : base(builder, DbEngine.MySql)
         {
         }
 

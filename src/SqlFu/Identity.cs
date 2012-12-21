@@ -4,14 +4,14 @@ using System.Text;
 
 namespace SqlFu
 {
-    public class Identity:IEquatable<Identity>
+    public class Identity : IEquatable<Identity>
     {
-        private int _hash;
+        private readonly int _hash;
 
-        public Identity(Type t,IDataReader rd,string sql)
+        public Identity(Type t, IDataReader rd, string sql)
         {
             _hash = t.GetHashCode();
-            
+
             _hash = _hash*17 + sql.GetHashCode();
 #if DEBUG
             var sb = new StringBuilder(t.Name);
@@ -19,13 +19,13 @@ namespace SqlFu
 #endif
             unchecked
             {
-             for(int i=0;i<rd.FieldCount;i++)
-             {
-                 _hash = _hash*23+rd.GetFieldType(i).GetHashCode();
+                for (int i = 0; i < rd.FieldCount; i++)
+                {
+                    _hash = _hash*23 + rd.GetFieldType(i).GetHashCode();
 #if DEBUG
-               //  sb.Append("-" + rd.GetFieldType(i));
+                    //  sb.Append("-" + rd.GetFieldType(i));
 #endif
-             }
+                }
             }
 #if DEBUG
             _toString = sb.ToString();
@@ -49,7 +49,7 @@ namespace SqlFu
         //    _toString = sb.ToString();
         //}
 
-        private string _toString;
+        private readonly string _toString;
 
         public bool Equals(Identity other)
         {
@@ -60,6 +60,7 @@ namespace SqlFu
         {
             return Equals(obj as Identity);
         }
+
         public override string ToString()
         {
             return _toString;

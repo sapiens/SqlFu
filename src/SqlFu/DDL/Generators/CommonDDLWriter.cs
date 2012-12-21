@@ -6,14 +6,14 @@ using SqlFu.DDL.Internals;
 
 namespace SqlFu.DDL.Generators
 {
-    internal abstract class CommonDDLWriter:IGenerateDDL
+    internal abstract class CommonDDLWriter : IGenerateDDL
     {
         protected readonly IAccessDb Db;
         private TableSchema _table;
 
-        public CommonDDLWriter(IAccessDb db,DbEngine engine)
+        public CommonDDLWriter(IAccessDb db, DbEngine engine)
         {
-            db.MustNotBeNull();            
+            db.MustNotBeNull();
             Db = db;
             Builder = new StringBuilder();
             _engine = engine;
@@ -56,7 +56,7 @@ namespace SqlFu.DDL.Generators
         }
 
         protected abstract void WriteTableName();
-        
+
 
         protected virtual void WriteEndTableOptions()
         {
@@ -64,7 +64,7 @@ namespace SqlFu.DDL.Generators
         }
 
         protected abstract AbstractColumnWriter GetColumnWriter();
-        
+
         protected abstract AbstractUniqueKeyWriter GetUniqueKeyWriter();
         protected abstract AbstractCheckWriter GetCheckWriter();
         protected abstract AbstractForeignKeyWriter GetForeignKeyWriter();
@@ -73,7 +73,7 @@ namespace SqlFu.DDL.Generators
 
         protected bool ColonBeforeConstraints = false;
 
-        protected void WriteConstraints(ConstraintsCollection constraints,bool isAdding=false)
+        protected void WriteConstraints(ConstraintsCollection constraints, bool isAdding = false)
         {
             var uniq = GetUniqueKeyWriter();
             if (ColonBeforeConstraints)
@@ -96,13 +96,12 @@ namespace SqlFu.DDL.Generators
                     Builder.AppendLine(",");
                     if (isAdding) Builder.AppendFormat(" {0} ", GetAddConstraintPrefix());
                 }
-
             }
 
             if (constraints.ForeignKeys.Count > 0)
             {
                 var w = GetForeignKeyWriter();
-              //  w.IsAdding = isAdding;
+                //  w.IsAdding = isAdding;
                 foreach (var key in constraints.ForeignKeys)
                 {
                     w.Write(key);
@@ -114,10 +113,10 @@ namespace SqlFu.DDL.Generators
             if (constraints.Checks.Count > 0)
             {
                 var chkWriter = GetCheckWriter();
-               // chkWriter.IsAdding = isAdding;
+                // chkWriter.IsAdding = isAdding;
                 foreach (var ch in constraints.Checks)
                 {
-                  //  Builder.AppendLine();
+                    //  Builder.AppendLine();
                     chkWriter.Write(ch);
                     Builder.AppendLine(",");
                     if (isAdding) Builder.AppendFormat(" {0} ", GetAddConstraintPrefix());
@@ -129,7 +128,7 @@ namespace SqlFu.DDL.Generators
             {
                 foreach (var ch in custom)
                 {
-                    Builder.AppendLine().Append(ch).AppendLine(",");                    
+                    Builder.AppendLine().Append(ch).AppendLine(",");
                 }
             }
             Builder.RemoveLastIfEquals(",\r\n");
@@ -140,7 +139,8 @@ namespace SqlFu.DDL.Generators
             return "add";
         }
 
-        private DbEngine _engine;
+        private readonly DbEngine _engine;
+
         protected void WriteIndexes(IndexCollection indexes)
         {
             if (indexes.Count > 0)
@@ -159,21 +159,21 @@ namespace SqlFu.DDL.Generators
             {
                 foreach (var ch in custom)
                 {
-                    Builder.AppendLine(ch+";");
+                    Builder.AppendLine(ch + ";");
                 }
             }
-            
         }
 
-       
-        public static void WriteColumnsNames(string columns, StringBuilder builder,Func<string,string> formatter)
+
+        public static void WriteColumnsNames(string columns, StringBuilder builder, Func<string, string> formatter)
         {
             columns.MustNotBeEmpty();
             formatter.MustNotBeNull();
-            WriteColumnsNames(columns.Split(','),builder,formatter);            
+            WriteColumnsNames(columns.Split(','), builder, formatter);
         }
 
-        public static void WriteColumnsNames(ICollection<string> columns, StringBuilder builder, Func<string, string> formatter)
+        public static void WriteColumnsNames(ICollection<string> columns, StringBuilder builder,
+                                             Func<string, string> formatter)
         {
             columns.MustNotBeNull();
             formatter.MustNotBeNull();
@@ -190,45 +190,44 @@ namespace SqlFu.DDL.Generators
         /// <param name="columns"></param>
         /// <param name="formatter"></param>
         /// <returns></returns>
-        public static string GetEscapedNames(string columns,Func<string,string> formatter)
+        public static string GetEscapedNames(string columns, Func<string, string> formatter)
         {
             columns.MustNotBeEmpty();
-            return string.Join(",",columns.Split(',').Select(c =>formatter(c.Trim())));            
+            return string.Join(",", columns.Split(',').Select(c => formatter(c.Trim())));
         }
 
-       public virtual string GenerateAlterTable(TableSchema schema)
-       {
-           _table = schema;
-           Builder.Clear();
-           DefineExistingColumns();
-           WriteColumnRenames();
-           WriteDroppedIndexes();
-           WriteDroppedConstraints();
-           GetChangedColumnsManager().Write(schema.ModifiedColumns);
-           WriteDroppedColumns();
-           WriteColumnsAdditions();
-           WriteConstraintsAdditions();
-           WriteIndexes(Table.Indexes);
+        public virtual string GenerateAlterTable(TableSchema schema)
+        {
+            _table = schema;
+            Builder.Clear();
+            DefineExistingColumns();
+            WriteColumnRenames();
+            WriteDroppedIndexes();
+            WriteDroppedConstraints();
+            GetChangedColumnsManager().Write(schema.ModifiedColumns);
+            WriteDroppedColumns();
+            WriteColumnsAdditions();
+            WriteConstraintsAdditions();
+            WriteIndexes(Table.Indexes);
 
-           return Builder.ToString();
-       }
+            return Builder.ToString();
+        }
 
         protected virtual void DefineExistingColumns()
         {
-            
         }
 
         protected abstract AbstractChangedColumnsManager GetChangedColumnsManager();
 
-       private void WriteColumnRenames()
-       {
-           if (Table.ModifiedColumns.Renames.Count == 0) return;
+        private void WriteColumnRenames()
+        {
+            if (Table.ModifiedColumns.Renames.Count == 0) return;
 
-           foreach (var col in Table.ModifiedColumns.Renames)
-           {
-               WriteRenameColumn(col);
-           }
-       }
+            foreach (var col in Table.ModifiedColumns.Renames)
+            {
+                WriteRenameColumn(col);
+            }
+        }
 
         protected abstract void WriteRenameColumn(ColumnModifications col);
 
@@ -238,10 +237,10 @@ namespace SqlFu.DDL.Generators
             if (Table.Indexes.Dropped.Count > 0)
             {
                 var writer = GetDropIndexWriter();
-                foreach(var idx in Table.Indexes.Dropped)
+                foreach (var idx in Table.Indexes.Dropped)
                 {
                     writer.Write(idx);
-                }              
+                }
             }
         }
 
@@ -252,10 +251,10 @@ namespace SqlFu.DDL.Generators
             if (Table.Constraints.Dropped.Count > 0)
             {
                 var writer = GetDropConstraintWriter();
-                foreach(var cn in Table.Constraints.Dropped)
+                foreach (var cn in Table.Constraints.Dropped)
                 {
                     writer.Write(cn);
-                }                
+                }
             }
         }
 
@@ -269,7 +268,7 @@ namespace SqlFu.DDL.Generators
                 foreach (var cn in Table.ModifiedColumns.DroppedColumns)
                 {
                     writer.Write(cn);
-                } 
+                }
             }
         }
 
@@ -281,12 +280,12 @@ namespace SqlFu.DDL.Generators
             {
                 var writer = GetColumnWriter();
                 var table = Escape(Table.Name);
-                foreach(var col in Table.Columns)
+                foreach (var col in Table.Columns)
                 {
                     Builder.AppendFormat("alter table {0} add ", table);
                     writer.Write(col);
                     Builder.Append(";\n");
-                }                
+                }
             }
         }
 
@@ -298,11 +297,10 @@ namespace SqlFu.DDL.Generators
             {
                 var table = Escape(Table.Name);
                 Builder.AppendFormat("alter table {0} add", Escape(Table.Name));
-                WriteConstraints(Table.Constraints,true);
+                WriteConstraints(Table.Constraints, true);
                 Builder.Append(";\n");
             }
         }
-
     }
 
     internal interface IGenerateDDL

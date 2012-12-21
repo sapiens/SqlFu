@@ -1,18 +1,17 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace SqlFu.DDL
 {
-    class DbEngineOptions:List<DbSpecificOption>
+    internal class DbEngineOptions : List<DbSpecificOption>
     {
-       
         /// <summary>
         /// Returns null if option doesn't exist
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public DbSpecificOption Get(string name,DbEngine engine=DbEngine.None)
+        public DbSpecificOption Get(string name, DbEngine engine = DbEngine.None)
         {
             if (engine == DbEngine.None) engine = _currentEngine;
             return Find(opt => opt.Name == name && opt.Engine == engine);
@@ -35,18 +34,17 @@ namespace SqlFu.DDL
                 var opt = Get(o);
                 if (opt != null)
                 {
-                    Remove(opt);                    
+                    Remove(opt);
                 }
                 Add(o);
             }
-            
         }
 
-       public DbEngineOptions Use(DbEngine engine)
-       {
-           _currentEngine = engine;
-           return this;
-       }
+        public DbEngineOptions Use(DbEngine engine)
+        {
+            _currentEngine = engine;
+            return this;
+        }
 
         public bool HasAny(params string[] names)
         {
@@ -54,40 +52,40 @@ namespace SqlFu.DDL
             return this.Any(d => d.Engine == _currentEngine && names.Any(n => n == d.Name));
         }
 
-       //Dictionary<DbEngine, NameValueCollection> _tableOptions = new Dictionary<DbEngine, NameValueCollection>();
+        //Dictionary<DbEngine, NameValueCollection> _tableOptions = new Dictionary<DbEngine, NameValueCollection>();
 
-       // public void SetOptions(DbEngine db,params string[] options)
-       // {
-            
-       //     options.MustNotBeEmpty();
-       //     NameValueCollection nv;
-       //     if (!_tableOptions.ContainsKey(db))
-       //     {
-       //         nv = new NameValueCollection();
-       //         _tableOptions[db] = nv;
-       //     }
-       //     else
-       //     {
-       //         nv = _tableOptions[db];
-       //     }
-       //     foreach(var option in options)
-       //     {
-       //         var items = option.Split(':');
-       //         if (items.Length > 0)
-       //         {
-       //             string key = items[0].Trim().ToUpperInvariant();
-       //             string value = null;
-       //             if (items.Length > 1)
-       //             {
-       //                 value = items[1].Trim().ToUpperInvariant();
-       //             }
-       //             nv[key] = value;
-       //         }
-       //     }
-            
-       // }
+        // public void SetOptions(DbEngine db,params string[] options)
+        // {
 
-       // Dictionary<DbEngine,string> _removed=new Dictionary<DbEngine, string>();
+        //     options.MustNotBeEmpty();
+        //     NameValueCollection nv;
+        //     if (!_tableOptions.ContainsKey(db))
+        //     {
+        //         nv = new NameValueCollection();
+        //         _tableOptions[db] = nv;
+        //     }
+        //     else
+        //     {
+        //         nv = _tableOptions[db];
+        //     }
+        //     foreach(var option in options)
+        //     {
+        //         var items = option.Split(':');
+        //         if (items.Length > 0)
+        //         {
+        //             string key = items[0].Trim().ToUpperInvariant();
+        //             string value = null;
+        //             if (items.Length > 1)
+        //             {
+        //                 value = items[1].Trim().ToUpperInvariant();
+        //             }
+        //             nv[key] = value;
+        //         }
+        //     }
+
+        // }
+
+        // Dictionary<DbEngine,string> _removed=new Dictionary<DbEngine, string>();
         private DbEngine _currentEngine;
 
         ///// <summary>
@@ -116,7 +114,7 @@ namespace SqlFu.DDL
         //    if (_tableOptions.TryGetValue(db, out rez))
         //    {
         //        var opt=rez[name];
-               
+
         //        return opt;
         //    }
         //    return null;
@@ -131,7 +129,7 @@ namespace SqlFu.DDL
         //internal bool HasOption(DbEngine db, params string[] names)
         //{
         //    NameValueCollection rez = null;
-            
+
         //    if (_tableOptions.TryGetValue(db, out rez))
         //    {
         //        foreach(var name in names)
@@ -142,7 +140,7 @@ namespace SqlFu.DDL
         //                return true;
         //            }
         //        }
-                
+
         //    }
         //    return false;
         //}

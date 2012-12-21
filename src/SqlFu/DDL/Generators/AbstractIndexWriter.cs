@@ -3,7 +3,7 @@ using SqlFu.DDL.Internals;
 
 namespace SqlFu.DDL.Generators
 {
-    internal abstract class AbstractIndexWriter:AbstractSchemaItemWriter
+    internal abstract class AbstractIndexWriter : AbstractSchemaItemWriter
     {
         private IndexDefinition _index;
 
@@ -20,7 +20,7 @@ namespace SqlFu.DDL.Generators
         public virtual void Write(IndexDefinition index)
         {
             _index = index;
-            
+
             if (Index.IsRedefinedFor(Engine))
             {
                 Builder.AppendLine(index.GetDefinition(Engine));
@@ -30,9 +30,9 @@ namespace SqlFu.DDL.Generators
             index.Options.Use(Engine);
 
             Builder.Append("CREATE");
-            
+
             WriteIndexType();
-            
+
             Builder.AppendFormat(" INDEX ");
             WriteIndexName();
             Builder.Append(" ON ");
@@ -44,13 +44,12 @@ namespace SqlFu.DDL.Generators
                 Builder.Append(",");
             }
             Builder.RemoveLast();
-            Builder.Append(")"); 
+            Builder.Append(")");
             WriteEndOptions();
         }
 
         protected virtual void WriteEndOptions()
         {
-            
         }
 
         protected virtual void WriteIndexType()

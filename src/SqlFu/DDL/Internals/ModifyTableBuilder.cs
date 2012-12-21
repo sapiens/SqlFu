@@ -1,30 +1,29 @@
 ﻿using System;
-using System.Data;
 using SqlFu.DDL.Generators;
 
 namespace SqlFu.DDL.Internals
 {
-    internal class ModifyTableBuilder:IModifyTable
+    internal class ModifyTableBuilder : IModifyTable
     {
         private readonly IAccessDb _db;
         private readonly IGenerateDDL _generator;
-        private TableSchema _table;
-        private ColumnsEditor _columns;
-        private ConstraintsEditor _constraints;
-        private IndexEditor _indexes;
+        private readonly TableSchema _table;
+        private readonly ColumnsEditor _columns;
+        private readonly ConstraintsEditor _constraints;
+        private readonly IndexEditor _indexes;
 
-        public ModifyTableBuilder(IAccessDb db,IGenerateDDL generator,string name)
+        public ModifyTableBuilder(IAccessDb db, IGenerateDDL generator, string name)
         {
             _db = db;
             _generator = generator;
             name.MustNotBeEmpty();
             _table = new TableSchema(name);
-            
-            _columns = new ColumnsEditor(Table,this);
-            _constraints = new ConstraintsEditor(Table.Constraints,this);
-            _indexes = new IndexEditor(Table.Indexes,this);                        
+
+            _columns = new ColumnsEditor(Table, this);
+            _constraints = new ConstraintsEditor(Table.Constraints, this);
+            _indexes = new IndexEditor(Table.Indexes, this);
         }
-        
+
         public string GetSql()
         {
             return _generator.GenerateAlterTable(_table);
@@ -37,7 +36,6 @@ namespace SqlFu.DDL.Internals
                 _db.ExecuteCommand(GetSql());
                 t.Commit();
             }
-            
         }
 
         //public ISupportSpecificTableOptions SetOptionsFor(DbEngine engine, params string[] options)

@@ -12,14 +12,14 @@ using SqlFu.Internals;
 
 namespace SqlFu
 {
-    public class DbAccess :IAccessDb
+    public class DbAccess : IAccessDb
     {
         public DbAccess()
         {
-            var cnx=ConfigurationManager.ConnectionStrings[0];
-            if (cnx==null) throw new InvalidOperationException("I need a connection!!!");
-            
-            Init(cnx.ConnectionString,ProviderFactory.GetProviderByName(cnx.ProviderName));
+            var cnx = ConfigurationManager.ConnectionStrings[0];
+            if (cnx == null) throw new InvalidOperationException("I need a connection!!!");
+
+            Init(cnx.ConnectionString, ProviderFactory.GetProviderByName(cnx.ProviderName));
         }
 
         public DbAccess(string connectionStringName)
@@ -30,17 +30,17 @@ namespace SqlFu
             Init(cnx.ConnectionString, ProviderFactory.GetProviderByName(cnx.ProviderName));
         }
 
-        public DbAccess(string cnxString,string provider)
+        public DbAccess(string cnxString, string provider)
         {
-            Init(cnxString,ProviderFactory.GetProviderByName(provider));
+            Init(cnxString, ProviderFactory.GetProviderByName(provider));
         }
 
-        public DbAccess(string cnxString,DbEngine provider)
+        public DbAccess(string cnxString, DbEngine provider)
         {
-          Init(cnxString,ProviderFactory.GetProvider(provider)); 
+            Init(cnxString, ProviderFactory.GetProvider(provider));
         }
 
-        public DbAccess(string cnxString,IHaveDbProvider provider)
+        public DbAccess(string cnxString, IHaveDbProvider provider)
         {
             Init(cnxString, provider);
         }
@@ -56,7 +56,7 @@ namespace SqlFu
 
         #region SProc
 
-         /// <summary>
+        /// <summary>
         /// Executes sproc
         /// </summary>
         /// <param name="sprocName"></param>
@@ -65,7 +65,7 @@ namespace SqlFu
         /// ExecuteStoredProcedure("sprocName",new{Id=1,_OutValue=""})
         /// </example>
         /// <returns></returns>
-        public StoredProcedureResult ExecuteStoredProcedure(string sprocName, object arguments=null)
+        public StoredProcedureResult ExecuteStoredProcedure(string sprocName, object arguments = null)
         {
             var sql = new SProcStatement(this);
             sql.UseStoredProcedure(sprocName, arguments);
@@ -80,7 +80,7 @@ namespace SqlFu
         }
 
         private DbConnection _conex;
-        
+
         public DbConnection Connection
         {
             get
@@ -140,7 +140,7 @@ namespace SqlFu
             }
         }
 
-        private Action<ISqlStatement,Exception> _onException = (s,e) => { };
+        private Action<ISqlStatement, Exception> _onException = (s, e) => { };
 
         public Action<ISqlStatement, Exception> OnException
         {
@@ -164,7 +164,7 @@ namespace SqlFu
             }
         }
 
-        private Action<IAccessDb,bool> _onEndTransaction = (d,s) => { };
+        private Action<IAccessDb, bool> _onEndTransaction = (d, s) => { };
 
         public Action<IAccessDb, bool> OnEndTransaction
         {
@@ -196,10 +196,10 @@ namespace SqlFu
             return st;
         }
 
-        public IPagedSqlStatement WithSql(long skip,int take,string sql, params object[] args)
+        public IPagedSqlStatement WithSql(long skip, int take, string sql, params object[] args)
         {
             var st = new PagedSqlStatement(this);
-            st.SetSql(skip,take,sql,args);
+            st.SetSql(skip, take, sql, args);
             return st;
         }
 
@@ -207,7 +207,7 @@ namespace SqlFu
         {
             if (_conex != null)
             {
-                if (!forceClose && (KeepAlive ||(_trans!=null))) return;
+                if (!forceClose && (KeepAlive || (_trans != null))) return;
 
                 _conex.Close();
                 OnCloseConnection(this);
@@ -222,7 +222,7 @@ namespace SqlFu
             //{
             //    return DbType.Int32;
             //}
-            
+
             //if (t==typeof(int))
             //{
             //    return DbType.;
@@ -230,17 +230,18 @@ namespace SqlFu
 
             throw new NotSupportedException();
         }
-        
-        #region Transaction support
-        private int _tLevel = 0;
 
-        
+        #region Transaction support
+
+        private int _tLevel;
+
+
         public int TransactionDepth
         {
             get { return _tLevel; }
         }
 
-        private DbTransaction _trans = null;
+        private DbTransaction _trans;
 
         private string _cnxString;
 
@@ -249,7 +250,9 @@ namespace SqlFu
             _tLevel++;
             if (_tLevel == 1)
             {
-                _trans = isolationLevel.HasValue ? Connection.BeginTransaction(isolationLevel.Value) : Connection.BeginTransaction();
+                _trans = isolationLevel.HasValue
+                             ? Connection.BeginTransaction(isolationLevel.Value)
+                             : Connection.BeginTransaction();
             }
             OnBeginTransaction(this);
             return new MyTransactionWrapper(this);
@@ -262,7 +265,7 @@ namespace SqlFu
             if (_tLevel == 0)
             {
                 _trans.Commit();
-                _trans = null;               
+                _trans = null;
             }
             OnEndTransaction(this, true);
         }
@@ -274,9 +277,8 @@ namespace SqlFu
                 _trans.Dispose();
                 _trans = null;
                 _tLevel = 0;
-                OnEndTransaction(this,false);
+                OnEndTransaction(this, false);
             }
-
         }
 
         private void EnsureTransaction()
@@ -284,9 +286,9 @@ namespace SqlFu
             if (_trans == null) throw new InvalidOperationException("No transaction started");
         }
 
-        
         #region TrnsactionClass
-        class MyTransactionWrapper : DbTransaction
+
+        private class MyTransactionWrapper : DbTransaction
         {
             private DbAccess _db;
 
@@ -301,7 +303,6 @@ namespace SqlFu
                 {
                     Rollback();
                 }
-
             }
 
             public override void Commit()
@@ -310,7 +311,6 @@ namespace SqlFu
                 {
                     _db.Commit();
                     _db = null;
-
                 }
                 else
                 {
@@ -329,23 +329,23 @@ namespace SqlFu
                 get { return _db.Connection; }
             }
 
-            public override  IsolationLevel IsolationLevel
+            public override IsolationLevel IsolationLevel
             {
                 get { return _db._trans.IsolationLevel; }
             }
         }
-        #endregion
 
         #endregion
 
-      
+        #endregion
+
         #region Query
 
         public int ExecuteCommand(string sql, params object[] args)
         {
-            using (var st=new SqlStatement(this))
+            using (var st = new SqlStatement(this))
             {
-                st.SetSql(sql,args);
+                st.SetSql(sql, args);
                 return st.Execute();
             }
         }
@@ -358,26 +358,25 @@ namespace SqlFu
 
         public T GetValue<T>(string sql, params object[] args)
         {
-            using(var st= new SqlStatement(this))
+            using (var st = new SqlStatement(this))
             {
-                st.SetSql(sql,args);
+                st.SetSql(sql, args);
                 return st.ExecuteScalar<T>();
             }
         }
 
-        
 
-        public T Get<T>(object id,string additionalPredicate=null,params object[] args)
+        public T Get<T>(object id, string additionalPredicate = null, params object[] args)
         {
             id.MustNotBeNull("id");
             var tp = typeof (T);
-            if (typeof(ExpandoObject) == tp || typeof(object) == tp)
+            if (typeof (ExpandoObject) == tp || typeof (object) == tp)
                 throw new InvalidOperationException("Can't work with System.Object or dynamic types");
             var ti = TableInfo.ForType(tp);
-            if (ti.SelectSingleSql==null)
+            if (ti.SelectSingleSql == null)
             {
                 var sb = new StringBuilder("select ");
-                var p = tp.GetProperties().Where(pr=>!pr.PropertyType.IsCustomObjectType()).Select(pr => pr.Name);
+                var p = tp.GetProperties().Where(pr => !pr.PropertyType.IsCustomObjectType()).Select(pr => pr.Name);
                 foreach (var name in p)
                 {
                     sb.AppendFormat("{0},", Provider.EscapeName(name));
@@ -396,22 +395,23 @@ namespace SqlFu
             var fargs = new List<object>(args.Length + 1);
             fargs.Add(id);
             fargs.AddRange(args);
-            using(var st=new SqlStatement(this))
+            using (var st = new SqlStatement(this))
             {
-                st.SetSql(ti.SelectSingleSql,fargs.ToArray());
-                
-                using(var rd=st.GetReader())
+                st.SetSql(ti.SelectSingleSql, fargs.ToArray());
+
+                using (var rd = st.GetReader())
                 {
                     try
                     {
                         if (rd.Read())
+                        {
+                            Func<IDataReader, T> mapper = PocoFactory.GetPocoMapper<T>(rd, st.Sql);
+                            rez = mapper(rd);
+                        }
+                    }
+                    catch (Exception ex)
                     {
-                        Func<IDataReader, T> mapper = PocoFactory.GetPocoMapper<T>(rd,st.Sql);
-                        rez = mapper(rd);
-                    }}
-                    catch(Exception ex)
-                    {
-                        OnException(st,ex);
+                        OnException(st, ex);
                         throw;
                     }
                     finally
@@ -423,96 +423,89 @@ namespace SqlFu
             return rez;
         }
 
-        public ResultSet<T> PagedQuery<T>(long skip,int take,string sql, params object[] args)
+        public ResultSet<T> PagedQuery<T>(long skip, int take, string sql, params object[] args)
         {
-            using (var st= new PagedSqlStatement(this))
+            using (var st = new PagedSqlStatement(this))
             {
-                st.SetSql(skip,take,sql,args);
+                st.SetSql(skip, take, sql, args);
                 return st.ExecutePagedQuery<T>();
             }
         }
 
         public IEnumerable<T> Query<T>(string sql, params object[] args)
         {
-           
             using (var st = new SqlStatement(this))
-           {
-               
+            {
                 st.SetSql(sql, args);
-               foreach(var r in st.ExecuteQuery<T>())
-               {
-                   yield return r;
-               }
-               //using (var rd = st.GetReader())
-               //{
+                foreach (var r in st.ExecuteQuery<T>())
+                {
+                    yield return r;
+                }
+                //using (var rd = st.GetReader())
+                //{
 
-               //    Func<IDataReader, T> mapper = null;
-               //    T rez=default(T);
-               //    while (true)
-               //    {
-               //        try
-               //        {
-               //            if (rd.Read())
-               //            {
+                //    Func<IDataReader, T> mapper = null;
+                //    T rez=default(T);
+                //    while (true)
+                //    {
+                //        try
+                //        {
+                //            if (rd.Read())
+                //            {
 
-               //                if (mapper == null)
-               //                {
-               //                    mapper = PocoFactory.GetPocoMapper<T>(rd);
-               //                }
-
-
-               //                rez = mapper(rd);
+                //                if (mapper == null)
+                //                {
+                //                    mapper = PocoFactory.GetPocoMapper<T>(rd);
+                //                }
 
 
-               //            }
-               //            else
-               //            {
-               //              break;
-               //            }
+                //                rez = mapper(rd);
 
-               //        }
-               //        catch (Exception ex)
-               //        {
-               //            OnException(st,ex);
-               //            throw;
-               //        }
-               //        yield return rez;
-               //    }
-               //    //yield break;
-               //} 
 
-           }
-            
+                //            }
+                //            else
+                //            {
+                //              break;
+                //            }
 
+                //        }
+                //        catch (Exception ex)
+                //        {
+                //            OnException(st,ex);
+                //            throw;
+                //        }
+                //        yield return rez;
+                //    }
+                //    //yield break;
+                //} 
+            }
         }
 
         public List<T> Fetch<T>(string sql, params object[] args)
         {
             using (var st = new SqlStatement(this))
             {
-
                 st.SetSql(sql, args);
 
                 using (var rd = st.GetReader())
                 {
-
                     Func<IDataReader, T> mapper = null;
                     var rez = new List<T>();
                     try
                     {
-                        while(rd.Read())
+                        while (rd.Read())
                         {
                             if (mapper == null)
                             {
-                                mapper = PocoFactory.GetPocoMapper<T>(rd,st.Sql);
+                                mapper = PocoFactory.GetPocoMapper<T>(rd, st.Sql);
                             }
                             rez.Add(mapper(rd));
                         }
                     }
                     catch (Exception ex)
                     {
-                        OnException(st,ex);
-                        
+                        OnException(st, ex);
+
                         throw;
                     }
 
@@ -520,7 +513,6 @@ namespace SqlFu
                 }
             }
         }
-
 
         #endregion
 
@@ -532,14 +524,13 @@ namespace SqlFu
             }
             CloseConnection(true);
         }
-
-      
     }
 
     public class LastInsertId
     {
-        private object _val;
+        private readonly object _val;
         public static LastInsertId Empty = new LastInsertId(null);
+
         public LastInsertId(object o)
         {
             _val = o;

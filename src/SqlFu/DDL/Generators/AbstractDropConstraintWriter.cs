@@ -1,15 +1,16 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using SqlFu.DDL.Internals;
-using System;
 
 namespace SqlFu.DDL.Generators
 {
-    internal abstract class AbstractDropConstraintWriter:AbstractSchemaItemWriter
+    internal abstract class AbstractDropConstraintWriter : AbstractSchemaItemWriter
     {
         private readonly IDatabaseTools _tools;
         private DroppedSchemaItem _item;
 
-        public AbstractDropConstraintWriter(StringBuilder builder, DbEngine engine,IDatabaseTools tools) : base(builder, engine)
+        public AbstractDropConstraintWriter(StringBuilder builder, DbEngine engine, IDatabaseTools tools)
+            : base(builder, engine)
         {
             _tools = tools;
         }
@@ -25,7 +26,7 @@ namespace SqlFu.DDL.Generators
             Item.Options.Use(Engine);
             if (Item.Name.IsNullOrEmpty())
             {
-                Item.Name= _tools.GetPrimaryKeyName(Item.TableName);
+                Item.Name = _tools.GetPrimaryKeyName(Item.TableName);
             }
             if (!Item.Name.IsNullOrEmpty())
             {
@@ -33,15 +34,14 @@ namespace SqlFu.DDL.Generators
                 WriteConstraint();
                 WriteEndOptions();
                 Builder.Append(";");
-            }            
+            }
         }
 
         protected abstract string EscapeName(string name);
         protected abstract void WriteConstraint();
-        
+
         protected virtual void WriteEndOptions()
         {
-           
         }
     }
 }

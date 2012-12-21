@@ -1,27 +1,27 @@
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SqlFu.DDL.Internals
 {
-    class IndexCollection:List<IndexDefinition>
+    internal class IndexCollection : List<IndexDefinition>
     {
         private readonly TableSchema _table;
 
         public IndexCollection(TableSchema table)
         {
             _table = table;
-            Dropped=new DroppedSchemaItemsCollection(table.Name);
+            Dropped = new DroppedSchemaItemsCollection(table.Name);
         }
 
-        public IndexDefinition AddIndex(string columnsNames, bool isUnique=false, string indexName = null)
+        public IndexDefinition AddIndex(string columnsNames, bool isUnique = false, string indexName = null)
         {
             columnsNames.MustNotBeEmpty();
             var idx = new IndexDefinition(_table.Name)
-                          {
-                              IsUnique = isUnique,
-                              Name = indexName ?? GenerateIndexName(columnsNames)
-                          };
+                {
+                    IsUnique = isUnique,
+                    Name = indexName ?? GenerateIndexName(columnsNames)
+                };
             idx.Columns.AddColumns(columnsNames);
             Add(idx);
             return idx;
@@ -32,7 +32,7 @@ namespace SqlFu.DDL.Internals
             get { return Find(d => d.Name == indexName); }
         }
 
-        List<Tuple<DbEngine, string>> _added = new List<Tuple<DbEngine, string>>();
+        private readonly List<Tuple<DbEngine, string>> _added = new List<Tuple<DbEngine, string>>();
 
         public void AddSpecific(DbEngine engine, string definition)
         {
@@ -45,7 +45,7 @@ namespace SqlFu.DDL.Internals
             return _added.FindAll(d => d.Item1 == engine).Select(d => d.Item2);
         }
 
-        string GenerateIndexName(string columns)
+        private string GenerateIndexName(string columns)
         {
             return "IX_" + _table.TableName + "_" + _table.ColumnsToName(columns);
         }

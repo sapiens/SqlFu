@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Dynamic;
 using System.Text;
 
 namespace SqlFu
@@ -11,12 +10,12 @@ namespace SqlFu
     public interface IQuerySqlStatement
     {
         int Execute();
-        T ExecuteScalar<T>(Func<object, T> converter=null);
-        
-        IEnumerable<T> ExecuteQuery<T>(Func<IDataReader, T> mapper=null);
+        T ExecuteScalar<T>(Func<object, T> converter = null);
+
+        IEnumerable<T> ExecuteQuery<T>(Func<IDataReader, T> mapper = null);
     }
 
-    public interface ISqlStatement:IQuerySqlStatement,IDisposable
+    public interface ISqlStatement : IQuerySqlStatement, IDisposable
     {
         DbAccess Db { get; }
 
@@ -25,22 +24,21 @@ namespace SqlFu
         /// </summary>
         string ExecutedSql { get; }
 
-       // void SetSql(string sql, params object[] args);
+        // void SetSql(string sql, params object[] args);
         IQuerySqlStatement ApplyToCommand(Action<DbCommand> action);
     }
 
 
-    public class SqlStatement:ISqlStatement
+    public class SqlStatement : ISqlStatement
     {
         protected DbAccess _db;
         protected DbCommand _cmd;
-        
+
         public SqlStatement(DbAccess db)
         {
             db.MustNotBeNull();
             _db = db;
             _cmd = _db.CreateCommand();
-            
         }
 
         public DbAccess Db
@@ -53,7 +51,7 @@ namespace SqlFu
         //public void SetSql(string sql, params  object[] args)
         //{
         //    _cmd.CommandText = sql;
-            
+
         //    if (args.Length == 0)
         //    {
         //        _paramNames = new string[0];                
@@ -68,29 +66,29 @@ namespace SqlFu
         //            var tp = poco.GetType();
         //            if (tp.IsCustomObjectType())
         //            {
-                        
+
         //                if (!tp.IsListParam())
         //                {
         //                    var mapper = PocoFactory.GetParametersMapper(tp);
         //                    _paramNames = mapper(_cmd, _db.Provider, poco);   
         //                }
-                        
+
         //                return;
         //            }
         //        }
         //    }
-            
+
         //    _paramNames = new string[args.Length];
         //    var prov = _db.Provider;
         //    IDbDataParameter p;
         //    string pname;
         //    var allp = _cmd.Parameters;
-           
+
         //    for (int i = 0; i < args.Length; i++)
         //    {
         //        p = _cmd.CreateParameter();
         //        pname = i.ToString();
-                
+
         //        prov.SetupParameter(p, pname, args[i]);
         //        _paramNames[i] = pname;
         //        allp.Add(p);
@@ -98,7 +96,6 @@ namespace SqlFu
 
         //}
 
-       
 
         public void SetSql(string sql, params object[] args)
         {
@@ -107,11 +104,11 @@ namespace SqlFu
                 var provider = _db.Provider;
                 var paramDict = CreateParamsDictionary(args);
                 var allp = _cmd.Parameters;
-                List<string> pnames=new List<string>();
+                List<string> pnames = new List<string>();
                 var sb = new StringBuilder();
                 var lastParamCount = args.Length;
-                
-                IDbDataParameter p=null;
+
+                IDbDataParameter p = null;
                 foreach (var kv in paramDict)
                 {
                     if (kv.Value.IsListParam())
@@ -131,14 +128,13 @@ namespace SqlFu
                             lastParamCount++;
                         }
                         sb.Remove(sb.Length - 1, 1);
-                        sql=sql.Replace("@" + kv.Key, sb.ToString());
-                        
+                        sql = sql.Replace("@" + kv.Key, sb.ToString());
                     }
                     else
                     {
                         p = _cmd.CreateParameter();
                         provider.SetupParameter(p, kv.Key, kv.Value);
-                        pnames.Add(kv.Key.ToString());
+                        pnames.Add(kv.Key);
                         allp.Add(p);
                     }
                 }
@@ -149,13 +145,13 @@ namespace SqlFu
             {
                 _paramNames = new string[0];
             }
-            
+
             _cmd.CommandText = sql;
         }
 
         protected virtual IDictionary<string, object> CreateParamsDictionary(params object[] args)
         {
-            IDictionary<string, object> d=new Dictionary<string, object>();
+            IDictionary<string, object> d = new Dictionary<string, object>();
             if (args != null)
             {
                 if (args.Length == 1)
@@ -163,7 +159,6 @@ namespace SqlFu
                     var poco = args[0];
                     if (poco != null && !poco.IsListParam())
                     {
-
                         if (poco.GetType().IsCustomObjectType())
                         {
                             d = poco.ToDictionary();
@@ -181,7 +176,9 @@ namespace SqlFu
         }
 
         internal bool ReuseCommand { get; set; }
+
         #region Command
+
         internal void ResetCommand()
         {
             _cmd.Parameters.Clear();
@@ -206,12 +203,11 @@ namespace SqlFu
             if (_before != null) _before(_cmd);
             _cmd.CommandText = _db.Provider.FormatSql(_cmd.CommandText, _paramNames);
             _db.Provider.OnCommandExecuting(_cmd);
-        } 
+        }
+
         #endregion
 
         #region ExecuteCommand
-
-       
 
         internal object ExecuteScalar()
         {
@@ -256,9 +252,6 @@ namespace SqlFu
         }
 
 
-
-
-
         public int Execute()
         {
             var rez = 0;
@@ -276,7 +269,6 @@ namespace SqlFu
                     _cmd.Dispose();
                     throw;
                 }
-
             }
             finally
             {
@@ -289,7 +281,7 @@ namespace SqlFu
             return rez;
         }
 
-        public T ExecuteScalar<T>(Func<object, T> converter=null)
+        public T ExecuteScalar<T>(Func<object, T> converter = null)
         {
             using (_cmd)
             {
@@ -311,7 +303,7 @@ namespace SqlFu
             }
         }
 
-        public IEnumerable<T> ExecuteQuery<T>(Func<IDataReader, T> mapper=null)
+        public IEnumerable<T> ExecuteQuery<T>(Func<IDataReader, T> mapper = null)
         {
             using (_cmd)
             {
@@ -326,7 +318,7 @@ namespace SqlFu
                             {
                                 break;
                             }
-                            if (mapper == null) mapper = PocoFactory.GetPocoMapper<T>(rd,_cmd.CommandText);
+                            if (mapper == null) mapper = PocoFactory.GetPocoMapper<T>(rd, _cmd.CommandText);
                             d = mapper(rd);
                         }
                         catch (Exception ex)
@@ -339,11 +331,11 @@ namespace SqlFu
                     }
                     Db.CloseConnection();
                 }
-
             }
-        } 
+        }
+
         #endregion
-       
+
         /// <summary>
         /// Returns last executed sql with params
         /// </summary>
@@ -358,15 +350,16 @@ namespace SqlFu
                 return "";
             }
         }
+
         internal string Sql
         {
             get { return _cmd.CommandText; }
             set { _cmd.CommandText = value; }
         }
-        
+
         public void Dispose()
-        {         
-            if (_cmd!=null)
+        {
+            if (_cmd != null)
             {
                 _cmd.Dispose();
                 _db.CloseConnection();

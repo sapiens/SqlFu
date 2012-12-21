@@ -11,7 +11,7 @@ namespace SqlFu.DDL.Generators.Postgresql
 
 
         protected override void WriteColumnsNames(string columns, StringBuilder builder)
-        {            
+        {
             PostgresqlDDLWriter.WriteColumnsNames(columns, builder);
         }
     }

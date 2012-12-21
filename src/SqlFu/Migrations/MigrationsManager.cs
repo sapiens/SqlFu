@@ -1,26 +1,24 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
-using CavemanTools.Infrastructure.MessagesBus;
+using CavemanTools;
 
 namespace SqlFu.Migrations
 {
-    public class MigrationsManager:IManageMigrations
+    public class MigrationsManager : IManageMigrations
     {
         private List<IMigrateSchema> _schemas;
         private readonly IRunMigrations _runner;
 
-        public MigrationsManager(IEnumerable<IMigrateSchema> schemas,IRunMigrations runner)
+        public MigrationsManager(IEnumerable<IMigrateSchema> schemas, IRunMigrations runner)
         {
             schemas.MustNotBeNull();
-            schemas.ForEach(s=>s.Runner=runner);
+            schemas.ForEach(s => s.Runner = runner);
             _schemas = Sort(schemas);
             _runner = runner;
-        
         }
 
-        static List<IMigrateSchema> Sort(IEnumerable<IMigrateSchema> data)
+        private static List<IMigrateSchema> Sort(IEnumerable<IMigrateSchema> data)
         {
             return data.OrderByDescending(s => s.Priority).ToList();
         }
@@ -44,7 +42,7 @@ namespace SqlFu.Migrations
 
         public void InstallAllSchemas()
         {
-           foreach(var schema in _schemas) schema.InstallSchema();
+            foreach (var schema in _schemas) schema.InstallSchema();
         }
 
         public void Add(IMigrateSchema schema)
@@ -59,7 +57,5 @@ namespace SqlFu.Migrations
         {
             get { return _schemas; }
         }
-
-       
     }
 }

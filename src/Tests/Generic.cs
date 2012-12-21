@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using SqlFu;
+using Xunit;
 using System;
 using System.Diagnostics;
 
@@ -20,6 +21,19 @@ namespace Tests
             Assert.Equal(1,st.ReturnValue);
             Assert.Equal(34,st.OutputValues["Param2"]);
         }
+
+        public enum TT:long
+        {
+            None=0
+        }
+
+        [Fact]
+        public void FactMethodName()
+        {
+            Assert.Equal(typeof(long),Enum.GetUnderlyingType(TT.None.GetType()));
+            
+        }
+
 
         private void Write(string format, params object[] param)
         {

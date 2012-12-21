@@ -1,11 +1,6 @@
-using System;
-using System.Text;
-using SqlFu.DDL.Internals;
-using SqlFu.Providers.SqlServer;
-
 namespace SqlFu.DDL.Generators.SqlServer.CE
 {
-    internal class SqlServerCompactDDLWriter 
+    internal class SqlServerCompactDDLWriter
     {
         //public SqlServerCompactDDLWriter(IAccessDb db) : base(db)
         //{
@@ -60,7 +55,7 @@ namespace SqlFu.DDL.Generators.SqlServer.CE
         //            Builder.Append(",");
         //        }
         //    }
-       
+
         //    Builder.RemoveLastIfEquals(',');
         //}
 
@@ -177,6 +172,5 @@ namespace SqlFu.DDL.Generators.SqlServer.CE
         //        Builder.Append(";\n");
         //    }
         //}
-
     }
 }

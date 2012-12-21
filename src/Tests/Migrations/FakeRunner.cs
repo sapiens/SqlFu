@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
-using CavemanTools.Infrastructure.MessagesBus;
+using CavemanTools;
+
 using SqlFu.Migrations;
 
 namespace Tests.Migrations

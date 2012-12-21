@@ -10,20 +10,21 @@ namespace SqlFu
 {
     public static class Utils
     {
-       
         public static string FormatCommand(this IDbCommand cmd)
         {
-            return FormatCommand(cmd.CommandText, (cmd.Parameters.Cast<IDbDataParameter>().ToDictionary(p=>p.ParameterName,p=>p.Value)));
+            return FormatCommand(cmd.CommandText,
+                                 (cmd.Parameters.Cast<IDbDataParameter>()
+                                     .ToDictionary(p => p.ParameterName, p => p.Value)));
         }
 
         public static bool IsListParam(this object data)
         {
             if (data == null) return false;
             var value = data.GetType();
-            return value.Implements<IEnumerable>() && typeof(string)!=value && typeof(byte[])!=value;
+            return value.Implements<IEnumerable>() && typeof (string) != value && typeof (byte[]) != value;
         }
 
-        public static string FormatCommand(string sql, IDictionary<string,object> args)
+        public static string FormatCommand(string sql, IDictionary<string, object> args)
         {
             var sb = new StringBuilder();
             if (sql == null)
@@ -32,11 +33,11 @@ namespace SqlFu
             if (args != null && args.Count > 0)
             {
                 sb.Append("\n");
-                foreach(var kv in args)
+                foreach (var kv in args)
                 {
-                    sb.AppendFormat("\t -> {0} [{1}] = \"{2}\"\n",  kv.Key, kv.Value.GetType().Name, kv.Value);
+                    sb.AppendFormat("\t -> {0} [{1}] = \"{2}\"\n", kv.Key, kv.Value.GetType().Name, kv.Value);
                 }
-                
+
                 sb.Remove(sb.Length - 1, 1);
             }
             return sb.ToString();

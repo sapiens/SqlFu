@@ -1,18 +1,17 @@
 using System;
 using System.Data;
-using System.Linq;
 
 namespace SqlFu.DDL.Internals
 {
-    class ColumnEditor:IChangeColumn
+    internal class ColumnEditor : IChangeColumn
     {
         private readonly string _columnName;
         private readonly ColumnModifications _data;
 
-        public ColumnEditor(string columnName,string table)
+        public ColumnEditor(string columnName, string table)
         {
             _columnName = columnName;
-            _data = new ColumnModifications(columnName,table);
+            _data = new ColumnModifications(columnName, table);
         }
 
         public ColumnModifications Modifications
@@ -69,7 +68,6 @@ namespace SqlFu.DDL.Internals
         {
             _data.DefaultDropped = true;
             return this;
-        }      
-    
+        }
     }
 }

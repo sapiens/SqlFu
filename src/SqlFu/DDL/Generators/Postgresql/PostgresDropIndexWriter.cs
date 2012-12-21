@@ -2,15 +2,14 @@
 
 namespace SqlFu.DDL.Generators.Postgresql
 {
-    internal class PostgresDropIndexWriter:AbstractDropIndexWriter
+    internal class PostgresDropIndexWriter : AbstractDropIndexWriter
     {
-        public PostgresDropIndexWriter(StringBuilder builder) : base(builder,DbEngine.PostgreSQL)
+        public PostgresDropIndexWriter(StringBuilder builder) : base(builder, DbEngine.PostgreSQL)
         {
         }
 
         protected override void WriteOnTable()
         {
-           
         }
 
         protected override void WriteEndOptions()
@@ -18,7 +17,7 @@ namespace SqlFu.DDL.Generators.Postgresql
             var c = Item.Options.Get(DropOptions.Cascade);
             if (c != null)
             {
-                Builder.AppendFormat(" " + c.ToString());
+                Builder.AppendFormat(" " + c);
             }
         }
     }

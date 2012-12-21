@@ -4,6 +4,6 @@ namespace SqlFu.DDL
     {
         Throw,
         DropIt,
-        Ignore        
+        Ignore
     }
 }

@@ -3,13 +3,15 @@ using System;
 namespace SqlFu
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class TableAttribute:Attribute
+    public class TableAttribute : Attribute
     {
         public string Name { get; set; }
+
         /// <summary>
         /// default is Id
         /// </summary>
         public string PrimaryKey { get; set; }
+
         /// <summary>
         /// defaults is true
         /// </summary>

@@ -7,6 +7,7 @@ namespace SqlFu.DDL
         /// </summary>
         /// <returns></returns>
         string GetSql();
+
         /// <summary>
         /// Executes generated DDL script
         /// </summary>

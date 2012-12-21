@@ -3,7 +3,7 @@ using SqlFu.Providers;
 
 namespace SqlFu.DDL.Generators.Postgresql
 {
-    internal class PostgresForeignKeyWriter:AbstractForeignKeyWriter
+    internal class PostgresForeignKeyWriter : AbstractForeignKeyWriter
     {
         public PostgresForeignKeyWriter(StringBuilder builder) : base(builder, DbEngine.PostgreSQL)
         {

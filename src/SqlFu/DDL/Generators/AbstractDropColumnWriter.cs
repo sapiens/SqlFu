@@ -3,7 +3,7 @@ using SqlFu.DDL.Internals;
 
 namespace SqlFu.DDL.Generators
 {
-    abstract class AbstractDropColumnWriter:AbstractSchemaItemWriter
+    internal abstract class AbstractDropColumnWriter : AbstractSchemaItemWriter
     {
         private ColumnModifications _item;
 
@@ -20,15 +20,15 @@ namespace SqlFu.DDL.Generators
         {
             _item = item;
             _item.Options.Use(Engine);
-            Builder.AppendFormat("alter table {0} drop column {1}",Escape(item.TableName),Escape(item.Name));
+            Builder.AppendFormat("alter table {0} drop column {1}", Escape(item.TableName), Escape(item.Name));
             WriteEndOptions();
             Builder.AppendLine(";");
         }
 
         protected abstract string Escape(string name);
+
         protected virtual void WriteEndOptions()
         {
-            
         }
     }
 }

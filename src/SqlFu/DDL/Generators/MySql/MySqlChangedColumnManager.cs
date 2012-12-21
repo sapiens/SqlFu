@@ -2,9 +2,9 @@
 
 namespace SqlFu.DDL.Generators.MySql
 {
-    internal class MySqlChangedColumnManager:AbstractChangedColumnsManager
+    internal class MySqlChangedColumnManager : AbstractChangedColumnsManager
     {
-        public MySqlChangedColumnManager(StringBuilder builder) : base(builder,DbEngine.MySql)
+        public MySqlChangedColumnManager(StringBuilder builder) : base(builder, DbEngine.MySql)
         {
         }
 

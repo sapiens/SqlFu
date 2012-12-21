@@ -2,23 +2,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using CavemanTools.Infrastructure;
 using CavemanTools.Logging;
 
 namespace SqlFu.Migrations.Automatic
 {
-    class AutomaticMigration : IAutomaticMigration
+    internal class AutomaticMigration : IAutomaticMigration
     {
         private readonly IAccessDb _db;
         private readonly IManageMigrations _migrations;
         private readonly IRunMigrations _runner;
         internal const string TableName = "SqlFuMigrationTracker";
         internal const string SchemaName = "AutomaticMigration";
+
         public AutomaticMigration(IAccessDb db, IManageMigrations migrations, ILogWriter logger)
         {
             _db = db;
             _migrations = migrations;
-            _runner=new MigrationTaskRunner(db,logger);
+            _runner = new MigrationTaskRunner(db, logger);
             UpdateSelf();
         }
 
@@ -29,7 +29,7 @@ namespace SqlFu.Migrations.Automatic
             {
                 tasks = tasks.Where(s => schemas.Any(d => d == s.SchemaName));
             }
-            using (var t=_migrations.StartUnitOfWork())
+            using (var t = _migrations.StartUnitOfWork())
             {
                 foreach (var schema in tasks)
                 {
@@ -37,7 +37,7 @@ namespace SqlFu.Migrations.Automatic
                     if (version.IsNullOrEmpty())
                     {
                         schema.InstallSchema();
-                        AppendVersion(schema.SchemaName,schema.LatestVersionAvailable);
+                        AppendVersion(schema.SchemaName, schema.LatestVersionAvailable);
                     }
                     else
                     {
@@ -50,34 +50,33 @@ namespace SqlFu.Migrations.Automatic
                 }
                 t.Commit();
             }
-            
         }
 
         public void Untrack(params string[] schemas)
         {
-            if (schemas.Length==0) return;
+            if (schemas.Length == 0) return;
             _db.ExecuteCommand("delete from " + TableName + " where SchemaName in (@0)", schemas.ToList());
         }
 
-        void AppendVersion(string schema, string version)
+        private void AppendVersion(string schema, string version)
         {
-            _db.Insert(new MigrationTrack()
-            {
-                SchemaName = schema,
-                Version = version
-            });
+            _db.Insert(new MigrationTrack
+                {
+                    SchemaName = schema,
+                    Version = version
+                });
         }
 
         private void UpdateSelf()
         {
             var migrator = new SchemaMigrationExecutor(_runner, GetMigratorTasks(), SchemaName);
-            
+
             using (var t = _db.BeginTransaction())
             {
                 if (!_db.DatabaseTools.TableExists(TableName))
                 {
                     migrator.InstallSchema();
-                    AppendVersion(SchemaName,migrator.LatestVersionAvailable);
+                    AppendVersion(SchemaName, migrator.LatestVersionAvailable);
                 }
                 else
                 {
@@ -87,7 +86,7 @@ namespace SqlFu.Migrations.Automatic
                         migrator.InstallSchema();
                         AppendVersion(SchemaName, migrator.LatestVersionAvailable);
                     }
-                    else 
+                    else
                     {
                         if (latest != migrator.LatestVersionAvailable)
                         {
@@ -96,14 +95,12 @@ namespace SqlFu.Migrations.Automatic
                         }
                     }
                 }
-                
+
                 t.Commit();
             }
-            
-
         }
 
-        IEnumerable<IMigrationTask> GetMigratorTasks()
+        private IEnumerable<IMigrationTask> GetMigratorTasks()
         {
             var tasks = GetType().Assembly.GetTypesImplementing<IMigrationTask>(true)
                                  .Select(t => Activator.CreateInstance(t))
@@ -111,13 +108,11 @@ namespace SqlFu.Migrations.Automatic
             return tasks.Where(t => t.SchemaName == SchemaName);
         }
 
-      
 
-        string GetInstalledVersion(string schema)
+        private string GetInstalledVersion(string schema)
         {
-            return _db.GetValue<string>("select Version from " + TableName + " where SchemaName=@0 order by Id desc",schema);
+            return _db.GetValue<string>("select Version from " + TableName + " where SchemaName=@0 order by Id desc",
+                                        schema);
         }
-
-      
     }
 }

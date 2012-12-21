@@ -7,7 +7,7 @@ using SqlFu.DDL;
 
 namespace SqlFu
 {
-    public interface IAccessDb:IDisposable
+    public interface IAccessDb : IDisposable
     {
         IDatabaseTools DatabaseTools { get; }
         DbConnection Connection { get; }
@@ -26,6 +26,7 @@ namespace SqlFu
 
         [Obsolete("Use GetValue method")]
         T ExecuteScalar<T>(string sql, params object[] args);
+
         /// <summary>
         /// Returns the first column of the first row in the result set.
         /// All the other rows and columns are ignored
@@ -35,8 +36,9 @@ namespace SqlFu
         /// <param name="args"></param>
         /// <returns></returns>
         T GetValue<T>(string sql, params object[] args);
-        T Get<T>(object id,string additionalPredicate=null,params object[] args);
-        ResultSet<T> PagedQuery<T>(long skip,int take,string sql, params object[] args);
+
+        T Get<T>(object id, string additionalPredicate = null, params object[] args);
+        ResultSet<T> PagedQuery<T>(long skip, int take, string sql, params object[] args);
         IEnumerable<T> Query<T>(string sql, params object[] args);
         List<T> Fetch<T>(string sql, params object[] args);
 
@@ -48,7 +50,7 @@ namespace SqlFu
         /// <returns></returns>
         ISqlStatement WithSql(string sql, params object[] args);
 
-        IPagedSqlStatement WithSql(long skip,int take,string sql, params object[] args);
+        IPagedSqlStatement WithSql(long skip, int take, string sql, params object[] args);
 
         /// <summary>
         /// Executes sproc
@@ -59,6 +61,6 @@ namespace SqlFu
         /// ExecuteStoredProcedure("sprocName",new{Id=1,_OutValue=""})
         /// </example>
         /// <returns></returns>
-        StoredProcedureResult ExecuteStoredProcedure(string sprocName, object arguments=null);
+        StoredProcedureResult ExecuteStoredProcedure(string sprocName, object arguments = null);
     }
 }

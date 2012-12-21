@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace SqlFu.DDL.Internals
 {
-    class IndexColumnsCollection:List<IndexColumn>
+    internal class IndexColumnsCollection : List<IndexColumn>
     {
         public IndexColumn this[string name]
         {

@@ -9,9 +9,10 @@ namespace SqlFu.Migrations.Automatic
         {
             TimeOfUpdate = DateTime.UtcNow;
         }
+
         public int Id { get; set; }
         public string SchemaName { get; set; }
         public string Version { get; set; }
-        public DateTime TimeOfUpdate { get; set; }        
+        public DateTime TimeOfUpdate { get; set; }
     }
 }

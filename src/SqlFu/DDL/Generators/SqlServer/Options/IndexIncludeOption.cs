@@ -2,7 +2,7 @@
 
 namespace SqlFu.DDL.Generators.SqlServer.Options
 {
-    public class IndexIncludeOption:DbSpecificOption
+    public class IndexIncludeOption : DbSpecificOption
     {
         public IndexIncludeOption(params string[] columns) : base(SqlServerOptions.Include, DbEngine.SqlServer)
         {
@@ -11,7 +11,8 @@ namespace SqlFu.DDL.Generators.SqlServer.Options
 
         public override string ToString()
         {
-            return string.Format("INCLUDE ({0})",CommonDDLWriter.GetEscapedNames(Value.ToString(),SqlServerProvider.EscapeIdentifier));
+            return string.Format("INCLUDE ({0})",
+                                 CommonDDLWriter.GetEscapedNames(Value.ToString(), SqlServerProvider.EscapeIdentifier));
         }
     }
 }

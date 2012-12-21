@@ -1,15 +1,13 @@
 ﻿using System.Text;
 using SqlFu.Providers.SqlServer;
 
-
 namespace SqlFu.DDL.Generators.SqlServer
 {
-    internal class SqlServerDropConstraintWriter:AbstractDropConstraintWriter
+    internal class SqlServerDropConstraintWriter : AbstractDropConstraintWriter
     {
-        
-        public SqlServerDropConstraintWriter(StringBuilder builder,IDatabaseTools tools) : base(builder, DbEngine.SqlServer,tools)
+        public SqlServerDropConstraintWriter(StringBuilder builder, IDatabaseTools tools)
+            : base(builder, DbEngine.SqlServer, tools)
         {
-            
         }
 
         #region Overrides of AbstractDropConstraintWriter
@@ -21,8 +19,9 @@ namespace SqlFu.DDL.Generators.SqlServer
 
         protected override void WriteConstraint()
         {
-           Builder.AppendFormat("constraint {0}",EscapeName(Item.Name));
+            Builder.AppendFormat("constraint {0}", EscapeName(Item.Name));
         }
+
         #endregion
     }
 }

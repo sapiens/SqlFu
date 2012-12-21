@@ -3,7 +3,7 @@ using SqlFu.DDL.Internals;
 
 namespace SqlFu.DDL.Generators
 {
-    abstract class AbstractCheckWriter:AbstractConstraintWriter
+    internal abstract class AbstractCheckWriter : AbstractConstraintWriter
     {
         protected AbstractCheckWriter(StringBuilder builder, DbEngine engine) : base(builder, engine)
         {
@@ -11,7 +11,7 @@ namespace SqlFu.DDL.Generators
 
         public void Write(CheckConstraint key)
         {
-           base.Write(key);
+            base.Write(key);
         }
 
         protected override void WriteConstraintType()

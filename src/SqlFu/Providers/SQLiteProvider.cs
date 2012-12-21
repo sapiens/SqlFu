@@ -5,28 +5,26 @@ using SqlFu.DDL.Generators.Sqlite;
 
 namespace SqlFu.Providers
 {
-    public class SqliteProvider:AbstractProvider
+    public class SqliteProvider : AbstractProvider
     {
         public const string ProviderName = "System.Data.SQLite";
 
-        public SqliteProvider():this(ProviderName)
+        public SqliteProvider() : this(ProviderName)
         {
-            
         }
 
-        public override void SetupParameter(System.Data.IDbDataParameter param, string name, object value)
+        public override void SetupParameter(IDbDataParameter param, string name, object value)
         {
             base.SetupParameter(param, name, value);
             if (value != null)
             {
-                if (value.GetType() == typeof(Guid))
+                if (value.GetType() == typeof (Guid))
                 {
                     param.DbType = DbType.String;
                     value = value.ToString();
                     param.Size = 32;
                 }
             }
-            
         }
 
         public SqliteProvider(string providerName) : base(providerName)
@@ -40,7 +38,7 @@ namespace SqlFu.Providers
 
         public override DbEngine ProviderType
         {
-            get { return DbEngine.SQLite;}
+            get { return DbEngine.SQLite; }
         }
 
         protected override IDatabaseTools InitTools(DbAccess db)
@@ -63,9 +61,9 @@ namespace SqlFu.Providers
                     var rez = sql.ExecuteScalar();
                     return new LastInsertId(rez);
                 }
-            }            
+            }
             sql.Execute();
-            return LastInsertId.Empty;            
+            return LastInsertId.Empty;
         }
 
         public override string ParamPrefix

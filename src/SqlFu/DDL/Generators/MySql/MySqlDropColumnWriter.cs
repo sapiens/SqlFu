@@ -3,7 +3,7 @@ using SqlFu.Providers;
 
 namespace SqlFu.DDL.Generators.MySql
 {
-    internal class MySqlDropColumnWriter:AbstractDropColumnWriter
+    internal class MySqlDropColumnWriter : AbstractDropColumnWriter
     {
         public MySqlDropColumnWriter(StringBuilder builder) : base(builder, DbEngine.MySql)
         {

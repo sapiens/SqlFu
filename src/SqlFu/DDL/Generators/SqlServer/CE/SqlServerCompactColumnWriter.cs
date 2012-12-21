@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using SqlFu.DDL.Internals;
 
 namespace SqlFu.DDL.Generators.SqlServer.CE
 {
@@ -8,7 +9,7 @@ namespace SqlFu.DDL.Generators.SqlServer.CE
         {
         }
 
-        public override void Write(Internals.ColumnModifications col)
+        public override void Write(ColumnModifications col)
         {
             col.Collation = null;
             base.Write(col);
@@ -26,7 +27,6 @@ namespace SqlFu.DDL.Generators.SqlServer.CE
 
         protected override void WriteSparseOption(DbEngineOptions options)
         {
-            
         }
     }
 }

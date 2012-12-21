@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SqlFu.DDL.Internals
 {
-    class ColumnsCollection:List<ColumnDefinition>
+    internal class ColumnsCollection : List<ColumnDefinition>
     {
         public void AddColumn(ColumnDefinition col)
         {
@@ -19,7 +18,7 @@ namespace SqlFu.DDL.Internals
 
         public ColumnDefinition this[string name]
         {
-            get { return Find(d => d.Name == name);}
+            get { return Find(d => d.Name == name); }
         }
 
         public bool IsIdentityDefined { get; private set; }

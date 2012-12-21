@@ -6,12 +6,12 @@ using CavemanTools.Model;
 
 namespace SqlFu
 {
-    public interface IPagedQueryStatement:IQuerySqlStatement
+    public interface IPagedQueryStatement : IQuerySqlStatement
     {
         ResultSet<T> ExecutePagedQuery<T>(Func<IDataReader, T> mapper = null);
     }
 
-    public interface IPagedSqlStatement:IPagedQueryStatement,IDisposable
+    public interface IPagedSqlStatement : IPagedQueryStatement, IDisposable
     {
         DbAccess Db { get; }
 
@@ -24,44 +24,44 @@ namespace SqlFu
         IPagedQueryStatement ApplyToCommand(Action<DbCommand> action);
     }
 
-    public class PagedSqlStatement:SqlStatement,IPagedSqlStatement
+    public class PagedSqlStatement : SqlStatement, IPagedSqlStatement
     {
         public const string SkipParameterName = "_fuskip";
         public const string TakeParameterName = "_futake";
         private long _skip;
+
         private int _take
-            ;
+                    ;
 
         public PagedSqlStatement(DbAccess db) : base(db)
         {
         }
 
-        public void SetSql(long skip,int take,string sql,params object[] args)
+        public void SetSql(long skip, int take, string sql, params object[] args)
         {
-            SetSql(sql,args);
+            SetSql(sql, args);
 
             _skip = skip;
             _take = take;
         }
 
-        void AddPagingParams()
+        private void AddPagingParams()
         {
             var sp = _cmd.CreateParameter();
-            Db.Provider.SetupParameter(sp,SkipParameterName,_skip);
+            Db.Provider.SetupParameter(sp, SkipParameterName, _skip);
             _cmd.Parameters.Add(sp);
 
             var tp = _cmd.CreateParameter();
-            Db.Provider.SetupParameter(tp,TakeParameterName,_take);
+            Db.Provider.SetupParameter(tp, TakeParameterName, _take);
             _cmd.Parameters.Add(tp);
             var lc = new List<string>(_paramNames);
             lc.Add(SkipParameterName);
             lc.Add(TakeParameterName);
             _paramNames = lc.ToArray();
         }
-        
+
         public ResultSet<T> ExecutePagedQuery<T>(Func<IDataReader, T> mapper = null)
         {
-
             string select;
             string count;
             _db.Provider.MakePaged(_cmd.CommandText, out @select, out count);
@@ -70,12 +70,10 @@ namespace SqlFu
 
             using (_cmd)
             {
-
                 _cmd.CommandText = count;
                 FormatCommand();
                 try
                 {
-
                     rez.Count = _cmd.ExecuteScalar().ConvertTo<int>();
                     _db.OnCommand(_cmd);
                     if (rez.Count == 0)
@@ -93,7 +91,6 @@ namespace SqlFu
                             if (mapper == null) mapper = PocoFactory.GetPocoMapper<T>(rd, _cmd.CommandText);
                             it.Add(mapper(rd));
                         }
-
                     }
                     rez.Items = it.ToArray();
                     _db.OnCommand(_cmd);
@@ -104,7 +101,6 @@ namespace SqlFu
                     Db.CloseConnection();
                     throw;
                 }
-
             }
             return rez;
         }

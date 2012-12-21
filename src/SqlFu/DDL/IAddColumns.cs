@@ -2,7 +2,6 @@ using System.Data;
 
 namespace SqlFu.DDL
 {
-
     public interface IAddColumns : ISupportSpecificColumnsOptions
     {
         /// <summary>
@@ -16,24 +15,26 @@ namespace SqlFu.DDL
         /// <param name="collation"> </param>
         /// <param name="autoIncrement">identity column</param>
         /// <returns></returns>
-        IConfigureColumns Add(string name, DbType type, string size = "", bool isNullable = true, string defaultValue = "", string collation = "", bool autoIncrement = false);
-       
+        IConfigureColumns Add(string name, DbType type, string size = "", bool isNullable = true,
+                              string defaultValue = "", string collation = "", bool autoIncrement = false);
     }
 
-    public interface IConfigureColumns:IAddColumns
+    public interface IConfigureColumns : IAddColumns
     {
         /// <summary>
         /// Set the primary key constraint
         /// </summary>
         /// <param name="keyName"></param>
         /// <returns></returns>
-        IConfigureColumns AsPrimaryKey(string keyName=null);
+        IConfigureColumns AsPrimaryKey(string keyName = null);
+
         /// <summary>
         /// Column has unique values
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        IConfigureColumns AsUnique(string name=null);
+        IConfigureColumns AsUnique(string name = null);
+
         /// <summary>
         /// Column value must respect expression
         /// </summary>
@@ -41,6 +42,7 @@ namespace SqlFu.DDL
         /// <param name="constraintName"></param>
         /// <returns></returns>
         IConfigureColumns WithCheck(string expression, string constraintName);
+
         /// <summary>
         /// Create an index for column
         /// </summary>
@@ -59,12 +61,12 @@ namespace SqlFu.DDL
         /// <param name="keyName"></param>
         /// <returns></returns>
         IConfigureColumns IsForeignKeyFrom(string parentTable, string parentColumns,
-                                          ForeignKeyRelationCascade onUpdate = ForeignKeyRelationCascade.NoAction,
-                                          ForeignKeyRelationCascade onDelete = ForeignKeyRelationCascade.NoAction,
-                                          string keyName = null);
+                                           ForeignKeyRelationCascade onUpdate = ForeignKeyRelationCascade.NoAction,
+                                           ForeignKeyRelationCascade onDelete = ForeignKeyRelationCascade.NoAction,
+                                           string keyName = null);
     }
 
-    
+
     public interface ISupportSpecificColumnsOptions
     {
         /// <summary>

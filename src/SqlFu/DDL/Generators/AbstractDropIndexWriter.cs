@@ -3,7 +3,7 @@ using SqlFu.DDL.Internals;
 
 namespace SqlFu.DDL.Generators
 {
-    internal abstract class AbstractDropIndexWriter:AbstractSchemaItemWriter
+    internal abstract class AbstractDropIndexWriter : AbstractSchemaItemWriter
     {
         private DroppedSchemaItem _item;
 
@@ -30,14 +30,12 @@ namespace SqlFu.DDL.Generators
 
         protected virtual void WriteBeforeNameOptions()
         {
-            
         }
 
         protected abstract void WriteOnTable();
-       
+
         protected virtual void WriteEndOptions()
         {
-            
         }
     }
 }

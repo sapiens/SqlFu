@@ -1,4 +1,4 @@
-﻿using CavemanTools.Infrastructure.MessagesBus;
+﻿using CavemanTools;
 
 namespace SqlFu.Migrations
 {

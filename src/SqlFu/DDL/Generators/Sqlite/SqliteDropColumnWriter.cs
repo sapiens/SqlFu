@@ -3,9 +3,9 @@ using SqlFu.Providers;
 
 namespace SqlFu.DDL.Generators.Sqlite
 {
-    internal class SqliteDropColumnWriter:AbstractDropColumnWriter
+    internal class SqliteDropColumnWriter : AbstractDropColumnWriter
     {
-        public SqliteDropColumnWriter(StringBuilder builder) : base(builder,DbEngine.SQLite)
+        public SqliteDropColumnWriter(StringBuilder builder) : base(builder, DbEngine.SQLite)
         {
         }
 

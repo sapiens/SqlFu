@@ -1,8 +1,4 @@
-﻿using System.Text;
-using SqlFu.DDL.Internals;
-using SqlFu.Providers;
-
-namespace SqlFu.DDL.Generators.Sqlite
+﻿namespace SqlFu.DDL.Generators.Sqlite
 {
     //internal abstract class SqliteConstraintWriter : AbstractConstraintWriter
     //{

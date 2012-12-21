@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SqlFu.DDL.Internals
 {
-    class DroppedSchemaItemsCollection:List<DroppedSchemaItem>
+    internal class DroppedSchemaItemsCollection : List<DroppedSchemaItem>
     {
         private readonly string _tableName;
 
@@ -15,7 +15,7 @@ namespace SqlFu.DDL.Internals
 
         public DroppedSchemaItem AddPrimaryKey()
         {
-            var item = new DroppedSchemaItem(null, _tableName){IsPrimaryKey = true};
+            var item = new DroppedSchemaItem(null, _tableName) {IsPrimaryKey = true};
             Add(item);
             return item;
         }
@@ -23,12 +23,12 @@ namespace SqlFu.DDL.Internals
         public DroppedSchemaItem Add(string name)
         {
             name.MustNotBeEmpty();
-            DroppedSchemaItem item=Find(d=>d.Name==name);
-            if (item==null)
+            DroppedSchemaItem item = Find(d => d.Name == name);
+            if (item == null)
             {
-                item = new DroppedSchemaItem(name,_tableName);
+                item = new DroppedSchemaItem(name, _tableName);
                 Add(item);
-            }            
+            }
             return item;
         }
     }

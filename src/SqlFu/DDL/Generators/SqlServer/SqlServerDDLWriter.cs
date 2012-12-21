@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 using SqlFu.DDL.Internals;
 using SqlFu.Providers.SqlServer;
 
 namespace SqlFu.DDL.Generators.SqlServer
 {
-    internal class SqlServerDDLWriter:CommonDDLWriter
+    internal class SqlServerDDLWriter : CommonDDLWriter
     {
-        public SqlServerDDLWriter(IAccessDb db) : base(db,DbEngine.SqlServer)
+        public SqlServerDDLWriter(IAccessDb db) : base(db, DbEngine.SqlServer)
         {
         }
 
@@ -43,28 +42,26 @@ namespace SqlFu.DDL.Generators.SqlServer
         }
 
 
-         public static void WriteColumnsNames(string columns,StringBuilder builder)
+        public static void WriteColumnsNames(string columns, StringBuilder builder)
         {
-            WriteColumnsNames(columns,builder,SqlServerProvider.EscapeIdentifier);            
+            WriteColumnsNames(columns, builder, SqlServerProvider.EscapeIdentifier);
         }
-        
+
         //public static void WriteColumnsNames(ICollection<string> columns,StringBuilder builder)
         //{
         //    WriteColumnsNames(columns,builder,SqlServerProvider.EscapeIdentifier);            
         //}
 
-        
         #region Alter Table
 
-   
-       protected override AbstractChangedColumnsManager GetChangedColumnsManager()
+        protected override AbstractChangedColumnsManager GetChangedColumnsManager()
         {
-            return new SqlServerChangedColumnsManager(Builder,Db);
+            return new SqlServerChangedColumnsManager(Builder, Db);
         }
 
         protected override void WriteRenameColumn(ColumnModifications col)
         {
-            Builder.AppendFormat("exec sp_rename '{2}.{0}','{1}','COLUMN';\n", col.Current.Name, col.NewName, Table.Name); 
+            Builder.AppendFormat("exec sp_rename '{2}.{0}','{1}','COLUMN';\n", col.Current.Name, col.NewName, Table.Name);
         }
 
         protected override AbstractDropIndexWriter GetDropIndexWriter()
@@ -74,12 +71,12 @@ namespace SqlFu.DDL.Generators.SqlServer
 
         protected override AbstractDropConstraintWriter GetDropConstraintWriter()
         {
-            return new SqlServerDropConstraintWriter(Builder,Db.DatabaseTools);
+            return new SqlServerDropConstraintWriter(Builder, Db.DatabaseTools);
         }
 
         protected override AbstractDropColumnWriter GetDropColumnWriter()
         {
-            return  new SqlServerDropColumnWriter(Builder);
+            return new SqlServerDropColumnWriter(Builder);
         }
 
         protected override string Escape(string name)
@@ -88,12 +85,13 @@ namespace SqlFu.DDL.Generators.SqlServer
         }
 
 
-         protected override string GetAddConstraintPrefix()
+        protected override string GetAddConstraintPrefix()
         {
             return "";
         }
 
         #region Sql future use
+
         /*
          * Find index
          * 
@@ -123,11 +121,9 @@ ORDER BY
          * For Pk,Fk ,Checks  
          * select * from [INFORMATION_SCHEMA].[TABLE_CONSTRAINTS]
          * */
+
         #endregion
 
-       
-
-       
         #endregion
     }
 }

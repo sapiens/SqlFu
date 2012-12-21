@@ -1,10 +1,9 @@
-﻿using System.Linq;
+﻿using System;
 using SqlFu.DDL.Generators;
-using System;
 
 namespace SqlFu.DDL.Internals
 {
-    internal abstract class CommonDatabaseTools:IDatabaseTools
+    internal abstract class CommonDatabaseTools : IDatabaseTools
     {
         protected readonly DbAccess Db;
 
@@ -26,14 +25,14 @@ namespace SqlFu.DDL.Internals
         {
             tableName.MustNotBeEmpty();
             var cmd = string.Format("drop table {0}", FormatName(tableName));
-             Db.ExecuteCommand(cmd);            
+            Db.ExecuteCommand(cmd);
         }
 
         public abstract bool TableExists(string name, string schema);
 
 
         public abstract void RenameTable(string oldName, string newName);
-        
+
 
         public void TruncateTable(string name)
         {
@@ -43,14 +42,14 @@ namespace SqlFu.DDL.Internals
 
         public ICreateTable GetCreateTableBuilder(string name, IfTableExists option = IfTableExists.Throw)
         {
-            return new CreateTableBuilder(Db,GetDDLWriter(), name, option);            
+            return new CreateTableBuilder(Db, GetDDLWriter(), name, option);
         }
 
         protected abstract IGenerateDDL GetDDLWriter();
 
         public IModifyTable GetAlterTableBuilder(string name)
         {
-            return new ModifyTableBuilder(Db,GetDDLWriter(),name);
+            return new ModifyTableBuilder(Db, GetDDLWriter(), name);
         }
     }
 }

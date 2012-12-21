@@ -4,10 +4,10 @@ using System.Linq;
 
 namespace SqlFu.DDL.Internals
 {
-    class ModifiedColumnsCollection:IEnumerable<ColumnModifications>
+    internal class ModifiedColumnsCollection : IEnumerable<ColumnModifications>
     {
         private readonly string _table;
-        Dictionary<string,ColumnEditor> _columns= new Dictionary<string, ColumnEditor>();
+        private readonly Dictionary<string, ColumnEditor> _columns = new Dictionary<string, ColumnEditor>();
 
         public ModifiedColumnsCollection(string table)
         {
@@ -21,13 +21,13 @@ namespace SqlFu.DDL.Internals
                 ColumnEditor rez = null;
                 if (!_columns.TryGetValue(name.ToLowerInvariant(), out rez))
                 {
-                    rez = new ColumnEditor(name,TableName);
+                    rez = new ColumnEditor(name, TableName);
                     _columns.Add(name.ToLowerInvariant(), rez);
                 }
                 return rez;
             }
         }
-        
+
         public ICollection<string> AllColumnsNames
         {
             get { return _columns.Keys; }
@@ -50,7 +50,13 @@ namespace SqlFu.DDL.Internals
 
         public ICollection<ColumnModifications> Renames
         {
-            get { return _columns.Where(d => d.Value.Modifications.NewName != null).Select(d=>d.Value.Modifications).ToArray(); }
+            get
+            {
+                return
+                    _columns.Where(d => d.Value.Modifications.NewName != null)
+                            .Select(d => d.Value.Modifications)
+                            .ToArray();
+            }
         }
 
         public string TableName

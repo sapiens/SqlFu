@@ -4,10 +4,11 @@ using System.Data;
 
 namespace SqlFu
 {
-    internal class SProcStatement:SqlStatement
+    internal class SProcStatement : SqlStatement
     {
-        List<IDbDataParameter> _output= new List<IDbDataParameter>();
-        private IDbDataParameter _return = null;
+        private readonly List<IDbDataParameter> _output = new List<IDbDataParameter>();
+        private IDbDataParameter _return;
+
         public SProcStatement(DbAccess db) : base(db)
         {
         }
@@ -47,7 +48,7 @@ namespace SqlFu
 
         protected override IDictionary<string, object> CreateParamsDictionary(params object[] args)
         {
-            if (args.Length==1 && args[0]==null) return base.CreateParamsDictionary();
+            if (args.Length == 1 && args[0] == null) return base.CreateParamsDictionary();
             return base.CreateParamsDictionary(args);
         }
 
@@ -56,12 +57,12 @@ namespace SqlFu
             base.Execute();
             var rez = new StoredProcedureResult();
             rez.ReturnValue = _return.Value.ConvertTo<int>();
-            foreach(var p in _output)
+            foreach (var p in _output)
             {
                 //first char of parameter name is db specific param naming
                 rez.OutputValues[p.ParameterName.Substring(1)] = p.Value;
             }
-            
+
             return rez;
         }
     }

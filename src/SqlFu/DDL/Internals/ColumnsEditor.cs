@@ -2,12 +2,12 @@ using System;
 
 namespace SqlFu.DDL.Internals
 {
-    class ColumnsEditor : ColumnsCreator, IModifyColumns, ISupportOptionsForDrop<IModifyColumns>
+    internal class ColumnsEditor : ColumnsCreator, IModifyColumns, ISupportOptionsForDrop<IModifyColumns>
     {
         private readonly TableSchema _table;
         private readonly IModifyTable _parent;
 
-        public ColumnsEditor(TableSchema table,IModifyTable parent) : base(table)
+        public ColumnsEditor(TableSchema table, IModifyTable parent) : base(table)
         {
             _table = table;
             _parent = parent;
@@ -23,10 +23,11 @@ namespace SqlFu.DDL.Internals
 
         public IChangeColumn Change(string name)
         {
-            return _table.ModifiedColumns[name];            
+            return _table.ModifiedColumns[name];
         }
 
         private ColumnModifications _dropped;
+
         public ISupportOptionsForDrop<IModifyColumns> Drop(string name)
         {
             _dropped = _table.ModifiedColumns[name].Modifications;

@@ -8,17 +8,20 @@ namespace SqlFu.Migrations
         /// Gets semantic version to upgrade from
         /// </summary>
         SemanticVersion CurrentVersion { get; }
+
         /// <summary>
         /// Gets semantic version to upgrade to
         /// </summary>
         SemanticVersion NextVersion { get; }
 
         string SchemaName { get; }
+
         /// <summary>
         /// Task is executed automatically in a transaction
         /// </summary>
         /// <param name="db"></param>
         void Execute(IAccessDb db);
+
         int Priority { get; }
     }
 }

@@ -3,12 +3,12 @@ using CavemanTools;
 
 namespace SqlFu.Migrations
 {
-    public abstract class AbstractMigrationTask:IMigrationTask
+    public abstract class AbstractMigrationTask : IMigrationTask
     {
         public AbstractMigrationTask()
         {
             var attr = GetType().GetSingleAttribute<MigrationAttribute>();
-            if (attr!=null)
+            if (attr != null)
             {
                 CurrentVersion = attr.From;
                 NextVersion = attr.To;
@@ -16,6 +16,7 @@ namespace SqlFu.Migrations
                 Priority = attr.Priority;
             }
         }
+
         public SemanticVersion CurrentVersion { get; private set; }
         public SemanticVersion NextVersion { get; private set; }
         public string SchemaName { get; private set; }

@@ -3,21 +3,20 @@ using SqlFu.Providers.SqlServer;
 
 namespace SqlFu.DDL.Generators.SqlServer
 {
-    class SqlServerUniqueKeyWriter:AbstractUniqueKeyWriter
+    internal class SqlServerUniqueKeyWriter : AbstractUniqueKeyWriter
     {
-        public SqlServerUniqueKeyWriter(StringBuilder builder) : base(builder,DbEngine.SqlServer)
+        public SqlServerUniqueKeyWriter(StringBuilder builder) : base(builder, DbEngine.SqlServer)
         {
         }
 
-        protected SqlServerUniqueKeyWriter(StringBuilder builder,DbEngine engine):base(builder,engine)
+        protected SqlServerUniqueKeyWriter(StringBuilder builder, DbEngine engine) : base(builder, engine)
         {
-            
         }
 
         protected override string ConstraintName(string name)
         {
             return SqlServerProvider.EscapeIdentifier(name);
-        }   
+        }
 
         protected override void WriteConstraintType()
         {

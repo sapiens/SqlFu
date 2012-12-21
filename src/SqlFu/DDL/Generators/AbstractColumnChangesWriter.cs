@@ -3,16 +3,15 @@ using SqlFu.DDL.Internals;
 
 namespace SqlFu.DDL.Generators
 {
-    internal abstract class AbstractColumnChangesWriter:AbstractSchemaItemWriter
+    internal abstract class AbstractColumnChangesWriter : AbstractSchemaItemWriter
     {
-      
         public AbstractColumnChangesWriter(StringBuilder builder, DbEngine engine) : base(builder, engine)
         {
         }
 
-    
+
         public abstract void WriteDropDefault(ColumnModifications col);
-     
+
         /// <summary>
         /// type, size,collate, null
         /// </summary>
@@ -20,6 +19,5 @@ namespace SqlFu.DDL.Generators
 
 
         public abstract void WriteSetDefault(ColumnModifications col);
-
     }
 }

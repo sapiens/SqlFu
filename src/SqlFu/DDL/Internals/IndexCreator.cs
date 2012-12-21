@@ -2,7 +2,7 @@
 
 namespace SqlFu.DDL.Internals
 {
-    class IndexCreator: ICreateIndexes,IDefineSpecificIndexOptions
+    internal class IndexCreator : ICreateIndexes, IDefineSpecificIndexOptions
     {
         private readonly IndexCollection _schema;
 
@@ -27,17 +27,20 @@ namespace SqlFu.DDL.Internals
         }
 
         private IndexDefinition _idx;
+
         public ISupportSpecificIndexOptions AddIndexOn(string columnsNames, bool isUnique, string indexName = null)
         {
-            _idx=Schema.AddIndex(columnsNames,isUnique,indexName);
+            _idx = Schema.AddIndex(columnsNames, isUnique, indexName);
             return this;
         }
 
         public ISupportSpecificIndexOptions this[string idxName]
         {
-            get { 
+            get
+            {
                 _idx = Schema[idxName];
-                if (_idx==null) throw new InvalidOperationException(string.Format("Index is not defined '{0}'",idxName));
+                if (_idx == null)
+                    throw new InvalidOperationException(string.Format("Index is not defined '{0}'", idxName));
                 return this;
             }
         }
@@ -54,13 +57,13 @@ namespace SqlFu.DDL.Internals
 
         public IDefineSpecificIndexOptions RedefineAs(string definition)
         {
-            _idx.Redefine(_engine.Value,definition);
+            _idx.Redefine(_engine.Value, definition);
             return this;
         }
 
         public IDefineSpecificIndexOptions AddCustom(string definition)
         {
-            if (_engine==null)
+            if (_engine == null)
             {
                 throw new InvalidOperationException("No database engine is selected. Please use the other overload");
             }
@@ -70,18 +73,18 @@ namespace SqlFu.DDL.Internals
 
         public IDefineSpecificIndexOptions AddCustom(DbEngine engine, string definition)
         {
-            Schema.AddSpecific(engine, definition); 
+            Schema.AddSpecific(engine, definition);
             return this;
         }
 
         #endregion
     }
 
-    class IndexEditor:IndexCreator,IModifyIndexes,ISupportOptionsForDrop<IModifyIndexes>
+    internal class IndexEditor : IndexCreator, IModifyIndexes, ISupportOptionsForDrop<IModifyIndexes>
     {
         private readonly IModifyTable _parent;
 
-        public IndexEditor(IndexCollection schema,IModifyTable parent) : base(schema)
+        public IndexEditor(IndexCollection schema, IModifyTable parent) : base(schema)
         {
             _parent = parent;
         }

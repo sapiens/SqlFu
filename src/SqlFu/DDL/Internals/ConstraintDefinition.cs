@@ -2,18 +2,20 @@ using System.Collections.Generic;
 
 namespace SqlFu.DDL.Internals
 {
-    abstract class ConstraintDefinition
+    internal abstract class ConstraintDefinition
     {
         public ConstraintDefinition()
         {
-            Options= new DbEngineOptions();
+            Options = new DbEngineOptions();
         }
+
         internal DbEngineOptions Options { get; private set; }
         public string Name { get; set; }
         public string Columns { get; set; }
         public bool Ignore { get; set; }
 
-        Dictionary<DbEngine, string> _redefined = new Dictionary<DbEngine, string>();
+        private readonly Dictionary<DbEngine, string> _redefined = new Dictionary<DbEngine, string>();
+
         public void Redefine(DbEngine engine, string definition)
         {
             _redefined[engine] = definition;
@@ -30,17 +32,17 @@ namespace SqlFu.DDL.Internals
         }
     }
 
-    class UniqueKeyConstraint:ConstraintDefinition
+    internal class UniqueKeyConstraint : ConstraintDefinition
     {
         public bool IsPrimary { get; set; }
     }
 
-    class CheckConstraint:ConstraintDefinition
+    internal class CheckConstraint : ConstraintDefinition
     {
         public string Expression { get; set; }
     }
 
-    class ForeignKeyConstraint:ConstraintDefinition
+    internal class ForeignKeyConstraint : ConstraintDefinition
     {
         public string ParentTable { get; set; }
         public string ParentColumn { get; set; }

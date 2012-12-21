@@ -1,9 +1,9 @@
 namespace SqlFu.DDL
 {
-    public interface IDatabaseTools:ICreateDDL
+    public interface IDatabaseTools : ICreateDDL
     {
         void DropTable(string tableName);
-        bool TableExists(string name, string schema=null);
+        bool TableExists(string name, string schema = null);
         void RenameTable(string oldName, string newName);
         void TruncateTable(string name);
         bool ConstraintExists(string name, string schema = null);

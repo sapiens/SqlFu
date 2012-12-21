@@ -3,7 +3,7 @@ using SqlFu.Providers;
 
 namespace SqlFu.DDL.Generators.MySql
 {
-    internal class MySqlForeignKeyWriter:AbstractForeignKeyWriter
+    internal class MySqlForeignKeyWriter : AbstractForeignKeyWriter
     {
         public MySqlForeignKeyWriter(StringBuilder builder) : base(builder, DbEngine.MySql)
         {
@@ -11,7 +11,7 @@ namespace SqlFu.DDL.Generators.MySql
 
         protected override void WriteColumnsNames(string columns, StringBuilder builder)
         {
-            MySqlDDLWriter.WriteColumnsNames(columns,builder);
+            MySqlDDLWriter.WriteColumnsNames(columns, builder);
         }
 
         protected override string EscapeName(string name)

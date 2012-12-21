@@ -3,7 +3,7 @@ using SqlFu.Providers;
 
 namespace SqlFu.DDL.Generators.Postgresql
 {
-    internal class PostgresDropColumnWriter:AbstractDropColumnWriter
+    internal class PostgresDropColumnWriter : AbstractDropColumnWriter
     {
         public PostgresDropColumnWriter(StringBuilder builder) : base(builder, DbEngine.PostgreSQL)
         {
@@ -19,7 +19,7 @@ namespace SqlFu.DDL.Generators.Postgresql
             var c = Item.Options.Get(DropOptions.Cascade);
             if (c != null)
             {
-                Builder.AppendFormat(" " + c.ToString());
+                Builder.AppendFormat(" " + c);
             }
         }
     }

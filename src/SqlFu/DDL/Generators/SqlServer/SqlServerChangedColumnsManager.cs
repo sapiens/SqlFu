@@ -3,16 +3,16 @@ using SqlFu.DDL.Internals;
 
 namespace SqlFu.DDL.Generators.SqlServer
 {
-    internal class SqlServerChangedColumnsManager:AbstractChangedColumnsManager
+    internal class SqlServerChangedColumnsManager : AbstractChangedColumnsManager
     {
         private readonly IAccessDb _db;
 
-        public SqlServerChangedColumnsManager(StringBuilder builder,IAccessDb db) : base(builder,DbEngine.SqlServer)
+        public SqlServerChangedColumnsManager(StringBuilder builder, IAccessDb db) : base(builder, DbEngine.SqlServer)
         {
             _db = db;
         }
 
-       #region Overrides of AbstractColumnsChangeManager
+        #region Overrides of AbstractColumnsChangeManager
 
         public override void Write(ModifiedColumnsCollection columns)
         {
@@ -33,7 +33,7 @@ namespace SqlFu.DDL.Generators.SqlServer
 
         #endregion
 
-        void FillRealTableSchema(ModifiedColumnsCollection cols)
+        private void FillRealTableSchema(ModifiedColumnsCollection cols)
         {
             var columns = cols.AllColumnsNames;
             var all = _db.Query<ColumnSchema>(
@@ -66,14 +66,14 @@ and c.name in (@1)", cols.TableName, columns);
         }
 
 
-        string ExtractType(ColumnSchema schema)
+        private string ExtractType(ColumnSchema schema)
         {
             var rez = schema.DataType;
             if (!string.IsNullOrEmpty(schema.CharacterMaximumLength))
             {
                 rez = rez + "(" + (schema.CharacterMaximumLength == "-1"
-                           ? "max"
-                           : schema.CharacterMaximumLength) + ")";
+                                       ? "max"
+                                       : schema.CharacterMaximumLength) + ")";
                 return rez;
             }
             if (!string.IsNullOrEmpty(schema.NumericPrecision))
@@ -86,6 +86,6 @@ and c.name in (@1)", cols.TableName, columns);
                 return rez + ")";
             }
             return rez;
-        } 
+        }
     }
 }

@@ -1,16 +1,16 @@
-using System.Data;
 using System;
+using System.Data;
 
 namespace SqlFu.DDL.Internals
 {
-    class ColumnModifications
+    internal class ColumnModifications
     {
-        public ColumnModifications(string name,string table)
+        public ColumnModifications(string name, string table)
         {
             name.MustNotBeEmpty();
             table.MustNotBeEmpty();
             Options = new DbEngineOptions();
-            Current= new CurrentColumnSchema();
+            Current = new CurrentColumnSchema();
             Current.Name = name;
             TableName = table;
         }
@@ -26,13 +26,13 @@ namespace SqlFu.DDL.Internals
         public bool? Nullable { get; set; }
         internal DbEngineOptions Options { get; private set; }
         public CurrentColumnSchema Current { get; set; }
+
         /// <summary>
         /// Gets the column's current name. It takes renaming into account 
         /// </summary>
         public string Name
         {
             get { return NewName ?? Current.Name; }
- 
         }
 
         public bool HasChangedStructure
@@ -53,13 +53,14 @@ namespace SqlFu.DDL.Internals
         public string Collation { get; set; }
         public string Name { get; set; }
         public string DefaultConstraintName { get; set; }
+
         public string Definition
         {
             get
             {
                 if (_definition.IsNullOrEmpty())
                 {
-                    return string.Format("{0} {1} {2}",Name,Type,Collation);
+                    return string.Format("{0} {1} {2}", Name, Type, Collation);
                 }
                 return _definition;
             }

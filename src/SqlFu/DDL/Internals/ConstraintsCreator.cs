@@ -2,7 +2,7 @@
 
 namespace SqlFu.DDL.Internals
 {
-    class ConstraintsCreator:ICreateConstraints,IDefineSpecificConstraintsOptions
+    internal class ConstraintsCreator : ICreateConstraints, IDefineSpecificConstraintsOptions
     {
         private readonly ConstraintsCollection _schema;
 
@@ -28,20 +28,20 @@ namespace SqlFu.DDL.Internals
 
         public IDefineSpecificConstraintsOptions PrimaryKeyOptions(params DbSpecificOption[] options)
         {
-            foreach(var opt in options) Schema.PrimaryKey.Options.Add(opt);
+            foreach (var opt in options) Schema.PrimaryKey.Options.Add(opt);
             return this;
         }
 
         public IDefineSpecificConstraintsOptions UniqueOptions(string keyName, params DbSpecificOption[] options)
         {
-            Schema.SetUniqueOptions(keyName,options);
+            Schema.SetUniqueOptions(keyName, options);
             return this;
         }
 
         public IDefineSpecificConstraintsOptions AddConstraint(string definition)
         {
             definition.MustNotBeEmpty();
-            Schema.AddSpecific(_engine.Value,definition);
+            Schema.AddSpecific(_engine.Value, definition);
             return this;
         }
 
@@ -50,7 +50,7 @@ namespace SqlFu.DDL.Internals
             definition.MustNotBeEmpty();
             if (_current != null)
             {
-                _current.Redefine(_engine.Value,definition);
+                _current.Redefine(_engine.Value, definition);
             }
             return this;
         }
@@ -59,29 +59,33 @@ namespace SqlFu.DDL.Internals
 
         #region Implementation of ICreateConstraints
 
-       
         public ICreateConstraints AddPrimaryKeyOn(string columnsNames, string keyName = null)
         {
-            _current=Schema.SetPrimaryKey(columnsNames,keyName);
+            _current = Schema.SetPrimaryKey(columnsNames, keyName);
             return this;
         }
 
         private ConstraintDefinition _current;
+
         public ICreateConstraints AddUniqueConstraintOn(string columnsNames, string constraintName = null)
         {
-           _current=Schema.AddUnique(columnsNames,constraintName);
+            _current = Schema.AddUnique(columnsNames, constraintName);
             return this;
         }
 
-        public ICreateConstraints AddForeignKeyOn(string columnNames, string parentTable, string parentColumns, ForeignKeyRelationCascade onUpdate = ForeignKeyRelationCascade.NoAction, ForeignKeyRelationCascade onDelete = ForeignKeyRelationCascade.NoAction, string keyName = null)
+        public ICreateConstraints AddForeignKeyOn(string columnNames, string parentTable, string parentColumns,
+                                                  ForeignKeyRelationCascade onUpdate =
+                                                      ForeignKeyRelationCascade.NoAction,
+                                                  ForeignKeyRelationCascade onDelete =
+                                                      ForeignKeyRelationCascade.NoAction, string keyName = null)
         {
-            _current=Schema.AddForeignKey(columnNames,parentTable,parentColumns,onUpdate,onDelete,keyName);
+            _current = Schema.AddForeignKey(columnNames, parentTable, parentColumns, onUpdate, onDelete, keyName);
             return this;
         }
 
         public ICreateConstraints AddCheck(string expression, string constraintName)
         {
-            _current=Schema.AddCheck(expression,constraintName);
+            _current = Schema.AddCheck(expression, constraintName);
             return this;
         }
 
@@ -93,7 +97,7 @@ namespace SqlFu.DDL.Internals
                 _current = Schema.Checks.Find(d => d.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
                 if (_current == null)
                 {
-                    throw new ArgumentException("Constraint not found",name);
+                    throw new ArgumentException("Constraint not found", name);
                 }
                 return this;
             }
@@ -102,11 +106,12 @@ namespace SqlFu.DDL.Internals
         #endregion
     }
 
-    class ConstraintsEditor:ConstraintsCreator,IModifyConstraints,ISupportOptionsForDrop<IModifyConstraints>
+    internal class ConstraintsEditor : ConstraintsCreator, IModifyConstraints,
+                                       ISupportOptionsForDrop<IModifyConstraints>
     {
         private readonly IModifyTable _parent;
 
-        public ConstraintsEditor(ConstraintsCollection schema,IModifyTable parent) : base(schema)
+        public ConstraintsEditor(ConstraintsCollection schema, IModifyTable parent) : base(schema)
         {
             _parent = parent;
         }
@@ -114,9 +119,10 @@ namespace SqlFu.DDL.Internals
         #region Implementation of IModifyConstraints
 
         private DroppedSchemaItem _current;
+
         public ISupportOptionsForDrop<IModifyConstraints> Drop(string name)
         {
-            _current=Schema.Dropped.Add(name);
+            _current = Schema.Dropped.Add(name);
             return this;
         }
 

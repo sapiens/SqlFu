@@ -1,6 +1,5 @@
 using System;
 using System.Data;
-using System.Linq;
 using SqlFu.DDL;
 using SqlFu.DDL.Generators.MySql;
 
@@ -9,7 +8,8 @@ namespace SqlFu.Providers
     public class MySqlProvider : AbstractProvider
     {
         public const string ProviderName = "MySql.Data.MySqlClient";
-        public MySqlProvider(string prov=null) : base(prov??ProviderName)
+
+        public MySqlProvider(string prov = null) : base(prov ?? ProviderName)
         {
         }
 
@@ -17,7 +17,7 @@ namespace SqlFu.Providers
         {
             return EscapeIdentifier(s);
         }
-        
+
         public static string EscapeIdentifier(string s)
         {
             s.MustNotBeEmpty();
@@ -33,24 +33,24 @@ namespace SqlFu.Providers
             {
                 var rez = sql.ExecuteScalar();
                 return new LastInsertId(rez);
-            }        
+            }
         }
 
         public override void SetupParameter(IDbDataParameter param, string name, object value)
         {
             if (value != null)
             {
-                if (value.GetType().IsEnum)
-                {
-                    value = (int)value;
-                }
+                //if (value.GetType().IsEnum)
+                //{
+                //    value = (int) value;
+                //}
             }
             base.SetupParameter(param, name, value);
         }
 
         public override DbEngine ProviderType
         {
-            get { return DbEngine.MySql;}
+            get { return DbEngine.MySql; }
         }
 
         protected override IDatabaseTools InitTools(DbAccess db)

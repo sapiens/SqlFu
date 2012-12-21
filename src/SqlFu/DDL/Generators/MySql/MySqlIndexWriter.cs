@@ -4,7 +4,7 @@ using SqlFu.Providers;
 
 namespace SqlFu.DDL.Generators.MySql
 {
-    internal class MySqlIndexWriter:AbstractIndexWriter
+    internal class MySqlIndexWriter : AbstractIndexWriter
     {
         public MySqlIndexWriter(StringBuilder builder) : base(builder, DbEngine.MySql)
         {

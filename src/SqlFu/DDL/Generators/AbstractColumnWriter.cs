@@ -1,11 +1,11 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Text;
 using SqlFu.DDL.Internals;
-using System;
 
 namespace SqlFu.DDL.Generators
 {
-    internal abstract class AbstractColumnWriter:AbstractSchemaItemWriter
+    internal abstract class AbstractColumnWriter : AbstractSchemaItemWriter
     {
         public AbstractColumnWriter(StringBuilder builder, DbEngine engine) : base(builder, engine)
         {
@@ -18,20 +18,20 @@ namespace SqlFu.DDL.Generators
 
         public virtual void Write(ColumnModifications col)
         {
-            if (col.Type!=null)
+            if (col.Type != null)
             {
                 Builder.Append(GetType(col.Type.Value, col.Size));
             }
             else
             {
-                Builder.Append(col.Current.Type);               
+                Builder.Append(col.Current.Type);
             }
 
             WriteCollation(col.Collation);
 
-            if (col.Nullable!=null)
+            if (col.Nullable != null)
             {
-               WriteNullable(col.Nullable.Value);
+                WriteNullable(col.Nullable.Value);
             }
 
             WriteEndColumnOptions(col.Options);
@@ -39,7 +39,7 @@ namespace SqlFu.DDL.Generators
 
         protected virtual void WriteEndColumnOptions(DbEngineOptions options)
         {
-         }
+        }
 
         private ColumnDefinition _definition;
 
@@ -51,18 +51,18 @@ namespace SqlFu.DDL.Generators
             }
             _definition = col;
             col.Options.Use(Engine);
-            
+
             WriteNameAndType(col);
-            
+
             WriteNullable(col.IsNullable);
 
             if (!col.IsIdentity) WriteDefault(col.DefaultValue);
 
-            else WriteIdentity(col);             
+            else WriteIdentity(col);
         }
 
         protected abstract void WriteIdentity(ColumnDefinition col);
-        
+
         protected virtual void WriteDefault(string value)
         {
             if (!value.IsNullOrEmpty())
@@ -90,7 +90,7 @@ namespace SqlFu.DDL.Generators
         {
             if (col.IsRedefined(Engine))
             {
-                Builder.Append(EscapeName(col.Name)+" "+col.GetDefinition(Engine));
+                Builder.Append(EscapeName(col.Name) + " " + col.GetDefinition(Engine));
                 return true;
             }
             return false;
@@ -111,11 +111,10 @@ namespace SqlFu.DDL.Generators
         }
 
         protected abstract string EscapeName(string name);
-             
 
         #region DbType
 
-        protected string GetType(DbType type,string size)
+        protected string GetType(DbType type, string size)
         {
             switch (type)
             {
@@ -202,14 +201,14 @@ namespace SqlFu.DDL.Generators
         {
             return "smallint";
         }
-        
+
         protected virtual string BigInt()
         {
             return "bigint";
         }
 
         protected abstract string Guid();
-        
+
         protected virtual string Double()
         {
             return "double";
@@ -224,7 +223,7 @@ namespace SqlFu.DDL.Generators
             }
             return rez;
         }
-        
+
         protected virtual string Time(string size)
         {
             var rez = "time";
@@ -262,7 +261,7 @@ namespace SqlFu.DDL.Generators
         }
 
         protected abstract string Binary(string size);
-        
+
         protected abstract string Currency();
 
         protected abstract string AnsiStringFixedLength(string size);
@@ -270,14 +269,14 @@ namespace SqlFu.DDL.Generators
         protected abstract string AnsiString(string size);
 
         protected abstract string Boolean();
-		 
+
         protected virtual string Byte()
         {
             return "tinyint";
         }
 
         protected abstract string DateTimeOffset(string size);
-	#endregion;       
 
+        #endregion;       
     }
 }

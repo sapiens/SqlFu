@@ -3,7 +3,7 @@ using SqlFu.DDL.Internals;
 
 namespace SqlFu.DDL.Generators
 {
-    abstract class AbstractForeignKeyWriter:AbstractConstraintWriter
+    internal abstract class AbstractForeignKeyWriter : AbstractConstraintWriter
     {
         public AbstractForeignKeyWriter(StringBuilder builder, DbEngine engine) : base(builder, engine)
         {
@@ -13,7 +13,7 @@ namespace SqlFu.DDL.Generators
         {
             base.Write(key);
             WriteParentReference();
-            WriteRestrictions();            
+            WriteRestrictions();
         }
 
         protected ForeignKeyConstraint Key
@@ -39,7 +39,7 @@ namespace SqlFu.DDL.Generators
         }
 
         protected abstract string EscapeName(string name);
-        
+
 
         public static string ToString(ForeignKeyRelationCascade relation)
         {

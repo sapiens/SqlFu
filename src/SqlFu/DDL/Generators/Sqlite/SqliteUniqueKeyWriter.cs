@@ -1,12 +1,11 @@
 ﻿using System.Text;
-using SqlFu.DDL.Internals;
 using SqlFu.Providers;
 
 namespace SqlFu.DDL.Generators.Sqlite
 {
-    internal class SqliteUniqueKeyWriter:AbstractUniqueKeyWriter
+    internal class SqliteUniqueKeyWriter : AbstractUniqueKeyWriter
     {
-        public SqliteUniqueKeyWriter(StringBuilder builder) : base(builder,DbEngine.SQLite)
+        public SqliteUniqueKeyWriter(StringBuilder builder) : base(builder, DbEngine.SQLite)
         {
         }
 
@@ -20,7 +19,7 @@ namespace SqlFu.DDL.Generators.Sqlite
 
         protected override void WriteColumnsNames(string columns, StringBuilder builder)
         {
-         SqliteDDLWriter.WriteColumnsNames(columns,builder,SqliteProvider.EscapeIdentifier);   
+            CommonDDLWriter.WriteColumnsNames(columns, builder, SqliteProvider.EscapeIdentifier);
         }
     }
 }

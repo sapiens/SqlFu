@@ -18,7 +18,7 @@ namespace SqlFu.DDL.Generators.MySql
                 Builder.Append(" KEY " + Key.Name);
             }
             var opt = Key.Options.Get(MySqlIndexOptions.Using);
-            if (opt!=null)
+            if (opt != null)
             {
                 Builder.Append(" " + opt);
             }
@@ -28,7 +28,5 @@ namespace SqlFu.DDL.Generators.MySql
         {
             MySqlDDLWriter.WriteColumnsNames(columns, builder);
         }
-
-       
     }
 }

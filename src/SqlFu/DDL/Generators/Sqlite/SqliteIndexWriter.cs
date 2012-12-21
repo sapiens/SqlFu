@@ -1,17 +1,16 @@
 ﻿using System.Text;
 using SqlFu.DDL.Internals;
 using SqlFu.Providers;
-using SqlFu.Providers.SqlServer;
 
 namespace SqlFu.DDL.Generators.Sqlite
 {
-    internal class SqliteIndexWriter:AbstractIndexWriter
+    internal class SqliteIndexWriter : AbstractIndexWriter
     {
         public SqliteIndexWriter(StringBuilder builder) : base(builder, DbEngine.SQLite)
         {
         }
 
-        
+
         //protected override void WriteEndOptions()
         //{
         //    WriteIncludes(Index.Options);
@@ -53,7 +52,7 @@ namespace SqlFu.DDL.Generators.Sqlite
 
         //private void WriteWith(DbEngineOptions options)
         //{
-            
+
         //    if (options.HasAny(SqlServerOptions.Drop_Existing,SqlServerOptions.Ignore_Dup_Key))
         //    {
         //        Builder.Append(" WITH (");

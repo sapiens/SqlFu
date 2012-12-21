@@ -1,6 +1,6 @@
 namespace SqlFu.DDL.Generators.SqlServer.CE
 {
-    class SqlServerCompactDatabaseTools : SqlServerDatabaseTools
+    internal class SqlServerCompactDatabaseTools : SqlServerDatabaseTools
     {
         public SqlServerCompactDatabaseTools(DbAccess db) : base(db)
         {

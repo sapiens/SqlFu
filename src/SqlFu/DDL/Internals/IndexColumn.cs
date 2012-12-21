@@ -1,11 +1,11 @@
 namespace SqlFu.DDL.Internals
 {
-    class IndexColumn
+    internal class IndexColumn
     {
         public IndexColumn(string name)
         {
             Name = name;
-            Options= new DbEngineOptions();
+            Options = new DbEngineOptions();
         }
 
         public string Name { get; set; }

@@ -1,14 +1,14 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Text;
 using SqlFu.DDL.Internals;
 using SqlFu.Providers;
-using System;
 
 namespace SqlFu.DDL.Generators.Postgresql
 {
-    internal class PostgresColumnWriter:AbstractColumnWriter
+    internal class PostgresColumnWriter : AbstractColumnWriter
     {
-        public PostgresColumnWriter(StringBuilder builder) : base(builder,DbEngine.PostgreSQL)
+        public PostgresColumnWriter(StringBuilder builder) : base(builder, DbEngine.PostgreSQL)
         {
         }
 
@@ -16,7 +16,7 @@ namespace SqlFu.DDL.Generators.Postgresql
         {
             if (col.IsIdentity)
             {
-                Builder.AppendFormat("{0} serial not null",EscapeName(col.Name));
+                Builder.AppendFormat("{0} serial not null", EscapeName(col.Name));
             }
             else base.Write(col);
         }
@@ -33,7 +33,6 @@ namespace SqlFu.DDL.Generators.Postgresql
 
         protected override void WriteIdentity(ColumnDefinition col)
         {
-            
         }
 
         protected override string SByte()

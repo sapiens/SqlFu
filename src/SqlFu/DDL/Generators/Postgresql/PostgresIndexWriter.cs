@@ -4,9 +4,9 @@ using SqlFu.Providers;
 
 namespace SqlFu.DDL.Generators.Postgresql
 {
-    internal class PostgresIndexWriter:AbstractIndexWriter
+    internal class PostgresIndexWriter : AbstractIndexWriter
     {
-        public PostgresIndexWriter(StringBuilder builder) : base(builder,DbEngine.PostgreSQL)
+        public PostgresIndexWriter(StringBuilder builder) : base(builder, DbEngine.PostgreSQL)
         {
         }
 

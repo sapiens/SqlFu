@@ -1,5 +1,4 @@
 using System;
-using SqlFu.DDL;
 using SqlFu.Providers;
 using SqlFu.Providers.SqlServer;
 
@@ -11,12 +10,18 @@ namespace SqlFu
         {
             switch (providerName)
             {
-                case SqlServerProvider.ProviderName:return new SqlServerProvider();
-                case MySqlProvider.ProviderName:return new MySqlProvider();
-                case PostgresProvider.ProviderName:return new PostgresProvider();
-                case OracleProvider.ProviderName:return new OracleProvider();
-                case SqlServerCEProvider.ProviderName:return new SqlServerCEProvider();
-                case SqliteProvider.ProviderName:return new SqliteProvider();
+                case SqlServerProvider.ProviderName:
+                    return new SqlServerProvider();
+                case MySqlProvider.ProviderName:
+                    return new MySqlProvider();
+                case PostgresProvider.ProviderName:
+                    return new PostgresProvider();
+                case OracleProvider.ProviderName:
+                    return new OracleProvider();
+                case SqlServerCEProvider.ProviderName:
+                    return new SqlServerCEProvider();
+                case SqliteProvider.ProviderName:
+                    return new SqliteProvider();
             }
             throw new Exception("Unkown provider");
         }
@@ -25,12 +30,18 @@ namespace SqlFu
         {
             switch (engine)
             {
-                case DbEngine.SqlServer: return new SqlServerProvider();
-                case DbEngine.SqlServerCE: return new SqlServerCEProvider();
-                case DbEngine.MySql: return new MySqlProvider();
-                case DbEngine.PostgreSQL:return new PostgresProvider();
-                case DbEngine.Oracle:return new OracleProvider();
-                case DbEngine.SQLite:return new SqliteProvider();
+                case DbEngine.SqlServer:
+                    return new SqlServerProvider();
+                case DbEngine.SqlServerCE:
+                    return new SqlServerCEProvider();
+                case DbEngine.MySql:
+                    return new MySqlProvider();
+                case DbEngine.PostgreSQL:
+                    return new PostgresProvider();
+                case DbEngine.Oracle:
+                    return new OracleProvider();
+                case DbEngine.SQLite:
+                    return new SqliteProvider();
             }
             throw new Exception("Unkown provider");
         }

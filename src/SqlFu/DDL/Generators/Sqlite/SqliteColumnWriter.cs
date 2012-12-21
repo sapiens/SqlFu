@@ -1,9 +1,10 @@
 ﻿using System.Text;
+using SqlFu.DDL.Internals;
 using SqlFu.Providers;
 
 namespace SqlFu.DDL.Generators.Sqlite
 {
-    internal class SqliteColumnWriter:AbstractColumnWriter
+    internal class SqliteColumnWriter : AbstractColumnWriter
     {
         public SqliteColumnWriter(StringBuilder builder) : base(builder, DbEngine.SQLite)
         {
@@ -15,10 +16,10 @@ namespace SqlFu.DDL.Generators.Sqlite
         }
 
 
-       protected override void WriteEndColumnOptions(DbEngineOptions options)
-       {
-           WriteOnConflictOption(options);
-       }
+        protected override void WriteEndColumnOptions(DbEngineOptions options)
+        {
+            WriteOnConflictOption(options);
+        }
 
         private void WriteOnConflictOption(DbEngineOptions options)
         {
@@ -30,91 +31,93 @@ namespace SqlFu.DDL.Generators.Sqlite
         }
 
         protected override void WriteNullable(bool nullable)
-       {
-          base.WriteNullable(nullable);
-          if (Definition != null)
-          {
-              if (!Definition.IsIdentity)
-              {
-                  WriteOnConflictOption(Definition.Options);
-              }
-          }
-       }
-
-       protected override void WriteIdentity(Internals.ColumnDefinition col)
         {
-           Builder.Append(" primary key autoincrement");
+            base.WriteNullable(nullable);
+            if (Definition != null)
+            {
+                if (!Definition.IsIdentity)
+                {
+                    WriteOnConflictOption(Definition.Options);
+                }
+            }
         }
-       #region DbTypes
 
-       protected override string UInt16()
-       {
-           return "integer";
-       }
+        protected override void WriteIdentity(ColumnDefinition col)
+        {
+            Builder.Append(" primary key autoincrement");
+        }
 
-       protected override string UInt32()
-       {
-           return "integer";
-       }
+        #region DbTypes
 
-       protected override string UInt64()
-       {
-           return "integer";
-       }
+        protected override string UInt16()
+        {
+            return "integer";
+        }
 
-       protected override string Guid()
-       {
-           return AnsiStringFixedLength("36");
-       }
+        protected override string UInt32()
+        {
+            return "integer";
+        }
 
-       protected override string StringFixedLength(string size)
-       {
-           return String(size);
-       }
+        protected override string UInt64()
+        {
+            return "integer";
+        }
 
-       protected override string String(string size)
-       {
-           var rez = "text";
-           if (!string.IsNullOrEmpty(size)) rez = rez + "(" + size + ")";
-           return rez;
-       }
+        protected override string Guid()
+        {
+            return AnsiStringFixedLength("36");
+        }
 
-       protected override string Binary(string size)
-       {
-           var rez = "blob";
-           if (!string.IsNullOrEmpty(size)) rez = rez + "(" + size + ")";
-           return rez;
-       }
+        protected override string StringFixedLength(string size)
+        {
+            return String(size);
+        }
 
-       protected override string Currency()
-       {
-           return "numeric";
-       }
+        protected override string String(string size)
+        {
+            var rez = "text";
+            if (!string.IsNullOrEmpty(size)) rez = rez + "(" + size + ")";
+            return rez;
+        }
 
-       protected override string AnsiStringFixedLength(string size)
-       {
-           return String(size);
-       }
+        protected override string Binary(string size)
+        {
+            var rez = "blob";
+            if (!string.IsNullOrEmpty(size)) rez = rez + "(" + size + ")";
+            return rez;
+        }
 
-       protected override string AnsiString(string size)
-       {
-           return String(size);
-       }
+        protected override string Currency()
+        {
+            return "numeric";
+        }
 
-       protected override string Boolean()
-       {
-           return Int32();
-       }
+        protected override string AnsiStringFixedLength(string size)
+        {
+            return String(size);
+        }
 
-       protected override string Int32()
-       {
-           return "integer";
-       }
+        protected override string AnsiString(string size)
+        {
+            return String(size);
+        }
 
-       protected override string DateTimeOffset(string size)
-       {
-           return String(null);
-       } 
-       #endregion
+        protected override string Boolean()
+        {
+            return Int32();
+        }
+
+        protected override string Int32()
+        {
+            return "integer";
+        }
+
+        protected override string DateTimeOffset(string size)
+        {
+            return String(null);
+        }
+
+        #endregion
     }
 }

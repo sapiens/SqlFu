@@ -1,10 +1,10 @@
-﻿using System.Data.Common;
-using CavemanTools.Infrastructure.MessagesBus;
-using System;
+﻿using System;
+using System.Data.Common;
+using CavemanTools;
 
 namespace SqlFu
 {
-    public class DatabaseUnitOfWork:IUnitOfWork
+    public class DatabaseUnitOfWork : IUnitOfWork
     {
         private DbTransaction _trans;
 
@@ -28,9 +28,9 @@ namespace SqlFu
 
         public void Commit()
         {
-            _trans.Commit();            
+            _trans.Commit();
         }
 
-        public string Tag { get; private set; }
+        public string Tag { get; set; }
     }
 }

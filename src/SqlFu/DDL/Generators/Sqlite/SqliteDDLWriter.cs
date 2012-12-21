@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Text;
 using SqlFu.DDL.Internals;
 using SqlFu.Providers;
 
 namespace SqlFu.DDL.Generators.Sqlite
 {
-    internal class SqliteDDLWriter:CommonDDLWriter
+    internal class SqliteDDLWriter : CommonDDLWriter
     {
         public SqliteDDLWriter(IAccessDb db)
             : base(db, DbEngine.SQLite)
@@ -17,8 +16,8 @@ namespace SqlFu.DDL.Generators.Sqlite
         {
             if (table.Columns.IsIdentityDefined)
             {
-                var pk=table.Constraints.PrimaryKey;
-                if (pk!=null) pk.Ignore = true;
+                var pk = table.Constraints.PrimaryKey;
+                if (pk != null) pk.Ignore = true;
             }
             return base.GenerateCreateTable(table);
         }
@@ -39,7 +38,7 @@ namespace SqlFu.DDL.Generators.Sqlite
 
         protected override AbstractColumnWriter GetColumnWriter()
         {
-            return  new SqliteColumnWriter(Builder);
+            return new SqliteColumnWriter(Builder);
         }
 
         protected override AbstractUniqueKeyWriter GetUniqueKeyWriter()
@@ -69,17 +68,17 @@ namespace SqlFu.DDL.Generators.Sqlite
 
         protected override void WriteRenameColumn(ColumnModifications col)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         protected override AbstractDropIndexWriter GetDropIndexWriter()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         protected override AbstractDropConstraintWriter GetDropConstraintWriter()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         protected override AbstractDropColumnWriter GetDropColumnWriter()

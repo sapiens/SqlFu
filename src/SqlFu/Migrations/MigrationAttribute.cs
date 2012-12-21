@@ -3,19 +3,20 @@ using CavemanTools;
 
 namespace SqlFu.Migrations
 {
-    [AttributeUsage(AttributeTargets.Class,AllowMultiple = false)]
-    public class MigrationAttribute:Attribute
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public class MigrationAttribute : Attribute
     {
         private string _schemaName = DatabaseMigration.DefaultSchemaName;
 
-        public MigrationAttribute(string fromVersion,string toVersion)
+        public MigrationAttribute(string fromVersion, string toVersion)
         {
             From = fromVersion;
-            To = toVersion;            
+            To = toVersion;
         }
 
         public SemanticVersion From { get; set; }
         public SemanticVersion To { get; set; }
+
         /// <summary>
         /// Optional schema name
         /// </summary>
@@ -28,6 +29,7 @@ namespace SqlFu.Migrations
                 _schemaName = value;
             }
         }
+
         /// <summary>
         /// Executed from highest to lowest
         /// </summary>

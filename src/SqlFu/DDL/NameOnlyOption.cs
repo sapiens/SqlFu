@@ -1,8 +1,8 @@
 namespace SqlFu.DDL
 {
-    public class NameOnlyOption:DbSpecificOption
+    public class NameOnlyOption : DbSpecificOption
     {
-        public NameOnlyOption(string name,DbEngine engine) : base(name,engine)
+        public NameOnlyOption(string name, DbEngine engine) : base(name, engine)
         {
         }
 

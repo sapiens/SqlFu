@@ -1,10 +1,10 @@
-﻿using SqlFu.DDL.Internals;
+﻿using System;
+using SqlFu.DDL.Internals;
 using SqlFu.Providers;
-using System;
 
 namespace SqlFu.DDL.Generators.Postgresql
 {
-    internal class PostgresDatabaseTools:CommonDatabaseTools
+    internal class PostgresDatabaseTools : CommonDatabaseTools
     {
         public PostgresDatabaseTools(DbAccess db) : base(db)
         {
@@ -19,15 +19,18 @@ namespace SqlFu.DDL.Generators.Postgresql
         {
             name.MustNotBeEmpty();
             if (schema.IsNullOrEmpty()) schema = "public";
-            return Db.GetValue<bool>(@"select count(*) from information_schema.table_constraints where constraint_name=@0 and constraint_schema=@1",name,schema);
+            return
+                Db.GetValue<bool>(
+                    @"select count(*) from information_schema.table_constraints where constraint_name=@0 and constraint_schema=@1",
+                    name, schema);
         }
 
         public override bool IndexExists(string name, string table, string schema = null)
         {
-            name.MustNotBeEmpty();            
+            name.MustNotBeEmpty();
             table.MustNotBeEmpty();
             return Db.GetValue<bool>(@"SELECT count(*) from pg_catalog.pg_indexes
-where tablename=@0 and indexname=@1",table,name);
+where tablename=@0 and indexname=@1", table, name);
         }
 
         public override bool TableHasColumn(string table, string column, string schema = null)
@@ -47,26 +50,33 @@ where table_name=@0 and column_name=@1", table, column);
         {
             tableName.MustNotBeEmpty();
             if (schema.IsNullOrEmpty()) schema = "public";
-            return Db.GetValue<string>(@"select constraint_name from information_schema.table_constraints where table_schema=@0 and table_name=@1 and constraint_type='PRIMARY KEY'",schema,tableName);
+            return
+                Db.GetValue<string>(
+                    @"select constraint_name from information_schema.table_constraints where table_schema=@0 and table_name=@1 and constraint_type='PRIMARY KEY'",
+                    schema, tableName);
         }
 
         public override bool TableExists(string name, string schema)
         {
             name.MustNotBeEmpty();
             if (schema.IsNullOrEmpty()) schema = "public";
-            return Db.GetValue<bool>(@"select count(*) from information_schema.tables where table_schema=@0 and table_name=@1", schema, name);
+            return
+                Db.GetValue<bool>(
+                    @"select count(*) from information_schema.tables where table_schema=@0 and table_name=@1", schema,
+                    name);
         }
 
         public override void RenameTable(string oldName, string newName)
         {
             oldName.MustNotBeEmpty();
             newName.MustNotBeEmpty();
-            Db.ExecuteCommand(string.Format("alter table {0} rename to {1}",PostgresProvider.EscapeIdentifier(oldName),PostgresProvider.EscapeIdentifier(newName)));
+            Db.ExecuteCommand(string.Format("alter table {0} rename to {1}", PostgresProvider.EscapeIdentifier(oldName),
+                                            PostgresProvider.EscapeIdentifier(newName)));
         }
 
         protected override IGenerateDDL GetDDLWriter()
         {
-            return  new PostgresqlDDLWriter(Db);
+            return new PostgresqlDDLWriter(Db);
         }
     }
 }

@@ -1,9 +1,10 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using SqlFu.DDL.Internals;
 
 namespace SqlFu.DDL.Generators.Sqlite
 {
-    internal class SqliteColumnChangesWriter:AbstractColumnChangesWriter
+    internal class SqliteColumnChangesWriter : AbstractColumnChangesWriter
     {
         public SqliteColumnChangesWriter(StringBuilder builder) : base(builder, DbEngine.SQLite)
         {
@@ -11,7 +12,7 @@ namespace SqlFu.DDL.Generators.Sqlite
 
         public override void WriteDropDefault(ColumnModifications col)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -19,12 +20,12 @@ namespace SqlFu.DDL.Generators.Sqlite
         /// </summary>
         public override void WriteColumnChanges(ColumnModifications col)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public override void WriteSetDefault(ColumnModifications col)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

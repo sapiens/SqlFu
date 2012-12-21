@@ -8,6 +8,7 @@ namespace SqlFu.Migrations.Automatic
         /// </summary>
         /// <param name="schemas"></param>
         void Execute(params string[] schemas);
+
         /// <summary>
         /// Removes the specified schemas names form the tracking table.
         /// It doesn't remove actual tables. 

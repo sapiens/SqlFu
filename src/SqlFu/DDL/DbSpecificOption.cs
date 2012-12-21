@@ -1,10 +1,8 @@
-using System;
-
 namespace SqlFu.DDL
 {
     public class DbSpecificOption
     {
-        public DbSpecificOption(string name,DbEngine engine)
+        public DbSpecificOption(string name, DbEngine engine)
         {
             Name = name;
             Engine = engine;
@@ -16,7 +14,7 @@ namespace SqlFu.DDL
 
         public string Name { get; private set; }
 
-      
+
         public bool IsSameOption(DbSpecificOption other)
         {
             if (other == null) return false;

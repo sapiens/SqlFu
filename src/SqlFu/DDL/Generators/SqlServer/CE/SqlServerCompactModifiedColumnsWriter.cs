@@ -10,7 +10,7 @@ namespace SqlFu.DDL.Generators.SqlServer.CE
         private readonly StringBuilder Builder;
         private readonly IAccessDb Db;
 
-        public SqlServerCompactModifiedColumnsWriter(StringBuilder builder,IAccessDb db)
+        public SqlServerCompactModifiedColumnsWriter(StringBuilder builder, IAccessDb db)
         {
             Builder = builder;
             Db = db;
@@ -23,26 +23,27 @@ namespace SqlFu.DDL.Generators.SqlServer.CE
             FillRealTableSchema(table);
             var writer = new SqlServerCompactColumnWriter(Builder);
 
-            foreach (var col in mods.Where(c => c.DefaultDropped ))
+            foreach (var col in mods.Where(c => c.DefaultDropped))
             {
                 Builder.AppendFormat("alter table {0} alter column {1} drop default;\n", table.Name, col.Name);
             }
 
             foreach (var col in mods.Where(d => !d.IsDropped))
             {
-                Builder.AppendFormat("alter table [{0}] alter column {1} ", table.Name, SqlServerProvider.EscapeIdentifier(col.Current.Name));
+                Builder.AppendFormat("alter table [{0}] alter column {1} ", table.Name,
+                                     SqlServerProvider.EscapeIdentifier(col.Current.Name));
                 writer.Write(col);
                 Builder.AppendLine(";");
             }
 
             foreach (var cl in mods.Where(c => !string.IsNullOrEmpty(c.DefaultValue)))
             {
-                Builder.AppendFormat("alter table {0} alter column {1} set default '{2}';\n", table.Name, cl.Name, cl.DefaultValue);
+                Builder.AppendFormat("alter table {0} alter column {1} set default '{2}';\n", table.Name, cl.Name,
+                                     cl.DefaultValue);
             }
-            
         }
 
-        void FillRealTableSchema(TableSchema table)
+        private void FillRealTableSchema(TableSchema table)
         {
             var columns = table.ModifiedColumns.AllColumnsNames;
             // var tableName = SqlServerProvider.FormatName(table.Name);
@@ -56,19 +57,17 @@ where TABLE_NAME = @0 and COLUMN_NAME in (@1)", table.Name, columns);
                 column.Modifications.Current.Type = ExtractType(cs);
                 column.Modifications.Current.Collation = cs.CollationName;
             }
-
-          
         }
 
 
-        string ExtractType(ColumnSchema schema)
+        private string ExtractType(ColumnSchema schema)
         {
             var rez = schema.DataType;
             if (!string.IsNullOrEmpty(schema.CharacterMaximumLength))
             {
                 rez = rez + "(" + (schema.CharacterMaximumLength == "-1"
-                           ? "max"
-                           : schema.CharacterMaximumLength) + ")";
+                                       ? "max"
+                                       : schema.CharacterMaximumLength) + ")";
                 return rez;
             }
             if (!string.IsNullOrEmpty(schema.NumericPrecision))
@@ -81,6 +80,6 @@ where TABLE_NAME = @0 and COLUMN_NAME in (@1)", table.Name, columns);
                 return rez + ")";
             }
             return rez;
-        } 
+        }
     }
 }

@@ -3,7 +3,7 @@ using SqlFu.DDL.Internals;
 
 namespace SqlFu.DDL.Generators.Postgresql
 {
-    internal class PostgresColumnChangesWriter:AbstractColumnChangesWriter
+    internal class PostgresColumnChangesWriter : AbstractColumnChangesWriter
     {
         public PostgresColumnChangesWriter(StringBuilder builder) : base(builder, DbEngine.PostgreSQL)
         {
@@ -11,7 +11,7 @@ namespace SqlFu.DDL.Generators.Postgresql
 
         public override void WriteDropDefault(ColumnModifications col)
         {
-            Builder.AppendFormat("alter table {0} alter {1} drop default;\n\r",col.TableName,col.Name);
+            Builder.AppendFormat("alter table {0} alter {1} drop default;\n\r", col.TableName, col.Name);
         }
 
         /// <summary>
@@ -25,7 +25,8 @@ namespace SqlFu.DDL.Generators.Postgresql
 
         public override void WriteSetDefault(ColumnModifications col)
         {
-            Builder.AppendFormat("alter table {0} alter {1} set default {2};\n\r", col.TableName, col.Name,col.DefaultValue);
+            Builder.AppendFormat("alter table {0} alter {1} set default {2};\n\r", col.TableName, col.Name,
+                                 col.DefaultValue);
         }
     }
 }

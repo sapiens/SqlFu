@@ -3,28 +3,29 @@ using SqlFu.DDL.Generators;
 
 namespace SqlFu.DDL.Internals
 {
-    internal class CreateTableBuilder:ICreateTable
+    internal class CreateTableBuilder : ICreateTable
     {
         private readonly IAccessDb _db;
         private readonly IGenerateDDL _generator;
-        TableSchema _table;
-        public CreateTableBuilder(IAccessDb db,IGenerateDDL generator,string tableName,IfTableExists option)
+        private readonly TableSchema _table;
+
+        public CreateTableBuilder(IAccessDb db, IGenerateDDL generator, string tableName, IfTableExists option)
         {
             _db = db;
             _generator = generator;
             tableName.MustNotBeEmpty();
-            _table= new TableSchema(tableName);
-            _columns= new ColumnsCreator(_table);
+            _table = new TableSchema(tableName);
+            _columns = new ColumnsCreator(_table);
             _constraints = new ConstraintsCreator(_table.Constraints);
             _indexes = new IndexCreator(_table.Indexes);
 
             _table.Name = tableName;
-            _table.CreationOption = option;                 
-            
+            _table.CreationOption = option;
         }
-        ColumnsCreator _columns;
-        private ConstraintsCreator _constraints;
-        private IndexCreator _indexes;
+
+        private readonly ColumnsCreator _columns;
+        private readonly ConstraintsCreator _constraints;
+        private readonly IndexCreator _indexes;
 
         public string GetSql()
         {
@@ -33,13 +34,13 @@ namespace SqlFu.DDL.Internals
 
         public void ExecuteDDL()
         {
-            if (ContinueIfTableExists())_db.ExecuteCommand(GetSql());            
+            if (ContinueIfTableExists()) _db.ExecuteCommand(GetSql());
         }
 
-        bool ContinueIfTableExists()
+        private bool ContinueIfTableExists()
         {
             var tools = _db.DatabaseTools;
-            
+
             if (tools.TableExists(_table.Name))
             {
                 switch (_table.CreationOption)
@@ -77,12 +78,8 @@ namespace SqlFu.DDL.Internals
             get { return _indexes; }
         }
 
-       
-
         #region Inner Classes
-        
-        #endregion
 
-        
+        #endregion
     }
 }

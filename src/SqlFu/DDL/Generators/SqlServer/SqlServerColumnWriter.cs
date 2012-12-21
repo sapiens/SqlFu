@@ -5,16 +5,14 @@ using SqlFu.Providers.SqlServer;
 
 namespace SqlFu.DDL.Generators.SqlServer
 {
-    internal class SqlServerColumnWriter:AbstractColumnWriter
+    internal class SqlServerColumnWriter : AbstractColumnWriter
     {
-       
         public SqlServerColumnWriter(StringBuilder builder) : base(builder, DbEngine.SqlServer)
         {
         }
 
-        public SqlServerColumnWriter(StringBuilder builder,DbEngine engine):base(builder,engine)
+        public SqlServerColumnWriter(StringBuilder builder, DbEngine engine) : base(builder, engine)
         {
-            
         }
 
         protected override void WriteIdentity(ColumnDefinition col)
@@ -27,8 +25,8 @@ namespace SqlFu.DDL.Generators.SqlServer
             return SqlServerProvider.EscapeIdentifier(name);
         }
 
-       
         #region DB Types
+
         protected override string UInt16()
         {
             return SmallInt();
@@ -49,7 +47,7 @@ namespace SqlFu.DDL.Generators.SqlServer
             return "uniqueidentifier";
         }
 
-        
+
         protected override string StringFixedLength(string size)
         {
             if (size.IsNullOrEmpty()) size = "1";
@@ -85,7 +83,7 @@ namespace SqlFu.DDL.Generators.SqlServer
             return "varchar(" + size + ")";
         }
 
- 
+
         protected override string Boolean()
         {
             return "bit";
@@ -100,16 +98,17 @@ namespace SqlFu.DDL.Generators.SqlServer
                 rez += string.Format("({0})", size);
             }
             return rez;
-        } 
+        }
+
         #endregion
 
         protected override void WriteNullable(bool nullable)
         {
-            if (Definition!=null) WriteSparseOption(Definition.Options);
+            if (Definition != null) WriteSparseOption(Definition.Options);
             base.WriteNullable(nullable);
         }
 
-        protected  virtual void WriteSparseOption(DbEngineOptions options)
+        protected virtual void WriteSparseOption(DbEngineOptions options)
         {
             var option = options.Get(SqlServerOptions.Sparse);
             if (option != null)
@@ -118,13 +117,13 @@ namespace SqlFu.DDL.Generators.SqlServer
             }
         }
 
-         protected override void WriteEndColumnOptions(DbEngineOptions options)
+        protected override void WriteEndColumnOptions(DbEngineOptions options)
         {
             var option = options.Get(SqlServerOptions.RowGuidCol);
             if (option != null)
             {
                 Builder.Append(" " + option);
-            }            
+            }
         }
     }
 }

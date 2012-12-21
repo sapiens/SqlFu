@@ -2,11 +2,10 @@
 
 namespace SqlFu.Migrations
 {
-    public class MigrationNotFoundException:Exception
+    public class MigrationNotFoundException : Exception
     {
-        public MigrationNotFoundException(string message):base(message)
+        public MigrationNotFoundException(string message) : base(message)
         {
-            
         }
     }
 }

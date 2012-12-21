@@ -1,15 +1,16 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using SqlFu.Providers;
-using System;
 
 namespace SqlFu.DDL.Generators.MySql
 {
-    internal class MysqlDropConstraintWriter:AbstractDropConstraintWriter
+    internal class MysqlDropConstraintWriter : AbstractDropConstraintWriter
     {
         private const string PrimaryKey = "PRIMARY KEY";
         private readonly IAccessDb _db;
 
-        public MysqlDropConstraintWriter(StringBuilder builder,IAccessDb db) : base(builder,DbEngine.MySql,db.DatabaseTools)
+        public MysqlDropConstraintWriter(StringBuilder builder, IAccessDb db)
+            : base(builder, DbEngine.MySql, db.DatabaseTools)
         {
             db.MustNotBeNull();
             _db = db;
@@ -34,9 +35,12 @@ namespace SqlFu.DDL.Generators.MySql
             Builder.AppendFormat(type);
         }
 
-        string GetConstraintType()
+        private string GetConstraintType()
         {
-            var tp = _db.GetValue<string>(@"select CONSTRAINT_TYPE as Type from information_schema.`TABLE_CONSTRAINTS` where CONSTRAINT_SCHEMA=@0 and CONSTRAINT_NAME=@1 and TABLE_NAME=@2 limit 1",_db.Connection.Database,Item.Name??"PRIMARY",Item.TableName);
+            var tp =
+                _db.GetValue<string>(
+                    @"select CONSTRAINT_TYPE as Type from information_schema.`TABLE_CONSTRAINTS` where CONSTRAINT_SCHEMA=@0 and CONSTRAINT_NAME=@1 and TABLE_NAME=@2 limit 1",
+                    _db.Connection.Database, Item.Name ?? "PRIMARY", Item.TableName);
             if (tp.IsNullOrEmpty())
             {
                 throw new InvalidOperationException("Constraint does not exist");

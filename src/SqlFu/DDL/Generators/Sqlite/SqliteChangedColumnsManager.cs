@@ -2,7 +2,7 @@
 
 namespace SqlFu.DDL.Generators.Sqlite
 {
-    internal class SqliteChangedColumnsManager:AbstractChangedColumnsManager
+    internal class SqliteChangedColumnsManager : AbstractChangedColumnsManager
     {
         public SqliteChangedColumnsManager(StringBuilder builder) : base(builder, DbEngine.SQLite)
         {
@@ -10,7 +10,7 @@ namespace SqlFu.DDL.Generators.Sqlite
 
         protected override AbstractColumnChangesWriter GetWriter()
         {
-            return  new SqliteColumnChangesWriter(Builder);
+            return new SqliteColumnChangesWriter(Builder);
         }
     }
 }

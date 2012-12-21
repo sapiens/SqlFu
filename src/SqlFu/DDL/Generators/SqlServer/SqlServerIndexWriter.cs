@@ -1,17 +1,16 @@
 ﻿using System.Text;
 using SqlFu.DDL.Internals;
 using SqlFu.Providers.SqlServer;
-using System;
 
 namespace SqlFu.DDL.Generators.SqlServer
 {
-    internal class SqlServerIndexWriter:AbstractIndexWriter
+    internal class SqlServerIndexWriter : AbstractIndexWriter
     {
         public SqlServerIndexWriter(StringBuilder builder) : base(builder, DbEngine.SqlServer)
         {
         }
 
-        
+
         protected override void WriteEndOptions()
         {
             WriteIncludes(Index.Options);
@@ -53,21 +52,20 @@ namespace SqlFu.DDL.Generators.SqlServer
 
         private void WriteWith(DbEngineOptions options)
         {
-            
-            if (options.HasAny(SqlServerOptions.Drop_Existing,SqlServerOptions.Ignore_Dup_Key))
+            if (options.HasAny(SqlServerOptions.Drop_Existing, SqlServerOptions.Ignore_Dup_Key))
             {
                 Builder.Append(" WITH (");
 
                 var ignore = options.Get(SqlServerOptions.Ignore_Dup_Key);
-                if (ignore!=null)
+                if (ignore != null)
                 {
-                    Builder.AppendFormat("{0},", ignore);                    
+                    Builder.AppendFormat("{0},", ignore);
                 }
 
                 var drop = options.Get(SqlServerOptions.Drop_Existing);
-                if (drop!=null)
+                if (drop != null)
                 {
-                    Builder.AppendFormat(" {0},", drop);                                        
+                    Builder.AppendFormat(" {0},", drop);
                 }
                 Builder.RemoveLast();
                 Builder.Append(")");
@@ -77,7 +75,7 @@ namespace SqlFu.DDL.Generators.SqlServer
         private void WriteIncludes(DbEngineOptions options)
         {
             var opt = options.Get(SqlServerOptions.Include);
-            if (opt!=null)Builder.Append(" "+opt.ToString());            
+            if (opt != null) Builder.Append(" " + opt);
         }
     }
 }

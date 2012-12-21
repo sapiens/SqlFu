@@ -4,7 +4,7 @@ using SqlFu.DDL.Internals;
 
 namespace SqlFu.DDL.Generators
 {
-    abstract class AbstractChangedColumnsManager:AbstractSchemaItemWriter
+    internal abstract class AbstractChangedColumnsManager : AbstractSchemaItemWriter
     {
         private ModifiedColumnsCollection _columns;
         private AbstractColumnChangesWriter _writer;
@@ -23,24 +23,25 @@ namespace SqlFu.DDL.Generators
             _columns = columns;
             if (!columns.HasAnyChange) return;
             var changes = columns.ChangedColumns;
-            
-            foreach(var column in columns.Where(ShouldDropDefault))
+
+            foreach (var column in columns.Where(ShouldDropDefault))
             {
                 Writer.WriteDropDefault(column);
             }
-            
-            foreach(var ch in changes.Where(c=>c.HasChangedStructure))
+
+            foreach (var ch in changes.Where(c => c.HasChangedStructure))
             {
-                Writer.WriteColumnChanges(ch);                
+                Writer.WriteColumnChanges(ch);
             }
 
-            foreach(var column in changes.Where(d=>d.DefaultValue!=null))
+            foreach (var column in changes.Where(d => d.DefaultValue != null))
             {
                 Writer.WriteSetDefault(column);
             }
         }
 
         protected abstract AbstractColumnChangesWriter GetWriter();
+
         protected AbstractColumnChangesWriter Writer
         {
             get

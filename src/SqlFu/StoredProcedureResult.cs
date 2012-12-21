@@ -9,9 +9,10 @@ namespace SqlFu
     {
         public StoredProcedureResult()
         {
-            OutputValues= new Dictionary<string, object>();                             
+            OutputValues = new Dictionary<string, object>();
         }
+
         public int ReturnValue { get; set; }
-        public IDictionary<string,object> OutputValues { get; set; }
+        public IDictionary<string, object> OutputValues { get; set; }
     }
 }

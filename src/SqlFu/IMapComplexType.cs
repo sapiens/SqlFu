@@ -16,7 +16,7 @@ namespace SqlFu
         /// <param name="poco"> </param>
         /// <param name="i"> </param>
         /// <returns></returns>
-        bool EmitMapping(ILGenerator il, Type poco,IDataReader rd, int i);
+        bool EmitMapping(ILGenerator il, Type poco, IDataReader rd, int i);
 
         /// <summary>
         /// Maps a complex type from reader
@@ -25,7 +25,8 @@ namespace SqlFu
         /// <param name="poco"></param>
         /// <param name="rd"></param>
         /// <param name="idx"></param>
-        void MapType<T>(T poco,IDataReader rd,int idx);
+        void MapType<T>(T poco, IDataReader rd, int idx);
+
         void DeclareILVariables(ILGenerator il);
         char Separator { get; set; }
     }
