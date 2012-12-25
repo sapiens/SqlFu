@@ -64,7 +64,7 @@ namespace Tests.DDL.SqlServer
             _col.DefaultValue = "test";
             _cw.Write(_col);
 
-            Assert.Equal("[User Id] nchar(1) NOT NULL DEFAULT 'test'",_sb.ToString());
+            Assert.Equal("[User Id] nchar(max) NOT NULL DEFAULT 'test'",_sb.ToString());
         }
 
         private void Write(string format, params object[] param)

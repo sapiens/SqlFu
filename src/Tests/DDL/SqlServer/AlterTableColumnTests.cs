@@ -37,7 +37,7 @@ namespace Tests.DDL.SqlServer
                 .Add("Name", DbType.String, "30",collation: "Latin1_General_CI_AI")
                 .Add("Gender", DbType.Boolean, defaultValue: "1", isNullable: false)
                 .Add("Email",DbType.String,"max")
-                .Add("Others",DbType.String)
+                .Add("Others",DbType.String,"20")
                 .IfDatabaseIs(DbEngine.SqlServer)
                 .SetColumnOptions(SqlServerOptions.ColumnIs.Sparse());
             t.Indexes.AddIndexOn("Others",false,"ix_users_others");

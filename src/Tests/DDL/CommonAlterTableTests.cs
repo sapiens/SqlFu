@@ -32,7 +32,7 @@ namespace Tests.DDL
                 .Add("Name", DbType.String, "30")
                 .Add("Gender", DbType.Boolean, defaultValue: "1", isNullable: false)
                 .Add("Email", DbType.String, "200", isNullable: false)
-                .Add("Others", DbType.String)
+                .Add("Others", DbType.String,"50",isNullable:false)
                 .Add("Number", DbType.Int32).WithCheck("Number>3", "ck_number").WithIndex("ix_users_others", false)
                 .Add("ParentId", DbType.Int32, isNullable: false);
             t.Constraints.AddUniqueConstraintOn("Others", "uk_others")

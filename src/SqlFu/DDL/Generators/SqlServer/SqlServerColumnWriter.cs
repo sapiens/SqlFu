@@ -50,13 +50,13 @@ namespace SqlFu.DDL.Generators.SqlServer
 
         protected override string StringFixedLength(string size)
         {
-            if (size.IsNullOrEmpty()) size = "1";
+            if (size.IsNullOrEmpty()) size = "max";
             return "nchar(" + size + ")";
         }
 
         protected override string String(string size)
         {
-            if (size.IsNullOrEmpty()) size = "1";
+            if (size.IsNullOrEmpty()) size = "max";
             return "nvarchar(" + size + ")";
         }
 

@@ -82,7 +82,7 @@ namespace SqlFu.DDL.Generators.Postgresql
 
         protected override string StringFixedLength(string size)
         {
-            if (size.IsNullOrEmpty()) size = "1";
+            if (size.IsNullOrEmpty()) return "text";
             return "char(" + size + ")";
         }
 
