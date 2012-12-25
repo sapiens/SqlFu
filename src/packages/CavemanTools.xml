@@ -2007,6 +2007,17 @@
             <param name="genericType">Interface's generic arguments types</param>
             <returns></returns>
         </member>
+        <member name="M:System.Reflection.ReflectionUtils.GetGenericArgument(System.Type,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="tp">Generic type</param>
+            <param name="index">0 based index of the generic argument</param>
+            <exception cref="T:System.InvalidOperationException">When the type is not generic</exception>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.ArgumentException"></exception>
+            <returns></returns>
+        </member>
         <member name="M:System.Reflection.ReflectionUtils.GetStaticProperty``1(System.Object,System.String)">
             <summary>
             Used for resource localizing
