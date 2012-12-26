@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Data;
 
 namespace SqlFu.DDL
@@ -17,6 +18,22 @@ namespace SqlFu.DDL
         /// <returns></returns>
         IConfigureColumns Add(string name, DbType type, string size = "", bool isNullable = true,
                               string defaultValue = "", string collation = "", bool autoIncrement = false);
+    }
+
+    public interface IIndexForCreateColumn
+    {
+        /// <summary>
+        /// Gets columns options if the column has been defined in the builder
+        /// </summary>
+        /// <exception cref="KeyNotFoundException"></exception>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        ISupportSpecificColumnsOptions this[string name] { get; }
+    }
+
+    public interface ICreateColumns:IIndexForCreateColumn,IAddColumns
+    {
+        
     }
 
     public interface IConfigureColumns : IAddColumns

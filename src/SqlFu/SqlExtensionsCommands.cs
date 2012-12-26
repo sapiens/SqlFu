@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using SqlFu.Internals;
 
@@ -137,7 +138,17 @@ namespace SqlFu
             return Update(db, ti, data, id);
         }
 
-        private static int Update(IAccessDb db, TableInfo ti, object data, object id = null)
+
+        public static int UpdateWhereColumn(this IAccessDb db, string tableName,object data,string colName,object columnValue)
+        {
+            tableName.MustNotBeEmpty();
+            colName.MustNotBeEmpty();
+            columnValue.MustNotBeNull();
+            return Update(db, new TableInfo(tableName),data, columnValue, colName);
+        }
+           
+
+        private static int Update(IAccessDb db, TableInfo ti, object data, object id = null,string filterColumn=null)
         {
             var sb = new StringBuilder();
             sb.AppendFormat("update {0} set", db.Provider.EscapeName(ti.Name));
@@ -165,9 +176,15 @@ namespace SqlFu
                 i++;
             }
             sb.Remove(sb.Length - 1, 1);
+
+            if (filterColumn.IsNullOrEmpty())
+            {
+                filterColumn = ti.PrimaryKey;
+            }
+
             if (id != null || hasId)
             {
-                sb.AppendFormat(" where {0}={1}", db.Provider.EscapeName(ti.PrimaryKey), db.Provider.ParamPrefix + i);
+                sb.AppendFormat(" where {0}={1}", db.Provider.EscapeName(filterColumn), db.Provider.ParamPrefix + i);
                 hasId = true;
                 if (id == null) id = d[ti.PrimaryKey];
             }

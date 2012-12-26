@@ -3,11 +3,23 @@ using SqlFu.DDL.Generators;
 
 namespace SqlFu.DDL.Internals
 {
+  
+
     internal class CreateTableBuilder : ICreateTable
     {
         private readonly IAccessDb _db;
         private readonly IGenerateDDL _generator;
         private readonly TableSchema _table;
+
+        public CreateTableBuilder(IAccessDb db,IGenerateDDL generator,TableSchema schema)
+        {
+            _db = db;
+            _generator = generator;
+            _table = schema;
+            _columns = new ColumnsCreator(Table);
+            _constraints = new ConstraintsCreator(Table.Constraints);
+            _indexes = new IndexCreator(Table.Indexes);            
+        }
 
         public CreateTableBuilder(IAccessDb db, IGenerateDDL generator, string tableName, IfTableExists option)
         {
@@ -15,12 +27,12 @@ namespace SqlFu.DDL.Internals
             _generator = generator;
             tableName.MustNotBeEmpty();
             _table = new TableSchema(tableName);
-            _columns = new ColumnsCreator(_table);
-            _constraints = new ConstraintsCreator(_table.Constraints);
-            _indexes = new IndexCreator(_table.Indexes);
+            _columns = new ColumnsCreator(Table);
+            _constraints = new ConstraintsCreator(Table.Constraints);
+            _indexes = new IndexCreator(Table.Indexes);
 
-            _table.Name = tableName;
-            _table.CreationOption = option;
+            Table.Name = tableName;
+            Table.CreationOption = option;
         }
 
         private readonly ColumnsCreator _columns;
@@ -29,7 +41,7 @@ namespace SqlFu.DDL.Internals
 
         public string GetSql()
         {
-            return _generator.GenerateCreateTable(_table);
+            return _generator.GenerateCreateTable(Table);
         }
 
         public void ExecuteDDL()
@@ -41,15 +53,15 @@ namespace SqlFu.DDL.Internals
         {
             var tools = _db.DatabaseTools;
 
-            if (tools.TableExists(_table.Name))
+            if (tools.TableExists(Table.Name))
             {
-                switch (_table.CreationOption)
+                switch (Table.CreationOption)
                 {
                     case IfTableExists.DropIt:
-                        tools.DropTable(_table.Name);
+                        tools.DropTable(Table.Name);
                         break;
                     case IfTableExists.Throw:
-                        throw new TableExistsException(_table.Name);
+                        throw new TableExistsException(Table.Name);
                     case IfTableExists.Ignore:
                         return false;
                 }
@@ -59,11 +71,11 @@ namespace SqlFu.DDL.Internals
 
         public ICreateTable TableOptionsFor(DbEngine engine, params DbSpecificOption[] options)
         {
-            _table.Options.AddRange(options);
+            Table.Options.AddRange(options);
             return this;
         }
 
-        public IAddColumns Columns
+        public ICreateColumns Columns
         {
             get { return _columns; }
         }
@@ -76,6 +88,11 @@ namespace SqlFu.DDL.Internals
         public ICreateIndexes Indexes
         {
             get { return _indexes; }
+        }
+
+        internal TableSchema Table
+        {
+            get { return _table; }
         }
 
         #region Inner Classes

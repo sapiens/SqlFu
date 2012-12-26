@@ -82,7 +82,6 @@ namespace SqlFu.DDL.Generators
             }
             if (constraints.PrimaryKey != null && !constraints.PrimaryKey.Ignore)
             {
-                //Builder.AppendLine();
                 uniq.Write(constraints.PrimaryKey);
                 Builder.AppendLine(",");
                 if (isAdding) Builder.AppendFormat(" {0} ", GetAddConstraintPrefix());
@@ -101,7 +100,6 @@ namespace SqlFu.DDL.Generators
             if (constraints.ForeignKeys.Count > 0)
             {
                 var w = GetForeignKeyWriter();
-                //  w.IsAdding = isAdding;
                 foreach (var key in constraints.ForeignKeys)
                 {
                     w.Write(key);
@@ -113,10 +111,8 @@ namespace SqlFu.DDL.Generators
             if (constraints.Checks.Count > 0)
             {
                 var chkWriter = GetCheckWriter();
-                // chkWriter.IsAdding = isAdding;
                 foreach (var ch in constraints.Checks)
                 {
-                    //  Builder.AppendLine();
                     chkWriter.Write(ch);
                     Builder.AppendLine(",");
                     if (isAdding) Builder.AppendFormat(" {0} ", GetAddConstraintPrefix());

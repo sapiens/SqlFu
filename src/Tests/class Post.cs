@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Data;
 using CavemanTools.Model;
 using SqlFu;
+using SqlFu.DDL;
 
 namespace Tests
 {
@@ -13,6 +15,7 @@ namespace Tests
     class Post
     {
         public int Id { get; set; }
+        [RedefineFor(DbEngine.SqlServer, "blblsd")]
         public int AuthorId { get; set; }
         public string Title { get; set; }
         public DateTime CreatedOn { get; set; }

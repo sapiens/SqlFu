@@ -18,6 +18,14 @@
             <param name="property">Lambda returning the property</param>
             <returns></returns>
         </member>
+        <member name="M:System.Linq.Expressions.ExpressionExtensions.GetInfo``2(System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+            <summary>
+            Returns reflection information for a property expression
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="property">Lambda returning the property</param>
+            <returns></returns>
+        </member>
         <member name="M:System.Reflection.Emit.LCGUtils.EmitPushType(System.Reflection.Emit.ILGenerator,System.Type)">
             <summary>
             IL corresponding to push Type on stack

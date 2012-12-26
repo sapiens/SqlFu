@@ -30,8 +30,8 @@ namespace Tests
         [Fact]
         public void FactMethodName()
         {
-            Assert.Equal(typeof(long),Enum.GetUnderlyingType(TT.None.GetType()));
             
+
         }
 
 

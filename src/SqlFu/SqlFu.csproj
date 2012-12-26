@@ -154,12 +154,14 @@
     <Compile Include="DDL\Internals\IndexDefinition.cs" />
     <Compile Include="DDL\Internals\ModifiedColumnsCollection.cs" />
     <Compile Include="DDL\Internals\ModifyTableBuilder.cs" />
+    <Compile Include="DDL\Internals\SchemaFromType.cs" />
     <Compile Include="DDL\ISupportOptionsForDrop.cs" />
     <Compile Include="DDL\ISupportSpecificTableOptions.cs" />
     <Compile Include="DDL\Internals\CreateTableBuilder.cs" />
     <Compile Include="DDL\Internals\TableSchema.cs" />
     <Compile Include="DDL\KeyValueOption.cs" />
     <Compile Include="DDL\NameOnlyOption.cs" />
+    <Compile Include="DDL\PrimaryKeyAttribute.cs" />
     <Compile Include="DDL\TableExistsException.cs" />
     <Compile Include="DefaultComplexTypeMapper.cs" />
     <Compile Include="IAccessDb.cs" />

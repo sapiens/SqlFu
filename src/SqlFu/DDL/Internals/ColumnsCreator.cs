@@ -1,9 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace SqlFu.DDL.Internals
 {
-    internal class ColumnsCreator : IDefineSpecificColumnsOptions, IConfigureColumns
+    internal class ColumnsCreator : IDefineSpecificColumnsOptions, IConfigureColumns,ICreateColumns
     {
         private readonly TableSchema _table;
 
@@ -91,5 +92,18 @@ namespace SqlFu.DDL.Internals
         }
 
         #endregion
+
+        public ISupportSpecificColumnsOptions this[string name]
+        {
+            get { 
+                var col = _table.Columns[name];
+                if (col != null)
+                {
+                    _currentColumn = col;
+                    return this;
+                }
+                throw new KeyNotFoundException(string.Format("No column with  the name '{0}' was defined in the builder",name));
+            }
+        }
     }
 }

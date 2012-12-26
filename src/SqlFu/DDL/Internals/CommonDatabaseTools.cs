@@ -45,6 +45,17 @@ namespace SqlFu.DDL.Internals
             return new CreateTableBuilder(Db, GetDDLWriter(), name, option);
         }
 
+        /// <summary>
+        /// Creates a fluent builder object to help you generate a Create Table script, starting from an existing type.
+        /// You can customize it further
+        /// </summary>
+        /// <returns></returns>
+        public ICreateTable GetCreateTableBuilder<T>()
+        {
+            var schema = new TableSchema(typeof (T));
+            return new CreateTableBuilder(Db,GetDDLWriter(),schema);
+        }
+
         protected abstract IGenerateDDL GetDDLWriter();
 
         public IModifyTable GetAlterTableBuilder(string name)

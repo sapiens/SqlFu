@@ -5,7 +5,7 @@ namespace SqlFu.DDL
         /// <summary>
         /// Define table columns
         /// </summary>
-        IAddColumns Columns { get; }
+        ICreateColumns Columns { get; }
 
         /// <summary>
         /// Define table constraints

@@ -1,6 +1,8 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
 using Moq;
 using SqlFu;
+using SqlFu.DDL;
 using SqlFu.DDL.Generators;
 using SqlFu.DDL.Generators.SqlServer;
 using SqlFu.DDL.Internals;
@@ -10,30 +12,43 @@ using System.Diagnostics;
 
 namespace Tests.DDL
 {
+    class DDLStub : IGenerateDDL
+    {
+        public string GenerateCreateTable(TableSchema table)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GenerateAlterTable(TableSchema schema)
+        {
+            throw new NotImplementedException();
+        }
+    }
     public class TableEditorTests
     {
         private Stopwatch _t = new Stopwatch();
         private ModifyTableBuilder _table;
 
-        class DDLStub:IGenerateDDL
-        {
-            public string GenerateCreateTable(TableSchema table)
-            {
-                throw new NotImplementedException();
-            }
-
-            public string GenerateAlterTable(TableSchema schema)
-            {
-                throw new NotImplementedException();
-            }
-        }
+        
 
         public TableEditorTests()
         {
            
             _table = new ModifyTableBuilder(Setup.GetDb(),new DDLStub(), "test");
+            
         }
 
+        [Fact]
+        public void get_col_by_index()
+        {
+            var b = new CreateTableBuilder(Setup.GetDb(), new DDLStub(), "bla", IfTableExists.Throw);
+            Assert.Throws<KeyNotFoundException>(() => b.Columns["id"]);
+
+            b.Columns.Add("id", DbType.Int32);
+            b.Columns["id"].IfDatabaseIs(DbEngine.SqlServer).RedefineColumnAs("bla");
+            Assert.True(b.Table.Columns["id"].IsRedefined(DbEngine.SqlServer));
+            Assert.Equal("bla",b.Table.Columns["id"].GetDefinition(DbEngine.SqlServer));
+        }
        
 
         [Fact]
