@@ -38,7 +38,10 @@ db.Query<dynamic>("select * from posts where id=@0",1);
 //you can pass ordinal params or anonymous objects
 db.Query<Post>("select * from posts where id=@id",new{id=1});
 
-db.ExecuteScalar<int>("select count(*) from posts")
+db.GetValue<int>("select count(*) from posts")
+
+//stored procedure support (1.2.0+) - see wiki for details
+db.ExecuteStoredProcedure("spSomething",new{Param1="bla",_OutParam=0});
 
 //insert 
 var p= new Post{ Id=1, Title="Test"};
@@ -81,7 +84,7 @@ result=db.PagedQuery<PostView>(0,10,sql,3)
 * All the parameters in sql must be prefixed with '@' . The specific db provider will replace it with the proper prefix.
 * _Enums_ are automatically handled from int or string when querying. When insert/update they are treated as ints. 
  * Use the [InsertAsStringAttribute] to save it as string
-* Multi poco mapping is done automatically if a column name has '_'.
+* Multi poco mapping is done automatically if a column name has '_'. That can be changed (1.2.0+)
 * Any property/column which can't be mapped is ignored
 * However an exception is thrown if you want to assign a value to an object type for example, or null to a non-nullable
 
@@ -120,7 +123,7 @@ PocoFactory.RegisterConverterFor<myStruct>(obj=>{ /* do conversion */})
 
 //or for value objects
 PocoFactory.RegisterConverterFor<EmailValueObject>(obj=> new EmailValueObject(obj.ToString()))
-db.ExecuteScalar<Email>("select email from users where id=@0",8)
+db.GetValue<Email>("select email from users where id=@0",8)
 
 //execute some command processing before query
 db.WithSql(sql,args).ApplyToCommand(cmd=> { /* modify DbCommand */}.Query<MyType>()
