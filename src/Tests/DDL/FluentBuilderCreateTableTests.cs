@@ -1,6 +1,6 @@
 ﻿using SqlFu;
 using SqlFu.DDL;
-using SqlFu.DDL.Internals;
+using SqlFu.DDL.Generators.MySql;
 using Xunit;
 using System;
 using System.Diagnostics;
@@ -8,7 +8,8 @@ using System.Diagnostics;
 namespace Tests.DDL
 {
     [Table("Users")]
-    [Index("Email")]
+    [Index("Email",Name="ix_email")]
+    [PrimaryKey("Id",AutoIncrement = true,Name="PK_Users")]
     public class User
     {
     
@@ -41,11 +42,12 @@ namespace Tests.DDL
 
         }
 
-        //[Fact]
+        [Fact]
         public void test()
         {
             var sb = Setup.GetDb();
             var builder = sb.DatabaseTools.GetCreateTableBuilder<User>();
+           
             Write(builder.GetSql());
         }
 

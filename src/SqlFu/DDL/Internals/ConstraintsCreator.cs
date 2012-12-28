@@ -97,7 +97,19 @@ namespace SqlFu.DDL.Internals
                 _current = Schema.Checks.Find(d => d.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
                 if (_current == null)
                 {
-                    throw new ArgumentException("Constraint not found", name);
+                    _current = Schema.Uniques.Find(d => d.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+                    if (_current == null)
+                    {
+                        if (Schema.PrimaryKey.Name == name)
+                        {
+                            _current = Schema.PrimaryKey;
+                        }
+                        else
+                        {
+                            throw new ArgumentException("Constraint not found", name);
+                        }
+                    }
+                    
                 }
                 return this;
             }

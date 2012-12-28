@@ -45,7 +45,7 @@ namespace SqlFu.DDL.Generators.Sqlite
 
         public override string GetPrimaryKeyName(string tableName, string schema = null)
         {
-            return "";
+            return null;
         }
 
         public override bool TableExists(string name, string schema)

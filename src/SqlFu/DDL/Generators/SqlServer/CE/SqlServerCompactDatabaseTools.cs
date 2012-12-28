@@ -1,3 +1,5 @@
+using System;
+
 namespace SqlFu.DDL.Generators.SqlServer.CE
 {
     internal class SqlServerCompactDatabaseTools : SqlServerDatabaseTools
@@ -8,8 +10,7 @@ namespace SqlFu.DDL.Generators.SqlServer.CE
 
         protected override IGenerateDDL GetDDLWriter()
         {
-            //return new SqlServerCompactDDLWriter(Db);
-            return null;
+            throw new NotSupportedException();            
         }
     }
 }

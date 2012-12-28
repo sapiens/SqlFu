@@ -29,7 +29,7 @@ where constraint_schema = @0 and table_name=@1 and constraint_name='PRIMARY'
         public override string GetPrimaryKeyName(string tableName, string schema = null)
         {
             if (TableHasPrimaryKey(tableName)) return "PRIMARY";
-            return "";
+            return null;
         }
 
         public override void DropTable(string tableName)

@@ -10,6 +10,12 @@ namespace SqlFu.DDL
         bool IndexExists(string name, string table, string schema = null);
         bool TableHasColumn(string table, string column, string schema = null);
         bool TableHasPrimaryKey(string table, string schema = null);
+        /// <summary>
+        /// Returns null if there isn't any
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="schema"></param>
+        /// <returns></returns>
         string GetPrimaryKeyName(string tableName, string schema = null);
     }
 }
