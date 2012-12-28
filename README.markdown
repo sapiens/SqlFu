@@ -5,6 +5,9 @@ If you're wondering if there's a reason for yet another micro-orm [read this](ht
 
 Latest version: 1.2.0 [Change Log](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
 
+Read about the (new) **[Advanced Features](https://github.com/sapiens/SqlFu/wiki)**
+
+
 ## Why should you use it
 The main USP (unique selling proposition - advantage) of SqlFu  is  **Versatility**. This is the reason I've developed it. I need it more flexibility and the micro-orm I was using (peta poco) didn't have it and if other micro-orms had it, they were too slow (FluentData). 
 
@@ -85,6 +88,12 @@ result=db.PagedQuery<PostView>(0,10,sql,3)
 * _Enums_ are automatically handled from int or string when querying. When insert/update they are treated as ints. 
  * Use the [InsertAsStringAttribute] to save it as string
 * Multi poco mapping is done automatically if a column name has '_'. That can be changed (1.2.0+)
+
+````
+//let's use '.' instead of '_'
+PocoFactory.ComplexTypeMapper.Separator = '.';
+
+```
 * Any property/column which can't be mapped is ignored
 * However an exception is thrown if you want to assign a value to an object type for example, or null to a non-nullable
 
