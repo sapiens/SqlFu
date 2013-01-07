@@ -40,10 +40,10 @@ namespace SqlFu.Providers
         {
             if (value != null)
             {
-                //if (value.GetType().IsEnum)
-                //{
-                //    value = (int) value;
-                //}
+                if (value is DateTimeOffset)
+                {
+                    value = value.As<DateTimeOffset>().DateTime;
+                }
             }
             base.SetupParameter(param, name, value);
         }

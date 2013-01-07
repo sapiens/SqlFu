@@ -120,7 +120,7 @@ namespace SqlFu.DDL.Generators.MySql
 
         protected override string DateTimeOffset(string size)
         {
-            return String("27");
+            return DateTime();
         }
     }
 }
