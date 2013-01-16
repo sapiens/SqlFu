@@ -42,7 +42,7 @@ namespace SqlFu.Providers
             {
                 if (value is DateTimeOffset)
                 {
-                    value = value.As<DateTimeOffset>().DateTime;
+                    value = value.Cast<DateTimeOffset>().DateTime;
                 }
             }
             base.SetupParameter(param, name, value);
