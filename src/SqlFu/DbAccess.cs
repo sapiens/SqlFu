@@ -423,7 +423,7 @@ namespace SqlFu
             return rez;
         }
 
-        public ResultSet<T> PagedQuery<T>(long skip, int take, string sql, params object[] args)
+        public IPagedResult<T> PagedQuery<T>(long skip, int take, string sql, params object[] args)
         {
             using (var st = new PagedSqlStatement(this))
             {

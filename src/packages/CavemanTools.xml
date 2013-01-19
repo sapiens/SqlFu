@@ -2329,19 +2329,19 @@
             <param name="defaultValue"></param>
             <returns></returns>
         </member>
-        <member name="T:CavemanTools.Model.IResultSet`1">
+        <member name="T:CavemanTools.Model.IPagedResult`1">
             <summary>
             Paginated result set with the total number of items from a query.
             Used for pagination.
             </summary>
             <typeparam name="T">Type of item</typeparam>
         </member>
-        <member name="P:CavemanTools.Model.IResultSet`1.Count">
+        <member name="P:CavemanTools.Model.IPagedResult`1.Count">
             <summary>
             Gets the total number of items
             </summary>
         </member>
-        <member name="P:CavemanTools.Model.IResultSet`1.Items">
+        <member name="P:CavemanTools.Model.IPagedResult`1.Items">
             <summary>
             Gets result items
             </summary>
@@ -2391,7 +2391,7 @@
             Returns true if there are no error messages
             </summary>
         </member>
-        <member name="T:CavemanTools.Model.ResultSet`1">
+        <member name="T:CavemanTools.Model.PagedResult`1">
             <summary>
             Holds limited result set and total number of items from a query.
             Used for pagination.

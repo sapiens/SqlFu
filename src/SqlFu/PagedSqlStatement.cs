@@ -8,7 +8,7 @@ namespace SqlFu
 {
     public interface IPagedQueryStatement : IQuerySqlStatement
     {
-        ResultSet<T> ExecutePagedQuery<T>(Func<IDataReader, T> mapper = null);
+        PagedResult<T> ExecutePagedQuery<T>(Func<IDataReader, T> mapper = null);
     }
 
     public interface IPagedSqlStatement : IPagedQueryStatement, IDisposable
@@ -60,13 +60,13 @@ namespace SqlFu
             _paramNames = lc.ToArray();
         }
 
-        public ResultSet<T> ExecutePagedQuery<T>(Func<IDataReader, T> mapper = null)
+        public PagedResult<T> ExecutePagedQuery<T>(Func<IDataReader, T> mapper = null)
         {
             string select;
             string count;
             _db.Provider.MakePaged(_cmd.CommandText, out @select, out count);
 
-            var rez = new ResultSet<T>();
+            var rez = new PagedResult<T>();
 
             using (_cmd)
             {
