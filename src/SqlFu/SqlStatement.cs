@@ -222,6 +222,7 @@ namespace SqlFu
             {
                 Db.OnException(this, ex);
                 _cmd.Dispose();
+                Db.CloseConnection();
                 throw;
             }
             finally
@@ -247,6 +248,7 @@ namespace SqlFu
             catch (Exception ex)
             {
                 Db.OnException(this, ex);
+                Db.CloseConnection();
                 throw;
             }
         }
@@ -266,6 +268,7 @@ namespace SqlFu
                 catch (Exception ex)
                 {
                     Db.OnException(this, ex);
+                    Db.CloseConnection();
                     _cmd.Dispose();
                     throw;
                 }
@@ -297,7 +300,10 @@ namespace SqlFu
                     Db.OnException(this, ex);
                     throw;
                 }
-                _db.CloseConnection();
+                finally
+                {
+                    _db.CloseConnection();
+                }
                 if (converter == null) converter = PocoFactory.GetConverter<T>();
                 return converter(rez);
             }
@@ -324,6 +330,7 @@ namespace SqlFu
                         catch (Exception ex)
                         {
                             Db.OnException(this, ex);
+                            Db.CloseConnection();
                             throw;
                         }
 

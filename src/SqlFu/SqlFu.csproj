@@ -191,6 +191,7 @@
     <Compile Include="QueryOnlyAttribute.cs" />
     <Compile Include="SProcStatement.cs" />
     <Compile Include="SqlExtensionsCommands.cs" />
+    <Compile Include="SqlExtensionsQuery.cs" />
     <Compile Include="StoredProcedureResult.cs" />
     <Compile Include="TableAttribute.cs" />
     <Compile Include="Internals\TableInfo.cs" />

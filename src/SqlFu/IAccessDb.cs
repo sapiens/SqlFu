@@ -37,10 +37,10 @@ namespace SqlFu
         /// <returns></returns>
         T GetValue<T>(string sql, params object[] args);
 
-        T Get<T>(object id, string additionalPredicate = null, params object[] args);
+        //T Get<T>(object id, string additionalPredicate = null, params object[] args);
         IPagedResult<T> PagedQuery<T>(long skip, int take, string sql, params object[] args);
         IEnumerable<T> Query<T>(string sql, params object[] args);
-        List<T> Fetch<T>(string sql, params object[] args);
+        //List<T> Fetch<T>(string sql, params object[] args);
 
         /// <summary>
         /// Prepares sql statement

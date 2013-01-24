@@ -59,14 +59,10 @@ namespace SqlFu.Providers.SqlServer
                 @"\bORDER\s+BY\s+(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\w\(\)\.])+(?:\s+(?:ASC|DESC))?(?:\s*,\s*(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\w\(\)\.])+(?:\s+(?:ASC|DESC))?)*",
                 RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Singleline | RegexOptions.Compiled);
 
-        private ConcurrentDictionary<int, PagingInfo> _pagingCache;
+        private static ConcurrentDictionary<int, PagingInfo> _pagingCache= new ConcurrentDictionary<int, PagingInfo>();
 
         public override void MakePaged(string sql, out string selecSql, out string countSql)
         {
-            if (_pagingCache == null)
-            {
-                _pagingCache = new ConcurrentDictionary<int, PagingInfo>();
-            }
             PagingInfo info;
             var key = sql.GetHashCode();
             if (_pagingCache.TryGetValue(key, out info))

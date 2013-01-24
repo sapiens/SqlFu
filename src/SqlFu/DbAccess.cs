@@ -216,21 +216,7 @@ namespace SqlFu
         }
 
 
-        public static DbType Convert(Type t)
-        {
-            //if (t==typeof(int))
-            //{
-            //    return DbType.Int32;
-            //}
-
-            //if (t==typeof(int))
-            //{
-            //    return DbType.;
-            //}
-
-            throw new NotSupportedException();
-        }
-
+      
         #region Transaction support
 
         private int _tLevel;
@@ -365,64 +351,6 @@ namespace SqlFu
             }
         }
 
-
-        public T Get<T>(object id, string additionalPredicate = null, params object[] args)
-        {
-            id.MustNotBeNull("id");
-            var tp = typeof (T);
-            if (typeof (ExpandoObject) == tp || typeof (object) == tp)
-                throw new InvalidOperationException("Can't work with System.Object or dynamic types");
-            var ti = TableInfo.ForType(tp);
-            if (ti.SelectSingleSql == null)
-            {
-                var sb = new StringBuilder("select ");
-                var p = tp.GetProperties().Where(pr => !pr.PropertyType.IsCustomObjectType()).Select(pr => pr.Name);
-                foreach (var name in p)
-                {
-                    sb.AppendFormat("{0},", Provider.EscapeName(name));
-                }
-                sb.Remove(sb.Length - 1, 1);
-
-                sb.AppendFormat(" from {0}", Provider.EscapeName(ti.Name));
-                sb.AppendFormat(" where {0}=@0", Provider.EscapeName(ti.PrimaryKey));
-                if (!string.IsNullOrEmpty(additionalPredicate))
-                {
-                    sb.AppendFormat(" {0}", additionalPredicate);
-                }
-                ti.SelectSingleSql = sb.ToString();
-            }
-            var rez = default(T);
-            var fargs = new List<object>(args.Length + 1);
-            fargs.Add(id);
-            fargs.AddRange(args);
-            using (var st = new SqlStatement(this))
-            {
-                st.SetSql(ti.SelectSingleSql, fargs.ToArray());
-
-                using (var rd = st.GetReader())
-                {
-                    try
-                    {
-                        if (rd.Read())
-                        {
-                            Func<IDataReader, T> mapper = PocoFactory.GetPocoMapper<T>(rd, st.Sql);
-                            rez = mapper(rd);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        OnException(st, ex);
-                        throw;
-                    }
-                    finally
-                    {
-                        CloseConnection();
-                    }
-                }
-            }
-            return rez;
-        }
-
         public IPagedResult<T> PagedQuery<T>(long skip, int take, string sql, params object[] args)
         {
             using (var st = new PagedSqlStatement(this))
@@ -481,39 +409,7 @@ namespace SqlFu
             }
         }
 
-        public List<T> Fetch<T>(string sql, params object[] args)
-        {
-            using (var st = new SqlStatement(this))
-            {
-                st.SetSql(sql, args);
-
-                using (var rd = st.GetReader())
-                {
-                    Func<IDataReader, T> mapper = null;
-                    var rez = new List<T>();
-                    try
-                    {
-                        while (rd.Read())
-                        {
-                            if (mapper == null)
-                            {
-                                mapper = PocoFactory.GetPocoMapper<T>(rd, st.Sql);
-                            }
-                            rez.Add(mapper(rd));
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        OnException(st, ex);
-
-                        throw;
-                    }
-
-                    return rez;
-                }
-            }
-        }
-
+      
         #endregion
 
         public void Dispose()

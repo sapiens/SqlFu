@@ -82,6 +82,7 @@
     <Compile Include="class Post.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Criteria\General.cs" />
     <Compile Include="DDL\FluentBuilderCreateTableTests.cs" />
     <Compile Include="FakeTransaction.cs" />
     <Compile Include="ComplexMapperTests.cs">
