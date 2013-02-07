@@ -3,7 +3,7 @@
 SqlFu is a **_versatile_** micro-orm (like dapper.net, peta poco , massive etc) for .Net 4.  SqlFu is Apache licensed.
 If you're wondering if there's a reason for yet another micro-orm [read this](http://www.sapiensworks.com/blog/post/2012/05/19/SqlFu-My-Versatile-Micro-Orm.aspx)
 
-Latest version: 1.3.0 [Change Log](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
+Latest version: 1.3.1 [Change Log](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
 
 Read about the (new) **[Advanced Features](https://github.com/sapiens/SqlFu/wiki)**
 
@@ -42,6 +42,8 @@ db.Get<Post>(p=>p.Id==12)
 
 db.Query<Post>("select * from posts where id=@0",1);
 db.Query<dynamic>("select * from posts where id=@0",1);
+db.Query<Post>(p=>p.CreatedAt.Year==2013)
+
 
 //you can pass ordinal params or anonymous objects
 db.Query<Post>("select * from posts where id=@id",new{id=1});
