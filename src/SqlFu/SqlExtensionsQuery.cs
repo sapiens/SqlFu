@@ -77,6 +77,24 @@ namespace SqlFu
             return db.FirstOrDefault<T>(builder.ToString(), builder.Parameters.ToArray());
         }
 
+         /// <summary>
+        /// Selects first row matching criteria and maps it to poco
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="condition"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> Query<T>(this IAccessDb db,Expression<Func<T,bool>> condition)
+        {
+            var builder = new ExpressionSqlBuilder<T>(db.Provider.BuilderHelper);
+            builder
+                .WriteSelect()
+                .WriteSelectAllColumns()
+                .WriteFrom()
+                .Where(condition);
+            return db.Query<T>(builder.ToString(), builder.Parameters.ToArray());
+        }
+
         /// <summary>
         /// Returns only the specified column value
         /// </summary>

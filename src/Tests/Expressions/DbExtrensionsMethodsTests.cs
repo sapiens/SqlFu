@@ -28,7 +28,7 @@ namespace Tests.Expressions
         public void any()
         {
             Assert.True(_db.HasAnyRows<Post>());
-            Assert.False(_db.HasAnyRows<Post>(p=>p.Id>30));
+            Assert.False(_db.HasAnyRows<Post>(p=>p.IsActive));
         }
 
         [Fact]
@@ -58,6 +58,13 @@ namespace Tests.Expressions
             var all = _db.Count<Post>();
             _db.DeleteFrom<Post>(p => new[] {1, 2}.Contains(p.Id));
             Assert.Equal(all-2,_db.Count<Post>());
+            
+        }
+
+        [Fact]
+        public void query()
+        {
+            Assert.Equal(5,_db.Query<Post>(P => P.Id <= 5).Count());
         }
 
         protected void Write(string format, params object[] param)
