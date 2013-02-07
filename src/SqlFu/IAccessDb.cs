@@ -62,5 +62,7 @@ namespace SqlFu
         /// </example>
         /// <returns></returns>
         StoredProcedureResult ExecuteStoredProcedure(string sprocName, object arguments = null);
+
+        T FirstOrDefault<T>(string sql, params object[] args);
     }
 }

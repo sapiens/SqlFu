@@ -34,7 +34,7 @@ create index ix_test on test(name)
 
         public override void provider_escape_name()
         {
-            Assert.Equal("\"main\".\"test\"",SqliteProvider.EscapeIdentifier("main.test"));
+            Assert.Equal("\"main.test\"",SqliteProvider.EscapeIdentifier("main.test"));
         }
 
         #endregion

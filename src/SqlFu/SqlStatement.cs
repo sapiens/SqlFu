@@ -13,6 +13,7 @@ namespace SqlFu
         T ExecuteScalar<T>(Func<object, T> converter = null);
 
         IEnumerable<T> ExecuteQuery<T>(Func<IDataReader, T> mapper = null);
+        T QuerySingle<T>(Func<IDataReader, T> mapper = null);
     }
 
     public interface ISqlStatement : IQuerySqlStatement, IDisposable
@@ -307,6 +308,34 @@ namespace SqlFu
                 if (converter == null) converter = PocoFactory.GetConverter<T>();
                 return converter(rez);
             }
+        }
+
+        public T QuerySingle<T>(Func<IDataReader, T> mapper = null)
+        {
+            T d=default(T);
+            using (_cmd)
+            {
+                using (var rd = GetReader())
+                {
+                    
+                    try
+                    {
+                        if (rd.Read())
+                        {
+                            if (mapper == null) mapper = PocoFactory.GetPocoMapper<T>(rd, _cmd.CommandText);
+                            d = mapper(rd);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Db.OnException(this, ex);
+                        Db.CloseConnection();
+                        throw;
+                    }
+                    Db.CloseConnection();
+                }
+            }
+            return d;
         }
 
         public IEnumerable<T> ExecuteQuery<T>(Func<IDataReader, T> mapper = null)

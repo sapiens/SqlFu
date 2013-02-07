@@ -53,6 +53,15 @@ namespace SqlFu.Providers
             get { return DbEngine.MySql; }
         }
 
+        /// <summary>
+        /// Gets expression query builder helpers for the rdbms.
+        /// Internal usage
+        /// </summary>
+        public override IDbProviderExpressionHelper BuilderHelper
+        {
+            get { return new MySqlBuilderHelper();}
+        }
+
         protected override IDatabaseTools InitTools(DbAccess db)
         {
             return new MysqlDatabaseTools(db);

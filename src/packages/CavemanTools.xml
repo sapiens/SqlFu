@@ -61,6 +61,62 @@
             <param name="method">Lambda with method call</param>
             <returns></returns>
         </member>
+        <member name="M:System.Linq.Expressions.ExpressionExtensions.InvolvesParameter(System.Linq.Expressions.Expression,System.Type)">
+            <summary>
+            True if expresion belongs to a parameter or is a method which has a parameter argument.
+            Doesn't handle lambdas
+            </summary>
+            <param name="node"></param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Linq.Expressions.ExpressionExtensions.BelongsToParameter(System.Linq.Expressions.Expression,System.Type)">
+            <summary>
+            True if expression belongs to a lambda argument (expression parameter)
+            </summary>
+            <param name="node"></param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Linq.Expressions.ExpressionExtensions.IsParameter(System.Linq.Expressions.Expression,System.Type)">
+            <summary>
+            True if expression is a lambda argument 
+            </summary>
+            <param name="ex"></param>
+            <param name="type">Argument type</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Linq.Expressions.ExpressionExtensions.GetValue(System.Linq.Expressions.Expression)">
+            <summary>
+            Gets the value of an expresion if it's a property,field,constant or method call
+            </summary>
+            <exception cref="T:System.InvalidOperationException"></exception>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Linq.Expressions.ExpressionExtensions.GetValue(System.Linq.Expressions.MemberExpression)">
+            <summary>
+            Gets the value of the member access expression.
+            Works with properties, fields
+            </summary>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Linq.Expressions.ExpressionExtensions.CanReturnValue(System.Linq.Expressions.Expression)">
+            <summary>
+            True if the expression is of the type that can return a value (property,field,cosntnat, method call)
+            </summary>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Linq.Expressions.ExpressionExtensions.GetValue(System.Linq.Expressions.MethodCallExpression)">
+            <summary>
+            
+            </summary>
+            <exception cref="T:System.NotSupportedException"></exception>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
         <member name="M:System.Reflection.Emit.LCGUtils.EmitPushType(System.Reflection.Emit.ILGenerator,System.Type)">
             <summary>
             IL corresponding to push Type on stack
@@ -1554,13 +1610,6 @@
             <param name="value">Object</param>
             <returns></returns>
         </member>
-        <member name="M:System.ObjectExtend.ToDebugString(System.Object,System.Text.StringBuilder)">
-            <summary>
-            Generates a string containing the properties and values of the object
-            </summary>
-            <param name="val"></param>
-            <returns></returns>
-        </member>
         <member name="M:System.ObjectExtend.CopyTo``1(System.Object)">
             <summary>
              Shallow copies source object into destination, only public properties are copied. Use CopyOptionsAttribute to mark the properties you want ignored.
@@ -1624,6 +1673,13 @@
             </summary>
             <typeparam name="T"></typeparam>
             <param name="o"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Testing.ObjectExtensions.ToDebugString(System.Object,System.Text.StringBuilder)">
+            <summary>
+            Generates a string containing the properties and values of the object
+            </summary>
+            <param name="val"></param>
             <returns></returns>
         </member>
         <member name="M:System.TimeUtils.Multiply(System.TimeSpan,System.Single)">

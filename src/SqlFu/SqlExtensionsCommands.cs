@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using SqlFu.Expressions;
 using SqlFu.Internals;
 
 namespace SqlFu
 {
     public static class SqlExtensionsCommands
     {
-        public static T FirstOrDefault<T>(this IAccessDb db, string sql, params object[] args)
-        {
-            return db.Query<T>(sql, args).FirstOrDefault();
-        }
+        //[Obsolete("Use QuerySingle")]
+        //public static T FirstOrDefault<T>(this IAccessDb db, string sql, params object[] args)
+        //{
+        //    return db.QuerySingle<T>(sql, args);
+        //}
 
         #region Insert
 
@@ -137,8 +139,7 @@ namespace SqlFu
             var ti = TableInfo.ForType(typeof (T));
             return Update(db, ti, data, id);
         }
-
-
+       
         public static int UpdateWhereColumn(this IAccessDb db, string tableName,object data,string colName,object columnValue)
         {
             tableName.MustNotBeEmpty();
@@ -146,7 +147,31 @@ namespace SqlFu
             columnValue.MustNotBeNull();
             return Update(db, new TableInfo(tableName),data, columnValue, colName);
         }
-           
+
+        public static int Update<T>(this IAccessDb db, object data, Expression<Func<T, bool>> criteria)
+        {
+            var args = data.ToDictionary();
+            var ti = TableInfo.ForType(typeof (T));
+            var updater = db.Update<T>();
+            foreach (var kv in args)
+            {
+                if (ti.PrimaryKey == kv.Value) continue;
+                if (ti.Excludes.Any(d => d == kv.Key)) continue;
+                updater.Set(kv.Key, kv.Value);
+            }
+            return updater.Where(criteria).Execute();
+        }
+
+        /// <summary>
+        /// Gets update table builder
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public static IBuildUpdateTable<T> Update<T>(this IAccessDb db)
+        {
+            return new UpdateTableBuilder<T>(db);
+        }
 
         private static int Update(IAccessDb db, TableInfo ti, object data, object id = null,string filterColumn=null)
         {
@@ -196,12 +221,29 @@ namespace SqlFu
 
         #endregion
 
+        [Obsolete("Use DeleteFrom")]
         public static int Delete<T>(this IAccessDb db, string condition, params object[] args)
+        {
+            return DeleteFrom<T>(db, condition, args);
+        }
+        
+        public static int DeleteFrom<T>(this IAccessDb db, string condition, params object[] args)
         {
             var ti = TableInfo.ForType(typeof (T));
             return
                 db.ExecuteCommand(
                     string.Format("delete from {0} where {1}", db.Provider.EscapeName(ti.Name), condition), args);
+        }
+
+        public static int DeleteFrom<T>(this IAccessDb db, Expression<Func<T, bool>> criteria=null)
+        {
+            var builder = new ExpressionSqlBuilder<T>(db.Provider.BuilderHelper);
+            builder.WriteDelete();
+            if (criteria != null)
+            {
+                builder.Where(criteria);
+            }
+            return db.ExecuteCommand(builder.ToString(), builder.Parameters.ToArray());
         }
     }
 }

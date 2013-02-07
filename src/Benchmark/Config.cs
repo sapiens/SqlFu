@@ -40,25 +40,25 @@ namespace Benchmark
             return d;
         }
 
-        private const string IfExistsDbSql =
-//                        @"select case when EXISTS (SELECT * 
-//                             FROM INFORMATION_SCHEMA.TABLES 
-//                             WHERE TABLE_SCHEMA = 'dbo' 
-//                             AND  TABLE_NAME = 'Posts') then 1 else 0 end;";
+//        private const string IfExistsDbSql =
+////                        @"select case when EXISTS (SELECT * 
+////                             FROM INFORMATION_SCHEMA.TABLES 
+////                             WHERE TABLE_SCHEMA = 'dbo' 
+////                             AND  TABLE_NAME = 'Posts') then 1 else 0 end;";
 
-           @"select case when OBJECT_ID('sfPosts') is null then 0 else 1 end";
-        const string CreateTableSql= @"
-CREATE TABLE [sfPosts] (
-[Id] int NOT NULL IDENTITY(1,1) ,
-[Title] nvarchar(20) COLLATE Latin1_General_CI_AI NOT NULL ,
-[AuthorId] int NOT NULL ,
-[CreatedOn] datetime NOT NULL ,
-[TopicId] int NULL ,
-[IsActive] bit NOT NULL
-CONSTRAINT [PK__sfPosts__3214EC070AD2A005] PRIMARY KEY ([Id])
-)
-ON [PRIMARY]
-";
+//           @"select case when OBJECT_ID('sfPosts') is null then 0 else 1 end";
+//        const string CreateTableSql= @"
+//CREATE TABLE [sfPosts] (
+//[Id] int NOT NULL IDENTITY(1,1) ,
+//[Title] nvarchar(20) COLLATE Latin1_General_CI_AI NOT NULL ,
+//[AuthorId] int NOT NULL ,
+//[CreatedOn] datetime NOT NULL ,
+//[TopicId] int NULL ,
+//[IsActive] bit NOT NULL
+//CONSTRAINT [PK__sfPosts__3214EC070AD2A005] PRIMARY KEY ([Id])
+//)
+//ON [PRIMARY]
+//";
         public static void EmptyTable()
         {
             using (var db= GetDb())
@@ -71,9 +71,10 @@ ON [PRIMARY]
         {
             var db = GetDb();
             
-            if (!db.GetValue<bool>(IfExistsDbSql))
+            if (!db.TableExists<sfPosts>())
             {
-                db.ExecuteCommand(CreateTableSql);
+               db.DatabaseTools.GetCreateTableBuilder<sfPosts>().ExecuteDDL();
+                // db.ExecuteCommand(CreateTableSql);
             };
          
         }
@@ -84,14 +85,15 @@ ON [PRIMARY]
             db.KeepAlive = true;
             db.OnCommand = c => { };
             
-            if (db.GetValue<int>("select count(*) from sfposts") != 15)
+            //if (db.GetValue<int>("select count(*) from sfposts") != 150)
+            if (db.Count<sfPosts>()!=150)
             {
                 Config.EmptyTable();
              //   Console.WriteLine("ensuring 500 posts");
 
                 using (var t = db.BeginTransaction())
                 {
-                    for (int i = 0; i < 15; i++)
+                    for (int i = 0; i < 150; i++)
                     {
                         db.Insert(new sfPosts {Title = "test" + i, AuthorId = 1, CreatedOn = DateTime.Now,IsActive = true});
                     }

@@ -63,7 +63,7 @@ namespace Benchmark.Tests
         {
             bc.Add(id =>
             {
-                _db.ExecuteScalar<int>("select AuthorId from sfPosts where id=@0", 5);
+                _db.ExecuteScalar<string>("select title from sfPosts where id=@0", 5);
             }, "PetaPoco int");
             
             //bc.Add(id =>

@@ -38,7 +38,7 @@ namespace Benchmark.Tests
         {
             bc.Add(id=>
                        {
-                           _db.Query<sfPosts>("select top 10 * from sfposts where id>@0 order by id",5).ToArray();
+                           _db.Query<sfPosts>("select top 10 * from sfposts where id>@0",5).ToArray();
                        },"SqlFu");
         }
 
@@ -46,7 +46,7 @@ namespace Benchmark.Tests
         {
             bc.Add(id =>
             {
-                _db.Query<dynamic>("select top 10 * from sfposts where id>@0 order by id", 5).ToArray();
+                _db.Query<dynamic>("select top 10 * from sfposts where id>@0", 5).ToArray();
             }, "SqlFu");
         }
 
@@ -54,7 +54,7 @@ namespace Benchmark.Tests
         {
             bc.Add(id =>
             {
-                _db.PagedQuery<sfPosts>(0,10,"select * from sfposts where id>@0 order by id", 5);
+                _db.PagedQuery<sfPosts>(0,10,"select * from sfposts where id>@0", 5);
             }, "SqlFu");
         }
 
@@ -62,8 +62,13 @@ namespace Benchmark.Tests
         {
             bc.Add(id =>
             {
-                _db.GetValue<int>("select authorid from sfposts where id=@0 order by id", 5);
+                _db.GetValue<string>("select title from sfposts where id=@0", 5);
             }, "SqlFu scalar int");
+            
+            bc.Add(id =>
+            {
+                _db.GetColumnValue<sfPosts,string>(p=>p.Title,p=>p.Id==5);
+            }, "SqlFu get scalar expression based");
 
             //bc.Add(id =>
             //{

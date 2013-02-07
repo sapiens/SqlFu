@@ -76,16 +76,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Benchamrk.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="class Post.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Criteria\General.cs" />
+    <Compile Include="Expressions\DbExtrensionsMethodsTests.cs" />
+    <Compile Include="Expressions\UpdateTableTests.cs" />
+    <Compile Include="Expressions\WhereCriteriaTests.cs" />
     <Compile Include="DDL\FluentBuilderCreateTableTests.cs" />
     <Compile Include="FakeTransaction.cs" />
-    <Compile Include="ComplexMapperTests.cs">
+    <Compile Include="Mapper\AnonymousMapping.cs" />
+    <Compile Include="Mapper\ComplexMapperTests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Config.cs">

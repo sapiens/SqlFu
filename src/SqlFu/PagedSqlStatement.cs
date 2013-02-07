@@ -74,7 +74,7 @@ namespace SqlFu
                 FormatCommand();
                 try
                 {
-                    rez.Count = _cmd.ExecuteScalar().ConvertTo<int>();
+                    rez.Count = (int)_cmd.ExecuteScalar();
                     _db.OnCommand(_cmd);
                     if (rez.Count == 0)
                     {
@@ -92,7 +92,7 @@ namespace SqlFu
                             it.Add(mapper(rd));
                         }
                     }
-                    rez.Items = it.ToArray();
+                    rez.Items = it;
                     _db.OnCommand(_cmd);
                 }
                 catch (Exception ex)

@@ -21,22 +21,17 @@ namespace Benchmark.Tests
         public override void FetchSingleEntity(BenchmarksContainer bc)
         {
             bc.Add(d=>
-                       {
-                           using(var cmd=_cnx.CreateCommand())
-                           {
-                               cmd.QueryById<sfPosts>(5);
-                           }
-                       },Name);
+                {
+                    _cnx.GetById<sfPosts>(5);
+                },Name);
         }
 
         public override void FetchSingleDynamicEntity(BenchmarksContainer bc)
         {
             bc.Add(d =>
             {
-                using (var cmd = _cnx.CreateCommand())
-                {
-                    cmd.QuerySingle<dynamic>("select * from sfPOsts where id=@id",new{id=5});
-                }
+               _cnx.QuerySingle<dynamic>("select * from sfPOsts where id=@id",new{id=5});
+               
             }, Name);
         }
 
@@ -44,10 +39,7 @@ namespace Benchmark.Tests
         {
             bc.Add(d =>
             {
-                using (var cmd = _cnx.CreateCommand())
-                {
-                    cmd.Query<sfPosts>("select top 10 * from sfPOsts where id>@id", new { id = 5 });
-                }
+                _cnx.Query<sfPosts>("select top 10 * from sfPOsts where id>@id", new { id = 5 });                
             }, Name);
         }
 
@@ -55,26 +47,24 @@ namespace Benchmark.Tests
         {
             bc.Add(d =>
             {
-                using (var cmd = _cnx.CreateCommand())
-                {
-                    cmd.Query<dynamic>("select top 10 * from sfPOsts where id>@id", new { id = 5 });
-                }
+                _cnx.Query<dynamic>("select top 10 * from sfPOsts where id>@id", new { id = 5 });                
             }, Name);
         }
 
         public override void PagedQuery_Skip0_Take10(BenchmarksContainer bc)
         {
-            bc.Add(d => { throw new NotSupportedException("No implicit pagination support"); }, Name);
+            bc.Add(d =>
+                {
+                    throw new NotSupportedException("No implicit pagination support");
+                }, Name);
         }
 
         public override void ExecuteScalar(BenchmarksContainer bc)
         {
             bc.Add(d =>
             {
-                using (var cmd = _cnx.CreateCommand())
-                {
-                    cmd.GetScalar<int>("select authorid from sfPOsts where id={0}",5);
-                }
+                _cnx.GetScalar<string>("select title from sfPOsts where id={0}",5);
+                
             }, Name);
         }
 
@@ -88,10 +78,7 @@ namespace Benchmark.Tests
             var p = sfPosts.Create();
             bc.Add(d=>
                      {
-                         using (var cmd = _cnx.CreateCommand())
-                         {
-                             cmd.Insert(p);
-                         } 
+                         _cnx.Insert(p);                          
                      },Name);
         }
 
@@ -102,10 +89,7 @@ namespace Benchmark.Tests
             p.Title = "updated";
             bc.Add(d =>
             {
-                using (var cmd = _cnx.CreateCommand())
-                {
-                    cmd.Update(p); 
-                }
+                _cnx.Update(p);                 
             }, Name);
         }
     }

@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Benchmark.Massive.Massive;
 using CavemanTools.Testing;
 using Tests;
+using System.Linq;
 
 
 namespace Benchmark.Tests
@@ -43,8 +45,8 @@ namespace Benchmark.Tests
         public override void QueryTop10Dynamic(BenchmarksContainer bc)
         {
             bc.Add(i =>
-            {
-                _db.Paged(pageSize: 10);
+                {
+                Enumerable.ToArray(_db.Paged(pageSize: 10).Items);
             }, "Massive");
         }
 
@@ -57,7 +59,7 @@ namespace Benchmark.Tests
         {
             bc.Add(i=>
                        {
-                           _db.Scalar("select authorid from sfPosts where id=@0", 5);
+                           _db.Scalar("select title from sfPosts where id=@0", 5);
                        },"Massive");
         }
 
@@ -74,8 +76,7 @@ namespace Benchmark.Tests
             var p = sfPosts.Create();
             bc.Add(d =>
                        {
-                        //  _db.Insert(p);
-                         throw new NotSupportedException("Couldn't figure how to insert pocos with auto increment id");
+                      throw new NotSupportedException("Couldn't figure how to insert pocos with auto increment id");
                        }, "massive");
 
         }

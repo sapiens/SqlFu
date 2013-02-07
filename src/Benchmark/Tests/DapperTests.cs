@@ -21,12 +21,16 @@ namespace Benchmark.Tests
         public override void FetchSingleEntity(BenchmarksContainer bc)
         {
             bc.Add(id =>
-                       {
+                {
+                    _cnx.Get<sfPosts>(3);
+                    
+                  }, "Dapper get entity");
 
-                           _cnx.Query<sfPosts>("select Id,AuthorId,Title,CreatedOn,'Post' as Type,TopicId,IsActive from sfPosts where id=@id order by id", new { id = 3 }).FirstOrDefault();
+            bc.Add(id =>
+            {
+                _cnx.Query<sfPosts>("select Id,AuthorId,Title,CreatedOn,'Post' as Type,TopicId,IsActive from sfPosts where id=@id", new { id = 3 }).FirstOrDefault();
 
-
-                       }, "Dapper entity");
+            }, "Dapper query entity");
         }
 
         public override void FetchSingleDynamicEntity(BenchmarksContainer bc)
@@ -34,10 +38,10 @@ namespace Benchmark.Tests
             bc.Add(id =>
             {
 
-                _cnx.Query<dynamic>("select Id,AuthorId,Title,CreatedOn,'Post' as Type,TopicId,IsActive from sfPosts where id=@id order by id", new { id = 3 }).FirstOrDefault();
+               _cnx.Query<dynamic>("select Id,AuthorId,Title,CreatedOn,'Post' as Type,TopicId,IsActive from sfPosts where id=@id", new { id = 3 }).FirstOrDefault();
 
 
-            }, "Dapper dynamic");
+            }, "Dapper query entitty dynamic");
         }
 
         public override void QueryTop10(BenchmarksContainer bc)
@@ -45,7 +49,7 @@ namespace Benchmark.Tests
             bc.Add(id =>
             {
 
-                _cnx.Query<sfPosts>("select top 10 Id,AuthorId,Title,CreatedOn,'Post' as Type,TopicId,IsActive from sfPosts where id>@id order by id", new { id = 3 }).ToArray();
+                _cnx.Query<sfPosts>("select top 10 Id,AuthorId,Title,CreatedOn,'Post' as Type,TopicId,IsActive from sfPosts where id>@id", new { id = 3 }).ToArray();
 
 
             }, "Dapper ");
@@ -56,7 +60,7 @@ namespace Benchmark.Tests
             bc.Add(id =>
             {
 
-                _cnx.Query<dynamic>("select top 10 Id,AuthorId,Title,CreatedOn,'Post' as Type,TopicId,IsActive from sfPosts where id>@id order by id", new { id = 3 }).ToArray();
+                _cnx.Query<dynamic>("select top 10 Id,AuthorId,Title,CreatedOn,'Post' as Type,TopicId,IsActive from sfPosts where id>@id", new { id = 3 }).ToArray();
 
 
             }, "Dapper ");
@@ -66,8 +70,7 @@ namespace Benchmark.Tests
         {
             bc.Add(id =>
             {
-
-               throw new NotSupportedException("No implicit pagination support");
+                throw new NotSupportedException("No implicit pagination support");
 
             }, "Dapper ");
         }
@@ -76,7 +79,7 @@ namespace Benchmark.Tests
         {
             bc.Add(id =>
             {
-                _cnx.Query<int>("select authorid from sfPosts where id>@id order by id", new { id = 3 }).ToArray();
+                _cnx.Query<string>("select title from sfPosts where id=@id", new { id = 3 }).Single();
                 
             }, "Dapper scalar int");
 

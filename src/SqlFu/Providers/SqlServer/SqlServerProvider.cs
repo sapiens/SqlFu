@@ -36,6 +36,15 @@ namespace SqlFu.Providers.SqlServer
             get { return DbEngine.SqlServer; }
         }
 
+        /// <summary>
+        /// Gets expression query builder helpers for the rdbms.
+        /// Internal usage
+        /// </summary>
+        public override IDbProviderExpressionHelper BuilderHelper
+        {
+            get { return new SqlServerBuilderHelper();}
+        }
+
         protected override IDatabaseTools InitTools(DbAccess db)
         {
             return new SqlServerDatabaseTools(db);
@@ -50,8 +59,9 @@ namespace SqlFu.Providers.SqlServer
         public static string EscapeIdentifier(string s)
         {
             s.MustNotBeEmpty();
-            if (!s.Contains(".")) return "[" + s + "]";
-            return string.Join(".", s.Split('.').Select(d => "[" + d + "]"));
+            return "[" + s + "]";
+            //if (!s.Contains(".")) 
+            //return string.Join(".", s.Split('.').Select(d => "[" + d + "]"));
         }
 
         private static readonly Regex rxOrderBy =

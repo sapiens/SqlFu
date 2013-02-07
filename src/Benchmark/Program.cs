@@ -73,6 +73,7 @@ namespace Benchmark
                     Console.WriteLine("\nExecuting scenario: " + mi.Name + "\n-----------------------------------");
                     f.WriteLine("\nExecuting scenario: " + mi.Name + "\n-----------------------------------");
                     var bc = _bcs.First(d => d.ContainerName == mi.Name);
+                    bc.WarmUpIterations = 20;
                     bc.ExecuteWarmup();
                     bc.Execute();
 

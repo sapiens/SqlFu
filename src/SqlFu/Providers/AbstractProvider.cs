@@ -94,6 +94,13 @@ namespace SqlFu.Providers
             return _tools;
         }
 
+        /// <summary>
+        /// Gets expression query builder helpers for the rdbms.
+        /// Internal usage
+        /// </summary>
+        public abstract IDbProviderExpressionHelper BuilderHelper { get; }
+      
+
         protected abstract IDatabaseTools InitTools(DbAccess db);
     }
 }

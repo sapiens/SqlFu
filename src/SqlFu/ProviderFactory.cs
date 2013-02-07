@@ -16,8 +16,8 @@ namespace SqlFu
                     return new MySqlProvider();
                 case PostgresProvider.ProviderName:
                     return new PostgresProvider();
-                case OracleProvider.ProviderName:
-                    return new OracleProvider();
+                //case OracleProvider.ProviderName:
+                //    return new OracleProvider();
                 case SqlServerCEProvider.ProviderName:
                     return new SqlServerCEProvider();
                 case SqliteProvider.ProviderName:
@@ -38,8 +38,8 @@ namespace SqlFu
                     return new MySqlProvider();
                 case DbEngine.PostgreSQL:
                     return new PostgresProvider();
-                case DbEngine.Oracle:
-                    return new OracleProvider();
+                //case DbEngine.Oracle:
+                //    return new OracleProvider();
                 case DbEngine.SQLite:
                     return new SqliteProvider();
             }

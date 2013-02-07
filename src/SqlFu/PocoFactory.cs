@@ -29,18 +29,26 @@ namespace SqlFu
             {
                 return (Func<object, T>) rez;
             }
-
+            var tp = typeof (T);
             return o =>
                 {
                     if (o == DBNull.Value)
                     {
-                        var tp = typeof (T);
                         if (tp.IsValueType && !tp.IsNullable())
                         {
                             throw new InvalidCastException("Can't convert db null to value type");
                         }
                         return default(T);
                     }
+
+                    //if (tp == typeof(int) || tp == typeof(int?) 
+                    //    || tp== typeof(string)
+                    //    || tp == typeof(long) || tp == typeof(long?)
+                    //    || tp == typeof(bool) || tp == typeof(bool?)
+                    //    )
+                    //{
+                    //    return (T) o;
+                    //}
                     return o.ConvertTo<T>();
                 };
         }
@@ -65,14 +73,39 @@ namespace SqlFu
             {
                 var d = new ExpandoObject();
                 var o = d as IDictionary<string, object>;
+                object val;
                 for (int i = 0; i < rd.FieldCount; i++)
                 {
-                    o[rd.GetName(i)] = rd.GetValue(i);
+                    val = rd.GetValue(i);
+                    o.Add(rd.GetName(i), DBNull.Value.Equals(val) ? null : val);                                       
                 }
                 return d;
             };
 
         private static readonly Func<IDataReader, byte[]> _pocoByteArray = rd => { return (byte[]) rd[0]; };
+
+        internal static Func<IDataReader, object> AnonMapper(Type type)
+        {
+            return rd =>
+                {
+                    var names = type.GetConstructors().First().GetParameters().Select(p => p.Name).ToArray();
+                    if (names.Length > rd.FieldCount)
+                    {
+                        throw new InvalidOperationException("Returned columns are too few to be used for creation of the requested anonymous type");
+                    }
+
+                    var param = new object[names.Length];
+
+                    for (var i = 0; i < names.Length; i++)
+                    {
+                        param[i]=rd[names[i]];
+                    }
+
+                    return Activator.CreateInstance(type, param.ToArray());
+                };
+        }
+           
+            
 
         internal static Func<IDataReader, T> GetPocoMapper<T>(IDataReader rd, string sql)
         {

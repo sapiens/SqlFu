@@ -14,12 +14,17 @@ namespace SqlFu.Providers.SqlServer
 
         public override LastInsertId ExecuteInsert(SqlStatement sql, string idKey)
         {
-            sql.Sql += ";Select @@IDENTITY as id";
-
+            //sql.Sql += ";Select @@IDENTITY as id";
             using (sql)
             {
-                var rez = sql.ExecuteScalar();
-                return new LastInsertId(rez);
+                sql.Execute();
+                using (var idquery = new SqlStatement(sql.Db))
+                {
+                    idquery.SetSql("select @@IDENTITY as id");
+                    var rez = idquery.ExecuteScalar();
+                    return new LastInsertId(rez);
+                }
+                
             }
         }
 
@@ -41,6 +46,14 @@ namespace SqlFu.Providers.SqlServer
         public override DbEngine ProviderType
         {
             get { return DbEngine.SqlServerCE; }
+        }
+
+        public override IDbProviderExpressionHelper BuilderHelper
+        {
+            get
+            {
+                return new SqlServerCEBuilderHelper();
+            }
         }
     }
 }

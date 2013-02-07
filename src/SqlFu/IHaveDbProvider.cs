@@ -4,9 +4,13 @@ using SqlFu.DDL;
 
 namespace SqlFu
 {
-    public interface IHaveDbProvider
+    public interface IEscapeDbIdentifier
     {
         string EscapeName(string s);
+    }
+
+    public interface IHaveDbProvider : IEscapeDbIdentifier
+    {
         LastInsertId ExecuteInsert(SqlStatement sql, string idKey);
         DbConnection CreateConnection();
         string ParamPrefix { get; }
@@ -17,5 +21,10 @@ namespace SqlFu
         void OnCommandExecuting(IDbCommand cmd);
         DbEngine ProviderType { get; }
         IDatabaseTools GetTools(DbAccess db);
+        /// <summary>
+        /// Gets expression query builder helpers for the rdbms.
+        /// Internal usage
+        /// </summary>
+        IDbProviderExpressionHelper BuilderHelper { get; }
     }
 }

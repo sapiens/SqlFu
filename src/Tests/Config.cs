@@ -133,10 +133,9 @@ ON [PRIMARY]
             var db = Setup.GetDb();
             db.KeepAlive = true;
             db.OnCommand = c => { };
-            if (db.GetValue<int>("select count(*) from posts") != 10)
-            {
-                Config.EmptyTable();
-                Console.WriteLine("ensuring 10 posts");
+            EnsureDb();
+                //Config.EmptyTable();
+                //Console.WriteLine("ensuring 10 posts");
 
                 using (var t = db.BeginTransaction())
                 {
@@ -146,7 +145,7 @@ ON [PRIMARY]
                     }
                     t.Commit();
                 }
-            }
+           
             db.Dispose();
         }
     }

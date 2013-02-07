@@ -351,6 +351,15 @@ namespace SqlFu
             }
         }
 
+        public T FirstOrDefault<T>(string sql, params object[] args)
+        {
+            using (var st = new SqlStatement(this))
+            {
+                st.SetSql(sql, args);
+                return st.QuerySingle<T>();
+            }
+        }
+
         public IPagedResult<T> PagedQuery<T>(long skip, int take, string sql, params object[] args)
         {
             using (var st = new PagedSqlStatement(this))
@@ -368,44 +377,7 @@ namespace SqlFu
                 foreach (var r in st.ExecuteQuery<T>())
                 {
                     yield return r;
-                }
-                //using (var rd = st.GetReader())
-                //{
-
-                //    Func<IDataReader, T> mapper = null;
-                //    T rez=default(T);
-                //    while (true)
-                //    {
-                //        try
-                //        {
-                //            if (rd.Read())
-                //            {
-
-                //                if (mapper == null)
-                //                {
-                //                    mapper = PocoFactory.GetPocoMapper<T>(rd);
-                //                }
-
-
-                //                rez = mapper(rd);
-
-
-                //            }
-                //            else
-                //            {
-                //              break;
-                //            }
-
-                //        }
-                //        catch (Exception ex)
-                //        {
-                //            OnException(st,ex);
-                //            throw;
-                //        }
-                //        yield return rez;
-                //    }
-                //    //yield break;
-                //} 
+                }            
             }
         }
 

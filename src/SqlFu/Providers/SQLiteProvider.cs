@@ -41,6 +41,15 @@ namespace SqlFu.Providers
             get { return DbEngine.SQLite; }
         }
 
+        /// <summary>
+        /// Gets expression query builder helpers for the rdbms.
+        /// Internal usage
+        /// </summary>
+        public override IDbProviderExpressionHelper BuilderHelper
+        {
+            get { return new SqliteBuilderHelper();}
+        }
+
         protected override IDatabaseTools InitTools(DbAccess db)
         {
             return new SqliteDatabaseTools(db);

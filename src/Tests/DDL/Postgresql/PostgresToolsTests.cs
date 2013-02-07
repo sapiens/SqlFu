@@ -30,7 +30,7 @@ namespace Tests.DDL.Postgresql
         [Fact]
         public override void provider_escape_name()
         {
-            var txt = @"""public"".""test""";
+            var txt = @"""public.test""";
             Assert.Equal(txt,PostgresProvider.EscapeIdentifier("public.test"));
         }
 

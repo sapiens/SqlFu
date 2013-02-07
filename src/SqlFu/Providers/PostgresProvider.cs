@@ -25,6 +25,15 @@ namespace SqlFu.Providers
             get { return DbEngine.PostgreSQL; }
         }
 
+        /// <summary>
+        /// Gets expression query builder helpers for the rdbms.
+        /// Internal usage
+        /// </summary>
+        public override IDbProviderExpressionHelper BuilderHelper
+        {
+            get { return  new PostgresBuilderHelper();}
+        }
+
         protected override IDatabaseTools InitTools(DbAccess db)
         {
             return new PostgresDatabaseTools(db);
@@ -42,8 +51,9 @@ namespace SqlFu.Providers
         public static string EscapeIdentifier(string s)
         {
             s.MustNotBeEmpty();
-            if (!s.Contains(".")) return "\"" + s + "\"";
-            return string.Join(".", s.Split('.').Select(d => "\"" + d + "\""));
+            return "\"" + s + "\"";
+            //if (!s.Contains(".")) return "\"" + s + "\"";
+            //return string.Join(".", s.Split('.').Select(d => "\"" + d + "\""));
         }
 
         public override void SetupParameter(IDbDataParameter param, string name, object value)

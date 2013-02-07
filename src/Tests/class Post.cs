@@ -14,8 +14,11 @@ namespace Tests
     [Table("Posts")]
     class Post
     {
+        public Post()
+        {
+            CreatedOn = DateTime.Now;
+        }
         public int Id { get; set; }
-        [RedefineFor(DbEngine.SqlServer, "blblsd")]
         public int AuthorId { get; set; }
         public string Title { get; set; }
         public DateTime CreatedOn { get; set; }
