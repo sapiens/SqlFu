@@ -3,7 +3,7 @@
 SqlFu is a **_versatile_** micro-orm (like dapper.net, peta poco , massive etc) for .Net 4.  SqlFu is Apache licensed.
 If you're wondering if there's a reason for yet another micro-orm [read this](http://www.sapiensworks.com/blog/post/2012/05/19/SqlFu-My-Versatile-Micro-Orm.aspx)
 
-Latest version: 1.2.1 [Change Log](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
+Latest version: 1.3.0 [Change Log](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
 
 Read about the (new) **[Advanced Features](https://github.com/sapiens/SqlFu/wiki)**
 
@@ -37,6 +37,9 @@ var db= new DbAccess(connection,DbType.SqlServer);
 //usual stuff
 db.Get<Post>(id)
 
+//1.3.0+
+db.Get<Post>(p=>p.Id==12)
+
 db.Query<Post>("select * from posts where id=@0",1);
 db.Query<dynamic>("select * from posts where id=@0",1);
 
@@ -45,14 +48,44 @@ db.Query<Post>("select * from posts where id=@id",new{id=1});
 
 db.GetValue<int>("select count(*) from posts")
 
+//1.3.0+
+db.GetColumnValue<Post,string>(p=>p.Title,p=>p.Id==12)
+
 //stored procedure support (1.2.0+) - see wiki for details
 db.ExecuteStoredProcedure("spSomething",new{Param1="bla",_OutParam=0});
+
+//quick helpers 1.3.0+
+db.Count<Post>();
+db.Count<Post>(p=>p.Title.StartsWith("Test"));
+
+//check if table contains rows
+db.HasAnyRows<Post>();
+db.HasAnyRows<Post>(p=>p.IsActive);
+
+
+var ids=new[]{1,2,3};
+db.DeleteFrom<Post>(p=>ids.Contains(p.Id));
+
+db.Drop<Post>();
+
+if (db.TableExists<Post>()){ }
 
 //insert 
 var p= new Post{ Id=1, Title="Test"};
 db.Insert(p);
 p.Title="changed title";
 db.Update<Post>(p);
+
+
+//1.3.0+
+// Update Post set Title=@0 where Id=23
+db.Update<Post>(new{Title="bla"},p=>p.Id==23);
+
+//update table sql builder
+
+// update Post set [Count]=[Count]+1, IsActive=@0 where Id=12
+db.Update<Post>().Set(p=>p.Count,p=>p.Count+1).Set(p=>p.IsActive,false).Where(p=>p.Id==12).Execute();
+
 
 //paged queries , result contains Count and Items properties
 var result=db.PagedQuery<Post>(0,5,"select * from post order by id desc");
