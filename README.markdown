@@ -21,7 +21,6 @@ SqlFu supports
 * SqlServer 2005+
 * MySql
 * Postgresql
-* Oracle (partial, no paging)
 * SqlServerCE 4 (new in SqlFu 1.1)
 * Sqlite (new in SqlFu 1.1)
 
@@ -38,11 +37,11 @@ var db= new DbAccess(connection,DbType.SqlServer);
 db.Get<Post>(id)
 
 //1.3.0+
-db.Get<Post>(p=>p.Id==12)
+db.Get<Post>(p=>p.Id==12 && p.Title.StartsWith("A"))
 
 db.Query<Post>("select * from posts where id=@0",1);
 db.Query<dynamic>("select * from posts where id=@0",1);
-db.Query<Post>(p=>p.CreatedAt.Year==2013)
+db.Query<Post>(p=>p.CreatedAt.Year==2013 && p.IsActive)
 
 
 //you can pass ordinal params or anonymous objects
