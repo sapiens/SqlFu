@@ -15,16 +15,7 @@ namespace Benchmark
         private static Dictionary<string, object> Params= new Dictionary<string, object>();
         static void Main(string[] args)
         {
-            Config.EnsureDb();
-
-            //Params["FetchSingleEntity"] = 3;
-            //Params["FetchSingleDynamicEntity"] = 3;
-            //Params["QueryTop10"] = 3;
-            //Params["PagedQuery_Skip5_Take10"] = 3;
-            //Params["Inserts"] = sfPosts.Create();
-            //Params["Updates"] = sfPosts.Create();
-    
-            
+            Config.EnsureDb();             
             var p = new Program();
             try
             {
@@ -73,7 +64,7 @@ namespace Benchmark
                     Console.WriteLine("\nExecuting scenario: " + mi.Name + "\n-----------------------------------");
                     f.WriteLine("\nExecuting scenario: " + mi.Name + "\n-----------------------------------");
                     var bc = _bcs.First(d => d.ContainerName == mi.Name);
-                    bc.WarmUpIterations = 20;
+                    bc.WarmUpIterations = 5;
                     bc.ExecuteWarmup();
                     bc.Execute();
 
