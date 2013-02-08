@@ -40,7 +40,6 @@ namespace SqlFu
                         }
                         return default(T);
                     }
-
                     //if (tp == typeof(int) || tp == typeof(int?) 
                     //    || tp== typeof(string)
                     //    || tp == typeof(long) || tp == typeof(long?)

@@ -170,7 +170,7 @@ namespace SqlFu
 
                 for (int i = 0; i < args.Length; i++)
                 {
-                    d[i.ToString()] = args[i];
+                    d.Add(i.ToString(),args[i]);                    
                 }
             }
             return d;
@@ -305,6 +305,7 @@ namespace SqlFu
                 {
                     _db.CloseConnection();
                 }
+
                 if (converter == null) converter = PocoFactory.GetConverter<T>();
                 return converter(rez);
             }

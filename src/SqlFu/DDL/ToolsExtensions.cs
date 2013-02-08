@@ -32,5 +32,10 @@ namespace SqlFu
             var ti = TableInfo.ForType(typeof(T));
             return db.DatabaseTools.TableExists(ti.Name);
         }
+
+        public static void CreateTable<T>(this IAccessDb db)
+        {
+            db.DatabaseTools.GetCreateTableBuilder<T>().ExecuteDDL();
+        }
     }
 }
