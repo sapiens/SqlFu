@@ -7,7 +7,7 @@ using SqlFu.Internals;
 
 namespace SqlFu.Expressions
 {
-    internal class ExpressionSqlBuilder<T>
+    public class ExpressionSqlBuilder<T>
     {
         private readonly IDbProviderExpressionHelper _provider;
         private StringBuilder _sb=new StringBuilder();
