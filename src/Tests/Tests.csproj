@@ -123,7 +123,7 @@
     </Compile>
     <Compile Include="DDL\TableEditorTests.cs" />
     <Compile Include="Generic.cs" />
-    <Compile Include="Helpers\ComplexTypeMapper.cs">
+    <Compile Include="ComplexTypeMapper.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Helpers\HelpersTests.cs">
@@ -132,7 +132,7 @@
     <Compile Include="Helpers\ProvidersTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Helpers\QueryTests.cs">
+    <Compile Include="QueryTests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Migrations\AutomaticMigrationTests.cs" />

@@ -8,6 +8,14 @@ namespace SqlFu
     {
         private readonly int _hash;
 
+        public static long GenerateHash(Type t, string sql)
+        {
+            long hash = t.GetHashCode();
+
+            hash = hash * 17 + sql.GetHashCode();
+            return hash;
+        }
+
         public Identity(Type t, IDataReader rd, string sql)
         {
             _hash = t.GetHashCode();
@@ -17,16 +25,15 @@ namespace SqlFu
             var sb = new StringBuilder(t.Name);
             sb.AppendFormat("<={0}", sql);
 #endif
-            unchecked
-            {
-                for (int i = 0; i < rd.FieldCount; i++)
+            var fields = rd.FieldCount;
+                for (int i = 0; i < fields; i++)
                 {
                     _hash = _hash*23 + rd.GetFieldType(i).GetHashCode();
 #if DEBUG
                     //  sb.Append("-" + rd.GetFieldType(i));
 #endif
                 }
-            }
+           
 #if DEBUG
             _toString = sb.ToString();
 #else

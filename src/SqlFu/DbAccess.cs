@@ -374,10 +374,11 @@ namespace SqlFu
             using (var st = new SqlStatement(this))
             {
                 st.SetSql(sql, args);
-                foreach (var r in st.ExecuteQuery<T>())
-                {
-                    yield return r;
-                }            
+                return st.ExecuteQuery<T>();
+                //foreach (var r in st.ExecuteQuery<T>())
+                //{
+                //    yield return r;
+                //}            
             }
         }
 

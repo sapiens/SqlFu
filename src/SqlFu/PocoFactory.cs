@@ -65,15 +65,16 @@ namespace SqlFu
         private static readonly ConcurrentDictionary<Type, object> _customMappers =
             new ConcurrentDictionary<Type, object>();
 
-        private static readonly ConcurrentDictionary<Identity, object> _pocoCache =
-            new ConcurrentDictionary<Identity, object>();
+        private static readonly ConcurrentDictionary<long, object> _pocoCache =
+            new ConcurrentDictionary<long, object>();
 
         private static readonly Func<IDataReader, dynamic> _dynamicPoco = rd =>
             {
                 var d = new ExpandoObject();
                 var o = d as IDictionary<string, object>;
                 object val;
-                for (int i = 0; i < rd.FieldCount; i++)
+                var fc = rd.FieldCount;
+                for (int i = 0; i < fc; i++)
                 {
                     val = rd.GetValue(i);
                     o.Add(rd.GetName(i), DBNull.Value.Equals(val) ? null : val);                                       
@@ -128,7 +129,8 @@ namespace SqlFu
                 return (Func<IDataReader, T>) rez;
             }
 
-            var key = new Identity(poco, rd, sql);
+            //var key = new Identity(poco, rd, sql);
+            var key = Identity.GenerateHash(poco, sql);
             //  Console.WriteLine("key {0} {1}",key,key.GetHashCode());
             //get from cache
             if (!_pocoCache.TryGetValue(key, out rez))
@@ -211,6 +213,7 @@ namespace SqlFu
             il.Emit(OpCodes.Ret);
         }
 
+      
         /// <summary>
         /// Read value and puts it on the stack
         /// </summary>
@@ -248,7 +251,7 @@ namespace SqlFu
             il.Emit(OpCodes.Br, end);
             il.MarkLabel(endIf);
 
-            var getter = typeof (IDataRecord).GetMethod("Get" + tp.Name, new[] {typeof (int)});
+            var getter = typeof(IDataRecord).GetMethod("Get" + tp.Name, new[] { typeof(int) });
             if (getter != null)
             {
                 il.EmitLoadMethodArgument(0);
@@ -260,7 +263,7 @@ namespace SqlFu
             {
                 //get converter delegate
                 il.Emit(OpCodes.Call,
-                        (typeof (PocoFactory).GetMethod("GetConverter", BindingFlags.Static | BindingFlags.NonPublic)).
+                        (typeof(PocoFactory).GetMethod("GetConverter", BindingFlags.Static | BindingFlags.NonPublic)).
                             MakeGenericMethod(tp));
 
                 //get reader value
@@ -269,7 +272,7 @@ namespace SqlFu
                 il.Emit(OpCodes.Call, _rdGetValueInfo); //poco,rd.GetValue(i)
 
                 //invoke delegate 
-                il.Emit(OpCodes.Call, (Expression.GetFuncType(typeof (object), tp)).GetMethod("Invoke"));
+                il.Emit(OpCodes.Call, (Expression.GetFuncType(typeof(object), tp)).GetMethod("Invoke"));
             }
             il.MarkLabel(end); //stack contains converted value
         }
