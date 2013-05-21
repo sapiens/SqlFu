@@ -37,6 +37,13 @@
             <typeparam name="T">Inerface type</typeparam>
             <param name="value"></param>
         </member>
+        <member name="M:System.AssertionsExtensions.MustDeriveFrom``1(System.Object)">
+            <summary>
+            Argument must be an implementation or subclass of T
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="value"></param>
+        </member>
         <member name="M:System.AssertionsExtensions.MustHaveValues``1(System.Collections.Generic.IEnumerable{``0},System.Boolean)">
             <summary>
             List must not be empty and must have non-null values
@@ -715,7 +722,7 @@
             First parameter is new item, second is the item used as base for comparison</param>
             <returns></returns>
         </member>
-        <member name="M:System.Collections.Generic.ListUtils.Update``1(System.Collections.Generic.ICollection{``0},System.Collections.Generic.IEnumerable{``0})">
+        <member name="M:System.Collections.Generic.ListUtils.Update``1(System.Collections.Generic.IList{``0},System.Collections.Generic.IEnumerable{``0})">
             <summary>
             Updates the old collection with new items, while removing the inexistent.
             </summary>
@@ -1128,9 +1135,9 @@
             <param name="source"></param>
             <returns></returns>
         </member>
-        <member name="M:System.Reflection.AssemblyExtensions.GetTypesImplementing``1(System.Reflection.Assembly,System.Boolean)">
+        <member name="M:System.Reflection.AssemblyExtensions.GetTypesDerivedFrom``1(System.Reflection.Assembly,System.Boolean)">
             <summary>
-            Returns public types implementing T
+            Returns public types derived from T
             </summary>
             <typeparam name="T"></typeparam>
             <param name="asm"></param>
@@ -1224,6 +1231,249 @@
             </summary>
             <param name="version">major.minor.patch[-preRelease][+build]</param>
         </member>
+        <member name="P:CavemanTools.Web.Authentication.AuthenticationData.Groups">
+            <summary>
+            Groups user belongs to. Empty for none
+            </summary>
+        </member>
+        <member name="T:CavemanTools.Web.Authentication.IAuthenticationService">
+            <summary>
+            Login session service. Used as singleton
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Web.Authentication.IAuthenticationService.Get(System.Guid)">
+            <summary>
+            If the guid is invalid (session expired or not found), it returns null
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Web.Authentication.IAuthenticationService.StartSession(CavemanTools.Web.Authentication.AuthenticationData,System.TimeSpan)">
+            <summary>
+            Returns the login session id
+            </summary>
+            <param name="data"></param>
+            <param name="valability">Duration of the session</param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Web.Authentication.IAuthenticationService.EndSession(System.Guid)">
+            <summary>
+            Logout
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:CavemanTools.Web.Authentication.AuthenticationService.Get(System.Guid)">
+            <summary>
+            If the guid is invalid (session expired or not found), it returns null
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Web.Authentication.AuthenticationService.StartSession(CavemanTools.Web.Authentication.AuthenticationData,System.TimeSpan)">
+            <summary>
+            Returns the login session id
+            </summary>
+            <param name="data"></param>
+            <param name="valability">Duration of the session</param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Web.Authentication.AuthenticationService.EndSession(System.Guid)">
+            <summary>
+            Logout
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="M:CavemanTools.Web.Authentication.AuthorizationScopeGuid.Equals(CavemanTools.Web.Authentication.AuthorizationScopeId)">
+            <summary>
+            Indicates whether the current object is equal to another object of the same type.
+            </summary>
+            <returns>
+            true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+            </returns>
+            <param name="other">An object to compare with this object.</param>
+        </member>
+        <member name="T:CavemanTools.Web.Authentication.UserRightsContext">
+            <summary>
+            Change the AdminRight field to the value you want
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Web.Authentication.IUserRightsContext.HasRightTo(System.UInt16)">
+            <summary>
+            True if user has the specified right
+            </summary>
+            <param name="right"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Web.Authentication.IUserRightsContext.IsMemberOf(System.Int32[])">
+            <summary>
+            True if the user is a member of at least one of the groups
+            </summary>
+            <param name="groupIds"></param>
+            <returns></returns>
+        </member>
+        <member name="P:CavemanTools.Web.Authentication.IUserRightsContext.Id">
+            <summary>
+            Gets the user id or null if anonymous
+            </summary>
+        </member>
+        <member name="P:CavemanTools.Web.Authentication.IUserRightsContext.Name">
+            <summary>
+            User name or null if anonymous
+            </summary>
+        </member>
+        <member name="P:CavemanTools.Web.Authentication.IUserRightsContext.IsAuthenticated">
+            <summary>
+            Gets the status of request
+            </summary>
+        </member>
+        <member name="P:CavemanTools.Web.Authentication.IUserRightsContext.OtherData">
+            <summary>
+            Gets a dictionary where you can store other information about the user
+            </summary>
+        </member>
+        <member name="F:CavemanTools.Web.Authentication.UserRightsContext.AdminRight">
+            <summary>
+            Value of Admin right.
+            Default is UserBasicRights.DoEverything
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Web.Authentication.UserRightsContext.HasRightTo(System.UInt16)">
+            <summary>
+            Checks if user has the specified right or the admin right
+            </summary>
+            <param name="right">right id</param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Web.Authentication.UserRightsContext.IsMemberOf(System.Int32[])">
+            <summary>
+            True if user is member of one of the specified groups
+            </summary>
+            <param name="groupIds"></param>
+            <returns></returns>
+        </member>
+        <member name="P:CavemanTools.Web.Authentication.UserRightsContext.Id">
+            <summary>
+            Gets the user id or null if anonymous
+            </summary>
+        </member>
+        <member name="P:CavemanTools.Web.Authentication.UserRightsContext.Name">
+            <summary>
+            User name or empty if anonymous
+            </summary>
+        </member>
+        <member name="P:CavemanTools.Web.Authentication.UserRightsContext.OtherData">
+            <summary>
+            Gets a dictionary where you can store other information about the user
+            </summary>
+        </member>
+        <member name="F:CavemanTools.Web.Authentication.CavemanIdentity.Type">
+            <summary>
+            Authentication type
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Web.Authentication.CavemanIdentity.#ctor">
+            <summary>
+            Anonymous
+            </summary>
+        </member>
+        <member name="P:CavemanTools.Web.Authentication.CavemanIdentity.AuthenticationType">
+            <summary>
+            Gets the type of authentication used.
+            </summary>
+            <returns>
+            The type of authentication used to identify the user.
+            </returns>
+        </member>
+        <member name="T:CavemanTools.Web.Authentication.DefaultAuthorizationScopeId">
+            <summary>
+            Uses Int32 as id type
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Web.Authentication.Extensions.GetCavemanIdentity(System.Security.Principal.IPrincipal)">
+            <summary>
+            Returns the user identity
+            </summary>
+            <param name="user"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Web.Authentication.Extensions.SetAuthScope(System.Security.Principal.IPrincipal,CavemanTools.Web.Authentication.AuthorizationScopeId)">
+            <summary>
+            Sets the scope for authorization purposes
+            </summary>
+            <param name="principal"></param>
+            <param name="scopeId"></param>
+        </member>
+        <member name="M:CavemanTools.Web.Authentication.IAuthenticationServiceStorage.Get(System.Guid)">
+            <summary>
+            Returns session data. If it's expired or missing returns null
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Web.Authentication.IAuthenticationServiceStorage.Save(System.Guid,CavemanTools.Web.Authentication.AuthenticationData,System.DateTimeOffset)">
+            <summary>
+            Stores session data
+            </summary>
+            <param name="id"></param>
+            <param name="user"></param>
+            <param name="expiration"></param>
+        </member>
+        <member name="M:CavemanTools.Web.Authentication.IAuthenticationServiceStorage.MarkAsFinished(System.Guid)">
+            <summary>
+            Logout
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="P:CavemanTools.Web.Authentication.IUserContextGroup.Id">
+            <summary>
+            Gets the group id value
+            </summary>
+        </member>
+        <member name="P:CavemanTools.Web.Authentication.IUserContextGroup.Rights">
+            <summary>
+            Gets the rights assigned to group
+            </summary>
+        </member>
+        <member name="P:CavemanTools.Web.Authentication.IUserContextGroup.ScopeId">
+            <summary>
+            Gets group scope if any
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Web.Authentication.IUserIdValue.ValueAs``1">
+            <summary>
+            Gets the id as the underlying type.
+            Default is int
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Web.Authentication.IUserIdValue.ToString">
+            <summary>
+            Id value as string
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:CavemanTools.Web.Authentication.IUserIdValue.Value">
+            <summary>
+            Gets the id as an object
+            </summary>
+        </member>
+        <member name="T:CavemanTools.Web.Authentication.UserGuid">
+            <summary>
+            Implments the user id value as a GUID
+            </summary>
+        </member>
+        <member name="T:CavemanTools.Web.Authentication.UserIdBase`1">
+            <summary>
+            Base class to implement user id value
+            </summary>
+            <typeparam name="T">Underlying value type</typeparam>
+        </member>
+        <member name="T:CavemanTools.Web.Authentication.UserId">
+            <summary>
+            Implements the user id value as an int
+            </summary>
+        </member>
         <member name="T:CavemanTools.Web.ContextInstance`1">
             <summary>
             Base class for types which will be used as singletons within a http request
@@ -1241,12 +1491,67 @@
             Gets the single instance of type for the current request
             </summary>
         </member>
+        <member name="T:CavemanTools.Web.HashedPassword">
+            <summary>
+            Hashed password class
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Web.HashedPassword.Matches(System.String)">
+            <summary>
+            True if the supplied argument matches hash
+            </summary>
+            <param name="otherHash"></param>
+            <returns></returns>
+        </member>
+        <member name="P:CavemanTools.Web.HashedPassword.Hash">
+            <summary>
+            Gets hash
+            </summary>
+        </member>
+        <member name="P:CavemanTools.Web.HashedPassword.Salt">
+            <summary>
+            Gets salt used for hashing
+            </summary>
+        </member>
         <member name="T:CavemanTools.Web.HttpContextRegistry">
             <summary>
             Helper to set/get objects in the current http context
             </summary>
         </member>
-        <member name="M:CavemanTools.Web.Security.AuthenticationUtils.SetAuthCookie(System.Web.HttpResponse,CavemanTools.Web.Security.IUserIdValue,System.String,System.Collections.Generic.IEnumerable{System.Int32},System.Boolean)">
+        <member name="M:CavemanTools.Web.IHashPassword.Hash(System.String,System.String)">
+            <summary>
+            Creates a hash for a string using salt
+            </summary>
+            <param name="text">Value to hash</param>
+            <param name="salt">Optional random string</param>
+            <returns></returns>
+        </member>
+        <member name="T:CavemanTools.Web.Password">
+            <summary>
+            Use it to encapsulate password hash generation. 
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Web.Password.#ctor(System.String,System.String)">
+            <summary>
+            Generates a password hash using sha256
+            </summary>
+            <param name="password"></param>
+            <param name="salt">A random 7 characters string will be used if empty</param>
+        </member>
+        <member name="M:CavemanTools.Web.Password.#ctor(System.String,CavemanTools.Web.IHashPassword,System.String)">
+            <summary>
+            Generates a password hash using the specified hashing strategy
+            </summary>
+            <param name="password"></param>
+            <param name="hasher">Hashing strategy, implement <see cref="T:CavemanTools.Web.IHashPassword"/></param>
+            <param name="salt">A random 7 characters string will be used if empty</param>
+        </member>
+        <member name="P:CavemanTools.Web.Password.Hash">
+            <summary>
+            Gets hashed password
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Web.Security.AuthenticationUtils.SetAuthCookie(System.Web.HttpResponse,CavemanTools.Web.Authentication.IUserIdValue,System.String,System.Collections.Generic.IEnumerable{System.Int32},System.Boolean)">
             <summary>
             Creates and attaches to response the authentication cookie
             </summary>
@@ -1264,149 +1569,27 @@
             <param name="context"></param>
             <returns></returns>
         </member>
-        <member name="M:CavemanTools.Web.Security.AuthorizationScopeGuid.Equals(CavemanTools.Web.Security.AuthorizationScopeId)">
+        <member name="M:CavemanTools.Web.Authentication.CavemanAuthenticationModule.Init(System.Web.HttpApplication)">
             <summary>
-            Indicates whether the current object is equal to another object of the same type.
+            Initializes a module and prepares it to handle requests.
             </summary>
-            <returns>
-            true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
-            </returns>
-            <param name="other">An object to compare with this object.</param>
+            <param name="context">An <see cref="T:System.Web.HttpApplication"/> that provides access to the methods, properties, and events common to all application objects within an ASP.NET application </param>
         </member>
-        <member name="T:CavemanTools.Web.Security.DefaultAuthorizationScopeId">
+        <member name="M:CavemanTools.Web.Authentication.CavemanAuthenticationModule.SetAuthCookie(System.Web.HttpCookieCollection,System.Guid,System.Boolean,System.Nullable{System.TimeSpan})">
             <summary>
-            Uses Int32 as id type
+            
             </summary>
+            <param name="cookies"></param>
+            <param name="id"></param>
+            <param name="rememberMe"></param>
+            <param name="valability">Custom valability. Remember me is ignored</param>
         </member>
-        <member name="T:CavemanTools.Web.Security.HashedPassword">
+        <member name="M:CavemanTools.Web.Authentication.CavemanAuthenticationModule.Dispose">
             <summary>
-            Hashed password class
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.Security.HashedPassword.Matches(System.String)">
-            <summary>
-            True if the supplied argument matches hash
-            </summary>
-            <param name="otherHash"></param>
-            <returns></returns>
-        </member>
-        <member name="P:CavemanTools.Web.Security.HashedPassword.Hash">
-            <summary>
-            Gets hash
+            Disposes of the resources (other than memory) used by the module that implements <see cref="T:System.Web.IHttpModule"/>.
             </summary>
         </member>
-        <member name="P:CavemanTools.Web.Security.HashedPassword.Salt">
-            <summary>
-            Gets salt used for hashing
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.Security.IHashPassword.Hash(System.String,System.String)">
-            <summary>
-            Creates a hash for a string using salt
-            </summary>
-            <param name="text">Value to hash</param>
-            <param name="salt">Optional random string</param>
-            <returns></returns>
-        </member>
-        <member name="T:CavemanTools.Web.Security.Password">
-            <summary>
-            Use it to encapsulate password hash generation. 
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.Security.Password.#ctor(System.String,System.String)">
-            <summary>
-            Generates a password hash using sha256
-            </summary>
-            <param name="password"></param>
-            <param name="salt">A random 7 characters string will be used if empty</param>
-        </member>
-        <member name="M:CavemanTools.Web.Security.Password.#ctor(System.String,CavemanTools.Web.Security.IHashPassword,System.String)">
-            <summary>
-            Generates a password hash using the specified hashing strategy
-            </summary>
-            <param name="password"></param>
-            <param name="hasher">Hashing strategy, implement <see cref="T:CavemanTools.Web.Security.IHashPassword"/></param>
-            <param name="salt">A random 7 characters string will be used if empty</param>
-        </member>
-        <member name="P:CavemanTools.Web.Security.Password.Hash">
-            <summary>
-            Gets hashed password
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Web.Security.Sha256Password">
-            <summary>
-            Password hashing strategy using sha256
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Security.IUserContextGroup.Id">
-            <summary>
-            Gets the group id value
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Security.IUserContextGroup.Rights">
-            <summary>
-            Gets the rights assigned to group
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Security.IUserContextGroup.ScopeId">
-            <summary>
-            Gets group scope if any
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.Security.IUserIdValue.ValueAs``1">
-            <summary>
-            Gets the id as the underlying type.
-            Default is int
-            </summary>
-            <typeparam name="T"></typeparam>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.Security.IUserIdValue.ToString">
-            <summary>
-            Id value as string
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:CavemanTools.Web.Security.IUserIdValue.Value">
-            <summary>
-            Gets the id as an object
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.Security.IUserRightsContext.HasRightTo(System.UInt16)">
-            <summary>
-            True if user has the specified right
-            </summary>
-            <param name="right"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.Security.IUserRightsContext.IsMemberOf(System.Int32[])">
-            <summary>
-            True if the user is a member of at least one of the groups
-            </summary>
-            <param name="groupIds"></param>
-            <returns></returns>
-        </member>
-        <member name="P:CavemanTools.Web.Security.IUserRightsContext.Id">
-            <summary>
-            Gets the user id or null if anonymous
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Security.IUserRightsContext.Name">
-            <summary>
-            User name or null if anonymous
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Security.IUserRightsContext.IsAuthenticated">
-            <summary>
-            Gets the status of request
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Security.IUserRightsContext.OtherData">
-            <summary>
-            Gets a dictionary where you can store other information about the user
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.Security.IUserRightsRepository.GetGroupsById(System.Collections.Generic.IEnumerable{System.Int32},CavemanTools.Web.Security.IUserIdValue)">
+        <member name="M:CavemanTools.Web.Security.IUserRightsRepository.GetGroupsById(System.Collections.Generic.IEnumerable{System.Int32},CavemanTools.Web.Authentication.IUserIdValue)">
             <summary>
             Gets groups contexts. If a group doesn't exist, it must return an empty object.
             If no groups are available return an empty collection
@@ -1426,81 +1609,11 @@
             Gets groups ids
             </summary>
         </member>
-        <member name="F:CavemanTools.Web.Security.UserBasicRights.None">
-            <summary>
-            Values is 0
-            </summary>
-        </member>
-        <member name="F:CavemanTools.Web.Security.UserBasicRights.DoEverything">
-            <summary>
-            Value is 1
-            </summary>
-        </member>
-        <member name="F:CavemanTools.Web.Security.UserBasicRights.Login">
-            <summary>
-            Value is 2
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Web.Security.UserGuid">
-            <summary>
-            Implments the user id value as a GUID
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Web.Security.UserIdBase`1">
-            <summary>
-            Base class to implement user id value
-            </summary>
-            <typeparam name="T">Underlying value type</typeparam>
-        </member>
-        <member name="T:CavemanTools.Web.Security.UserId">
-            <summary>
-            Implements the user id value as an int
-            </summary>
-        </member>
         <member name="T:CavemanTools.Web.Security.UserRightsModule">
             <summary>
+            Asp.Net WebForms + Forms Auth only
             Requires an utility (like HttpModuleMagic.Mvc3 nuget package) for module dependecy injection.
             Automatically creates UserContext
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Web.Security.UserRightsContext">
-            <summary>
-            Change the AdminRight field to the value you want
-            </summary>
-        </member>
-        <member name="F:CavemanTools.Web.Security.UserRightsContext.AdminRight">
-            <summary>
-            Value of Admin right.
-            Default is UserBasicRights.DoEverything
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.Security.UserRightsContext.HasRightTo(System.UInt16)">
-            <summary>
-            Checks if user has the specified right or the admin right
-            </summary>
-            <param name="right">right id</param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.Security.UserRightsContext.IsMemberOf(System.Int32[])">
-            <summary>
-            True if user is member of one of the specified groups
-            </summary>
-            <param name="groupIds"></param>
-            <returns></returns>
-        </member>
-        <member name="P:CavemanTools.Web.Security.UserRightsContext.Id">
-            <summary>
-            Gets the user id or null if anonymous
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Security.UserRightsContext.Name">
-            <summary>
-            User name or empty if anonymous
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Security.UserRightsContext.OtherData">
-            <summary>
-            Gets a dictionary where you can store other information about the user
             </summary>
         </member>
         <member name="M:System.EncryptionUtils.Sha256(System.String)">
@@ -2385,6 +2498,26 @@
             <param name="defaultValue"></param>
             <returns></returns>
         </member>
+        <member name="T:CavemanTools.Web.Sha256Password">
+            <summary>
+            Password hashing strategy using sha256
+            </summary>
+        </member>
+        <member name="F:CavemanTools.Web.UserBasicRights.None">
+            <summary>
+            Values is 0
+            </summary>
+        </member>
+        <member name="F:CavemanTools.Web.UserBasicRights.DoEverything">
+            <summary>
+            Value is 1
+            </summary>
+        </member>
+        <member name="F:CavemanTools.Web.UserBasicRights.Login">
+            <summary>
+            Value is 2
+            </summary>
+        </member>
         <member name="T:CavemanTools.Model.IPagedResult`1">
             <summary>
             Paginated result set with the total number of items from a query.
@@ -2485,6 +2618,23 @@
             </summary>
             <param name="type">Class Implementing the interface</param>
             <param name="interfaceType">Type of an interface</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.TypeExtensions.DerivesFrom``1(System.Type)">
+            <summary>
+            True if the type implements of extends T
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.TypeExtensions.DerivesFrom(System.Type,System.Type)">
+            <summary>
+            True if the type implements of extends parent. 
+            Doesn't work with generics
+            </summary>
+            <param name="type"></param>
+            <param name="parent"></param>
             <returns></returns>
         </member>
         <member name="M:System.TypeExtensions.GetGenericArgument(System.Type,System.Int32)">

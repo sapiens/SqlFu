@@ -74,7 +74,16 @@ namespace SqlFu
                 FormatCommand();
                 try
                 {
-                    rez.Count = (int)_cmd.ExecuteScalar();
+                    var cnt = _cmd.ExecuteScalar();
+                    cnt.MustNotBeNull();
+                    if (cnt.GetType() == typeof (Int32))
+                    {
+                        rez.Count = (int)cnt;
+                    }
+                    else
+                    {
+                        rez.Count = (long)cnt;
+                    }
                     _db.OnCommand(_cmd);
                     if (rez.Count == 0)
                     {
