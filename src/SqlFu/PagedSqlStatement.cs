@@ -82,7 +82,7 @@ namespace SqlFu
                     }
                     else
                     {
-                        rez.Count = (long)cnt;
+                        rez.LongCount = (long)cnt;
                     }
                     _db.OnCommand(_cmd);
                     if (rez.Count == 0)
