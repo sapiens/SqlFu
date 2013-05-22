@@ -49,55 +49,7 @@ namespace SqlFu
 
         protected string[] _paramNames;
 
-        //public void SetSql(string sql, params  object[] args)
-        //{
-        //    _cmd.CommandText = sql;
-
-        //    if (args.Length == 0)
-        //    {
-        //        _paramNames = new string[0];                
-        //        return;
-        //    }
-
-        //    if (args.Length == 1)
-        //    {
-        //        var poco = args[0];
-        //        if (poco != null)
-        //        {
-        //            var tp = poco.GetType();
-        //            if (tp.IsCustomObjectType())
-        //            {
-
-        //                if (!tp.IsListParam())
-        //                {
-        //                    var mapper = PocoFactory.GetParametersMapper(tp);
-        //                    _paramNames = mapper(_cmd, _db.Provider, poco);   
-        //                }
-
-        //                return;
-        //            }
-        //        }
-        //    }
-
-        //    _paramNames = new string[args.Length];
-        //    var prov = _db.Provider;
-        //    IDbDataParameter p;
-        //    string pname;
-        //    var allp = _cmd.Parameters;
-
-        //    for (int i = 0; i < args.Length; i++)
-        //    {
-        //        p = _cmd.CreateParameter();
-        //        pname = i.ToString();
-
-        //        prov.SetupParameter(p, pname, args[i]);
-        //        _paramNames[i] = pname;
-        //        allp.Add(p);
-        //    }
-
-        //}
-
-
+    
         public void SetSql(string sql, params object[] args)
         {
             if (args.Length > 0)
@@ -110,35 +62,36 @@ namespace SqlFu
                 var lastParamCount = args.Length;
 
                 IDbDataParameter p = null;
+                
                 foreach (var kv in paramDict)
-                {
-                    if (kv.Value.IsListParam())
                     {
-                        var lp = kv.Value as IEnumerable;
+                        if (kv.Value.IsListParam())
+                        {
+                            var lp = kv.Value as IEnumerable;
 
-                        sb.Clear();
+                            sb.Clear();
 
-                        foreach (var val in lp)
+                            foreach (var val in lp)
+                            {
+                                p = _cmd.CreateParameter();
+
+                                sb.Append("@" + lastParamCount + ",");
+                                pnames.Add(lastParamCount.ToString());
+                                provider.SetupParameter(p, lastParamCount.ToString(), val);
+                                allp.Add(p);
+                                lastParamCount++;
+                            }
+                            sb.Remove(sb.Length - 1, 1);
+                            sql = sql.Replace("@" + kv.Key, sb.ToString());
+                        }
+                        else
                         {
                             p = _cmd.CreateParameter();
-
-                            sb.Append("@" + lastParamCount + ",");
-                            pnames.Add(lastParamCount.ToString());
-                            provider.SetupParameter(p, lastParamCount.ToString(), val);
+                            provider.SetupParameter(p, kv.Key, kv.Value);
+                            pnames.Add(kv.Key);
                             allp.Add(p);
-                            lastParamCount++;
                         }
-                        sb.Remove(sb.Length - 1, 1);
-                        sql = sql.Replace("@" + kv.Key, sb.ToString());
                     }
-                    else
-                    {
-                        p = _cmd.CreateParameter();
-                        provider.SetupParameter(p, kv.Key, kv.Value);
-                        pnames.Add(kv.Key);
-                        allp.Add(p);
-                    }
-                }
 
                 _paramNames = pnames.ToArray();
             }
@@ -170,7 +123,7 @@ namespace SqlFu
 
                 for (int i = 0; i < args.Length; i++)
                 {
-                    d[i.ToString()] = args[i];
+                    d.Add(i.ToString(),args[i]);                    
                 }
             }
             return d;
@@ -305,6 +258,7 @@ namespace SqlFu
                 {
                     _db.CloseConnection();
                 }
+
                 if (converter == null) converter = PocoFactory.GetConverter<T>();
                 return converter(rez);
             }
@@ -342,9 +296,11 @@ namespace SqlFu
         {
             using (_cmd)
             {
+                var results = new List<T>();
                 using (var rd = GetReader())
                 {
-                    T d;
+                    
+                    //T d;
                     while (true)
                     {
                         try
@@ -354,7 +310,8 @@ namespace SqlFu
                                 break;
                             }
                             if (mapper == null) mapper = PocoFactory.GetPocoMapper<T>(rd, _cmd.CommandText);
-                            d = mapper(rd);
+                      //      d = mapper(rd);
+                            results.Add(mapper(rd));
                         }
                         catch (Exception ex)
                         {
@@ -363,10 +320,11 @@ namespace SqlFu
                             throw;
                         }
 
-                        yield return d;
+                        
                     }
-                    Db.CloseConnection();
+                    Db.CloseConnection();                    
                 }
+                return results;
             }
         }
 

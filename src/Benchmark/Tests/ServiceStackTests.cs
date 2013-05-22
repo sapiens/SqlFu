@@ -17,6 +17,7 @@ namespace Benchmark.Tests
         {
             _db = new OrmLiteConnectionFactory(Config.Connex, SqlServerOrmLiteDialectProvider.Instance);
             _cnx = _db.OpenDbConnection();
+            
         }
         public override void FetchSingleEntity(BenchmarksContainer bc)
         {
@@ -55,17 +56,18 @@ namespace Benchmark.Tests
         {
             bc.Add(d =>
                 {
-                    throw new NotSupportedException("No implicit pagination support");
-                }, Name);
+                    _cnx.QueryScalar<int>("select count(*) from sfPosts where id >@id",new{id=5});
+                    _cnx.Select<sfPosts>(s => s.Where(p=>p.Id>5).Limit(0,10));
+                    }, Name);
         }
 
         public override void ExecuteScalar(BenchmarksContainer bc)
         {
             bc.Add(d =>
-            {
-                _cnx.GetScalar<string>("select title from sfPOsts where id={0}",5);
-                
-            }, Name);
+                {
+                    _cnx.QueryScalar<string>("select title from sfPOsts where id=@id", new {id = 5});                    
+
+                }, Name);
         }
 
         public override void MultiPocoMapping(BenchmarksContainer bc)

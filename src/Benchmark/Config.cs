@@ -86,20 +86,20 @@ namespace Benchmark
             db.OnCommand = c => { };
             
             //if (db.GetValue<int>("select count(*) from sfposts") != 150)
-            if (db.Count<sfPosts>()!=150)
-            {
+            //if (db.Count<sfPosts>()!=150)
+            //{
                 Config.EmptyTable();
              //   Console.WriteLine("ensuring 500 posts");
 
                 using (var t = db.BeginTransaction())
                 {
-                    for (int i = 0; i < 150; i++)
+                    for (int i = 0; i < 15; i++)
                     {
                         db.Insert(new sfPosts {Title = "test" + i, AuthorId = 1, CreatedOn = DateTime.Now,IsActive = true});
                     }
                     t.Commit();
                 }
-            }
+            //}
             db.Dispose();
         }
     }

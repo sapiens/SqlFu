@@ -7,7 +7,7 @@ using SqlFu.Internals;
 
 namespace SqlFu.Expressions
 {
-    internal class ExpressionSqlBuilder<T>
+    public class ExpressionSqlBuilder<T>
     {
         private readonly IDbProviderExpressionHelper _provider;
         private StringBuilder _sb=new StringBuilder();
@@ -93,7 +93,7 @@ namespace SqlFu.Expressions
 
         public ExpressionSqlBuilder<T> WriteTableName()
         {
-            _sb.Append(_provider.EscapeName(TableInfo.Name));
+            _sb.Append(_provider.EscapeName(_ti.Name));
             return this;
         }
 
@@ -149,10 +149,10 @@ namespace SqlFu.Expressions
             get { return _pm; }
         }
 
-        public TableInfo TableInfo
-        {
-            get { return _ti; }
-        }
+        //public TableInfo TableInfo
+        //{
+        //    get { return _ti; }
+        //}
 
         public override string ToString()
         {

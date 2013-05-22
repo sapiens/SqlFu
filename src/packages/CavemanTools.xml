@@ -37,6 +37,13 @@
             <typeparam name="T">Inerface type</typeparam>
             <param name="value"></param>
         </member>
+        <member name="M:System.AssertionsExtensions.MustDeriveFrom``1(System.Object)">
+            <summary>
+            Argument must be an implementation or subclass of T
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="value"></param>
+        </member>
         <member name="M:System.AssertionsExtensions.MustHaveValues``1(System.Collections.Generic.IEnumerable{``0},System.Boolean)">
             <summary>
             List must not be empty and must have non-null values
@@ -387,65 +394,6 @@
             <exception cref="T:System.InvalidCastException"></exception>
             <returns></returns>
         </member>
-        <member name="M:CavemanTools.Web.AspNetCache.Get``1(System.String,``0,System.Nullable{System.DateTimeOffset})">
-            <summary>
-            Gets typed object from cache or the supplied default value if the value doesn't exist.
-            Optionally set a new expiration date
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="key"></param>
-            <param name="defaultValue">Value to return if the object doesn't exist in cache</param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.AspNetCache.Add(System.String,System.Object,System.TimeSpan,System.Runtime.Caching.ChangeMonitor)">
-            <summary>
-            Tries to add value to cache.
-            Returns false if the value already exists
-            </summary>
-            <param name="key"></param>
-            <param name="value"></param>
-            <param name="slidingExpiration"></param>
-            <param name="monitor"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.AspNetCache.Add(System.String,System.Object,System.DateTimeOffset,System.Runtime.Caching.ChangeMonitor)">
-            <summary>
-            Tries to add value to cache.
-            Returns false if the value already exists
-            </summary>
-            <param name="key"></param>
-            <param name="value"></param>
-            <param name="absoluteExpiration"></param>
-            <param name="monitor"></param>
-        </member>
-        <member name="M:CavemanTools.Web.AspNetCache.Set(System.String,System.Object,System.TimeSpan,System.Runtime.Caching.ChangeMonitor)">
-            <summary>
-            Adds or updates a key with the provided value.
-            </summary>
-            <param name="key"></param>
-            <param name="value"></param>
-            <param name="slidingExpiration"></param>
-            <param name="monitor"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.AspNetCache.Set(System.String,System.Object,System.DateTimeOffset,System.Runtime.Caching.ChangeMonitor)">
-            <summary>
-            Adds or updates a key with the provided value.
-            </summary>
-            <param name="key"></param>
-            <param name="value"></param>
-            <param name="absoluteExpiration"></param>
-            <param name="monitor"></param>
-        </member>
-        <member name="M:CavemanTools.Web.AspNetCache.GetUnderlyingCacheAs``1">
-            <summary>
-            Returns the underlying cache (the real caching object) used by this adapter.
-             </summary>
-            <typeparam name="T"></typeparam>
-            <exception cref="T:System.NotSupportedException"></exception>
-            <exception cref="T:System.InvalidCastException"></exception>
-            <returns></returns>
-        </member>
         <member name="M:CavemanTools.Infrastructure.NullCache.Get``1(System.String,``0,System.Nullable{System.DateTimeOffset})">
             <summary>
             Gets typed object from cache or the supplied default value if the value doesn't exist.
@@ -715,7 +663,7 @@
             First parameter is new item, second is the item used as base for comparison</param>
             <returns></returns>
         </member>
-        <member name="M:System.Collections.Generic.ListUtils.Update``1(System.Collections.Generic.ICollection{``0},System.Collections.Generic.IEnumerable{``0})">
+        <member name="M:System.Collections.Generic.ListUtils.Update``1(System.Collections.Generic.IList{``0},System.Collections.Generic.IEnumerable{``0})">
             <summary>
             Updates the old collection with new items, while removing the inexistent.
             </summary>
@@ -756,37 +704,12 @@
             
             </summary>
         </member>
-        <member name="T:CavemanTools.Model.PagerHelper">
-            <summary>
-            Used for paginating stuff
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Model.PagerHelper.GetSkips(System.Int32,System.Int32)">
-            <summary>
-            How many items should be skipped to reach the result page
-            </summary>
-            <param name="page">Page number</param>
-            <param name="itemsOnPage">Number of items on a page</param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Model.PagerHelper.MakeValidPage(System.Nullable{System.Int32})">
-            <summary>
-            Ensures we have a valid page number
-            </summary>
-            <param name="page">Page number</param>
-            <returns></returns>
-        </member>
-        <member name="T:CavemanTools.Model.BusinessRuleException">
-            <summary>
-            This exception is used to communicate errors to the UI
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Model.ValueObjects.Slug">
+        <member name="T:CavemanTools.Model.ValueObjects.UrlSlug">
             <summary>
             Encapsulates the url friendly version of a string
             </summary>
         </member>
-        <member name="M:CavemanTools.Model.ValueObjects.Slug.#ctor(System.String)">
+        <member name="M:CavemanTools.Model.ValueObjects.UrlSlug.#ctor(System.String)">
             <summary>
             
             </summary>
@@ -1128,9 +1051,9 @@
             <param name="source"></param>
             <returns></returns>
         </member>
-        <member name="M:System.Reflection.AssemblyExtensions.GetTypesImplementing``1(System.Reflection.Assembly,System.Boolean)">
+        <member name="M:System.Reflection.AssemblyExtensions.GetTypesDerivedFrom``1(System.Reflection.Assembly,System.Boolean)">
             <summary>
-            Returns public types implementing T
+            Returns public types derived from T
             </summary>
             <typeparam name="T"></typeparam>
             <param name="asm"></param>
@@ -1223,285 +1146,6 @@
             
             </summary>
             <param name="version">major.minor.patch[-preRelease][+build]</param>
-        </member>
-        <member name="T:CavemanTools.Web.ContextInstance`1">
-            <summary>
-            Base class for types which will be used as singletons within a http request
-            </summary>
-            <typeparam name="T">Reference type</typeparam>
-        </member>
-        <member name="M:CavemanTools.Web.ContextInstance`1.Register(`0)">
-            <summary>
-            Register an instance of T to http context as a request scoped singleton
-            </summary>
-            <param name="inst"></param>
-        </member>
-        <member name="P:CavemanTools.Web.ContextInstance`1.Instance">
-            <summary>
-            Gets the single instance of type for the current request
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Web.HttpContextRegistry">
-            <summary>
-            Helper to set/get objects in the current http context
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.Security.AuthenticationUtils.SetAuthCookie(System.Web.HttpResponse,CavemanTools.Web.Security.IUserIdValue,System.String,System.Collections.Generic.IEnumerable{System.Int32},System.Boolean)">
-            <summary>
-            Creates and attaches to response the authentication cookie
-            </summary>
-            <param name="response"></param>
-            <param name="userId"></param>
-            <param name="name"></param>
-            <param name="group"></param>
-            <param name="isPersistent"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.Security.AuthenticationUtils.GetUserContext(System.Web.HttpContext)">
-            <summary>
-            Returns the user context created by the UserRights module
-            </summary>
-            <param name="context"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.Security.AuthorizationScopeGuid.Equals(CavemanTools.Web.Security.AuthorizationScopeId)">
-            <summary>
-            Indicates whether the current object is equal to another object of the same type.
-            </summary>
-            <returns>
-            true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
-            </returns>
-            <param name="other">An object to compare with this object.</param>
-        </member>
-        <member name="T:CavemanTools.Web.Security.DefaultAuthorizationScopeId">
-            <summary>
-            Uses Int32 as id type
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Web.Security.HashedPassword">
-            <summary>
-            Hashed password class
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.Security.HashedPassword.Matches(System.String)">
-            <summary>
-            True if the supplied argument matches hash
-            </summary>
-            <param name="otherHash"></param>
-            <returns></returns>
-        </member>
-        <member name="P:CavemanTools.Web.Security.HashedPassword.Hash">
-            <summary>
-            Gets hash
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Security.HashedPassword.Salt">
-            <summary>
-            Gets salt used for hashing
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.Security.IHashPassword.Hash(System.String,System.String)">
-            <summary>
-            Creates a hash for a string using salt
-            </summary>
-            <param name="text">Value to hash</param>
-            <param name="salt">Optional random string</param>
-            <returns></returns>
-        </member>
-        <member name="T:CavemanTools.Web.Security.Password">
-            <summary>
-            Use it to encapsulate password hash generation. 
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.Security.Password.#ctor(System.String,System.String)">
-            <summary>
-            Generates a password hash using sha256
-            </summary>
-            <param name="password"></param>
-            <param name="salt">A random 7 characters string will be used if empty</param>
-        </member>
-        <member name="M:CavemanTools.Web.Security.Password.#ctor(System.String,CavemanTools.Web.Security.IHashPassword,System.String)">
-            <summary>
-            Generates a password hash using the specified hashing strategy
-            </summary>
-            <param name="password"></param>
-            <param name="hasher">Hashing strategy, implement <see cref="T:CavemanTools.Web.Security.IHashPassword"/></param>
-            <param name="salt">A random 7 characters string will be used if empty</param>
-        </member>
-        <member name="P:CavemanTools.Web.Security.Password.Hash">
-            <summary>
-            Gets hashed password
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Web.Security.Sha256Password">
-            <summary>
-            Password hashing strategy using sha256
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Security.IUserContextGroup.Id">
-            <summary>
-            Gets the group id value
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Security.IUserContextGroup.Rights">
-            <summary>
-            Gets the rights assigned to group
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Security.IUserContextGroup.ScopeId">
-            <summary>
-            Gets group scope if any
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.Security.IUserIdValue.ValueAs``1">
-            <summary>
-            Gets the id as the underlying type.
-            Default is int
-            </summary>
-            <typeparam name="T"></typeparam>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.Security.IUserIdValue.ToString">
-            <summary>
-            Id value as string
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:CavemanTools.Web.Security.IUserIdValue.Value">
-            <summary>
-            Gets the id as an object
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.Security.IUserRightsContext.HasRightTo(System.UInt16)">
-            <summary>
-            True if user has the specified right
-            </summary>
-            <param name="right"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.Security.IUserRightsContext.IsMemberOf(System.Int32[])">
-            <summary>
-            True if the user is a member of at least one of the groups
-            </summary>
-            <param name="groupIds"></param>
-            <returns></returns>
-        </member>
-        <member name="P:CavemanTools.Web.Security.IUserRightsContext.Id">
-            <summary>
-            Gets the user id or null if anonymous
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Security.IUserRightsContext.Name">
-            <summary>
-            User name or null if anonymous
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Security.IUserRightsContext.IsAuthenticated">
-            <summary>
-            Gets the status of request
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Security.IUserRightsContext.OtherData">
-            <summary>
-            Gets a dictionary where you can store other information about the user
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.Security.IUserRightsRepository.GetGroupsById(System.Collections.Generic.IEnumerable{System.Int32},CavemanTools.Web.Security.IUserIdValue)">
-            <summary>
-            Gets groups contexts. If a group doesn't exist, it must return an empty object.
-            If no groups are available return an empty collection
-            </summary>
-            <param name="ids">list of ids of groups</param>
-            <param name="userId">user id from the current request</param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.Security.IUserRightsRepository.GetDefaultGroup">
-            <summary>
-            Returns the default group for anonymous users
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="P:CavemanTools.Web.Security.AccessRules.MustBeInGroupAccess.Groups">
-            <summary>
-            Gets groups ids
-            </summary>
-        </member>
-        <member name="F:CavemanTools.Web.Security.UserBasicRights.None">
-            <summary>
-            Values is 0
-            </summary>
-        </member>
-        <member name="F:CavemanTools.Web.Security.UserBasicRights.DoEverything">
-            <summary>
-            Value is 1
-            </summary>
-        </member>
-        <member name="F:CavemanTools.Web.Security.UserBasicRights.Login">
-            <summary>
-            Value is 2
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Web.Security.UserGuid">
-            <summary>
-            Implments the user id value as a GUID
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Web.Security.UserIdBase`1">
-            <summary>
-            Base class to implement user id value
-            </summary>
-            <typeparam name="T">Underlying value type</typeparam>
-        </member>
-        <member name="T:CavemanTools.Web.Security.UserId">
-            <summary>
-            Implements the user id value as an int
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Web.Security.UserRightsModule">
-            <summary>
-            Requires an utility (like HttpModuleMagic.Mvc3 nuget package) for module dependecy injection.
-            Automatically creates UserContext
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Web.Security.UserRightsContext">
-            <summary>
-            Change the AdminRight field to the value you want
-            </summary>
-        </member>
-        <member name="F:CavemanTools.Web.Security.UserRightsContext.AdminRight">
-            <summary>
-            Value of Admin right.
-            Default is UserBasicRights.DoEverything
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.Security.UserRightsContext.HasRightTo(System.UInt16)">
-            <summary>
-            Checks if user has the specified right or the admin right
-            </summary>
-            <param name="right">right id</param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.Security.UserRightsContext.IsMemberOf(System.Int32[])">
-            <summary>
-            True if user is member of one of the specified groups
-            </summary>
-            <param name="groupIds"></param>
-            <returns></returns>
-        </member>
-        <member name="P:CavemanTools.Web.Security.UserRightsContext.Id">
-            <summary>
-            Gets the user id or null if anonymous
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Security.UserRightsContext.Name">
-            <summary>
-            User name or empty if anonymous
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Security.UserRightsContext.OtherData">
-            <summary>
-            Gets a dictionary where you can store other information about the user
-            </summary>
         </member>
         <member name="M:System.EncryptionUtils.Sha256(System.String)">
             <summary>
@@ -1609,25 +1253,6 @@
             </summary>
             <param name="value">Object</param>
             <returns></returns>
-        </member>
-        <member name="M:System.ObjectExtend.CopyTo``1(System.Object)">
-            <summary>
-             Shallow copies source object into destination, only public properties are copied. Use CopyOptionsAttribute to mark the properties you want ignored.
-            Use Automapper for heavy duty mapping
-            </summary>
-            <seealso cref="T:CavemanTools.Extensions.CopyOptionsAttribute"/>
-            <typeparam name="T">Destination type must have parameterless constructor</typeparam>
-            <param name="source">Object to copy</param>
-        </member>
-        <member name="M:System.ObjectExtend.CopyTo``1(System.Object,``0)">
-            <summary>
-            Shallow copies source object into destination, only public properties are copied. For ocasional use.
-            Use Automapper for heavy duty mapping
-            </summary>
-            <exception cref="T:System.ArgumentNullException">If source or destination are null</exception>
-            <typeparam name="T">Destination Type</typeparam>
-            <param name="source">Object to copy from</param>
-            <param name="destination">Object to copy to. Unmatching or read-only properties are ignored</param>
         </member>
         <member name="M:System.ObjectExtend.ConvertTo(System.Object,System.Type)">
             <summary>
@@ -1785,606 +1410,6 @@
             <param name="defaultValue">Value to return if conversion fails</param>
             <returns></returns>
         </member>
-        <member name="T:CavemanTools.Web.CookieCache`1">
-            <summary>
-            Caches a single object in a cookie
-            </summary>
-            <typeparam name="T">Type of object</typeparam>
-        </member>
-        <member name="T:CavemanTools.Web.ICookieCache`1">
-            <summary>
-            Provides caching functionality for one value
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
-        <member name="M:CavemanTools.Web.ICookieCache`1.Store(System.Web.HttpCookieCollection)">
-            <summary>
-            Saves value into response cookie.
-            Uses object's ToString()
-            </summary>
-            <param name="response">Response cookie collection</param>
-        </member>
-        <member name="M:CavemanTools.Web.ICookieCache`1.Load(System.Web.HttpCookieCollection,System.Text.IStringParser{`0})">
-            <summary>
-            Tries to load object from request cookie, using the supplied parser
-            </summary>
-            <param name="request">Request cookie collection</param>
-            <param name="parser">Parser to convert cookie value to object</param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.ICookieCache`1.CleanUp(System.Web.HttpCookieCollection)">
-            <summary>
-            Cleans up the cookie
-            </summary>
-            <param name="response">Response cookie collection</param>
-        </member>
-        <member name="P:CavemanTools.Web.ICookieCache`1.Value">
-            <summary>
-            Gets or sets object 
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.ICookieCache`1.Cookie">
-            <summary>
-            Gets the underlaying cookie
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.ICookieCache`1.CookieName">
-            <summary>
-            Gets or sets cookie name which stores the value of parameter
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.CookieCache`1.#ctor(System.String,`0)">
-            <summary>
-            
-            </summary>
-            <param name="name">Cookie name</param>
-            <param name="value">Value</param>
-        </member>
-        <member name="M:CavemanTools.Web.CookieCache`1.Store(System.Web.HttpCookieCollection)">
-            <summary>
-            Saves value into response cookie.
-            Uses object's ToString()
-            </summary>
-            <param name="response">Response cookie collection</param>
-        </member>
-        <member name="M:CavemanTools.Web.CookieCache`1.Load(System.Web.HttpCookieCollection)">
-            <summary>
-            Loads object from request cookie.
-            It uses the default parser to create the object
-            </summary>
-            <param name="request">Request cookie collection</param>
-        </member>
-        <member name="M:CavemanTools.Web.CookieCache`1.Load(System.Web.HttpCookieCollection,System.Text.IStringParser{`0})">
-            <summary>
-            Loads object from request cookie, using the supplied parser
-            </summary>
-            <param name="request">Request cookie collection</param>
-            <param name="parser">Parser to convert cookie value to object</param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.CookieCache`1.CleanUp(System.Web.HttpCookieCollection)">
-            <summary>
-            Cleans up the cookie
-            </summary>
-            <param name="response">Response cookie collection</param>
-        </member>
-        <member name="P:CavemanTools.Web.CookieCache`1.Value">
-            <summary>
-            Gets or sets object 
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.CookieCache`1.CookieName">
-            <summary>
-            Gets or sets cookie name which stores the value of parameter
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.CookieCache`1.Cookie">
-            <summary>
-            Gets the underlying cookie
-            </summary>
-        </member>
-        <member name="M:System.Web.CookieExtensions.Attach(System.Web.HttpCookieCollection,System.Web.HttpCookie)">
-            <summary>
-            Updates or appends a cookie to collection
-            </summary>
-            <param name="cookies"></param>
-            <param name="cookie"></param>
-        </member>
-        <member name="M:System.Web.CookieExtensions.GetValue``1(System.Web.HttpCookie,``0)">
-            <summary>
-            Gets typed object from cookie value or a specified default value if invalid cookie
-            </summary>
-            <typeparam name="T">object type</typeparam>
-            <param name="cookie"></param>
-            <param name="defaultValue">Value to return if cookie doesn't contain a valid value</param>
-            <returns></returns>
-        </member>
-        <member name="M:System.Web.CookieExtensions.GetValue``1(System.Web.HttpCookie)">
-            <summary>
-            Gets typed object from cookie value, or default for the type if invalid cookie value
-            </summary>
-            <typeparam name="T">object type</typeparam>
-            <param name="cookie"></param>
-            <returns></returns>
-        </member>
-        <member name="M:System.Web.CookieExtensions.GetValue``1(System.Web.HttpCookie,System.Text.IStringParser{``0})">
-            <summary>
-            Gets typed object from cookie value using parser 
-            </summary>
-            <typeparam name="T">object type</typeparam>
-            <param name="cookie"></param>
-            <param name="parser">Parser to create object from string</param>
-            <returns></returns>
-        </member>
-        <member name="T:CavemanTools.Web.ICookieEncryption">
-            <summary>
-            Provides functioanlity to encrypt and decrypt a cookie
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.ICookieEncryption.Encrypt(System.Web.HttpCookie)">
-            <summary>
-            Encrypts cookie
-            </summary>
-            <param name="value">HttpCookie</param>
-        </member>
-        <member name="M:CavemanTools.Web.ICookieEncryption.Decrypt(System.Web.HttpCookie)">
-            <summary>
-            Descrypts cookie
-            </summary>
-            <param name="cookie">Cookie</param>
-        </member>
-        <member name="P:CavemanTools.Web.ICookieEncryption.Secret">
-            <summary>
-            Gets encryption secret (between 8 and 16 characters)
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.DefaultCookieEncryption.Secret">
-            <summary>
-            At least 8 characters
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.Email.EmailUtils.UseTemplate(System.Net.Mail.MailMessage,System.String,System.Object)">
-            <summary>
-            Uses a template to generate the message body.
-            The template parameters have the format {Parameter}.
-            </summary>
-            <param name="msg"></param>
-            <param name="file">Template file path</param>
-            <param name="values">Anonymous object with values for placeholders</param>
-        </member>
-        <member name="M:CavemanTools.Web.Email.EmailUtils.EmailToGravatar(System.String)">
-            <summary>
-            Generates the Gravatar id from email.
-            </summary>
-            <param name="email">Email address</param>
-            <returns></returns>
-        </member>
-        <member name="T:CavemanTools.Web.Email.TemplateEmailFormatter">
-            <summary>
-            This class formats a tempalte file into a Mail Message
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.Email.TemplateEmailFormatter.LoadFileTemplate(System.String)">
-            <summary>
-            Loads the template from file. Template uses {ParamName} for parameters
-            </summary>
-            <param name="file">File path</param>
-        </member>
-        <member name="M:CavemanTools.Web.Email.TemplateEmailFormatter.ProcessTemplate(System.Object)">
-            <summary>
-            Creates the message body from template.
-            </summary>
-            <param name="values"></param>
-        </member>
-        <member name="P:CavemanTools.Web.Email.TemplateEmailFormatter.Template">
-            <summary>
-            Gets or sets the template string. Template uses {ParamName} for parameters.
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Email.TemplateEmailFormatter.Message">
-            <summary>
-            Gets the mail message with formatted body.
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Web.EncryptedCookie">
-            <summary>
-            Provides an encrypted cookie to store seesion values
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.EncryptedCookie.#ctor(System.String,System.String)">
-            <summary>
-            Constructs a nw encrypted cookie
-            </summary>
-            <param name="name">Cookie name</param>
-            <param name="encryptionSecret">secret salt for encryption</param>
-        </member>
-        <member name="M:CavemanTools.Web.EncryptedCookie.#ctor(System.Web.HttpCookie,System.String)">
-            <summary>
-            Constructs a nw encrypted cookie
-            </summary>
-            <param name="cookie">Cookie name</param>
-            <param name="salt">secret salt for encryption</param>
-        </member>
-        <member name="M:CavemanTools.Web.EncryptedCookie.FromRequest(System.Web.HttpCookieCollection,System.String,System.String)">
-            <summary>
-            Creates a new encrypted cookie from request or a new one if it's missing
-            </summary>
-            <param name="request">Request collection</param>
-            <param name="name">Cookie name</param>
-            <param name="secret">Secret key</param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.EncryptedCookie.FromRequest(System.Web.HttpCookieCollection,System.String,CavemanTools.Web.ICookieEncryption)">
-            <summary>
-            Creates a new encrypted cookie from request or a new one if it's missing
-            </summary>
-            <param name="request">Request collection</param>
-            <param name="name">cookie name</param>
-            <param name="encryptor">encrypting strategy</param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.EncryptedCookie.#ctor(System.Web.HttpCookie,CavemanTools.Web.ICookieEncryption)">
-            <summary>
-            Constructs a nw encrypted cookie
-            </summary>
-            <exception cref="T:System.ArgumentNullException"></exception>
-            <param name="cookie">Cookie</param>
-            <param name="encryptor">Encripting strategy</param>
-        </member>
-        <member name="M:CavemanTools.Web.EncryptedCookie.Unseal">
-            <summary>
-            Decrypts and opens the cookie for modification
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.EncryptedCookie.Seal">
-            <summary>
-            Encrypts and seals the cookie, nothing can be modified or retrieved
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.EncryptedCookie.GetValue``1(System.String,``0)">
-            <summary>
-            Gets a cookie value as object of type
-            </summary>
-            <typeparam name="T">Object type</typeparam>
-            <param name="key">Key</param>
-            <param name="defaultValue">return this if key was not found or conversion failed</param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.EncryptedCookie.Save(System.Web.HttpCookieCollection)">
-            <summary>
-            Saves the encrypted cookie into collection
-            </summary>
-            <remarks>
-            If cookie is not sealed it will try to seal it first.
-            </remarks>
-            <param name="response">Cookie collection</param>
-        </member>
-        <member name="P:CavemanTools.Web.EncryptedCookie.Item(System.String)">
-            <summary>
-            Gets or sets cookie value for key
-            </summary>
-            <param name="key">Key</param>
-            <returns></returns>
-        </member>
-        <member name="P:CavemanTools.Web.EncryptedCookie.Cookie">
-            <summary>
-            Gets underlying cookie
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Web.Helpers.PaginationLinks">
-            <summary>
-            Creates pagination links
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.Helpers.PaginationLinks.GetPages">
-            <summary>
-            Gets the links to use for pagination
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.Helpers.PaginationLinks.TotalToPages(System.Int32,System.Int32)">
-            <summary>
-            Caculates the number of pages 
-            </summary>
-            <param name="total">Total items number</param>
-            <param name="itemsOnPage">Items shown on a page</param>
-            <returns></returns>
-        </member>
-        <member name="P:CavemanTools.Web.Helpers.PaginationLinks.LinkUrlFormat">
-            <summary>
-            Gets or sets the url format for links.
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Helpers.PaginationLinks.CurrentPageFormat">
-            <summary>
-            Active page html element format. Default it renders
-            &lt;span class="current"&gt;{0}&lt;span&gt;
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Helpers.PaginationLinks.TotalItems">
-            <summary>
-            Gets or sets the total results number
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Helpers.PaginationLinks.ItemsOnPage">
-            <summary>
-            Gets or sets the number of results on a page
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.Helpers.PaginationLinks.Current">
-            <summary>
-            Gets or sets the current page number
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.Helpers.Snippets.GoogleAnalytics(System.String)">
-            <summary>
-            Returns analytics js code for id
-            </summary>
-            <param name="id"></param>
-            <returns></returns>
-        </member>
-        <member name="T:CavemanTools.Web.HenriFormatter">
-            <summary>
-            Formats strings using named parameters {param}
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.HenriFormatter.FormatNamed(System.String,System.Object)">
-            <summary>
-            Formats the string using named parameters
-            </summary>
-            <param name="format">String having {param}</param>
-            <param name="source">Anonymous object where properties are the names of the parameters</param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.HenriFormatter.HenriFormat(System.String,System.Object)">
-            <summary>
-            Formats the string using named parameters
-            </summary>
-            <param name="format">String having {param}</param>
-            <param name="source">Anonymous object where properties are the names of the parameters</param>
-            <returns></returns>
-        </member>
-        <member name="T:CavemanTools.Web.IOnlineUserInfo">
-            <summary>
-            Defines the minimum information required about an online user.
-            Used by implementations of IOnlineUsersRepository
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.IOnlineUserInfo.UserId">
-            <summary>
-            Gets or sets user id, use null for anonymous users
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.IOnlineUserInfo.Name">
-            <summary>
-            Gets or sets the name of the user
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.IOnlineUserInfo.IsAnonymous">
-            <summary>
-            Gets if the visitor is anonymous
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Web.IOnlineUsersRepository">
-            <summary>
-            Provides functionality for repository managing online users list
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.IOnlineUsersRepository.GetOnlineUsers">
-            <summary>
-            Gets the list of online users
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.IOnlineUsersRepository.CheckInMember(System.String,System.Object)">
-            <summary>
-             Registers a visitor as being online
-            </summary>
-            <param name="name">Username or a random string for anonymous users</param>
-            <param name="userId">Can be null for anonymous users</param>
-        </member>
-        <member name="P:CavemanTools.Web.IOnlineUsersRepository.ExpirationInterval">
-            <summary>
-            Gets or sets the time period in which an user is considered online
-            Default is 15 minutes
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Web.Localization.RequestLocale">
-             <summary>
-             Establish UI Culture for current request
-             </summary>
-             <example>
-             var req=new RequestLocale(Request.Cookies,Response.Cookies);
-             if (req.LoadFromString(Request.QueryString["lang"]))
-            		{
-            			req.Cache();
-            		}
-            		else
-            		{
-            			req.LoadFromCache();
-            		}
-            
-            	if (req.Value!=null) Thread.CurrentThread.CurrentCulture = req.Value
-             </example>
-        </member>
-        <member name="T:CavemanTools.Web.RequestPersonalizationParameter`1">
-            <summary>
-            Handles a request parameter which personalizes the request and can be temporary stored,
-            such as a theme, language, number of items etc
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.RequestPersonalizationParameter`1.#ctor(System.String)">
-            <summary>
-            Initializes with default settings: generic string parser, cookie caching
-            </summary>
-            <param name="paraName"></param>
-        </member>
-        <member name="M:CavemanTools.Web.RequestPersonalizationParameter`1.#ctor(System.Web.HttpCookieCollection,System.Web.HttpCookieCollection,System.Text.IStringParser{`0},CavemanTools.Web.ICookieCache{`0})">
-            <summary>
-            
-            </summary>
-            <param name="response">Response cookie collection</param>
-            <param name="parser">String parser to object</param>
-            <param name="cookieCache">Caching implementation</param>
-            <param name="request">Request cookie collection</param>
-        </member>
-        <member name="M:CavemanTools.Web.RequestPersonalizationParameter`1.LoadFromString(System.String)">
-            <summary>
-            Tries to load parameter from a string
-            </summary>
-            <param name="value"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.RequestPersonalizationParameter`1.LoadFromCache">
-            <summary>
-            Tries to load parameter from cache
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.RequestPersonalizationParameter`1.Cache">
-            <summary>
-            Caches value using provided caching implementation
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.RequestPersonalizationParameter`1.Value">
-            <summary>
-            Gets or sets the parameter value
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.RequestPersonalizationParameter`1.Caching">
-            <summary>
-            Gets or sets caching storage object
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.Localization.RequestLocale.ApplyLanguage">
-            <summary>
-            Sets the UICulture of the thread with the value if not empty
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Web.MemoryOnlineUsersRepository">
-            <summary>
-            Manages online users list. Thread safe.
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Web.MemoryOnlineUsersRepository.GetOnlineUsers">
-            <summary>
-            Gets info about the online users.
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.MemoryOnlineUsersRepository.CheckInMember(System.String,System.Object)">
-            <summary>
-             Registers a visitor as being online
-            </summary>
-            <param name="name">Username or a random string for anonymous users</param>
-            <param name="userId">Can be null for anonymous users</param>
-        </member>
-        <member name="M:CavemanTools.Web.MemoryOnlineUsersRepository.GetOnlineMembers">
-            <summary>
-            Returns a sequence of the online authenticated users
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Web.MemoryOnlineUsersRepository.CountAnonymous">
-            <summary>
-            Gets the number of anonymous users
-            </summary>
-            <value></value>
-        </member>
-        <member name="M:CavemanTools.Web.MemoryOnlineUsersRepository.CountMembers">
-            <summary>
-            Gets the number of online users
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.MemoryOnlineUsersRepository.ExpirationInterval">
-            <summary>
-            Gets or sets the time period in which an user is considered online
-            Default is 15 minutes
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Web.OnlineUserInfo">
-            <summary>
-            Default implementation of IOnlineUserInfo
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.OnlineUserInfo.UserId">
-            <summary>
-            Gets or sets user id, use null for anonymous users
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.OnlineUserInfo.Name">
-            <summary>
-            Gets or sets the name of the user
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.OnlineUserInfo.Expiraton">
-            <summary>
-            Gets or sets the date when the user checked in
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.OnlineUserInfo.IsAnonymous">
-            <summary>
-            Gets if the visitor is anonymous
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Web.OnlineUsersData">
-            <summary>
-            Used by IOnlineUsersRepository to return information
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.OnlineUsersData.AnonymousCount">
-            <summary>
-            Gets the number of anonymous users
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Web.OnlineUsersData.OnlineMembers">
-            <summary>
-            Gets a sequence of online members
-            </summary>
-        </member>
-        <member name="M:System.Web.WebExtensions.RealIp(System.Web.HttpRequest)">
-            <summary>
-            Gets the IP of the user  detects proxy
-            </summary>
-            <param name="request"></param>
-            <returns></returns>
-        </member>
-        <member name="M:System.Web.WebExtensions.ExtractSubdomain(System.String)">
-            <summary>
-             Returns subdomain from url. It covers only some common cases.
-            </summary>
-            <exception cref="T:System.ArgumentNullException"></exception>
-            <param name="host">Host name</param>
-            <returns></returns>
-        </member>
-        <member name="M:System.Web.WebExtensions.MatchesStaticResource(System.Web.HttpRequest)">
-            <summary>
-            Tries to detect if the requested path is a static resource
-            </summary>
-            <param name="req"></param>
-            <returns></returns>
-        </member>
-        <member name="M:System.Web.WebExtensions.Get``1(System.Web.HttpContextBase,System.String,``0)">
-            <summary>
-            Gets an object from context items 
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="ctx"></param>
-            <param name="key"></param>
-            <param name="defaultValue"></param>
-            <returns></returns>
-        </member>
-        <member name="M:System.Web.WebExtensions.Get``1(System.Web.HttpContext,System.String,``0)">
-            <summary>
-            Gets an object from context items 
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="ctx"></param>
-            <param name="key"></param>
-            <param name="defaultValue"></param>
-            <returns></returns>
-        </member>
         <member name="T:CavemanTools.Model.IPagedResult`1">
             <summary>
             Paginated result set with the total number of items from a query.
@@ -2395,6 +1420,11 @@
         <member name="P:CavemanTools.Model.IPagedResult`1.Count">
             <summary>
             Gets the total number of items
+            </summary>
+        </member>
+        <member name="P:CavemanTools.Model.IPagedResult`1.LongCount">
+            <summary>
+            Gets total number of items
             </summary>
         </member>
         <member name="P:CavemanTools.Model.IPagedResult`1.Items">
@@ -2454,16 +1484,6 @@
             </summary>
             <typeparam name="T">Type of item</typeparam>
         </member>
-        <member name="T:CavemanTools.Extensions.CopyOptionsAttribute">
-            <summary>
-             Used when copying objects. Further properties may be added in the future.
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Extensions.CopyOptionsAttribute.IgnoreProperty">
-            <summary>
-            Gets or sets if the property should be copied.
-            </summary>        
-        </member>
         <member name="M:System.TypeExtensions.Implements``1(System.Type)">
             <summary>
             Used for checking if a class implements an interface
@@ -2485,6 +1505,23 @@
             </summary>
             <param name="type">Class Implementing the interface</param>
             <param name="interfaceType">Type of an interface</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.TypeExtensions.DerivesFrom``1(System.Type)">
+            <summary>
+            True if the type implements of extends T
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.TypeExtensions.DerivesFrom(System.Type,System.Type)">
+            <summary>
+            True if the type implements of extends parent. 
+            Doesn't work with generics
+            </summary>
+            <param name="type"></param>
+            <param name="parent"></param>
             <returns></returns>
         </member>
         <member name="M:System.TypeExtensions.GetGenericArgument(System.Type,System.Int32)">
