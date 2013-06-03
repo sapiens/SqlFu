@@ -129,18 +129,6 @@ sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, bo
                 param.Size = Math.Max((value as string).Length + 1, 4000);
             }
 
-            //else
-            //{
-            //    if (tp==typeof(DateTime))
-            //    {
-            //        var date = (DateTime) value;
-            //        if (date<new DateTime(1753,1,1))
-            //        {
-
-            //        }
-            //    }
-            //}
-
             if (tp.Name == "SqlGeography") //SqlGeography is a CLR Type
             {
                 dynamic p = param;
