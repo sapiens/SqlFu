@@ -123,10 +123,11 @@ sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, bo
         {
             base.SetupParameter(param, name, value);
             if (value == null) return;
+            
             var tp = value.GetType();
             if (tp == typeof (string))
             {
-                param.Size = Math.Max((value as string).Length + 1, 4000);
+                param.Size = Math.Max(((string) value).Length + 1, 4000);
             }
 
             if (tp.Name == "SqlGeography") //SqlGeography is a CLR Type
