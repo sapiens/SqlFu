@@ -12,8 +12,8 @@ namespace SqlFu.Providers.SqlServer
     {
         private class PagingInfo
         {
-            public string countString;
-            public string selectString;
+            public string CountSql;
+            public string SelectSql;
         }
 
         public const string ProviderName = "System.Data.SqlClient";
@@ -73,28 +73,28 @@ namespace SqlFu.Providers.SqlServer
             return string.Join(".", s.Split('.').Select(d => "[" + d + "]"));
         }
 
-        private static readonly Regex rxOrderBy =
+        private static readonly Regex RxOrderBy =
             new Regex(
                 @"\bORDER\s+BY\s+(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\w\(\)\.])+(?:\s+(?:ASC|DESC))?(?:\s*,\s*(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\w\(\)\.])+(?:\s+(?:ASC|DESC))?)*",
                 RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Singleline | RegexOptions.Compiled);
 
-        private static ConcurrentDictionary<int, PagingInfo> _pagingCache= new ConcurrentDictionary<int, PagingInfo>();
+        private static readonly ConcurrentDictionary<int, PagingInfo> PagingCache= new ConcurrentDictionary<int, PagingInfo>();
 
         public override void MakePaged(string sql, out string selecSql, out string countSql)
         {
             PagingInfo info;
             var key = sql.GetHashCode();
-            if (_pagingCache.TryGetValue(key, out info))
+            if (PagingCache.TryGetValue(key, out info))
             {
-                selecSql = info.selectString;
-                countSql = info.countString;
+                selecSql = info.SelectSql;
+                countSql = info.CountSql;
                 return;
             }
 
             int fromidx;
             var body = GetPagingBody(sql, out fromidx);
             selecSql = sql;
-            var all = rxOrderBy.Matches(body);
+            var all = RxOrderBy.Matches(body);
             string orderBy = "order by (select null)";
             if (all.Count > 0)
             {
@@ -114,9 +114,9 @@ sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, bo
                     PagedSqlStatement.TakeParameterName);
             //cache it
             info = new PagingInfo();
-            info.countString = countSql;
-            info.selectString = selecSql;
-            _pagingCache.TryAdd(key, info);
+            info.CountSql = countSql;
+            info.SelectSql = selecSql;
+            PagingCache.TryAdd(key, info);
         }
 
         public override void SetupParameter(IDbDataParameter param, string name, object value)
