@@ -59,9 +59,18 @@ namespace SqlFu.Providers.SqlServer
         public static string EscapeIdentifier(string s)
         {
             s.MustNotBeEmpty();
-            return "[" + s + "]";
-            //if (!s.Contains(".")) 
-            //return string.Join(".", s.Split('.').Select(d => "[" + d + "]"));
+
+            //If the identifier already includes the escape characters, we return
+            //the identifier as is.
+            if (s.Contains("[") && s.Contains("]"))
+                return s;
+
+            //Single part identifier can be returned as is.
+            if (!s.Contains(".")) 
+                return "[" + s + "]";
+            
+            //multipart identifier has to be escaped separately.
+            return string.Join(".", s.Split('.').Select(d => "[" + d + "]"));
         }
 
         private static readonly Regex rxOrderBy =
