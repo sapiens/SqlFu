@@ -1,4 +1,5 @@
-﻿using System.Data.SQLite;
+﻿#if Sqlite
+using System.Data.SQLite;
 using SqlFu;
 using Xunit;
 
@@ -44,3 +45,4 @@ namespace Tests.DDL.Sqlite
         }
     }
 }
+#endif

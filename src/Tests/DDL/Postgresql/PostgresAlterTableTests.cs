@@ -1,4 +1,5 @@
-﻿using SqlFu;
+﻿#if Postgres
+using SqlFu;
 using SqlFu.DDL.Generators.Postgresql;
 using Xunit;
 
@@ -25,3 +26,4 @@ namespace Tests.DDL.Postgresql
         }
     }
 }
+#endif

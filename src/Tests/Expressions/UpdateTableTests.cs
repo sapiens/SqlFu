@@ -75,21 +75,28 @@ namespace Tests.Expressions
             p.Title = "bla";
             p.IsActive = true;
             p.Type = PostType.Post;
-            try
+            using (var t = db.BeginTransaction())
             {
-                var id = db.Insert(p).InsertedId<int>();
-                var builder = db.Update<Post>();
-                builder.Set(pst => pst.Title, v => v.Title.Substring(0, 1)).Where(d => d.Id == id);
-                builder.Execute();
-                var post = db.Get<Post>(ps=>ps.Id==id);
-                Assert.Equal("b", post.Title);
-            }
-            finally
-            {
-                db.Drop<Post>();
-            }
+                if (!db.TableExists<Post>())
+                {
+                    db.CreateTable<Post>();
+                }
+                try
+                {
 
-
+                    var id = db.Insert(p).InsertedId<int>();
+                    var builder = db.Update<Post>();
+                    builder.Set(pst => pst.Title, v => v.Title.Substring(0, 1)).Where(d => d.Id == id);
+                    builder.Execute();
+                    var post = db.Get<Post>(ps => ps.Id == id);
+                    Assert.Equal("b", post.Title);
+                }
+                finally
+                {
+                    db.Drop<Post>();
+                }
+                t.Commit();
+            }
         }
 
         protected void Write(string format, params object[] param)

@@ -1,4 +1,5 @@
-﻿using SqlFu;
+﻿#if Postgres
+using SqlFu;
 using Xunit;
 using System;
 using System.Diagnostics;
@@ -28,3 +29,4 @@ namespace Tests.DDL.Postgresql
        
     }
 }
+#endif

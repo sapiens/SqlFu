@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿#if MySql
+using System.Data;
 using MySql.Data.MySqlClient;
 using SqlFu;
 using SqlFu.DDL.Generators.MySql;
@@ -75,3 +76,4 @@ namespace Tests.DDL.MySql
         }
     }
 }
+#endif

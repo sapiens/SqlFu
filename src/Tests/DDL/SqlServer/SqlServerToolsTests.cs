@@ -20,11 +20,7 @@ namespace Tests.DDL.SqlServer
         {
             get { return DbEngine.SqlServer;}
         }
-        [Fact]
-        public override void provider_escape_name()
-        {
-            Assert.Equal("[dbo.table]", SqlServerProvider.EscapeIdentifier("dbo.table"));
-        }
+       
 
         private void Write(string format, params object[] param)
         {

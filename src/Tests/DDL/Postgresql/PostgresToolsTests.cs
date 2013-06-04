@@ -1,4 +1,5 @@
-﻿using SqlFu;
+﻿#if Postgres
+using SqlFu;
 using SqlFu.Providers;
 using Xunit;
 using System;
@@ -27,12 +28,6 @@ namespace Tests.DDL.Postgresql
             get { return DbEngine.PostgreSQL;}
         }
 
-        [Fact]
-        public override void provider_escape_name()
-        {
-            var txt = @"""public.test""";
-            Assert.Equal(txt,PostgresProvider.EscapeIdentifier("public.test"));
-        }
 
         protected void Write(string format, params object[] param)
         {
@@ -40,3 +35,4 @@ namespace Tests.DDL.Postgresql
         }
     }
 }
+#endif
