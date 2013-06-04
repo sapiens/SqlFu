@@ -5,13 +5,13 @@ using Xunit;
 using System;
 using System.Diagnostics;
 
-namespace Tests.Helpers
+namespace Tests.Providers
 {
-    public class ProvidersTests
+    public class PaginationTests
     {
         private Stopwatch _t = new Stopwatch();
 
-        public ProvidersTests()
+        public PaginationTests()
         {
 
         }
@@ -28,7 +28,6 @@ namespace Tests.Helpers
 
        
         }
-
 
         [Fact]
         public void npgsql_test_pagination_strings()
