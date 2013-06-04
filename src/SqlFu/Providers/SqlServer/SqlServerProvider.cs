@@ -64,6 +64,8 @@ namespace SqlFu.Providers.SqlServer
             //the identifier as is.
             if (s.Contains("[") && s.Contains("]"))
                 return s;
+            if (s.Contains("\""))
+                return s;
 
             //Single part identifier can be returned as is.
             if (!s.Contains(".")) 
