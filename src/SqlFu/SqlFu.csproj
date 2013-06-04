@@ -195,7 +195,7 @@
     <Compile Include="Providers\MySqlBuilderHelper.cs" />
     <Compile Include="Providers\PostgresBuilderHelper.cs" />
     <Compile Include="Providers\SqliteBuilderHelper.cs" />
-    <Compile Include="Providers\SQLiteProvider.cs" />
+    <Compile Include="Providers\SqLiteProvider.cs" />
     <Compile Include="Providers\SqlServer\SqlServerBuilderHelper.cs" />
     <Compile Include="Providers\SqlServer\SqlServerCeBuilderHelper.cs" />
     <Compile Include="Providers\SqlServer\SqlServerCEProvider.cs" />

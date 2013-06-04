@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Linq;
 using SqlFu.DDL;
 using SqlFu.DDL.Generators.MySql;
 
@@ -21,9 +22,13 @@ namespace SqlFu.Providers
         public static string EscapeIdentifier(string s)
         {
             s.MustNotBeEmpty();
-            return "`" + s + "`";
-            //if (!s.Contains(".")) 
-            //return string.Join(".", s.Split('.').Select(d => "`" + d + "`"));            
+            if (s.Contains("`"))
+            {
+                return s;//already escaped
+            }
+            if (s.Contains("."))
+                return string.Join(".", s.Split('.').Select(d => "`" + d + "`"));            
+            return "`" + s + "`";            
         }
 
         public override LastInsertId ExecuteInsert(SqlStatement sql, string idKey)

@@ -1,10 +1,12 @@
-﻿using SqlFu;
+﻿#if MySQl
+using SqlFu;
 using Xunit;
 using System;
 using System.Diagnostics;
 
 namespace Tests.DDL.MySql
 {
+
     public class MySqlAlterTableTests:CommonAlterTableTests
     {
         private Stopwatch _t = new Stopwatch();
@@ -36,3 +38,4 @@ namespace Tests.DDL.MySql
         }
     }
 }
+#endif

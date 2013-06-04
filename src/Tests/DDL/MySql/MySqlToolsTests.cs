@@ -1,4 +1,5 @@
-﻿using SqlFu;
+﻿#if MySql
+using SqlFu;
 using SqlFu.Providers;
 using SqlFu.Providers.SqlServer;
 using Xunit;
@@ -40,3 +41,4 @@ create index ix_test on test(name)
 
     }
 }
+#endif

@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -101,9 +101,6 @@
     <Compile Include="DDL\Postgresql\PostgresCreateTableTests.cs" />
     <Compile Include="DDL\Postgresql\PostgresToolsTests.cs" />
     <Compile Include="DDL\CommonDatabaseToolsTests.cs" />
-    <Compile Include="DDL\Sqlite\ConstraintWriterTests.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="DDL\Sqlite\SqliteCreateTableTests.cs" />
     <Compile Include="DDL\Sqlite\SqliteDatabaseTools.cs" />
     <Compile Include="DDL\SqlServer\AlterTableColumnTests.cs" />
@@ -129,9 +126,13 @@
     <Compile Include="Helpers\HelpersTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Helpers\ProvidersTests.cs">
+    <Compile Include="Providers\SqliteProviderTests.cs" />
+    <Compile Include="Providers\PostgresProviderTests.cs" />
+    <Compile Include="Providers\MySqlProviderTests.cs" />
+    <Compile Include="Providers\PaginationTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Providers\SqlServerProviderTests.cs" />
     <Compile Include="QueryTests.cs">
       <SubType>Code</SubType>
     </Compile>

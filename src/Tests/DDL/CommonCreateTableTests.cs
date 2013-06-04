@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Data.Common;
 using SqlFu;
 using SqlFu.DDL;
 using SqlFu.DDL.Generators.MySql;
@@ -16,17 +17,19 @@ namespace Tests.DDL
         protected DbAccess Db;
         protected ICreateTable Table;
         protected bool DontDispose;
+      
 
         public CommonCreateTableTests()
         {
             Db = Setup.GetDb(engine: Engine);
             Db.KeepAlive = true;
+            
             SetupTable();
         }
 
         protected abstract DbEngine Engine { get;}
 
-        private void SetupTable()
+        internal void SetupTable()
         {
             Table = Db.DatabaseTools.GetCreateTableBuilder(TableName,IfTableExists.Throw);
             Table.Columns
@@ -125,21 +128,21 @@ namespace Tests.DDL
             Table.ExecuteDDL();
             Assert.True(Db.DatabaseTools.TableExists(TableName));
             var ddl = Db.DatabaseTools.GetCreateTableBuilder(TableName, IfTableExists.DropIt);
-            ddl.Columns.Add("id", DbType.Int32);
+            ddl.Columns.Add("sid", DbType.Int32);
             Assert.DoesNotThrow(() => ddl.ExecuteDDL());
+            Assert.True(Db.DatabaseTools.TableHasColumn(TableName,"sid"));
         }
 
         [Fact]
         public void create_if_exists_ignore()
         {
             Table.ExecuteDDL();
-            Db.Insert(TableName, new {Name = "aha", Uid = Guid.NewGuid()});
+            Db.Insert(TableName, new { Name = "aha", Uid = Guid.NewGuid() });
             var ddl = Db.DatabaseTools.GetCreateTableBuilder(TableName, IfTableExists.Ignore);
-            ddl.Columns.Add("id", DbType.Int32);
+            ddl.Columns.Add("sid", DbType.Int32);
             Assert.DoesNotThrow(() => ddl.ExecuteDDL());
-            var cnt = Db.GetValue<int>("select count(*) from "+Db.Provider.EscapeName(TableName));
-            Write(cnt.ToString());
-            Assert.Equal(1, cnt);
+            var cnt = Db.FirstOrDefault<dynamic>("select * from " + Db.Provider.EscapeName(TableName));
+            Assert.Equal("aha", cnt.Name);
         }
 
 
@@ -152,7 +155,8 @@ namespace Tests.DDL
 
         public void Dispose()
         {
-          if (!DontDispose) Db.DatabaseTools.DropTable(TableName); 
+       
+            if (!DontDispose) Db.DatabaseTools.DropTable(TableName); 
             Db.Dispose();
         }
 

@@ -22,8 +22,6 @@ namespace Tests.DDL
 
         protected abstract DbEngine Engine { get; }
 
-        public abstract void provider_escape_name();
-
         protected virtual void SetupTable()
         {
             Db.ExecuteCommand(@"
