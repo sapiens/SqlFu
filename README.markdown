@@ -3,7 +3,7 @@
 SqlFu is a **_versatile_** micro-orm (like dapper.net, peta poco , massive etc) for .Net 4.  SqlFu is Apache licensed.
 If you're wondering if there's a reason for yet another micro-orm [read this](http://www.sapiensworks.com/blog/post/2012/05/19/SqlFu-My-Versatile-Micro-Orm.aspx)
 
-Latest version: 1.4.0 [Change Log](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
+Latest version: 1.4.1 [Change Log](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
 
 Read about the (new) **[Advanced Features](https://github.com/sapiens/SqlFu/wiki)**
 
@@ -124,6 +124,8 @@ result=db.PagedQuery<PostView>(0,10,sql,3)
 * _Enums_ are automatically handled from int or string when querying. When insert/update they are treated as ints. 
  * Use the [InsertAsStringAttribute] to save it as string
 * Multi poco mapping is done automatically if a column name has '_'. That can be changed (1.2.0+)
+* If a table or column name is already escaped by the user, it won't be escaped by SqlFu
+ * Every identifier containing a '.' will be split and each part will be escaped e.g dbo.table -> [dbo].[table]
 
 ````
 //let's use '.' instead of '_'
