@@ -129,6 +129,8 @@
     <Compile Include="Helpers\HelpersTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Providers\SqliteProviderTests.cs" />
+    <Compile Include="Providers\PostgresProviderTests.cs" />
     <Compile Include="Providers\MySqlProviderTests.cs" />
     <Compile Include="Providers\PaginationTests.cs">
       <SubType>Code</SubType>

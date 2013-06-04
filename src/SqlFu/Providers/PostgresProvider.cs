@@ -51,9 +51,12 @@ namespace SqlFu.Providers
         public static string EscapeIdentifier(string s)
         {
             s.MustNotBeEmpty();
-            return "\"" + s + "\"";
-            //if (!s.Contains(".")) return "\"" + s + "\"";
-            //return string.Join(".", s.Split('.').Select(d => "\"" + d + "\""));
+            if (s.Contains("\""))
+            {
+                return s;
+            }
+            if (!s.Contains(".")) return "\"" + s + "\"";
+            return string.Join(".", s.Split('.').Select(d => "\"" + d + "\""));
         }
 
         public override void SetupParameter(IDbDataParameter param, string name, object value)

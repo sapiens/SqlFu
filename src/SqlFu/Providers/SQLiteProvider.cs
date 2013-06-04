@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Linq;
 using SqlFu.DDL;
 using SqlFu.DDL.Generators.Sqlite;
 
@@ -55,9 +56,15 @@ namespace SqlFu.Providers
             return new SqliteDatabaseTools(db);
         }
 
-        public static string EscapeIdentifier(string name)
+        public static string EscapeIdentifier(string s)
         {
-            return "\"" + name + "\"";
+            s.MustNotBeEmpty();
+            if (s.Contains("\""))
+            {
+                return s;
+            }
+            if (!s.Contains(".")) return "\"" + s + "\"";
+            return string.Join(".", s.Split('.').Select(d => "\"" + d + "\""));
         }
 
         public override LastInsertId ExecuteInsert(SqlStatement sql, string idKey)
