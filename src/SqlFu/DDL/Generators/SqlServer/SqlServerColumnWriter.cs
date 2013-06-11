@@ -91,7 +91,7 @@ namespace SqlFu.DDL.Generators.SqlServer
 
         protected override string DateTimeOffset(string size)
         {
-            var hasSize = size.IsNullOrEmpty();
+            var hasSize = !size.IsNullOrEmpty();
             var rez = "datetimeoffset";
             if (hasSize)
             {
