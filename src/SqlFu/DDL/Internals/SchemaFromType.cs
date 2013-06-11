@@ -156,6 +156,8 @@ namespace SqlFu.DDL.Internals
             dict.Add(typeof(double?),DbType.Double);
             dict.Add(typeof(DateTime),DbType.DateTime);
             dict.Add(typeof(DateTime?),DbType.DateTime);
+            dict.Add(typeof(DateTimeOffset),DbType.DateTimeOffset);
+            dict.Add(typeof(DateTimeOffset?),DbType.DateTimeOffset);
             dict.Add(typeof(TimeSpan),DbType.String);
             dict.Add(typeof(TimeSpan?),DbType.String);
             dict.Add(typeof(decimal),DbType.Decimal);
