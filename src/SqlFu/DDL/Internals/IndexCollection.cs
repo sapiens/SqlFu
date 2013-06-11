@@ -47,7 +47,7 @@ namespace SqlFu.DDL.Internals
 
         private string GenerateIndexName(string columns)
         {
-            return "IX_" + _table.TableName + "_" + _table.ColumnsToName(columns);
+            return "IX_" + _table.TableName.FilterEscape() + "_" + _table.ColumnsToName(columns).FilterEscape();
         }
 
         public DroppedSchemaItemsCollection Dropped { get; private set; }

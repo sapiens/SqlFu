@@ -1,4 +1,5 @@
 ﻿using SqlFu;
+using SqlFu.DDL.Internals;
 using Xunit;
 using System;
 using System.Diagnostics;
@@ -30,7 +31,8 @@ namespace Tests
         [Fact]
         public void FactMethodName()
         {
-           
+           Assert.Equal("blada",Extensions.FilterEscape("[bla].[da]"));
+           Assert.Equal("blada",Extensions.FilterEscape("\"bla\".`da`"));
 
         }
 

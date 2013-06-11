@@ -132,6 +132,7 @@
     <Compile Include="DDL\IModifyTable.cs" />
     <Compile Include="DDL\Internals\DroppedSchemaItem.cs" />
     <Compile Include="DDL\Internals\DroppedSchemaItemsCollection.cs" />
+    <Compile Include="DDL\Internals\Extensions.cs" />
     <Compile Include="DDL\Internals\IndexColumn.cs" />
     <Compile Include="DDL\Internals\IndexColumnsCollection.cs" />
     <Compile Include="DDL\Internals\IndexCreator.cs" />
