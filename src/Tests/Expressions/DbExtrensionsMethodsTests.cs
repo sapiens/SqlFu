@@ -22,6 +22,7 @@ namespace Tests.Expressions
         {
             Assert.Equal(10,_db.Count<Post>());
             Assert.Equal(0,_db.Count<Post>(p=>p.Id>30));
+            Assert.Equal(10,_db.Count<Post>(p=>p.TopicId==null));
         }
         
         [Fact]

@@ -68,6 +68,14 @@ namespace Tests.Expressions
         }
 
         [Fact]
+        public void where_topic_id_is_null_is_written_correctly()
+        {
+            _builder.Set(d => d.Title, "f").Where(d => d.TopicId == null);
+            Assert.Equal("update [Posts] set [Title]=@0 where ([TopicId] is null)",_builder.GetSql());
+        }
+
+
+        [Fact]
         public void data_spike()
         {
             var db = Config.GetDb();

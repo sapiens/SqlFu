@@ -82,6 +82,7 @@ namespace SqlFu.Expressions
             return Expression.Equal(left, Expression.Constant(value));            
         }
 
+        
         protected override Expression VisitBinary(BinaryExpression node)
         {
             string op = "";
@@ -94,14 +95,11 @@ namespace SqlFu.Expressions
                     op = "or";
                     break;
                 case ExpressionType.Equal:
-                    if (node.Right is ConstantExpression)
-                    {
-                        if (node.Right.As<ConstantExpression>().Value == null)
-                        {
-                            op = "is";
-                            break;
-                        }
-                    }
+                   if (node.Right.IsNullUnaryOrConstant())
+                   {
+                       op = "is";
+                       break;
+                   }
                     op = "=";
                     break;
                 case ExpressionType.GreaterThan:
@@ -116,14 +114,13 @@ namespace SqlFu.Expressions
                     op = "<=";
                     break;
                 case ExpressionType.NotEqual:
-                    if (node.Right is ConstantExpression)
+
+                    if (node.Right.IsNullUnaryOrConstant())
                     {
-                        if (node.Right.As<ConstantExpression>().Value == null)
-                        {
-                            op = "is not";
-                            break;
-                        }
+                        op = "is not";
+                        break;
                     }
+                    
                     op = "<>";
                     break;   
                 case ExpressionType.Add:
@@ -416,6 +413,7 @@ namespace SqlFu.Expressions
         public void Write<T>(Expression<Func<T, bool>> criteria)
         {
             criteria.MustNotBeNull();
+
             if (criteria.Body.BelongsToParameter())
             {
                 switch (criteria.Body.NodeType)

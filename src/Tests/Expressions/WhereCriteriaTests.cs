@@ -230,6 +230,22 @@ namespace Tests.Expressions
             Assert.Equal("(([Id] + (4 * [Id])) = [AuthorId])",_sb.ToString());
         }
 
+        [Fact]
+        public void property_is_null()
+        {
+            Expression<Func<Post, bool>> data = p => p.TopicId==null;
+            _w.Write(data);
+            Assert.Equal("([TopicId] is null)",_sb.ToString());
+        }
+
+        [Fact]
+        public void propety_is_not_null()
+        {
+            Expression<Func<Post, bool>> data = p => p.TopicId != null;
+            _w.Write(data);
+            Assert.Equal("([TopicId] is not null)", _sb.ToString());
+        }
+
         protected void Write(string format, params object[] param)
         {
             Console.WriteLine(format, param);
