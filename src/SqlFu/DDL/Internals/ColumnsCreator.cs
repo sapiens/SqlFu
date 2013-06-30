@@ -4,7 +4,7 @@ using System.Data;
 
 namespace SqlFu.DDL.Internals
 {
-    internal class ColumnsCreator : IDefineSpecificColumnsOptions, IConfigureColumns,ICreateColumns
+    internal class ColumnsCreator : IDefineSpecificColumnsOptions, IConfigureColumns, ICreateColumns
     {
         private readonly TableSchema _table;
 
@@ -95,14 +95,16 @@ namespace SqlFu.DDL.Internals
 
         public ISupportSpecificColumnsOptions this[string name]
         {
-            get { 
+            get
+            {
                 var col = _table.Columns[name];
                 if (col != null)
                 {
                     _currentColumn = col;
                     return this;
                 }
-                throw new KeyNotFoundException(string.Format("No column with  the name '{0}' was defined in the builder",name));
+                throw new KeyNotFoundException(string.Format(
+                    "No column with  the name '{0}' was defined in the builder", name));
             }
         }
     }

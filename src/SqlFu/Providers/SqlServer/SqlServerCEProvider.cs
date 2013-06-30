@@ -1,4 +1,5 @@
-﻿using SqlFu.DDL;
+﻿using System.Data.Common;
+using SqlFu.DDL;
 using SqlFu.DDL.Generators.SqlServer.CE;
 
 namespace SqlFu.Providers.SqlServer
@@ -12,20 +13,14 @@ namespace SqlFu.Providers.SqlServer
         }
 
 
-        public override LastInsertId ExecuteInsert(SqlStatement sql, string idKey)
+        public override LastInsertId ExecuteInsert(DbCommand cmd, string idKey)
         {
-            //sql.Sql += ";Select @@IDENTITY as id";
-            using (sql)
-            {
-                sql.Execute();
-                using (var idquery = new SqlStatement(sql.Db))
-                {
-                    idquery.SetSql("select @@IDENTITY as id");
-                    var rez = idquery.ExecuteScalar();
-                    return new LastInsertId(rez);
-                }
-                
-            }
+           cmd.Execute();
+           cmd.Reset();
+            cmd.CommandText = "select @@IDENTITY as id";
+            var rez = cmd.ExecuteScalar();
+            return new LastInsertId(rez);
+            
         }
 
         public override void MakePaged(string sql, out string selecSql, out string countSql)
@@ -34,11 +29,11 @@ namespace SqlFu.Providers.SqlServer
             var body = GetPagingBody(sql, out formidx);
             countSql = "select count(*) " + body;
             selecSql = string.Format("{0} OFFSET @{1} ROWS FETCH NEXT @{2} ROWS ONLY", sql,
-                                     PagedSqlStatement.SkipParameterName,
-                                     PagedSqlStatement.TakeParameterName);
+                                     PreparePagedStatement.SkipParameterName,
+                                     PreparePagedStatement.TakeParameterName);
         }
 
-        protected override IDatabaseTools InitTools(DbAccess db)
+        protected override IDatabaseTools InitTools(SqlFuConnection db)
         {
             return new SqlServerCompactDatabaseTools(db);
         }

@@ -12,7 +12,7 @@ namespace Tests.Migrations
     public class AutomaticMigrationTests:IDisposable
     {
         private Stopwatch _t = new Stopwatch();
-        private DbAccess _db;
+        private SqlFuConnection _db;
 
         public AutomaticMigrationTests()
         {

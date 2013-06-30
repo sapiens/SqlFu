@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using CavemanTools.Testing;
 using SqlFu;
@@ -5,14 +6,14 @@ using Tests;
 
 namespace Benchmark.Tests
 {
-    public class SqlFuTests:PerformanceTests
+    public class SqlFuTests:PerformanceTests,IDisposable
     {
-        private DbAccess _db;
+        private SqlFuConnection _db;
 
         public SqlFuTests()
         {
-            _db = new DbAccess(Config.Connex, DbEngine.SqlServer);
-            _db.KeepAlive = true;
+            _db = new SqlFuConnection(Config.Connex, DbEngine.SqlServer);
+            
         }
         public override void FetchSingleEntity(BenchmarksContainer bc)
         {
@@ -22,7 +23,7 @@ namespace Benchmark.Tests
                        },"SqlFu Get");
             bc.Add(id=>
                        {
-                           _db.FirstOrDefault<sfPosts>("select * from sfPosts where id=@0",5);
+                           _db.QuerySingle<sfPosts>("select * from sfPosts where id=@0",5);
                        },"SqlFu FirstOrDefault");
         }
 
@@ -30,7 +31,7 @@ namespace Benchmark.Tests
         {
             bc.Add(id =>
             {
-                _db.FirstOrDefault<dynamic>("select * from sfPosts where id=@0", 5);
+                _db.QuerySingle<dynamic>("select * from sfPosts where id=@0", 5);
             }, "SqlFu dynamic");
         }
 
@@ -84,7 +85,7 @@ namespace Benchmark.Tests
         {
             bc.Add(id =>
             {
-                _db.FirstOrDefault<PostViewModel>("select *,id as Author_Id,title as Author_Name from sfposts where id=@0 order by id",5);
+                _db.QuerySingle<PostViewModel>("select *,id as Author_Id,title as Author_Name from sfposts where id=@0 order by id",5);
             }, "SqlFu");
         }
 
@@ -103,6 +104,14 @@ namespace Benchmark.Tests
             {
                 _db.Update<sfPosts>(new{Id=3,Title="updated"});
             }, "SqlFu");
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            _db.Dispose();
         }
     }
 }

@@ -6,7 +6,7 @@ namespace SqlFu.DDL.Generators.Postgresql
 {
     internal class PostgresqlDDLWriter : CommonDDLWriter
     {
-        public PostgresqlDDLWriter(IAccessDb db)
+        public PostgresqlDDLWriter(SqlFuConnection db)
             : base(db, DbEngine.PostgreSQL)
         {
         }

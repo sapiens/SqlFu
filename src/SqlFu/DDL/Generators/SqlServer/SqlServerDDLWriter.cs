@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Data.Common;
+using System.Text;
 using SqlFu.DDL.Internals;
 using SqlFu.Providers.SqlServer;
 
@@ -6,7 +7,7 @@ namespace SqlFu.DDL.Generators.SqlServer
 {
     internal class SqlServerDDLWriter : CommonDDLWriter
     {
-        public SqlServerDDLWriter(IAccessDb db) : base(db, DbEngine.SqlServer)
+        public SqlServerDDLWriter(SqlFuConnection db) : base(db, DbEngine.SqlServer)
         {
         }
 

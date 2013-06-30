@@ -19,7 +19,7 @@ namespace SqlFu.Providers
             return "\"" + s + "\"";
         }
 
-        public abstract LastInsertId ExecuteInsert(SqlStatement sql, string idKey);
+        public abstract LastInsertId ExecuteInsert(DbCommand cmd, string idKey);
 
 
         public DbConnection CreateConnection()
@@ -85,7 +85,7 @@ namespace SqlFu.Providers
         public abstract DbEngine ProviderType { get; }
         private IDatabaseTools _tools;
 
-        public IDatabaseTools GetTools(DbAccess db)
+        public IDatabaseTools GetTools(SqlFuConnection db)
         {
             if (_tools == null)
             {
@@ -101,6 +101,6 @@ namespace SqlFu.Providers
         public abstract IDbProviderExpressionHelper BuilderHelper { get; }
       
 
-        protected abstract IDatabaseTools InitTools(DbAccess db);
+        protected abstract IDatabaseTools InitTools(SqlFuConnection db);
     }
 }

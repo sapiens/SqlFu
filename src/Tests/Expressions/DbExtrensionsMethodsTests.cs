@@ -9,7 +9,7 @@ namespace Tests.Expressions
     public class DbExtrensionsMethodsTests:IDisposable
     {
         private Stopwatch _t = new Stopwatch();
-        private DbAccess _db;
+        private SqlFuConnection _db;
 
         public DbExtrensionsMethodsTests()
         {

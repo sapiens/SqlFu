@@ -10,7 +10,6 @@ namespace SqlFu.DDL.Internals
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
- 
         public static string FilterEscape(this string name)
         {
             return Regex.Replace(name, @"[\[\]\.`""]", "");

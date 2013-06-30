@@ -31,9 +31,8 @@ namespace SqlFu.DDL
         ISupportSpecificColumnsOptions this[string name] { get; }
     }
 
-    public interface ICreateColumns:IIndexForCreateColumn,IAddColumns
+    public interface ICreateColumns : IIndexForCreateColumn, IAddColumns
     {
-        
     }
 
     public interface IConfigureColumns : IAddColumns

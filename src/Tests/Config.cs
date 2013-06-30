@@ -15,7 +15,13 @@ namespace Tests
         public const string MysqlConnex = @"Server=localhost;Database=mysql;Uid=root;Pwd=;Allow User Variables=True";
         public const string PostgresConnex = @"User ID=postgres;Password=123456;Host=localhost;Port=5432;Database=postgres;";
 
-        public static DbAccess GetDb(bool noLog = false,DbEngine engine=DbEngine.SqlServer)
+        static Setup()
+        {
+            SqlFuDao.OnCommand = cmd => Console.WriteLine(cmd.FormatCommand());
+            SqlFuDao.OnException = (cmd,ex)=>Console.WriteLine("\nSql:{1}\nException:\n\t\t{0}", ex,cmd.FormatCommand());
+        }
+
+        public static SqlFuConnection GetDb(bool noLog = false,DbEngine engine=DbEngine.SqlServer)
         {
             var cnx = Connex;
             switch(engine)
@@ -33,21 +39,8 @@ namespace Tests
                     cnx = PostgresConnex;
                     break;
             }
-            var d = new DbAccess(cnx, engine);
-            if (!noLog)
-            {
-                d.OnCommand = cmd => Console.WriteLine(cmd.FormatCommand());
-                d.OnOpenConnection = cmd => Console.WriteLine("Connection opened");
-                d.OnCloseConnection = cmd => Console.WriteLine("Connection closed");
-                d.OnException = (s, ex) =>
-                {
-                    Console.WriteLine("Exaception:\n\t\t{0}",s.ExecutedSql);
-                };
-
-                d.OnBeginTransaction = cmd => Console.WriteLine("Begin trans");
-                d.OnEndTransaction = (cmd, s) => Console.WriteLine("End trans: {0} . Transaction level :{1}", s?"Committed":"Rollback",cmd.TransactionDepth);
-            }
-
+            var d = new SqlFuConnection(cnx, engine);
+            
             return d;
         }
     }
@@ -64,7 +57,7 @@ namespace Tests
             EnsureDb();
         }
 
-        public static DbAccess GetDb()
+        public static SqlFuConnection GetDb()
         {
             return Setup.GetDb();
         }
@@ -131,13 +124,12 @@ ON [PRIMARY]
         public static void EnsurePosts()
         {
             var db = Setup.GetDb();
-            db.KeepAlive = true;
-            db.OnCommand = c => { };
+            
             EnsureDb();
                 //Config.EmptyTable();
                 //Console.WriteLine("ensuring 10 posts");
 
-                using (var t = db.BeginTransaction())
+                using (var t = db.BeginSqlFuTransaction())
                 {
                     for (int i = 0; i < 10; i++)
                     {

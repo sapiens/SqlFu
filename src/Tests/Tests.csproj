@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;Sqlite</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -83,7 +83,9 @@
     <Compile Include="Expressions\UpdateTableTests.cs" />
     <Compile Include="Expressions\WhereCriteriaTests.cs" />
     <Compile Include="DDL\FluentBuilderCreateTableTests.cs" />
-    <Compile Include="FakeTransaction.cs" />
+    <Compile Include="FakeTransaction.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Mapper\AnonymousMapping.cs" />
     <Compile Include="Mapper\ComplexMapperTests.cs">
       <SubType>Code</SubType>

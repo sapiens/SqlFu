@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using CavemanTools.Infrastructure;
@@ -10,18 +11,18 @@ namespace SqlFu.Migrations
 {
     public class DatabaseMigration : IConfigureMigrationsRunner
     {
-        private readonly IAccessDb _db;
+        private readonly DbConnection _db;
         public const string DefaultSchemaName = "_GlobalSchema";
         private ILogWriter _log = NullLogger.Instance;
         private readonly List<Assembly> _asm = new List<Assembly>();
         private IResolveDependencies _resolver = ActivatorContainer.Instance;
 
-        public DatabaseMigration(IAccessDb db)
+        public DatabaseMigration(DbConnection db)
         {
             _db = db;
         }
 
-        public static IConfigureMigrationsRunner ConfigureFor(IAccessDb db)
+        public static IConfigureMigrationsRunner ConfigureFor(DbConnection db)
         {
             return new DatabaseMigration(db);
         }

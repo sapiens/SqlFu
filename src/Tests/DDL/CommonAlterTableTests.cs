@@ -11,7 +11,7 @@ namespace Tests.DDL
     {
         protected const string TableName = "users";
         private Stopwatch _t = new Stopwatch();
-        protected DbAccess Db;
+        protected SqlFuConnection Db;
         protected IModifyTable Table;
         public CommonAlterTableTests()
         {

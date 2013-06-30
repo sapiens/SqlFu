@@ -6,7 +6,7 @@ namespace SqlFu.DDL.Generators.Postgresql
 {
     internal class PostgresDatabaseTools : CommonDatabaseTools
     {
-        public PostgresDatabaseTools(DbAccess db) : base(db)
+        public PostgresDatabaseTools(SqlFuConnection db) : base(db)
         {
         }
 

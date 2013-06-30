@@ -8,10 +8,10 @@ namespace SqlFu.DDL.Generators
 {
     internal abstract class CommonDDLWriter : IGenerateDDL
     {
-        protected readonly IAccessDb Db;
+        protected readonly SqlFuConnection Db;
         private TableSchema _table;
 
-        public CommonDDLWriter(IAccessDb db, DbEngine engine)
+        public CommonDDLWriter(SqlFuConnection db, DbEngine engine)
         {
             db.MustNotBeNull();
             Db = db;

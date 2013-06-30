@@ -7,7 +7,7 @@ namespace SqlFu.DDL.Generators.MySql
 {
     internal class MysqlDatabaseTools : CommonDatabaseTools
     {
-        public MysqlDatabaseTools(DbAccess db) : base(db)
+        public MysqlDatabaseTools(SqlFuConnection db) : base(db)
         {
         }
 

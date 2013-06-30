@@ -11,7 +11,7 @@ namespace Tests.Helpers
     public class QueryTests:IDisposable
     {
         private Stopwatch _t = new Stopwatch();
-        private DbAccess _db;
+        private SqlFuConnection _db;
 
         public QueryTests()
         {
@@ -85,7 +85,7 @@ namespace Tests.Helpers
         public void apply_to_command()
         {
             var before = false;
-            _db.WithSql("select 1").ApplyToCommand(d =>before = true).ExecuteQuery<Post>().First();
+            _db.WithSql("select 1").Apply(d =>before = true).Query<Post>().First();
             Assert.True(before);
         }
 
@@ -93,7 +93,7 @@ namespace Tests.Helpers
         public void custom_mapper()
         {
             var custom = false;
-            var d= _db.WithSql("select 1 as Id, 'test' as Name").ExecuteQuery(rd =>
+            var d= _db.WithSql("select 1 as Id, 'test' as Name").Query(rd =>
                                                                            {
                                                                                var rez = new IdName();
                                                                                rez.Id = rd.GetInt32(0);
@@ -123,7 +123,7 @@ namespace Tests.Helpers
         public void custom_value_converter()
         {
             var c = false;
-            _db.WithSql("select 1").ExecuteScalar(o =>
+            _db.WithSql("select 1").GetValue(o =>
                                                       {
                                                           c = true;
                                                           return 1;

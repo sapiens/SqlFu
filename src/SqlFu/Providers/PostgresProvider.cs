@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using SqlFu.DDL;
 using SqlFu.DDL.Generators.Postgresql;
@@ -34,7 +35,7 @@ namespace SqlFu.Providers
             get { return  new PostgresBuilderHelper();}
         }
 
-        protected override IDatabaseTools InitTools(DbAccess db)
+        protected override IDatabaseTools InitTools(SqlFuConnection db)
         {
             return new PostgresDatabaseTools(db);
         }
@@ -44,8 +45,8 @@ namespace SqlFu.Providers
             int formidx;
             var body = GetPagingBody(sql, out formidx);
             countSql = "select count(*) " + body;
-            selecSql = string.Format("{0} limit @{2} offset @{1}", sql, PagedSqlStatement.SkipParameterName,
-                                     PagedSqlStatement.TakeParameterName);
+            selecSql = string.Format("{0} limit @{2} offset @{1}", sql, PreparePagedStatement.SkipParameterName,
+                                     PreparePagedStatement.TakeParameterName);
         }
 
         public static string EscapeIdentifier(string s)
@@ -73,16 +74,13 @@ namespace SqlFu.Providers
             base.SetupParameter(param, name, value);
         }
 
-        public override LastInsertId ExecuteInsert(SqlStatement sql, string idKey)
+        public override LastInsertId ExecuteInsert(DbCommand cmd, string idKey)
         {
             if (!string.IsNullOrEmpty(idKey))
             {
-                sql.Sql += (" returning " + EscapeName(idKey));
+                cmd.CommandText += (" returning " + EscapeName(idKey));
             }
-            using (sql)
-            {
-                return new LastInsertId(sql.ExecuteScalar());
-            }
+            return new LastInsertId(cmd.ExecuteScalar());            
         }
 
         public override string ParamPrefix

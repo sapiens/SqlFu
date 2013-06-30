@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Data.Common;
+using System.Linq;
 using System.Reflection;
 using CavemanTools.Infrastructure;
 using CavemanTools.Logging;
@@ -14,11 +15,11 @@ namespace Tests.Migrations
     public class MIgrationsConfigTests
     {
         private Stopwatch _t = new Stopwatch();
-        private IAccessDb _db;
+        private DbConnection _db;
 
         public MIgrationsConfigTests()
         {
-            var db = new Mock<IAccessDb>();
+            var db = new Mock<DbConnection>();
             _db = db.Object;
         }
 

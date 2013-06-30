@@ -10,7 +10,7 @@ namespace Tests.Helpers
     public class ComplexTypeMapper
     {
         private Stopwatch _t = new Stopwatch();
-        private DbAccess _db;
+        private SqlFuConnection _db;
 
         public ComplexTypeMapper()
         {

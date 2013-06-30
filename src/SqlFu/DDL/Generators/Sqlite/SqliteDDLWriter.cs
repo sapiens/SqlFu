@@ -6,7 +6,7 @@ namespace SqlFu.DDL.Generators.Sqlite
 {
     internal class SqliteDDLWriter : CommonDDLWriter
     {
-        public SqliteDDLWriter(IAccessDb db)
+        public SqliteDDLWriter(SqlFuConnection db)
             : base(db, DbEngine.SQLite)
         {
             ColonBeforeConstraints = true;

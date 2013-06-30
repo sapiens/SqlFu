@@ -7,9 +7,9 @@ namespace SqlFu.DDL.Generators.MySql
     internal class MysqlDropConstraintWriter : AbstractDropConstraintWriter
     {
         private const string PrimaryKey = "PRIMARY KEY";
-        private readonly IAccessDb _db;
+        private readonly SqlFuConnection _db;
 
-        public MysqlDropConstraintWriter(StringBuilder builder, IAccessDb db)
+        public MysqlDropConstraintWriter(StringBuilder builder, SqlFuConnection db)
             : base(builder, DbEngine.MySql, db.DatabaseTools)
         {
             db.MustNotBeNull();

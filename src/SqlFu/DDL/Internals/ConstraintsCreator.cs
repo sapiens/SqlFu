@@ -109,7 +109,6 @@ namespace SqlFu.DDL.Internals
                             throw new ArgumentException("Constraint not found", name);
                         }
                     }
-                    
                 }
                 return this;
             }

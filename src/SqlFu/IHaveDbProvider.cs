@@ -11,16 +11,22 @@ namespace SqlFu
 
     public interface IHaveDbProvider : IEscapeDbIdentifier
     {
-        LastInsertId ExecuteInsert(SqlStatement sql, string idKey);
+        LastInsertId ExecuteInsert(DbCommand cmd, string idKey);
         DbConnection CreateConnection();
         string ParamPrefix { get; }
         void MakePaged(string sql, out string selecSql, out string countSql);
 
         void SetupParameter(IDbDataParameter param, string name, object value);
+        /// <summary>
+        /// Replaces @ with provider parameter prefix
+        /// </summary>
+        /// <param name="sql"></param>
+        /// <param name="paramNames"></param>
+        /// <returns></returns>
         string FormatSql(string sql, params string[] paramNames);
         void OnCommandExecuting(IDbCommand cmd);
         DbEngine ProviderType { get; }
-        IDatabaseTools GetTools(DbAccess db);
+        IDatabaseTools GetTools(SqlFuConnection db);
         /// <summary>
         /// Gets expression query builder helpers for the rdbms.
         /// Internal usage

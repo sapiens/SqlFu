@@ -1,3 +1,4 @@
+using System.Data.Common;
 using System.Reflection;
 using CavemanTools;
 
@@ -20,7 +21,7 @@ namespace SqlFu.Migrations
         public SemanticVersion CurrentVersion { get; private set; }
         public SemanticVersion NextVersion { get; private set; }
         public string SchemaName { get; private set; }
-        public abstract void Execute(IAccessDb db);
+        public abstract void Execute(DbConnection db);
         public int Priority { get; private set; }
     }
 }

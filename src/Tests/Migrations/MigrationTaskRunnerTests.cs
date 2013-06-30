@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.Common;
 using System.Text;
 using CavemanTools.Logging;
 using Moq;
@@ -16,15 +17,15 @@ namespace Tests.Migrations
         private Stopwatch _t = new Stopwatch();
         private StringBuilder _sb;
         private MigrationTaskRunner _runner;
-        private readonly Mock<IAccessDb> _db;
+        private readonly FakeConnection _db;
 
         public MigrationTaskRunnerTests()
         {
-            _db = new Mock<IAccessDb>();
-            _db.Setup(d => d.BeginTransaction(null)).Returns(new FakeTransaction());
+            _db = new FakeConnection();
+            //_db.Setup(d => d.BeginTransaction()).Returns(new FakeTransaction());
             LogHelper.Register(new ConsoleLogger(), "Default");
             _sb = new StringBuilder();
-           _runner = new MigrationTaskRunner(_db.Object, LogHelper.DefaultLogger);
+           _runner = new MigrationTaskRunner(_db, LogHelper.DefaultLogger);
         }
 
         [Fact]
@@ -47,7 +48,7 @@ namespace Tests.Migrations
         public void tasks_are_wrapped_in_a_transaction()
         {
             _runner.Run(new Migration2(_sb),new Migration1(_sb));
-            _db.Verify(d=>d.BeginTransaction(null),Times.Once());
+            Assert.Equal(_db.TransactionLevel,1);
         }
 
         protected void Write(string format, params object[] param)

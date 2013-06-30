@@ -1,4 +1,5 @@
-﻿using SqlFu;
+﻿using System.Data.Common;
+using SqlFu;
 using SqlFu.Migrations;
 
 namespace Tests.Migrations.Data
@@ -10,7 +11,7 @@ namespace Tests.Migrations.Data
         /// Task is executed automatically in a transaction
         /// </summary>
         /// <param name="db"/>
-        public override void Execute(IAccessDb db)
+        public override void Execute(DbConnection db)
         {
             
         }

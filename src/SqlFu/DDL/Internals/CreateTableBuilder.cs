@@ -1,27 +1,26 @@
 ﻿using System;
+using System.Data.Common;
 using SqlFu.DDL.Generators;
 
 namespace SqlFu.DDL.Internals
 {
-  
-
     internal class CreateTableBuilder : ICreateTable
     {
-        private readonly IAccessDb _db;
+        private readonly DbConnection _db;
         private readonly IGenerateDDL _generator;
         private readonly TableSchema _table;
 
-        public CreateTableBuilder(IAccessDb db,IGenerateDDL generator,TableSchema schema)
+        public CreateTableBuilder(DbConnection db, IGenerateDDL generator, TableSchema schema)
         {
             _db = db;
             _generator = generator;
             _table = schema;
             _columns = new ColumnsCreator(Table);
             _constraints = new ConstraintsCreator(Table.Constraints);
-            _indexes = new IndexCreator(Table.Indexes);            
+            _indexes = new IndexCreator(Table.Indexes);
         }
 
-        public CreateTableBuilder(IAccessDb db, IGenerateDDL generator, string tableName, IfTableExists option)
+        public CreateTableBuilder(DbConnection db, IGenerateDDL generator, string tableName, IfTableExists option)
         {
             _db = db;
             _generator = generator;
@@ -51,7 +50,7 @@ namespace SqlFu.DDL.Internals
 
         private bool ContinueIfTableExists()
         {
-            var tools = _db.DatabaseTools;
+            var tools = _db.DatabaseTools();
 
             if (tools.TableExists(Table.Name))
             {

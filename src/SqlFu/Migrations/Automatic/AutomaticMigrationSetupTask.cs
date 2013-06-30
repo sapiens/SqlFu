@@ -1,4 +1,5 @@
 using System.Data;
+using System.Data.Common;
 using SqlFu.DDL;
 
 namespace SqlFu.Migrations.Automatic
@@ -10,9 +11,9 @@ namespace SqlFu.Migrations.Automatic
         /// Task is executed automatically in a transaction
         /// </summary>
         /// <param name="db"/>
-        public override void Execute(IAccessDb db)
+        public override void Execute(DbConnection db)
         {
-            var tbl = db.DatabaseTools.GetCreateTableBuilder(AutomaticMigration.TableName, IfTableExists.Ignore);
+            var tbl = db.DatabaseTools().GetCreateTableBuilder(AutomaticMigration.TableName, IfTableExists.Ignore);
             tbl.Columns
                .Add("Id", DbType.Int32, isNullable: false, autoIncrement: true).AsPrimaryKey()
                .Add("SchemaName", DbType.String, "50")

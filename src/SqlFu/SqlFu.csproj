@@ -45,7 +45,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DatabaseUnitOfWork.cs" />
-    <Compile Include="DbAccess.cs" />
+    <Compile Include="IControlSqlStatement.cs" />
+    <Compile Include="LastInsertId.cs" />
+    <Compile Include="SqlFuConnection.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="DbEngine.cs" />
     <Compile Include="DDL\Generators\AbstractCheckWriter.cs" />
     <Compile Include="DDL\Generators\AbstractColumnChangesWriter.cs" />
@@ -169,7 +173,6 @@
     <Compile Include="Expressions\ExpressionWriter.cs" />
     <Compile Include="Expressions\ExpressionSqlBuilder.cs" />
     <Compile Include="Expressions\Helpers.cs" />
-    <Compile Include="IAccessDb.cs" />
     <Compile Include="IBuildUpdateTable.cs" />
     <Compile Include="IDbProviderExpressionHelper.cs" />
     <Compile Include="InsertAsStringAttribute.cs" />
@@ -190,8 +193,9 @@
     <Compile Include="Migrations\MigrationTaskRunner.cs" />
     <Compile Include="Migrations\SchemaMigrationExecutor.cs" />
     <Compile Include="Migrations\MigrationAttribute.cs" />
-    <Compile Include="PagedSqlStatement.cs" />
     <Compile Include="DDL\Generators\CommonDDLWriter.cs" />
+    <Compile Include="PreparePagedStatement.cs" />
+    <Compile Include="PrepareStatement.cs" />
     <Compile Include="Providers\CommonBuilderHelper.cs" />
     <Compile Include="Providers\MySqlBuilderHelper.cs" />
     <Compile Include="Providers\PostgresBuilderHelper.cs" />
@@ -202,9 +206,9 @@
     <Compile Include="Providers\SqlServer\SqlServerCEProvider.cs" />
     <Compile Include="DDL\Generators\SqlServer\SqlServerDDLWriter.cs" />
     <Compile Include="QueryOnlyAttribute.cs" />
-    <Compile Include="SProcStatement.cs" />
-    <Compile Include="SqlExtensionsCommands.cs" />
-    <Compile Include="SqlExtensionsQuery.cs" />
+    <Compile Include="CrudHelpers.cs" />
+    <Compile Include="QueryHelpers.cs" />
+    <Compile Include="SqlFuDao.cs" />
     <Compile Include="StoredProcedureResult.cs" />
     <Compile Include="TableAttribute.cs" />
     <Compile Include="Internals\TableInfo.cs" />
@@ -219,7 +223,6 @@
     <Compile Include="Providers\OracleProvider.cs" />
     <Compile Include="Providers\PostgresProvider.cs" />
     <Compile Include="Providers\SqlServer\SqlServerProvider.cs" />
-    <Compile Include="SqlStatement.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>

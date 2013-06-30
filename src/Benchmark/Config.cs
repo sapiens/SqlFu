@@ -34,9 +34,9 @@ namespace Benchmark
         //    if (!warm) Console.WriteLine("{0} took {1} ms",name,timer.Elapsed.TotalMilliseconds);
         //}
 
-        public static DbAccess GetDb()
+        public static SqlFuConnection GetDb()
         {
-            var d = new DbAccess(Connex, DbEngine.SqlServer);
+            var d = new SqlFuConnection(Connex, DbEngine.SqlServer);
             return d;
         }
 
@@ -82,8 +82,6 @@ namespace Benchmark
         public static void EnsurePosts()
         {
             var db = GetDb();
-            db.KeepAlive = true;
-            db.OnCommand = c => { };
             
             //if (db.GetValue<int>("select count(*) from sfposts") != 150)
             //if (db.Count<sfPosts>()!=150)
@@ -91,7 +89,7 @@ namespace Benchmark
                 Config.EmptyTable();
              //   Console.WriteLine("ensuring 500 posts");
 
-                using (var t = db.BeginTransaction())
+                using (var t = db.BeginSqlFuTransaction())
                 {
                     for (int i = 0; i < 15; i++)
                     {

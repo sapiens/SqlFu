@@ -8,9 +8,9 @@ namespace SqlFu.DDL.Generators.SqlServer.CE
     internal class SqlServerCompactModifiedColumnsWriter
     {
         private readonly StringBuilder Builder;
-        private readonly IAccessDb Db;
+        private readonly SqlFuConnection Db;
 
-        public SqlServerCompactModifiedColumnsWriter(StringBuilder builder, IAccessDb db)
+        public SqlServerCompactModifiedColumnsWriter(StringBuilder builder, SqlFuConnection db)
         {
             Builder = builder;
             Db = db;

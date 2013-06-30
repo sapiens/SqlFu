@@ -24,7 +24,7 @@ namespace Tests.Providers
             string sel;
             m.MakePaged("select * from test",out sel,out cnt);
             Assert.Equal("select count(*) from test",cnt);
-            Assert.Equal(string.Format("select * from test limit @{0},@{1}",PagedSqlStatement.SkipParameterName,PagedSqlStatement.TakeParameterName),sel);
+            Assert.Equal(string.Format("select * from test limit @{0},@{1}",PreparePagedStatement.SkipParameterName,PreparePagedStatement.TakeParameterName),sel);
 
        
         }
@@ -37,7 +37,7 @@ namespace Tests.Providers
             string sel;
             m.MakePaged("select * from test", out sel, out cnt);
             Assert.Equal("select count(*) from test", cnt);
-            Assert.Equal(string.Format("select * from test limit @{0} offset @{1}", PagedSqlStatement.TakeParameterName,PagedSqlStatement.SkipParameterName), sel);
+            Assert.Equal(string.Format("select * from test limit @{0} offset @{1}", PreparePagedStatement.TakeParameterName,PreparePagedStatement.SkipParameterName), sel);
             
         }
 
@@ -49,7 +49,7 @@ namespace Tests.Providers
             string sel;
             ce.MakePaged("select * from test", out sel, out cnt);
             Assert.Equal("select count(*) from test", cnt);
-            Assert.Equal(string.Format("select * from test OFFSET @{0} ROWS FETCH NEXT @{1} ROWS ONLY", PagedSqlStatement.SkipParameterName, PagedSqlStatement.TakeParameterName), sel);
+            Assert.Equal(string.Format("select * from test OFFSET @{0} ROWS FETCH NEXT @{1} ROWS ONLY", PreparePagedStatement.SkipParameterName, PreparePagedStatement.TakeParameterName), sel);
         }
 
 
@@ -61,7 +61,7 @@ namespace Tests.Providers
             string sel;
             m.MakePaged("select * from test", out sel, out cnt);
             Assert.Equal("select count(*) from test", cnt);
-            Assert.Equal(string.Format("select * from test limit @{0},@{1}", PagedSqlStatement.SkipParameterName, PagedSqlStatement.TakeParameterName), sel);
+            Assert.Equal(string.Format("select * from test limit @{0},@{1}", PreparePagedStatement.SkipParameterName, PreparePagedStatement.TakeParameterName), sel);
         }
 
         private void Write(string format, params object[] param)

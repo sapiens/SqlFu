@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text.RegularExpressions;
 using SqlFu.DDL;
@@ -45,7 +46,7 @@ namespace SqlFu.Providers.SqlServer
             get { return new SqlServerBuilderHelper();}
         }
 
-        protected override IDatabaseTools InitTools(DbAccess db)
+        protected override IDatabaseTools InitTools(SqlFuConnection db)
         {
             return new SqlServerDatabaseTools(db);
         }
@@ -112,8 +113,8 @@ namespace SqlFu.Providers.SqlServer
                 string.Format(
                     @"SELECT {1} FROM 
 (SELECT ROW_NUMBER() OVER ({0}) sqlfu_rn, {1} {2}) 
-sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, body, PagedSqlStatement.SkipParameterName,
-                    PagedSqlStatement.TakeParameterName);
+sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, body, PreparePagedStatement.SkipParameterName,
+                    PreparePagedStatement.TakeParameterName);
             //cache it
             info = new PagingInfo();
             info.CountSql = countSql;
@@ -145,15 +146,13 @@ sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, bo
             }
         }
 
-        public override LastInsertId ExecuteInsert(SqlStatement sql, string idKey)
+        public override LastInsertId ExecuteInsert(DbCommand cmd, string idKey)
         {
-            sql.Sql += ";Select SCOPE_IDENTITY() as id";
-
-            using (sql)
-            {
-                var rez = sql.ExecuteScalar();
-                return new LastInsertId(rez);
-            }
+            cmd.CommandText += ";Select SCOPE_IDENTITY() as id";
+            
+            var rez = cmd.ExecuteScalar();
+            return new LastInsertId(rez);
+            
         }
 
         public const string ParameterPrefix = "@";

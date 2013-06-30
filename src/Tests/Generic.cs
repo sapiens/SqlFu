@@ -31,8 +31,9 @@ namespace Tests
         [Fact]
         public void FactMethodName()
         {
-           Assert.Equal("blada",Extensions.FilterEscape("[bla].[da]"));
-           Assert.Equal("blada",Extensions.FilterEscape("\"bla\".`da`"));
+            var db = Setup.GetDb();
+            var con = db.Connection;
+            db.Dispose();
 
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Data.Common;
+using System.Text;
 using SqlFu.DDL.Internals;
 using SqlFu.Providers;
 
@@ -6,7 +7,7 @@ namespace SqlFu.DDL.Generators.MySql
 {
     internal class MySqlDDLWriter : CommonDDLWriter
     {
-        public MySqlDDLWriter(IAccessDb db) : base(db, DbEngine.MySql)
+        public MySqlDDLWriter(SqlFuConnection db) : base(db, DbEngine.MySql)
         {
         }
 

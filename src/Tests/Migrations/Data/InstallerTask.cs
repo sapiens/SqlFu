@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Data.Common;
+using System.Text;
 using SqlFu;
 using SqlFu.Migrations;
 
@@ -18,7 +19,7 @@ namespace Tests.Migrations.Data
             _sb = sb;
         }
 
-        public override void Execute(IAccessDb db)
+        public override void Execute(DbConnection db)
         {
             _sb.Append("1.0.2");
         }

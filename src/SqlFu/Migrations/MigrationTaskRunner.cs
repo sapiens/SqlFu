@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Data.Common;
 using CavemanTools;
 using CavemanTools.Logging;
 
@@ -6,10 +7,10 @@ namespace SqlFu.Migrations
 {
     public class MigrationTaskRunner : IRunMigrations
     {
-        private readonly IAccessDb _db;
+        private readonly DbConnection _db;
         private readonly ILogWriter _logger;
 
-        public MigrationTaskRunner(IAccessDb db, ILogWriter logger)
+        public MigrationTaskRunner(DbConnection db, ILogWriter logger)
         {
             _db = db;
             _logger = logger;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using CavemanTools.Logging;
@@ -8,13 +9,13 @@ namespace SqlFu.Migrations.Automatic
 {
     internal class AutomaticMigration : IAutomaticMigration
     {
-        private readonly IAccessDb _db;
+        private readonly DbConnection _db;
         private readonly IManageMigrations _migrations;
         private readonly IRunMigrations _runner;
         internal const string TableName = "SqlFuMigrationTracker";
         internal const string SchemaName = "AutomaticMigration";
 
-        public AutomaticMigration(IAccessDb db, IManageMigrations migrations, ILogWriter logger)
+        public AutomaticMigration(DbConnection db, IManageMigrations migrations, ILogWriter logger)
         {
             _db = db;
             _migrations = migrations;
@@ -73,7 +74,7 @@ namespace SqlFu.Migrations.Automatic
 
             using (var t = _db.BeginTransaction())
             {
-                if (!_db.DatabaseTools.TableExists(TableName))
+                if (!_db.DatabaseTools().TableExists(TableName))
                 {
                     migrator.InstallSchema();
                     AppendVersion(SchemaName, migrator.LatestVersionAvailable);

@@ -14,7 +14,7 @@ namespace Tests.DDL
     {
         protected const string TableName = "abf_test";
         private Stopwatch _t = new Stopwatch();
-        protected DbAccess Db;
+        protected SqlFuConnection Db;
         protected ICreateTable Table;
         protected bool DontDispose;
       
@@ -22,8 +22,6 @@ namespace Tests.DDL
         public CommonCreateTableTests()
         {
             Db = Setup.GetDb(engine: Engine);
-            Db.KeepAlive = true;
-            
             SetupTable();
         }
 
@@ -141,7 +139,7 @@ namespace Tests.DDL
             var ddl = Db.DatabaseTools.GetCreateTableBuilder(TableName, IfTableExists.Ignore);
             ddl.Columns.Add("sid", DbType.Int32);
             Assert.DoesNotThrow(() => ddl.ExecuteDDL());
-            var cnt = Db.FirstOrDefault<dynamic>("select * from " + Db.Provider.EscapeName(TableName));
+            var cnt = Db.QuerySingle<dynamic>("select * from " + Db.Provider.EscapeName(TableName));
             Assert.Equal("aha", cnt.Name);
         }
 

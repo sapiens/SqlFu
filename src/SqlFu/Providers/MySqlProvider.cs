@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using SqlFu.DDL;
 using SqlFu.DDL.Generators.MySql;
@@ -31,14 +32,11 @@ namespace SqlFu.Providers
             return "`" + s + "`";            
         }
 
-        public override LastInsertId ExecuteInsert(SqlStatement sql, string idKey)
+        public override LastInsertId ExecuteInsert(DbCommand cmd, string idKey)
         {
-            sql.Sql += ";SELECT LAST_INSERT_ID()";
-            using (sql)
-            {
-                var rez = sql.ExecuteScalar();
-                return new LastInsertId(rez);
-            }
+            cmd.CommandText += ";SELECT LAST_INSERT_ID()";
+            var rez = cmd.ExecuteScalar();
+            return new LastInsertId(rez);            
         }
 
         public override void SetupParameter(IDbDataParameter param, string name, object value)
@@ -67,7 +65,7 @@ namespace SqlFu.Providers
             get { return new MySqlBuilderHelper();}
         }
 
-        protected override IDatabaseTools InitTools(DbAccess db)
+        protected override IDatabaseTools InitTools(SqlFuConnection db)
         {
             return new MysqlDatabaseTools(db);
         }
@@ -77,8 +75,8 @@ namespace SqlFu.Providers
             int formidx;
             var body = GetPagingBody(sql, out formidx);
             countSql = "select count(*) " + body;
-            selecSql = string.Format("{0} limit @{1},@{2}", sql, PagedSqlStatement.SkipParameterName,
-                                     PagedSqlStatement.TakeParameterName);
+            selecSql = string.Format("{0} limit @{1},@{2}", sql, PreparePagedStatement.SkipParameterName,
+                                     PreparePagedStatement.TakeParameterName);
         }
 
         public override string ParamPrefix
