@@ -53,7 +53,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SqlFu45\SqlFu45.csproj">
+    <ProjectReference Include="..\SqlFu\SqlFu45.csproj">
       <Project>{cb60cde9-9ba9-4907-93a6-1ea4dfd9af58}</Project>
       <Name>SqlFu45</Name>
     </ProjectReference>
