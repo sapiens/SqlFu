@@ -2,10 +2,10 @@
 
 namespace SqlFu.Providers
 {
-    public abstract class CommonBuilderHelper:IDbProviderExpressionHelper
+    public abstract class CommonBuilderHelper : IDbProviderExpressionHelper
     {
         public abstract string EscapeName(string s);
-      
+
         public virtual string FormatBoolean(bool value)
         {
             return value ? "1" : "0";

@@ -49,7 +49,7 @@ namespace SqlFu.Providers
         /// </summary>
         public override IDbProviderExpressionHelper BuilderHelper
         {
-            get { return new SqliteBuilderHelper();}
+            get { return new SqliteBuilderHelper(); }
         }
 
         protected override IDatabaseTools InitTools(SqlFuConnection db)
@@ -74,7 +74,7 @@ namespace SqlFu.Providers
             {
                 cmd.CommandText += ";SELECT last_insert_rowid()";
                 var rez = cmd.ExecuteScalar();
-                return new LastInsertId(rez);                
+                return new LastInsertId(rez);
             }
             cmd.Execute();
             return LastInsertId.Empty;

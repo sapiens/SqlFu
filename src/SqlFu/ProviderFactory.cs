@@ -17,8 +17,8 @@ namespace SqlFu
                     return new MySqlProvider();
                 case PostgresProvider.ProviderName:
                     return new PostgresProvider();
-                //case OracleProvider.ProviderName:
-                //    return new OracleProvider();
+                    //case OracleProvider.ProviderName:
+                    //    return new OracleProvider();
                 case SqlServerCEProvider.ProviderName:
                     return new SqlServerCEProvider();
                 case SqliteProvider.ProviderName:
@@ -35,12 +35,12 @@ namespace SqlFu
                 return sqlfu.Provider;
             }
             var type = cnx.GetType().Name;
-            
+
             if (type.Equals("SqlConnection", StringComparison.InvariantCultureIgnoreCase))
             {
                 return new SqlServerProvider();
             }
-            
+
             if (type.StartsWith("MySql"))
             {
                 return new MySqlProvider();
@@ -50,12 +50,12 @@ namespace SqlFu
             {
                 return new PostgresProvider();
             }
-            
+
             if (type.StartsWith("SQLite"))
             {
                 return new SqliteProvider();
             }
-            
+
             if (type.Equals("SqlCeConnection", StringComparison.InvariantCultureIgnoreCase))
             {
                 return new SqlServerCEProvider();
@@ -63,6 +63,7 @@ namespace SqlFu
 
             throw new NotSupportedException();
         }
+
         public static IHaveDbProvider GetProvider(DbEngine engine)
         {
             switch (engine)
@@ -75,8 +76,8 @@ namespace SqlFu
                     return new MySqlProvider();
                 case DbEngine.PostgreSQL:
                     return new PostgresProvider();
-                //case DbEngine.Oracle:
-                //    return new OracleProvider();
+                    //case DbEngine.Oracle:
+                    //    return new OracleProvider();
                 case DbEngine.SQLite:
                     return new SqliteProvider();
             }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Dynamic;
 using System.Linq;
@@ -13,7 +12,6 @@ namespace SqlFu
 {
     public static class QueryHelpers
     {
-        
         /// <summary>
         /// Gets one object, selected by id and an optional predicate
         /// </summary>
@@ -23,11 +21,12 @@ namespace SqlFu
         /// <param name="additionalPredicate"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static T Get<T>(this DbConnection db,object id, string additionalPredicate = null, params object[] args) where T:new()
+        public static T Get<T>(this DbConnection db, object id, string additionalPredicate = null, params object[] args)
+            where T : new()
         {
             id.MustNotBeNull("id");
-            var tp = typeof(T);
-            if (typeof(ExpandoObject) == tp || typeof(object) == tp)
+            var tp = typeof (T);
+            if (typeof (ExpandoObject) == tp || typeof (object) == tp)
                 throw new InvalidOperationException("Can't work with System.Object or dynamic types");
             var provider = db.GetProvider();
             var ti = TableInfo.ForType(tp);
@@ -53,10 +52,9 @@ namespace SqlFu
             fargs.Add(id);
             fargs.AddRange(args);
             return db.QuerySingle<T>(ti.SelectSingleSql, fargs.ToArray());
-         
         }
 
-        public static IEnumerable<T> QueryTop<T>(this DbConnection db,int take, string sql, params object[] args)
+        public static IEnumerable<T> QueryTop<T>(this DbConnection db, int take, string sql, params object[] args)
         {
             var r = db.PagedQuery<T>(0, take, sql, args);
             return r.Items;
@@ -69,7 +67,7 @@ namespace SqlFu
         /// <param name="db"></param>
         /// <param name="condition"></param>
         /// <returns></returns>
-        public static T Get<T>(this DbConnection db,Expression<Func<T,bool>> condition) where T : new()
+        public static T Get<T>(this DbConnection db, Expression<Func<T, bool>> condition) where T : new()
         {
             var builder = new ExpressionSqlBuilder<T>(db.GetProvider().BuilderHelper);
             builder
@@ -80,15 +78,15 @@ namespace SqlFu
             return db.QuerySingle<T>(builder.ToString(), builder.Parameters.ToArray());
         }
 
-         /// <summary>
+        /// <summary>
         /// Selects first row matching criteria and maps it to poco
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="db"></param>
         /// <param name="condition"></param>
         /// <returns></returns>
-        public static IEnumerable<T> Query<T>(this DbConnection db,Expression<Func<T,bool>> condition) where T : new()
-         {
+        public static IEnumerable<T> Query<T>(this DbConnection db, Expression<Func<T, bool>> condition) where T : new()
+        {
             var builder = new ExpressionSqlBuilder<T>(db.GetProvider().BuilderHelper);
             builder
                 .WriteSelect()
@@ -108,7 +106,7 @@ namespace SqlFu
         /// <param name="criteria">Selection criteria</param>
         /// <returns></returns>
         public static R GetColumnValue<T, R>(this DbConnection db, Expression<Func<T, R>> selector,
-                                       Expression<Func<T, bool>> criteria)
+                                             Expression<Func<T, bool>> criteria)
         {
             selector.MustNotBeNull();
             var builder = new ExpressionSqlBuilder<T>(db.GetProvider().BuilderHelper);
@@ -121,7 +119,7 @@ namespace SqlFu
             return db.GetValue<R>(builder.ToString(), builder.Parameters.ToArray());
         }
 
-        public static long Count<T>(this DbConnection db, Expression<Func<T, bool>> criteria=null)
+        public static long Count<T>(this DbConnection db, Expression<Func<T, bool>> criteria = null)
         {
             var builder = new ExpressionSqlBuilder<T>(db.GetProvider().BuilderHelper);
             builder.Append("select count(*) from ").WriteTableName();
@@ -139,7 +137,7 @@ namespace SqlFu
         /// <param name="db"></param>
         /// <param name="criteria"></param>
         /// <returns></returns>
-        public static bool HasAnyRows<T>(this DbConnection db, Expression<Func<T, bool>> criteria=null)
+        public static bool HasAnyRows<T>(this DbConnection db, Expression<Func<T, bool>> criteria = null)
         {
             var builder = new ExpressionSqlBuilder<T>(db.GetProvider().BuilderHelper);
             builder
@@ -151,12 +149,10 @@ namespace SqlFu
             {
                 builder.Where(criteria);
             }
-                builder.Append(")");
+            builder.Append(")");
             var r = db.GetValue<int?>(builder.ToString(), builder.Parameters.ToArray());
             if (r.HasValue) return true;
             return false;
         }
     }
-
-
 }

@@ -1,23 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.Common;
-using System.Dynamic;
-using System.Linq;
-using System.Text;
-using CavemanTools.Model;
 using SqlFu.DDL;
-using SqlFu.Internals;
 
 namespace SqlFu
 {
-    public class SqlFuConnection:DbConnection
+    public class SqlFuConnection : DbConnection
     {
         internal SqlFuConnection()
         {
             var cnx = ConfigurationManager.ConnectionStrings[0];
-            if (cnx == null) throw new InvalidOperationException("I need a connection! Either call SqlFu.ConnectionStringIs() method or define a connection in config file. If there are more than one connection defined, call SqlFu.ConnectionNameIs() method");
+            if (cnx == null)
+                throw new InvalidOperationException(
+                    "I need a connection! Either call SqlFu.ConnectionStringIs() method or define a connection in config file. If there are more than one connection defined, call SqlFu.ConnectionNameIs() method");
 
             Init(cnx.ConnectionString, ProviderFactory.GetProviderByName(cnx.ProviderName));
         }
@@ -25,7 +21,9 @@ namespace SqlFu
         public SqlFuConnection(string connectionStringName)
         {
             var cnx = ConfigurationManager.ConnectionStrings[connectionStringName];
-            if (cnx == null) throw new InvalidOperationException("Can't find connection '{0}' in the configuration file.".ToFormat(connectionStringName));
+            if (cnx == null)
+                throw new InvalidOperationException(
+                    "Can't find connection '{0}' in the configuration file.".ToFormat(connectionStringName));
 
             Init(cnx.ConnectionString, ProviderFactory.GetProviderByName(cnx.ProviderName));
         }
@@ -52,16 +50,15 @@ namespace SqlFu
             _provider = provider;
             _conex = _provider.CreateConnection();
             _conex.ConnectionString = cnxString;
-            Connection.Open();      
+            Connection.Open();
         }
 
-      
+
         public StoredProcedureResult ExecuteStoredProcedure(string sprocName, object arguments = null)
         {
             return Connection.ExecuteStoredProcedure(sprocName, arguments);
         }
 
-       
 
         public IDatabaseTools DatabaseTools
         {
@@ -85,7 +82,6 @@ namespace SqlFu
         //    }
         //}
 
-       
 
         public IHaveDbProvider Provider
         {
@@ -197,10 +193,10 @@ namespace SqlFu
             var cmd = Connection.CreateCommand();
             if (_trans != null) cmd.Transaction = _trans;
             return cmd;
-        } 
+        }
+
         #endregion
 
-       
         #region Transaction support
 
         private int _tLevel;
@@ -238,7 +234,7 @@ namespace SqlFu
             {
                 _trans.Commit();
                 _trans = null;
-            }            
+            }
         }
 
         internal void Rollback()
@@ -247,7 +243,7 @@ namespace SqlFu
             {
                 _trans.Dispose();
                 _trans = null;
-                _tLevel = 0;                
+                _tLevel = 0;
             }
         }
 
@@ -269,14 +265,13 @@ namespace SqlFu
 
             protected override void Dispose(bool disposing)
             {
-              if (disposing)
-              {
-                  if (_db != null)
-                  {
-                      Rollback();
-                  }  
-              }
-                
+                if (disposing)
+                {
+                    if (_db != null)
+                    {
+                        Rollback();
+                    }
+                }
             }
 
             public override void Commit()
@@ -312,8 +307,7 @@ namespace SqlFu
         #endregion
 
         #endregion
-        
-    
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -326,9 +320,8 @@ namespace SqlFu
                     }
                     Connection.Dispose();
                     _conex = null;
-                }    
-            }            
-            
+                }
+            }
         }
     }
 }

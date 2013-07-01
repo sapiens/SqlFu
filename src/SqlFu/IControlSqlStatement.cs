@@ -15,12 +15,12 @@ namespace SqlFu
         IControlSqlStatement Apply(Action<DbCommand> action);
     }
 
-    public class ControlledQueryStatement:IControlSqlStatement,IDisposable
+    public class ControlledQueryStatement : IControlSqlStatement, IDisposable
     {
-       private DbCommand _cmd;
+        private DbCommand _cmd;
 
-        public ControlledQueryStatement(DbConnection cnx,string sql,params object[] args)
-        {         
+        public ControlledQueryStatement(DbConnection cnx, string sql, params object[] args)
+        {
             _cmd = cnx.CreateCommand();
             var statment = new PrepareStatement(cnx.GetProvider(), sql, args);
             statment.Setup(Command);
@@ -28,7 +28,7 @@ namespace SqlFu
 
         public DbCommand Command
         {
-            get { return _cmd; }          
+            get { return _cmd; }
         }
 
         public bool Reusable { get; set; }
@@ -56,14 +56,14 @@ namespace SqlFu
 
         public T QuerySingle<T>(Func<IDataReader, T> mapper = null)
         {
-            var rez = Command.Fetch(mapper,true);
+            var rez = Command.Fetch(mapper, true);
             if (!Reusable) Dispose();
             return rez.FirstOrDefault();
         }
 
         public IControlSqlStatement Apply(Action<DbCommand> action)
         {
-           action.MustNotBeNull();
+            action.MustNotBeNull();
             action(Command);
             return this;
         }

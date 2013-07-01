@@ -17,6 +17,7 @@ namespace SqlFu
         void MakePaged(string sql, out string selecSql, out string countSql);
 
         void SetupParameter(IDbDataParameter param, string name, object value);
+
         /// <summary>
         /// Replaces @ with provider parameter prefix
         /// </summary>
@@ -24,9 +25,11 @@ namespace SqlFu
         /// <param name="paramNames"></param>
         /// <returns></returns>
         string FormatSql(string sql, params string[] paramNames);
+
         void OnCommandExecuting(IDbCommand cmd);
         DbEngine ProviderType { get; }
         IDatabaseTools GetTools(SqlFuConnection db);
+
         /// <summary>
         /// Gets expression query builder helpers for the rdbms.
         /// Internal usage

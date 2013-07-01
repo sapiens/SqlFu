@@ -14,18 +14,18 @@ namespace SqlFu
         int Execute();
     }
 
-    internal class UpdateTableBuilder<T>:IBuildUpdateTable<T>
+    internal class UpdateTableBuilder<T> : IBuildUpdateTable<T>
     {
         private readonly DbConnection _db;
-        private ExpressionSqlBuilder<T> _builder;
+        private readonly ExpressionSqlBuilder<T> _builder;
 
-       public UpdateTableBuilder(DbConnection db)
+        public UpdateTableBuilder(DbConnection db)
         {
             db.MustNotBeNull();
             _db = db;
             _builder = new ExpressionSqlBuilder<T>(db.GetProvider().BuilderHelper);
-           _builder.Append("update ").WriteTableName();
-           _builder.Append(" set");
+            _builder.Append("update ").WriteTableName();
+            _builder.Append(" set");
         }
 
         public IBuildUpdateTable<T> Set(Expression<Func<T, object>> column, Expression<Func<T, object>> statement)
@@ -61,7 +61,7 @@ namespace SqlFu
             _builder.EndEnumeration();
             return _builder.ToString();
         }
-        
+
         public object[] GetParameters()
         {
             return _builder.Parameters.ToArray();

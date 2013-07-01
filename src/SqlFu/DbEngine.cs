@@ -7,7 +7,7 @@ namespace SqlFu
         SqlServerCE,
         MySql,
         PostgreSQL,
-       // Oracle,
+        // Oracle,
         SQLite
     }
 }

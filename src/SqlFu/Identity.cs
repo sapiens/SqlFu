@@ -12,7 +12,7 @@ namespace SqlFu
         {
             long hash = t.GetHashCode();
 
-            hash = hash * 17 + sql.GetHashCode();
+            hash = hash*17 + sql.GetHashCode();
             return hash;
         }
 
@@ -26,14 +26,14 @@ namespace SqlFu
             sb.AppendFormat("<={0}", sql);
 #endif
             var fields = rd.FieldCount;
-                for (int i = 0; i < fields; i++)
-                {
-                    _hash = _hash*23 + rd.GetFieldType(i).GetHashCode();
+            for (int i = 0; i < fields; i++)
+            {
+                _hash = _hash*23 + rd.GetFieldType(i).GetHashCode();
 #if DEBUG
-                    //  sb.Append("-" + rd.GetFieldType(i));
+                //  sb.Append("-" + rd.GetFieldType(i));
 #endif
-                }
-           
+            }
+
 #if DEBUG
             _toString = sb.ToString();
 #else

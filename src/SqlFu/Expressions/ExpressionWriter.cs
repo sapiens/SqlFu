@@ -6,10 +6,10 @@ using System.Text;
 
 namespace SqlFu.Expressions
 {
-    public class ExpressionWriter:ExpressionVisitor
+    public class ExpressionWriter : ExpressionVisitor
     {
-        private StringBuilder _sb;
-        private ParametersManager _pm;
+        private readonly StringBuilder _sb;
+        private readonly ParametersManager _pm;
         private readonly IDbProviderExpressionHelper _provider;
 
         public ExpressionWriter(StringBuilder sb, IDbProviderExpressionHelper provider, ParametersManager pm = null)
@@ -18,7 +18,7 @@ namespace SqlFu.Expressions
             _sb = sb;
             if (pm == null)
             {
-                pm=new ParametersManager();
+                pm = new ParametersManager();
             }
             _pm = pm;
             _provider = provider;
@@ -38,20 +38,20 @@ namespace SqlFu.Expressions
                     Visit(node.Operand);
                     break;
                 case ExpressionType.Not:
-                  if (node.Operand.BelongsToParameter())
-                  {
-                      if (node.Operand.NodeType == ExpressionType.MemberAccess)
-                      {
-                          var oper = node.Operand as MemberExpression;
-                          if (oper.Type == typeof (bool))
-                          {
-                              var nex = EqualityFromUnary(node);
-                              Visit(nex);
-                              break;
-                          }
-                      }
-                  }
-                    
+                    if (node.Operand.BelongsToParameter())
+                    {
+                        if (node.Operand.NodeType == ExpressionType.MemberAccess)
+                        {
+                            var oper = node.Operand as MemberExpression;
+                            if (oper.Type == typeof (bool))
+                            {
+                                var nex = EqualityFromUnary(node);
+                                Visit(nex);
+                                break;
+                            }
+                        }
+                    }
+
                     //if (node.Operand is ConstantExpression)
                     //{
                     //    var oper = node.Operand as ConstantExpression;
@@ -61,28 +61,28 @@ namespace SqlFu.Expressions
                     //        break;
                     //    }
                     //}
-                  
-                       _sb.Append("not ");
-                  
+
+                    _sb.Append("not ");
+
                     Visit(node.Operand);
                     break;
             }
-            
+
             return node;
         }
 
-        Expression EqualityFromUnary(UnaryExpression node)
+        private Expression EqualityFromUnary(UnaryExpression node)
         {
             return Expression.Equal(node.Operand,
                                     Expression.Constant(node.NodeType != ExpressionType.Not));
         }
 
-        Expression EqualityFromBoolProperty(Expression left,bool value)
+        private Expression EqualityFromBoolProperty(Expression left, bool value)
         {
-            return Expression.Equal(left, Expression.Constant(value));            
+            return Expression.Equal(left, Expression.Constant(value));
         }
 
-        
+
         protected override Expression VisitBinary(BinaryExpression node)
         {
             string op = "";
@@ -95,18 +95,19 @@ namespace SqlFu.Expressions
                     op = "or";
                     break;
                 case ExpressionType.Equal:
-                   if (node.Right.IsNullUnaryOrConstant())
-                   {
-                       op = "is";
-                       break;
-                   }
+                    if (node.Right.IsNullUnaryOrConstant())
+                    {
+                        op = "is";
+                        break;
+                    }
                     op = "=";
                     break;
                 case ExpressionType.GreaterThan:
                     op = ">";
                     break;
                 case ExpressionType.GreaterThanOrEqual:
-                    op = ">=";break;
+                    op = ">=";
+                    break;
                 case ExpressionType.LessThan:
                     op = "<";
                     break;
@@ -120,9 +121,9 @@ namespace SqlFu.Expressions
                         op = "is not";
                         break;
                     }
-                    
+
                     op = "<>";
-                    break;   
+                    break;
                 case ExpressionType.Add:
                     op = "+";
                     break;
@@ -136,16 +137,17 @@ namespace SqlFu.Expressions
                     op = "/";
                     break;
 
-                default:throw new NotSupportedException();
+                default:
+                    throw new NotSupportedException();
             }
             _sb.Append("(");
             if (ContinueAfterParameterBoolProperty(node.NodeType, node.Left))
             {
                 Visit(node.Left);
-            }            
-            _sb.Append(" "+op+" ");
-           
-            if (ContinueAfterParameterBoolProperty(node.NodeType,node.Right))
+            }
+            _sb.Append(" " + op + " ");
+
+            if (ContinueAfterParameterBoolProperty(node.NodeType, node.Right))
             {
                 Visit(node.Right);
             }
@@ -153,14 +155,14 @@ namespace SqlFu.Expressions
             return node;
         }
 
-        bool ContinueAfterParameterBoolProperty(ExpressionType type,Expression node)
+        private bool ContinueAfterParameterBoolProperty(ExpressionType type, Expression node)
         {
             if ((type == ExpressionType.AndAlso || type == ExpressionType.OrElse) && node.BelongsToParameter())
             {
                 if (node is MemberExpression)
                 {
                     var prop = node as MemberExpression;
-                    if (prop.Type == typeof(bool))
+                    if (prop.Type == typeof (bool))
                     {
                         var nex = Expression.Equal(prop, Expression.Constant(true));
                         Visit(nex);
@@ -172,7 +174,7 @@ namespace SqlFu.Expressions
                     if (node is UnaryExpression)
                     {
                         var un = node as UnaryExpression;
-                        if (un.Operand.Type == typeof(bool))
+                        if (un.Operand.Type == typeof (bool))
                         {
                             var nex = EqualityFromUnary(un);
                             Visit(nex);
@@ -203,9 +205,7 @@ namespace SqlFu.Expressions
                     {
                         _sb.Append(node.Value);
                     }
-                    
                 }
-                
             }
             else
             {
@@ -222,9 +222,8 @@ namespace SqlFu.Expressions
             }
             else
             {
-                _sb.Append("@"+Parameters.CurrentIndex);
+                _sb.Append("@" + Parameters.CurrentIndex);
                 Parameters.RegisterParameter(node.GetValue());
-                
             }
             return node;
         }
@@ -252,40 +251,40 @@ namespace SqlFu.Expressions
 
         private void HandleParameter(MethodCallExpression node)
         {
-          if (node.HasParameterArgument())
-          {
-              if (node.Method.Name == "Contains")
-              {
-                  HandleContains(node);
-                  return;
-              }
-              throw new NotSupportedException();
-          }
+            if (node.HasParameterArgument())
+            {
+                if (node.Method.Name == "Contains")
+                {
+                    HandleContains(node);
+                    return;
+                }
+                throw new NotSupportedException();
+            }
 
-          if (node.BelongsToParameter())
-          {
-              if (node.Object.Type == typeof (string))
-              {
-                  HandleParamStringFunctions(node);
-              }
-          }
+            if (node.BelongsToParameter())
+            {
+                if (node.Object.Type == typeof (string))
+                {
+                    HandleParamStringFunctions(node);
+                }
+            }
         }
 
-        void HandleParamStringFunctions(MethodCallExpression node)
+        private void HandleParamStringFunctions(MethodCallExpression node)
         {
             var name = node.Object.As<MemberExpression>().Member.Name;
             var arg = node.Arguments[0].GetValue();
-            string value=null;
+            string value = null;
             switch (node.Method.Name)
             {
                 case "StartsWith":
-                    value = "{0} like '{1}%'".ToFormat(_provider.EscapeName(name),arg);
+                    value = "{0} like '{1}%'".ToFormat(_provider.EscapeName(name), arg);
                     break;
                 case "EndsWith":
-                    value = "{0} like '%{1}'".ToFormat(_provider.EscapeName(name),arg);
+                    value = "{0} like '%{1}'".ToFormat(_provider.EscapeName(name), arg);
                     break;
                 case "Contains":
-                    value = "{0} like '%{1}%'".ToFormat(_provider.EscapeName(name),arg);
+                    value = "{0} like '%{1}%'".ToFormat(_provider.EscapeName(name), arg);
                     break;
                 case "ToUpper":
                 case "ToUpperInvariant":
@@ -296,14 +295,14 @@ namespace SqlFu.Expressions
                     value = _provider.ToLower(name);
                     break;
                 case "Substring":
-                    value = _provider.Substring(name, (int)arg, (int)node.Arguments[1].GetValue());
+                    value = _provider.Substring(name, (int) arg, (int) node.Arguments[1].GetValue());
                     break;
             }
-            
+
             _sb.Append(value);
         }
 
-        void HandleContains(MethodCallExpression meth)
+        private void HandleContains(MethodCallExpression meth)
         {
             IList list = null;
             int pIdx = 1;
@@ -316,22 +315,22 @@ namespace SqlFu.Expressions
             {
                 list = meth.Arguments[0].GetValue().As<IList>();
             }
-            
+
             if (list == null)
             {
                 throw new NotSupportedException("Contains must be invoked on a IList (array or List)");
-            } 
+            }
             var param = meth.Arguments[pIdx].As<MemberExpression>();
-            
-            _sb.Append(_provider.EscapeName(param.Member.Name)).AppendFormat(" in (@{0})",Parameters.CurrentIndex);
+
+            _sb.Append(_provider.EscapeName(param.Member.Name)).AppendFormat(" in (@{0})", Parameters.CurrentIndex);
             Parameters.RegisterParameter(list);
         }
 
-        void HandleParameter(UnaryExpression node)
+        private void HandleParameter(UnaryExpression node)
         {
             if (node.NodeType == ExpressionType.MemberAccess)
             {
-                HandleParameter(node.Operand.As<MemberExpression>(),true);
+                HandleParameter(node.Operand.As<MemberExpression>(), true);
             }
             else
             {
@@ -339,7 +338,7 @@ namespace SqlFu.Expressions
             }
         }
 
-        void HandleParameter(MemberExpression node,bool isSingle=false)
+        private void HandleParameter(MemberExpression node, bool isSingle = false)
         {
             if (node.BelongsToParameter())
             {
@@ -369,7 +368,7 @@ namespace SqlFu.Expressions
         /// Used to for properties that can be translated into db functions
         /// </summary>
         /// <param name="node"></param>
-        void HandleParameterSubProperty(MemberExpression node)
+        private void HandleParameterSubProperty(MemberExpression node)
         {
             if (node.Expression.Type == typeof (string))
             {
@@ -377,7 +376,7 @@ namespace SqlFu.Expressions
                 return;
             }
 
-            if (node.Expression.Type == typeof (DateTime) || node.Expression.Type==typeof(DateTimeOffset))
+            if (node.Expression.Type == typeof (DateTime) || node.Expression.Type == typeof (DateTimeOffset))
             {
                 HandleDateTimeProperties(node);
                 return;
@@ -385,7 +384,7 @@ namespace SqlFu.Expressions
         }
 
 
-        void HandleStringProperties(MemberExpression node)
+        private void HandleStringProperties(MemberExpression node)
         {
             var name = node.Expression.As<MemberExpression>().Member.Name;
             switch (node.Member.Name)
@@ -396,7 +395,7 @@ namespace SqlFu.Expressions
             }
         }
 
-        void HandleDateTimeProperties(MemberExpression node)
+        private void HandleDateTimeProperties(MemberExpression node)
         {
             var name = node.Expression.GetPropertyName();
             switch (node.Member.Name)
@@ -419,7 +418,7 @@ namespace SqlFu.Expressions
                 switch (criteria.Body.NodeType)
                 {
                     case ExpressionType.MemberAccess:
-                        HandleParameter(criteria.Body.As<MemberExpression>(),true);
+                        HandleParameter(criteria.Body.As<MemberExpression>(), true);
                         return;
                     case ExpressionType.Not:
                         HandleParameter(criteria.Body.As<UnaryExpression>());
@@ -450,13 +449,13 @@ namespace SqlFu.Expressions
 
     public class ParametersManager
     {
-        List<object>_params=new List<object>();
+        private readonly List<object> _params = new List<object>();
+
         public object[] ToArray()
         {
-             return _params.ToArray(); 
+            return _params.ToArray();
         }
 
-     
 
         /// <summary>
         /// param position
@@ -468,7 +467,7 @@ namespace SqlFu.Expressions
 
         public void RegisterParameter(object value)
         {
-            _params.Add(value);             
+            _params.Add(value);
         }
     }
 }

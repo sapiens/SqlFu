@@ -15,12 +15,11 @@ namespace SqlFu.Providers.SqlServer
 
         public override LastInsertId ExecuteInsert(DbCommand cmd, string idKey)
         {
-           cmd.Execute();
-           cmd.Reset();
+            cmd.Execute();
+            cmd.Reset();
             cmd.CommandText = "select @@IDENTITY as id";
             var rez = cmd.ExecuteScalar();
             return new LastInsertId(rez);
-            
         }
 
         public override void MakePaged(string sql, out string selecSql, out string countSql)
@@ -45,10 +44,7 @@ namespace SqlFu.Providers.SqlServer
 
         public override IDbProviderExpressionHelper BuilderHelper
         {
-            get
-            {
-                return new SqlServerCEBuilderHelper();
-            }
+            get { return new SqlServerCEBuilderHelper(); }
         }
     }
 }

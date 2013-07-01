@@ -43,7 +43,7 @@ namespace SqlFu.Providers.SqlServer
         /// </summary>
         public override IDbProviderExpressionHelper BuilderHelper
         {
-            get { return new SqlServerBuilderHelper();}
+            get { return new SqlServerBuilderHelper(); }
         }
 
         protected override IDatabaseTools InitTools(SqlFuConnection db)
@@ -69,9 +69,9 @@ namespace SqlFu.Providers.SqlServer
                 return s;
 
             //Single part identifier can be returned as is.
-            if (!s.Contains(".")) 
+            if (!s.Contains("."))
                 return "[" + s + "]";
-            
+
             //multipart identifier has to be escaped separately.
             return string.Join(".", s.Split('.').Select(d => "[" + d + "]"));
         }
@@ -81,7 +81,8 @@ namespace SqlFu.Providers.SqlServer
                 @"\bORDER\s+BY\s+(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\w\(\)\.])+(?:\s+(?:ASC|DESC))?(?:\s*,\s*(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\w\(\)\.])+(?:\s+(?:ASC|DESC))?)*",
                 RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Singleline | RegexOptions.Compiled);
 
-        private static readonly ConcurrentDictionary<int, PagingInfo> PagingCache= new ConcurrentDictionary<int, PagingInfo>();
+        private static readonly ConcurrentDictionary<int, PagingInfo> PagingCache =
+            new ConcurrentDictionary<int, PagingInfo>();
 
         public override void MakePaged(string sql, out string selecSql, out string countSql)
         {
@@ -113,7 +114,8 @@ namespace SqlFu.Providers.SqlServer
                 string.Format(
                     @"SELECT {1} FROM 
 (SELECT ROW_NUMBER() OVER ({0}) sqlfu_rn, {1} {2}) 
-sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, body, PreparePagedStatement.SkipParameterName,
+sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, body,
+                    PreparePagedStatement.SkipParameterName,
                     PreparePagedStatement.TakeParameterName);
             //cache it
             info = new PagingInfo();
@@ -126,7 +128,7 @@ sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, bo
         {
             base.SetupParameter(param, name, value);
             if (value == null) return;
-            
+
             var tp = value.GetType();
             if (tp == typeof (string))
             {
@@ -149,10 +151,9 @@ sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, bo
         public override LastInsertId ExecuteInsert(DbCommand cmd, string idKey)
         {
             cmd.CommandText += ";Select SCOPE_IDENTITY() as id";
-            
+
             var rez = cmd.ExecuteScalar();
             return new LastInsertId(rez);
-            
         }
 
         public const string ParameterPrefix = "@";

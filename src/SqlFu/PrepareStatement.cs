@@ -7,7 +7,7 @@ using System.Text;
 
 namespace SqlFu
 {
-    class PrepareStatement
+    internal class PrepareStatement
     {
         protected readonly IHaveDbProvider Provider;
         protected string _sql;
@@ -79,7 +79,6 @@ namespace SqlFu
 
                 ParamNames = pnames.ToArray();
             }
-            
         }
 
         internal static IDictionary<string, object> CreateParamsDictionary(params object[] args)

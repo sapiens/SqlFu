@@ -5,7 +5,6 @@ namespace SqlFu
 {
     public static class ToolsExtensions
     {
-        
         /// <summary>
         /// Drops table specified by type param
         /// </summary>

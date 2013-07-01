@@ -1,5 +1,4 @@
-﻿using System.Data.Common;
-using System.Text;
+﻿using System.Text;
 using SqlFu.DDL.Internals;
 using SqlFu.Providers.SqlServer;
 

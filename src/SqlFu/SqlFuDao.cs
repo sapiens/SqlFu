@@ -1,35 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using CavemanTools.Model;
 using SqlFu.DDL;
-using System.Linq;
 
 namespace SqlFu
 {
-   
     public static class SqlFuDao
     {
         public static int ExecuteCommand(this DbConnection cnx, string sql, params object[] args)
         {
             return cnx.Execute(sql, args);
         }
+
         public static int Execute(this DbConnection cnx, string sql, params object[] args)
         {
-            using (var cmd = cnx.CreateAndSetupCommand(sql,args))
+            using (var cmd = cnx.CreateAndSetupCommand(sql, args))
             {
-                
                 return cmd.Execute();
             }
         }
-        
+
         public static T GetValue<T>(this DbConnection cnx, string sql, params object[] args)
         {
-            using (var cmd = cnx.CreateAndSetupCommand(sql,args))
+            using (var cmd = cnx.CreateAndSetupCommand(sql, args))
             {
-
                 return cmd.GetValue(PocoFactory.GetConverter<T>());
             }
         }
@@ -40,9 +37,9 @@ namespace SqlFu
         }
 
 
-        public static IControlSqlStatement WithSql(this DbConnection cnx,string sql, params object[] args)
+        public static IControlSqlStatement WithSql(this DbConnection cnx, string sql, params object[] args)
         {
-            return new ControlledQueryStatement(cnx,sql,args);
+            return new ControlledQueryStatement(cnx, sql, args);
         }
 
         /// <summary>
@@ -53,28 +50,26 @@ namespace SqlFu
         /// <param name="sql"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-         public static T QuerySingle<T>(this DbConnection cnx,string sql, params object[] args) where T:new ()
-         {
-             using (var cmd = cnx.CreateAndSetupCommand(sql, args))
-             {
+        public static T QuerySingle<T>(this DbConnection cnx, string sql, params object[] args) where T : new()
+        {
+            using (var cmd = cnx.CreateAndSetupCommand(sql, args))
+            {
+                return cmd.Fetch<T>(firstRowOnly: true).FirstOrDefault();
+            }
+        }
 
-                 return cmd.Fetch<T>(firstRowOnly:true).FirstOrDefault();
-             }
-         }
+        public static IEnumerable<T> Query<T>(this DbConnection cnx, string sql, params object[] args) where T : new()
+        {
+            return Fetch<T>(cnx, sql, args);
+        }
 
-         public static IEnumerable<T> Query<T>(this DbConnection cnx, string sql, params object[] args) where T:new()
-         {
-             return Fetch<T>(cnx, sql, args);
-         }
-        
-        public static List<T> Fetch<T>(this DbConnection cnx, string sql, params object[] args) where T:new()
-         {
-             using (var cmd = cnx.CreateAndSetupCommand(sql, args))
-             {
-
-                 return cmd.Fetch<T>();
-             }
-         }
+        public static List<T> Fetch<T>(this DbConnection cnx, string sql, params object[] args) where T : new()
+        {
+            using (var cmd = cnx.CreateAndSetupCommand(sql, args))
+            {
+                return cmd.Fetch<T>();
+            }
+        }
 
         internal static DbCommand CreateAndSetupCommand(this DbConnection cnx, string sql, params object[] args)
         {
@@ -86,6 +81,7 @@ namespace SqlFu
         }
 
         #region Settings
+
         public static void ConnectionNameIs(string name)
         {
             name.MustNotBeEmpty();
@@ -108,14 +104,15 @@ namespace SqlFu
 
             if (!connString.IsNullOrEmpty())
             {
-                return new SqlFuConnection(connString,Engine);
+                return new SqlFuConnection(connString, Engine);
             }
-            return new SqlFuConnection();            
+            return new SqlFuConnection();
         }
 
         #endregion
 
         #region Events
+
         private static Action<DbCommand, Exception> _onException = (s, e) => { };
 
         public static Action<DbCommand, Exception> OnException
@@ -157,7 +154,7 @@ namespace SqlFu
         private static Action<DbConnection> _onOpenConex = c => { };
         private static string conexName;
         private static string connString;
-        private static DbEngine Engine=DbEngine.SqlServer;
+        private static DbEngine Engine = DbEngine.SqlServer;
 
         public static Action<DbConnection> OnOpenConnection
         {
@@ -196,6 +193,7 @@ namespace SqlFu
         //        _onEndTransaction = value;
         //    }
         //} 
+
         #endregion
 
         public static IDatabaseTools DatabaseTools(this DbConnection cnx)
@@ -227,7 +225,8 @@ namespace SqlFu
         /// ExecuteStoredProcedure("sprocName",new{Id=1,_OutValue=""})
         /// </example>
         /// <returns></returns>
-        public static StoredProcedureResult ExecuteStoredProcedure(this DbConnection cnx, string sprocName, object arguments)
+        public static StoredProcedureResult ExecuteStoredProcedure(this DbConnection cnx, string sprocName,
+                                                                   object arguments)
         {
             using (var cmd = cnx.CreateCommand())
             {
@@ -296,11 +295,11 @@ namespace SqlFu
                     {
                         rez.LongCount = (long) cnt;
                     }
-                    SqlFuDao.OnCommand(cmd);
+                    OnCommand(cmd);
                 }
                 catch (Exception ex)
                 {
-                    SqlFuDao.OnException(cmd, ex);
+                    OnException(cmd, ex);
                     throw;
                 }
 
@@ -322,12 +321,12 @@ namespace SqlFu
             try
             {
                 rez = cmd.ExecuteScalar();
-                SqlFuDao.OnCommand(cmd);
+                OnCommand(cmd);
                 return converter(rez);
             }
             catch (Exception ex)
             {
-                SqlFuDao.OnException(cmd, ex);
+                OnException(cmd, ex);
                 throw;
             }
         }
@@ -338,18 +337,18 @@ namespace SqlFu
             try
             {
                 rez = cmd.ExecuteNonQuery();
-                SqlFuDao.OnCommand(cmd);
+                OnCommand(cmd);
                 return rez;
             }
             catch (Exception ex)
             {
-                SqlFuDao.OnException(cmd, ex);
+                OnException(cmd, ex);
                 throw;
             }
         }
 
         public static List<T> Fetch<T>(this DbCommand cmd, Func<IDataReader, T> mapper = null,
-                                              bool firstRowOnly = false)
+                                       bool firstRowOnly = false)
         {
             List<T> rez = new List<T>();
 
@@ -358,7 +357,7 @@ namespace SqlFu
                 CommandBehavior behavior = firstRowOnly ? CommandBehavior.SingleRow : CommandBehavior.Default;
                 using (var reader = cmd.ExecuteReader(behavior))
                 {
-                    SqlFuDao.OnCommand(cmd);
+                    OnCommand(cmd);
                     while (reader.Read())
                     {
                         if (mapper == null)
@@ -373,20 +372,15 @@ namespace SqlFu
             }
             catch (DbException ex)
             {
-                SqlFuDao.OnException(cmd, ex);
+                OnException(cmd, ex);
                 throw;
             }
         }
-
 
         #endregion
 
         #region OtherHelpers
 
-
-
         #endregion
-
     }
-
 }

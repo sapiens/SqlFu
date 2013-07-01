@@ -93,7 +93,8 @@ namespace SqlFu
         /// <param name="provider"></param>
         /// <param name="sb"></param>
         /// <returns></returns>
-        private static List<object> FillArgs(IDictionary<string, object> arguments, TableInfo tableInfo, IHaveDbProvider provider,
+        private static List<object> FillArgs(IDictionary<string, object> arguments, TableInfo tableInfo,
+                                             IHaveDbProvider provider,
                                              StringBuilder sb = null)
         {
             var args = new List<object>();
@@ -144,13 +145,14 @@ namespace SqlFu
             var ti = TableInfo.ForType(typeof (T));
             return Update(db, ti, data, id);
         }
-       
-        public static int UpdateWhereColumn(this DbConnection db, string tableName,object data,string colName,object columnValue)
+
+        public static int UpdateWhereColumn(this DbConnection db, string tableName, object data, string colName,
+                                            object columnValue)
         {
             tableName.MustNotBeEmpty();
             colName.MustNotBeEmpty();
             columnValue.MustNotBeNull();
-            return Update(db, new TableInfo(tableName),data, columnValue, colName);
+            return Update(db, new TableInfo(tableName), data, columnValue, colName);
         }
 
         public static int Update<T>(this DbConnection db, object data, Expression<Func<T, bool>> criteria)
@@ -178,7 +180,8 @@ namespace SqlFu
             return new UpdateTableBuilder<T>(db);
         }
 
-        private static int Update(DbConnection db, TableInfo ti, object data, object id = null,string filterColumn=null)
+        private static int Update(DbConnection db, TableInfo ti, object data, object id = null,
+                                  string filterColumn = null)
         {
             var sb = new StringBuilder();
             sb.AppendFormat("update {0} set", db.EscapeIdentifier(ti.Name));
@@ -216,7 +219,7 @@ namespace SqlFu
 
             if (id != null || hasId)
             {
-                sb.AppendFormat(" where {0}={1}", provider.EscapeName(filterColumn),provider.ParamPrefix + i);
+                sb.AppendFormat(" where {0}={1}", provider.EscapeName(filterColumn), provider.ParamPrefix + i);
                 hasId = true;
                 if (id == null) id = d[ti.PrimaryKey];
             }
@@ -228,7 +231,6 @@ namespace SqlFu
 
         #endregion
 
-      
         public static int DeleteFrom<T>(this DbConnection db, string condition, params object[] args)
         {
             var ti = TableInfo.ForType(typeof (T));
@@ -237,7 +239,7 @@ namespace SqlFu
                     string.Format("delete from {0} where {1}", db.GetProvider().EscapeName(ti.Name), condition), args);
         }
 
-        public static int DeleteFrom<T>(this DbConnection db, Expression<Func<T, bool>> criteria=null)
+        public static int DeleteFrom<T>(this DbConnection db, Expression<Func<T, bool>> criteria = null)
         {
             var builder = new ExpressionSqlBuilder<T>(db.GetProvider().BuilderHelper);
             builder.WriteDelete();

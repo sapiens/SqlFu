@@ -61,8 +61,6 @@ namespace SqlFu.Providers
                 {
                     param.Value = value;
                 }
-                
-                
             }
             else
             {
@@ -99,7 +97,7 @@ namespace SqlFu.Providers
         /// Internal usage
         /// </summary>
         public abstract IDbProviderExpressionHelper BuilderHelper { get; }
-      
+
 
         protected abstract IDatabaseTools InitTools(SqlFuConnection db);
     }

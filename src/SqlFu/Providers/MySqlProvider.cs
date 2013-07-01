@@ -25,18 +25,18 @@ namespace SqlFu.Providers
             s.MustNotBeEmpty();
             if (s.Contains("`"))
             {
-                return s;//already escaped
+                return s; //already escaped
             }
             if (s.Contains("."))
-                return string.Join(".", s.Split('.').Select(d => "`" + d + "`"));            
-            return "`" + s + "`";            
+                return string.Join(".", s.Split('.').Select(d => "`" + d + "`"));
+            return "`" + s + "`";
         }
 
         public override LastInsertId ExecuteInsert(DbCommand cmd, string idKey)
         {
             cmd.CommandText += ";SELECT LAST_INSERT_ID()";
             var rez = cmd.ExecuteScalar();
-            return new LastInsertId(rez);            
+            return new LastInsertId(rez);
         }
 
         public override void SetupParameter(IDbDataParameter param, string name, object value)
@@ -62,7 +62,7 @@ namespace SqlFu.Providers
         /// </summary>
         public override IDbProviderExpressionHelper BuilderHelper
         {
-            get { return new MySqlBuilderHelper();}
+            get { return new MySqlBuilderHelper(); }
         }
 
         protected override IDatabaseTools InitTools(SqlFuConnection db)

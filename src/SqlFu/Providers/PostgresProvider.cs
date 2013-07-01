@@ -32,7 +32,7 @@ namespace SqlFu.Providers
         /// </summary>
         public override IDbProviderExpressionHelper BuilderHelper
         {
-            get { return  new PostgresBuilderHelper();}
+            get { return new PostgresBuilderHelper(); }
         }
 
         protected override IDatabaseTools InitTools(SqlFuConnection db)
@@ -80,7 +80,7 @@ namespace SqlFu.Providers
             {
                 cmd.CommandText += (" returning " + EscapeName(idKey));
             }
-            return new LastInsertId(cmd.ExecuteScalar());            
+            return new LastInsertId(cmd.ExecuteScalar());
         }
 
         public override string ParamPrefix

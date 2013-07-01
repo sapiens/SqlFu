@@ -3,7 +3,7 @@ using System.Data.Common;
 
 namespace SqlFu
 {
-    class PreparePagedStatement:PrepareStatement
+    internal class PreparePagedStatement : PrepareStatement
     {
         private readonly long _skip;
         private readonly int _take;
@@ -11,17 +11,20 @@ namespace SqlFu
         public const string SkipParameterName = "_fuskip";
         public const string TakeParameterName = "_futake";
 
-        public PreparePagedStatement(IHaveDbProvider provider,long skip,int take, string sql, params object[] args) : base(provider, sql, args)
+        public PreparePagedStatement(IHaveDbProvider provider, long skip, int take, string sql, params object[] args)
+            : base(provider, sql, args)
         {
             _skip = skip;
             _take = take;
         }
+
         private string _select;
+
         public void SetupCount(DbCommand cmd)
         {
             SetupParameters(cmd);
             var count = "";
-            Provider.MakePaged(_sql,out _select,out count);
+            Provider.MakePaged(_sql, out _select, out count);
             cmd.CommandText = count;
             Format(cmd);
         }
@@ -47,6 +50,5 @@ namespace SqlFu
             lc.Add(TakeParameterName);
             ParamNames = lc.ToArray();
         }
-
     }
 }

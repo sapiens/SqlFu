@@ -10,15 +10,15 @@ namespace SqlFu.Expressions
     public class ExpressionSqlBuilder<T>
     {
         private readonly IDbProviderExpressionHelper _provider;
-        private StringBuilder _sb=new StringBuilder();
-        private ParametersManager _pm=new ParametersManager();
-        private ExpressionWriter _writer;
-        private TableInfo _ti;
+        private readonly StringBuilder _sb = new StringBuilder();
+        private readonly ParametersManager _pm = new ParametersManager();
+        private readonly ExpressionWriter _writer;
+        private readonly TableInfo _ti;
 
         public ExpressionSqlBuilder(IDbProviderExpressionHelper provider)
         {
             _provider = provider;
-            _ti=TableInfo.ForType(typeof(T));
+            _ti = TableInfo.ForType(typeof (T));
             provider.MustNotBeNull();
             _writer = new ExpressionWriter(_sb, provider, _pm);
         }
@@ -35,12 +35,13 @@ namespace SqlFu.Expressions
             return this;
         }
 
-        static string SortToString(SortOrder sort)
+        private static string SortToString(SortOrder sort)
         {
             return sort == SortOrder.Descending ? "desc" : "asc";
         }
 
-        public ExpressionSqlBuilder<T> OrderBy(Expression<Func<T, object>> selector, SortOrder sort=SortOrder.Ascending)
+        public ExpressionSqlBuilder<T> OrderBy(Expression<Func<T, object>> selector,
+                                               SortOrder sort = SortOrder.Ascending)
         {
             if (_order)
             {
@@ -52,8 +53,8 @@ namespace SqlFu.Expressions
             }
 
             var column = selector.Body.GetPropertyName();
-            _sb.AppendFormat("{0} {1}",_provider.EscapeName(column),SortToString(sort));
-            _order = true;             
+            _sb.AppendFormat("{0} {1}", _provider.EscapeName(column), SortToString(sort));
+            _order = true;
             return this;
         }
 
@@ -74,20 +75,20 @@ namespace SqlFu.Expressions
             return this;
         }
 
-        public ExpressionSqlBuilder<T> WriteSelectColumn<R>(Expression<Func<T, R>> selector,string alias=null)
+        public ExpressionSqlBuilder<T> WriteSelectColumn<R>(Expression<Func<T, R>> selector, string alias = null)
         {
             var name = selector.Body.GetPropertyName();
             if (_hasColumn)
             {
-                _sb.Append(", ");                
+                _sb.Append(", ");
             }
             _sb.Append(_provider.EscapeName(name));
             _hasColumn = true;
             if (alias != null)
             {
-                _sb.AppendFormat(" as {0}",alias);
+                _sb.AppendFormat(" as {0}", alias);
             }
-            
+
             return this;
         }
 
@@ -137,7 +138,7 @@ namespace SqlFu.Expressions
             _writer.Write(criteria);
             return this;
         }
-        
+
         public ExpressionSqlBuilder<T> Write(Expression<Func<T, object>> statement)
         {
             _writer.Write(statement);
