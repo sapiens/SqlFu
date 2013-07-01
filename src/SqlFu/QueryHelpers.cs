@@ -79,7 +79,7 @@ namespace SqlFu
         }
 
         /// <summary>
-        /// Selects first row matching criteria and maps it to poco
+        /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="db"></param>

@@ -78,10 +78,12 @@ namespace SqlFu
                 args = FillArgs(arguments, tableInfo, provider);
             }
 
-            var st = new ControlledQueryStatement(db, tableInfo.InsertSql, args.ToArray());
-            st.Reusable = true;
-            LastInsertId rez = db.GetProvider().ExecuteInsert(st.Command, tableInfo.PrimaryKey);
-            st.Dispose();
+            LastInsertId rez;
+            using (var st = new ControlledQueryStatement(db, tableInfo.InsertSql, args.ToArray()))
+            {
+                st.Reusable = true;
+                rez = db.GetProvider().ExecuteInsert(st.Command, tableInfo.PrimaryKey);                
+            }
             return rez;
         }
 

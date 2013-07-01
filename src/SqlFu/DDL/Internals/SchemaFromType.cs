@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Reflection;
 using SqlFu.Internals;
+using System.Linq;
 
 namespace SqlFu.DDL.Internals
 {
@@ -53,7 +54,11 @@ namespace SqlFu.DDL.Internals
 
         private void ProcessIndexes()
         {
+#if !NET45
             var att = _tp.GetCustomAttributes<IndexAttribute>();
+#else
+            var att = _tp.GetCustomAttributes<IndexAttribute>().ToArray();
+#endif
             if (att.Length > 0)
             {
                 foreach (var idx in att)
