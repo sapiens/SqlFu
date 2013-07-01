@@ -38,12 +38,10 @@
     <Reference Include="CavemanTools">
       <HintPath>..\packages\CavemanTools.dll</HintPath>
     </Reference>
-    <Reference Include="Dapper, Version=1.12.1.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Dapper.1.13\lib\net40\Dapper.dll</HintPath>
+    <Reference Include="Dapper">
+      <HintPath>..\packages\Dapper.1.12.1\lib\net40\Dapper.dll</HintPath>
     </Reference>
-    <Reference Include="DapperExtensions, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="DapperExtensions">
       <HintPath>..\packages\DapperExtensions.1.4.1\lib\net40\DapperExtensions.dll</HintPath>
     </Reference>
     <Reference Include="DbExtensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=6b3b4f54da52bca4, processorArchitecture=MSIL">

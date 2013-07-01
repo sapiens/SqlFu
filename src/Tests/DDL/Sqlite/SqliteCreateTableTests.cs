@@ -31,7 +31,7 @@ namespace Tests.DDL.Sqlite
         
         protected override void assert_foreign_key()
         {
-            Db.Insert("ptest", new {Id = 1});
+            Db.Insert("ptest", new {Id = 1},false);
             Db.Insert(TableName, new {parent = 1});
             //needs foreign keys to be enabled, by default sqlite does not enforce it
            Assert.Throws<SQLiteException>(() => Db.Insert("test", new {parent = 2}));

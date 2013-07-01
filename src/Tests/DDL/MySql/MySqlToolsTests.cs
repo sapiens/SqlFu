@@ -33,11 +33,11 @@ create index ix_test on test(name)
         {
             get { return DbEngine.MySql;}
         }
-        [Fact]
-        public override void provider_escape_name()
-        {
-            Assert.Equal("`dbo.table`", MySqlProvider.EscapeIdentifier("dbo.table"));
-        }
+        //[Fact]
+        //public override void provider_escape_name()
+        //{
+        //    Assert.Equal("`dbo.table`", MySqlProvider.EscapeIdentifier("dbo.table"));
+        //}
 
     }
 }

@@ -3,6 +3,7 @@
   <metadata>
     <id>DapperExtensions</id>
     <version>1.4.1</version>
+    <title>DapperExtensions</title>
     <authors>Thad Smith,  Page Brooks</authors>
     <owners>Thad Smith,  Page Brooks</owners>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
@@ -29,6 +30,8 @@
 			* ***BREAKNG CHANGE*** GetPage is now 0 based as intended. SqlCe and SqlServer were working differently.
 			* Added ability to search other assemlies for mappings if not found in same assembly as poco class.
 			* Added ability to add a global property ignore using a callback on AutoMap</releaseNotes>
+    <copyright />
+    <language />
     <tags>orm sql micro-orm Data Dapper</tags>
     <dependencies>
       <dependency id="Dapper" version="1.12" />
