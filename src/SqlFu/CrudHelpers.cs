@@ -164,7 +164,7 @@ namespace SqlFu
             var updater = db.Update<T>();
             foreach (var kv in args)
             {
-                if (ti.PrimaryKey == kv.Value) continue;
+                if (ti.PrimaryKey == kv.Key) continue;
                 if (ti.Excludes.Any(d => d == kv.Key)) continue;
                 updater.Set(kv.Key, kv.Value);
             }
