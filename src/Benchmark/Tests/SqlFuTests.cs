@@ -39,7 +39,7 @@ namespace Benchmark.Tests
         {
             bc.Add(id=>
                        {
-                           _db.Query<sfPosts>("select top 10 * from sfposts where id>@0",5).ToArray();
+                           _db.Query<sfPosts>("select top 10 * from sfposts where id>@0",5);
                        },"SqlFu");
         }
 
@@ -47,7 +47,7 @@ namespace Benchmark.Tests
         {
             bc.Add(id =>
             {
-                _db.Query<dynamic>("select top 10 * from sfposts where id>@0", 5).ToArray();
+                _db.Query<dynamic>("select top 10 * from sfposts where id>@0", 5);
             }, "SqlFu");
         }
 

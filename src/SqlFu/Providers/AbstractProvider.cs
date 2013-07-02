@@ -27,16 +27,7 @@ namespace SqlFu.Providers
             return _factory.CreateConnection();
         }
 
-        //internal static string GetColumnsFromSql(string sql)
-        //{
-        //    var sidx = sql.IndexOf("select", 0, StringComparison.InvariantCultureIgnoreCase);
-        //    if (sidx<0) throw new InvalidPagedSqlException(sql);
-        //    sidx = sidx + 7;
-        //    var fromidx = sql.IndexOf("from", sidx, StringComparison.InvariantCultureIgnoreCase);
-        //    if (fromidx < 0) fromidx = sql.Length;
-        //    return sql.Substring(sidx, fromidx - sidx);
-        //}
-
+    
         internal static string GetPagingBody(string sql, out int fromidx)
         {
             fromidx = sql.IndexOf("from", 0, StringComparison.InvariantCultureIgnoreCase);
@@ -50,7 +41,7 @@ namespace SqlFu.Providers
         public virtual void SetupParameter(IDbDataParameter param, string name, object value)
         {
             if (name == null) name = "";
-            param.ParameterName = ParamPrefix + name;
+            param.ParameterName = string.Concat(ParamPrefix, name);
             if (value != null)
             {
                 if (value.GetType().IsEnum)

@@ -124,24 +124,36 @@ sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, bo
             PagingCache.TryAdd(key, info);
         }
 
+
+        static ConcurrentDictionary<Type,Tuple<bool,bool,bool>> _meta=new ConcurrentDictionary<Type, Tuple<bool, bool, bool>>();
+
         public override void SetupParameter(IDbDataParameter param, string name, object value)
         {
             base.SetupParameter(param, name, value);
             if (value == null) return;
-
+            
             var tp = value.GetType();
-            if (tp == typeof (string))
+
+            Tuple<bool, bool, bool> meta;
+
+            if (!_meta.TryGetValue(tp, out meta))
+            {
+                meta = new Tuple<bool, bool, bool>(tp == typeof(string), tp.Name == "SqlGeography", tp.Name == "SqlGeometry");
+                _meta.TryAdd(tp, meta);
+            }
+
+            if (meta.Item1)
             {
                 param.Size = Math.Max(((string) value).Length + 1, 4000);
             }
 
-            if (tp.Name == "SqlGeography") //SqlGeography is a CLR Type
+            else if (meta.Item2) //SqlGeography is a CLR Type
             {
                 dynamic p = param;
                 p.UdtTypeName = "geography";
             }
 
-            else if (tp.Name == "SqlGeometry") //SqlGeometry is a CLR Type
+            else if (meta.Item3) //SqlGeometry is a CLR Type
             {
                 dynamic p = param;
                 p.UdtTypeName = "geometry";

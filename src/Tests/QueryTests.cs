@@ -77,6 +77,11 @@ namespace Tests.Helpers
             Config.EnsurePosts();
             var list = new[] { 1, 2, 3 };
             var all = _db.Query<dynamic>("select * from posts where Title=@1 or id in (@0)", list, "fer").ToArray();
+            var first = all[0];
+            Write(first.Id);
+            Write(first.Title);
+            Write(first.AuthorId);
+            Write(first.CreatedOn);
             Assert.Equal(3, all.Length);
         }
 
@@ -149,9 +154,9 @@ namespace Tests.Helpers
 
         }
 
-        private void Write(string format, params object[] param)
+        private void Write(object format, params object[] param)
         {
-            Console.WriteLine(format, param);
+            Console.WriteLine(format.ToString(), param);
         }
 
         public void Dispose()

@@ -70,16 +70,16 @@ namespace SqlFu
 
         private static readonly Func<IDataReader, dynamic> _dynamicPoco = rd =>
             {
-                var d = new ExpandoObject();
-                var o = d as IDictionary<string, object>;
                 object val;
                 var fc = rd.FieldCount;
+                KeyValuePair<string,object>[] data=new KeyValuePair<string, object>[fc];
                 for (int i = 0; i < fc; i++)
                 {
                     val = rd.GetValue(i);
-                    o.Add(rd.GetName(i), DBNull.Value.Equals(val) ? null : val);
+                    data[i]=new KeyValuePair<string, object>(rd.GetName(i), DBNull.Value.Equals(val) ? null : val);
                 }
-                return d;
+
+                return new SqlFuDynamic(data);
             };
 
         private static readonly Func<IDataReader, byte[]> _pocoByteArray = rd => { return (byte[]) rd[0]; };

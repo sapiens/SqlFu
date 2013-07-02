@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace SqlFu
@@ -42,7 +45,7 @@ namespace SqlFu
                 var paramDict = CreateParamsDictionary(_args);
                 var allp = cmd.Parameters;
                 List<string> pnames = new List<string>();
-                var sb = new StringBuilder();
+                StringBuilder sb =null;
                 var lastParamCount = _args.Length;
 
                 IDbDataParameter p = null;
@@ -51,11 +54,15 @@ namespace SqlFu
                 {
                     if (kv.Value.IsListParam())
                     {
-                        var lp = kv.Value as IEnumerable;
-
-                        sb.Clear();
-
-                        foreach (var val in lp)
+                        if (sb == null)
+                        {
+                            sb = new StringBuilder();
+                        }
+                        else sb.Clear();
+                        
+                        var listParam = kv.Value as IEnumerable;
+                        
+                        foreach (var val in listParam)
                         {
                             p = cmd.CreateParameter();
 
@@ -81,27 +88,31 @@ namespace SqlFu
             }
         }
 
-        internal static IDictionary<string, object> CreateParamsDictionary(params object[] args)
+    //internal static IDictionary<string, object> CreateParamsDictionary(params object[] args)
+
+        private static CultureInfo culture = CultureInfo.InvariantCulture;
+
+        internal static KeyValuePair<string, object>[] CreateParamsDictionary(params object[] args)
         {
-            IDictionary<string, object> d = new Dictionary<string, object>();
+           var d=new KeyValuePair<string, object>[args.Length];
             if (args != null)
             {
                 if (args.Length == 1)
                 {
                     var poco = args[0];
-                    if (poco != null && !poco.IsListParam())
+                    if (poco != null)
                     {
-                        if (poco.GetType().IsCustomObjectType())
+                        if (!poco.IsListParam() && poco.IsCustomObject())
                         {
-                            d = poco.ToDictionary();
-                            return d;
+                            return poco.ToDictionary().ToArray();
                         }
                     }
+                 
                 }
-
+                
                 for (int i = 0; i < args.Length; i++)
                 {
-                    d.Add(i.ToString(), args[i]);
+                    d[i]=new KeyValuePair<string, object>(i.ToString(culture),args[i]);                    
                 }
             }
             return d;

@@ -19,8 +19,9 @@ namespace SqlFu
         public static bool IsListParam(this object data)
         {
             if (data == null) return false;
-            var value = data.GetType();
-            return value.Implements<IEnumerable>() && typeof (string) != value && typeof (byte[]) != value;
+            //var type = data.GetType();
+            return data is IEnumerable && !(data is string) && !(data is byte[]);
+           // return type.Implements<IEnumerable>() && typeof (string) != type && typeof (byte[]) != type;
         }
 
         public static string FormatCommand(string sql, IDictionary<string, object> args)
@@ -46,5 +47,11 @@ namespace SqlFu
         {
             return t.IsClass && (Type.GetTypeCode(t) == TypeCode.Object);
         }
+        
+        public static bool IsCustomObject<T>(this T t)
+        {
+            return !(t is ValueType) && (Type.GetTypeCode(t.GetType()) == TypeCode.Object);
+        }
+       
     }
 }

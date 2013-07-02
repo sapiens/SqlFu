@@ -129,7 +129,7 @@ ON [PRIMARY]
                 //Config.EmptyTable();
                 //Console.WriteLine("ensuring 10 posts");
 
-                using (var t = db.BeginSqlFuTransaction())
+                using (var t = db.BeginTransaction())
                 {
                     for (int i = 0; i < 10; i++)
                     {

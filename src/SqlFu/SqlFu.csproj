@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DatabaseUnitOfWork.cs" />
+    <Compile Include="SqlFuDynamic.cs" />
     <Compile Include="IControlSqlStatement.cs" />
     <Compile Include="LastInsertId.cs" />
     <Compile Include="SqlFuConnection.cs">
