@@ -3,7 +3,7 @@
 SqlFu is a **_versatile_** micro-orm (like dapper.net, peta poco , massive etc) for .Net 4.  SqlFu is Apache licensed.
 If you're wondering if there's a reason for yet another micro-orm [read this](http://www.sapiensworks.com/blog/post/2012/05/19/SqlFu-My-Versatile-Micro-Orm.aspx)
 
-Latest version: 1.4.1 [Change Log](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
+Latest version: 2.0.0 [Change Log](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
 
 **Version 2 is not compatbile with version 1**. [Read how to upgrade to SqlFu 2](https://github.com/sapiens/SqlFu/wiki/How-To-Upgrade-to-SqlFu2)
 
@@ -32,7 +32,7 @@ Read about the **[Advanced Features](https://github.com/sapiens/SqlFu/wiki)**
 
 ##Usage
 
-### Config (2.0.0+ - unreleased)
+### Config
 ```csharp
 
 //convenience 
@@ -46,7 +46,7 @@ SqlFuDao.OnException = (cmd,ex)=>Console.WriteLine("\nSql:{1}\nException:\n\t\t{
 ````
 
 
-### Get Connection (2.0.0+ - unreleased)
+### Get Connection
 
 ```csharp
 //if no config is set as above, it will try to use the first connection found in app(web).config
