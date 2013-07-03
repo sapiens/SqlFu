@@ -177,7 +177,7 @@ PocoFactory.ComplexTypeMapper.Separator = '.';
  * Every identifier containing a '.' will be split and each part will be escaped e.g dbo.table -> [dbo].[table]
 * Dynamic results are read-only(2.0.0+)
 * Any property/column which can't be mapped is ignored
- * However an exception is thrown if you want to assign a value to an object type for example, or null to a non-nullable
+ * However an exception is thrown if you want to assign a unsupported value to an object type for example, a null to a non-nullable
 
  
 #### Attributes
