@@ -2,7 +2,7 @@
 
 namespace SqlFu.Providers
 {
-    internal class PostgresBuilderHelper:CommonBuilderHelper
+    internal class PostgresBuilderHelper : CommonBuilderHelper
     {
         public override string EscapeName(string s)
         {

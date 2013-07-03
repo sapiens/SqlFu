@@ -1,18 +1,19 @@
 ﻿using System;
+using System.Data.Common;
 using SqlFu.DDL.Generators;
 
 namespace SqlFu.DDL.Internals
 {
     internal class ModifyTableBuilder : IModifyTable
     {
-        private readonly IAccessDb _db;
+        private readonly DbConnection _db;
         private readonly IGenerateDDL _generator;
         private readonly TableSchema _table;
         private readonly ColumnsEditor _columns;
         private readonly ConstraintsEditor _constraints;
         private readonly IndexEditor _indexes;
 
-        public ModifyTableBuilder(IAccessDb db, IGenerateDDL generator, string name)
+        public ModifyTableBuilder(DbConnection db, IGenerateDDL generator, string name)
         {
             _db = db;
             _generator = generator;

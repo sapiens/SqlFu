@@ -1,3 +1,4 @@
+using System.Data.Common;
 using CavemanTools;
 
 namespace SqlFu.Migrations
@@ -20,7 +21,7 @@ namespace SqlFu.Migrations
         /// Task is executed automatically in a transaction
         /// </summary>
         /// <param name="db"></param>
-        void Execute(IAccessDb db);
+        void Execute(DbConnection db);
 
         int Priority { get; }
     }

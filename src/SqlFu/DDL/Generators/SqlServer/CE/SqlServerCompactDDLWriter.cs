@@ -2,7 +2,7 @@ namespace SqlFu.DDL.Generators.SqlServer.CE
 {
     internal class SqlServerCompactDDLWriter
     {
-        //public SqlServerCompactDDLWriter(IAccessDb db) : base(db)
+        //public SqlServerCompactDDLWriter(DbConnection db) : base(db)
         //{
         //}
 

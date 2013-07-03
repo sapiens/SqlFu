@@ -4,7 +4,7 @@ using CavemanTools;
 
 namespace SqlFu
 {
-    public class DatabaseUnitOfWork : IUnitOfWork
+    public sealed class DatabaseUnitOfWork : IUnitOfWork
     {
         private DbTransaction _trans;
 

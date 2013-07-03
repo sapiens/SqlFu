@@ -14,7 +14,7 @@ namespace Tests.DDL.SqlServer
     {
         private Stopwatch _t = new Stopwatch();
         private SqlServerDDLWriter _ddl;
-        private DbAccess db;
+        private SqlFuConnection db;
 
         public CreateTableTests()
         {

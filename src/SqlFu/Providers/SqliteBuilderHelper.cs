@@ -2,7 +2,7 @@
 
 namespace SqlFu.Providers
 {
-    class SqliteBuilderHelper : CommonBuilderHelper
+    internal class SqliteBuilderHelper : CommonBuilderHelper
     {
         public override string EscapeName(string s)
         {

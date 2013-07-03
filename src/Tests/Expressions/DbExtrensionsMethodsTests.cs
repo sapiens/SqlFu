@@ -9,7 +9,7 @@ namespace Tests.Expressions
     public class DbExtrensionsMethodsTests:IDisposable
     {
         private Stopwatch _t = new Stopwatch();
-        private DbAccess _db;
+        private SqlFuConnection _db;
 
         public DbExtrensionsMethodsTests()
         {
@@ -22,6 +22,7 @@ namespace Tests.Expressions
         {
             Assert.Equal(10,_db.Count<Post>());
             Assert.Equal(0,_db.Count<Post>(p=>p.Id>30));
+            Assert.Equal(10,_db.Count<Post>(p=>p.TopicId==null));
         }
         
         [Fact]

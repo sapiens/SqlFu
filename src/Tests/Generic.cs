@@ -1,4 +1,6 @@
-﻿using SqlFu;
+﻿using System.Collections.Generic;
+using SqlFu;
+using SqlFu.DDL.Internals;
 using Xunit;
 using System;
 using System.Diagnostics;
@@ -30,7 +32,8 @@ namespace Tests
         [Fact]
         public void FactMethodName()
         {
-           
+            dynamic d = new SqlFuDynamic(new KeyValuePair<string, object>[0]);
+            Assert.Throws<InvalidOperationException>(() => { d.La = "23"; });
 
         }
 

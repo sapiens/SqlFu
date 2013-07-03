@@ -20,7 +20,7 @@ namespace SqlFu.DDL.Internals
         public ConstraintDefinition SetPrimaryKey(string columnsNames, string keyName = null)
         {
             columnsNames.MustNotBeEmpty();
-            if (keyName == null) keyName = "PK_" + _table.TableName;
+            if (keyName == null) keyName = "PK_" + _table.TableName.FilterEscape();
             PrimaryKey = new UniqueKeyConstraint {Name = keyName, Columns = columnsNames, IsPrimary = true};
             return PrimaryKey;
         }

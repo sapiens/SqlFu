@@ -1,7 +1,3 @@
-using System;
-using System.Data;
-using SqlFu.DDL;
-
 namespace SqlFu.Providers
 {
     //public class OracleProvider : AbstractProvider

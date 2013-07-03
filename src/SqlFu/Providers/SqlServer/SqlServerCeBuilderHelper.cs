@@ -2,7 +2,7 @@
 
 namespace SqlFu.Providers.SqlServer
 {
-    class SqlServerCEBuilderHelper : SqlServerBuilderHelper
+    internal class SqlServerCEBuilderHelper : SqlServerBuilderHelper
     {
         public override string Year(string column)
         {

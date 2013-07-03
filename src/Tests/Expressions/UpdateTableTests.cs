@@ -16,17 +16,16 @@ namespace Tests.Expressions
         private Stopwatch _t = new Stopwatch();
         private StringBuilder _sb;
         private ExpressionWriter _w;
-        //private Mock<IDbProviderExpressionHelper> _provider;
         private Expression<Func<Post,object>> _data;
         private UpdateTableBuilder<Post> _builder;
+        private SqlFuConnection _db;
 
         public UpdateTableTests()
         {
             _sb = new StringBuilder();
             _w = new ExpressionWriter(_sb,new SqlServerBuilderHelper());
-            var db = new Mock<IAccessDb>();
-            db.Setup(d => d.Provider).Returns(new SqlServerProvider());
-            _builder = new UpdateTableBuilder<Post>(db.Object);
+            _db = Setup.GetDb();
+            _builder = new UpdateTableBuilder<Post>(_db);
         }
 
         [Fact]
@@ -68,6 +67,14 @@ namespace Tests.Expressions
         }
 
         [Fact]
+        public void where_topic_id_is_null_is_written_correctly()
+        {
+            _builder.Set(d => d.Title, "f").Where(d => d.TopicId == null);
+            Assert.Equal("update [Posts] set [Title]=@0 where ([TopicId] is null)",_builder.GetSql());
+        }
+
+
+        [Fact]
         public void data_spike()
         {
             var db = Config.GetDb();
@@ -75,7 +82,7 @@ namespace Tests.Expressions
             p.Title = "bla";
             p.IsActive = true;
             p.Type = PostType.Post;
-            using (var t = db.BeginTransaction())
+            using (var t = db.BeginSqlFuTransaction())
             {
                 if (!db.TableExists<Post>())
                 {
@@ -110,7 +117,7 @@ namespace Tests.Expressions
         public void Dispose()
         {
             Write(_builder.GetSql());
-
+            _db.Dispose();
         }
     }
 

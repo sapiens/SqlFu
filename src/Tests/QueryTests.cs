@@ -11,7 +11,7 @@ namespace Tests.Helpers
     public class QueryTests:IDisposable
     {
         private Stopwatch _t = new Stopwatch();
-        private DbAccess _db;
+        private SqlFuConnection _db;
 
         public QueryTests()
         {
@@ -77,6 +77,11 @@ namespace Tests.Helpers
             Config.EnsurePosts();
             var list = new[] { 1, 2, 3 };
             var all = _db.Query<dynamic>("select * from posts where Title=@1 or id in (@0)", list, "fer").ToArray();
+            var first = all[0];
+            Write(first.Id);
+            Write(first.Title);
+            Write(first.AuthorId);
+            Write(first.CreatedOn);
             Assert.Equal(3, all.Length);
         }
 
@@ -85,7 +90,7 @@ namespace Tests.Helpers
         public void apply_to_command()
         {
             var before = false;
-            _db.WithSql("select 1").ApplyToCommand(d =>before = true).ExecuteQuery<Post>().First();
+            _db.WithSql("select 1").Apply(d =>before = true).Query<Post>().First();
             Assert.True(before);
         }
 
@@ -93,7 +98,7 @@ namespace Tests.Helpers
         public void custom_mapper()
         {
             var custom = false;
-            var d= _db.WithSql("select 1 as Id, 'test' as Name").ExecuteQuery(rd =>
+            var d= _db.WithSql("select 1 as Id, 'test' as Name").Query(rd =>
                                                                            {
                                                                                var rez = new IdName();
                                                                                rez.Id = rd.GetInt32(0);
@@ -123,7 +128,7 @@ namespace Tests.Helpers
         public void custom_value_converter()
         {
             var c = false;
-            _db.WithSql("select 1").ExecuteScalar(o =>
+            _db.WithSql("select 1").GetValue(o =>
                                                       {
                                                           c = true;
                                                           return 1;
@@ -149,9 +154,9 @@ namespace Tests.Helpers
 
         }
 
-        private void Write(string format, params object[] param)
+        private void Write(object format, params object[] param)
         {
-            Console.WriteLine(format, param);
+            Console.WriteLine(format.ToString(), param);
         }
 
         public void Dispose()

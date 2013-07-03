@@ -11,10 +11,10 @@ namespace SqlFu.DDL.Internals
             Init(p.TableName);
             p.Process(this);
         }
+
         public TableSchema(string name)
         {
             Init(name);
-            
         }
 
         private void Init(string name)

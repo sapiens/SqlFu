@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text.RegularExpressions;
 using SqlFu.DDL;
@@ -42,10 +43,10 @@ namespace SqlFu.Providers.SqlServer
         /// </summary>
         public override IDbProviderExpressionHelper BuilderHelper
         {
-            get { return new SqlServerBuilderHelper();}
+            get { return new SqlServerBuilderHelper(); }
         }
 
-        protected override IDatabaseTools InitTools(DbAccess db)
+        protected override IDatabaseTools InitTools(SqlFuConnection db)
         {
             return new SqlServerDatabaseTools(db);
         }
@@ -68,9 +69,9 @@ namespace SqlFu.Providers.SqlServer
                 return s;
 
             //Single part identifier can be returned as is.
-            if (!s.Contains(".")) 
+            if (!s.Contains("."))
                 return "[" + s + "]";
-            
+
             //multipart identifier has to be escaped separately.
             return string.Join(".", s.Split('.').Select(d => "[" + d + "]"));
         }
@@ -80,7 +81,8 @@ namespace SqlFu.Providers.SqlServer
                 @"\bORDER\s+BY\s+(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\w\(\)\.])+(?:\s+(?:ASC|DESC))?(?:\s*,\s*(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\w\(\)\.])+(?:\s+(?:ASC|DESC))?)*",
                 RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Singleline | RegexOptions.Compiled);
 
-        private static readonly ConcurrentDictionary<int, PagingInfo> PagingCache= new ConcurrentDictionary<int, PagingInfo>();
+        private static readonly ConcurrentDictionary<int, PagingInfo> PagingCache =
+            new ConcurrentDictionary<int, PagingInfo>();
 
         public override void MakePaged(string sql, out string selecSql, out string countSql)
         {
@@ -112,8 +114,9 @@ namespace SqlFu.Providers.SqlServer
                 string.Format(
                     @"SELECT {1} FROM 
 (SELECT ROW_NUMBER() OVER ({0}) sqlfu_rn, {1} {2}) 
-sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, body, PagedSqlStatement.SkipParameterName,
-                    PagedSqlStatement.TakeParameterName);
+sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, body,
+                    PreparePagedStatement.SkipParameterName,
+                    PreparePagedStatement.TakeParameterName);
             //cache it
             info = new PagingInfo();
             info.CountSql = countSql;
@@ -121,39 +124,48 @@ sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, bo
             PagingCache.TryAdd(key, info);
         }
 
+
+        static ConcurrentDictionary<Type,Tuple<bool,bool,bool>> _meta=new ConcurrentDictionary<Type, Tuple<bool, bool, bool>>();
+
         public override void SetupParameter(IDbDataParameter param, string name, object value)
         {
             base.SetupParameter(param, name, value);
             if (value == null) return;
             
             var tp = value.GetType();
-            if (tp == typeof (string))
+
+            Tuple<bool, bool, bool> meta;
+
+            if (!_meta.TryGetValue(tp, out meta))
+            {
+                meta = new Tuple<bool, bool, bool>(tp == typeof(string), tp.Name == "SqlGeography", tp.Name == "SqlGeometry");
+                _meta.TryAdd(tp, meta);
+            }
+
+            if (meta.Item1)
             {
                 param.Size = Math.Max(((string) value).Length + 1, 4000);
             }
 
-            if (tp.Name == "SqlGeography") //SqlGeography is a CLR Type
+            else if (meta.Item2) //SqlGeography is a CLR Type
             {
                 dynamic p = param;
                 p.UdtTypeName = "geography";
             }
 
-            else if (tp.Name == "SqlGeometry") //SqlGeometry is a CLR Type
+            else if (meta.Item3) //SqlGeometry is a CLR Type
             {
                 dynamic p = param;
                 p.UdtTypeName = "geometry";
             }
         }
 
-        public override LastInsertId ExecuteInsert(SqlStatement sql, string idKey)
+        public override LastInsertId ExecuteInsert(DbCommand cmd, string idKey)
         {
-            sql.Sql += ";Select SCOPE_IDENTITY() as id";
+            cmd.CommandText += ";Select SCOPE_IDENTITY() as id";
 
-            using (sql)
-            {
-                var rez = sql.ExecuteScalar();
-                return new LastInsertId(rez);
-            }
+            var rez = cmd.ExecuteScalar();
+            return new LastInsertId(rez);
         }
 
         public const string ParameterPrefix = "@";

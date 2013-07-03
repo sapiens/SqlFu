@@ -1,13 +1,15 @@
-﻿using System.Text;
+﻿using System.Data.Common;
+using System.Text;
 using SqlFu.DDL.Internals;
 
 namespace SqlFu.DDL.Generators.SqlServer
 {
     internal class SqlServerChangedColumnsManager : AbstractChangedColumnsManager
     {
-        private readonly IAccessDb _db;
+        private readonly DbConnection _db;
 
-        public SqlServerChangedColumnsManager(StringBuilder builder, IAccessDb db) : base(builder, DbEngine.SqlServer)
+        public SqlServerChangedColumnsManager(StringBuilder builder, DbConnection db)
+            : base(builder, DbEngine.SqlServer)
         {
             _db = db;
         }

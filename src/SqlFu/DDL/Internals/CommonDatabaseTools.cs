@@ -5,9 +5,9 @@ namespace SqlFu.DDL.Internals
 {
     internal abstract class CommonDatabaseTools : IDatabaseTools
     {
-        protected readonly DbAccess Db;
+        protected readonly SqlFuConnection Db;
 
-        public CommonDatabaseTools(DbAccess db)
+        public CommonDatabaseTools(SqlFuConnection db)
         {
             Db = db;
         }
@@ -53,7 +53,7 @@ namespace SqlFu.DDL.Internals
         public ICreateTable GetCreateTableBuilder<T>()
         {
             var schema = new TableSchema(typeof (T));
-            return new CreateTableBuilder(Db,GetDDLWriter(),schema);
+            return new CreateTableBuilder(Db, GetDDLWriter(), schema);
         }
 
         protected abstract IGenerateDDL GetDDLWriter();

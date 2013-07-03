@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using SqlFu.DDL;
 using SqlFu.DDL.Generators.Sqlite;
@@ -48,10 +49,10 @@ namespace SqlFu.Providers
         /// </summary>
         public override IDbProviderExpressionHelper BuilderHelper
         {
-            get { return new SqliteBuilderHelper();}
+            get { return new SqliteBuilderHelper(); }
         }
 
-        protected override IDatabaseTools InitTools(DbAccess db)
+        protected override IDatabaseTools InitTools(SqlFuConnection db)
         {
             return new SqliteDatabaseTools(db);
         }
@@ -67,18 +68,15 @@ namespace SqlFu.Providers
             return string.Join(".", s.Split('.').Select(d => "\"" + d + "\""));
         }
 
-        public override LastInsertId ExecuteInsert(SqlStatement sql, string idKey)
+        public override LastInsertId ExecuteInsert(DbCommand cmd, string idKey)
         {
             if (idKey != null)
             {
-                sql.Sql += ";SELECT last_insert_rowid()";
-                using (sql)
-                {
-                    var rez = sql.ExecuteScalar();
-                    return new LastInsertId(rez);
-                }
+                cmd.CommandText += ";SELECT last_insert_rowid()";
+                var rez = cmd.ExecuteScalar();
+                return new LastInsertId(rez);
             }
-            sql.Execute();
+            cmd.Execute();
             return LastInsertId.Empty;
         }
 
@@ -92,8 +90,8 @@ namespace SqlFu.Providers
             int formidx;
             var body = GetPagingBody(sql, out formidx);
             countSql = "select count(*) " + body;
-            selecSql = string.Format("{0} limit @{1},@{2}", sql, PagedSqlStatement.SkipParameterName,
-                                     PagedSqlStatement.TakeParameterName);
+            selecSql = string.Format("{0} limit @{1},@{2}", sql, PreparePagedStatement.SkipParameterName,
+                                     PreparePagedStatement.TakeParameterName);
         }
     }
 }

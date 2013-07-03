@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Common;
 using System.Linq.Expressions;
 using SqlFu.Expressions;
 
@@ -13,23 +14,23 @@ namespace SqlFu
         int Execute();
     }
 
-    internal class UpdateTableBuilder<T>:IBuildUpdateTable<T>
+    internal class UpdateTableBuilder<T> : IBuildUpdateTable<T>
     {
-        private readonly IAccessDb _db;
-        private ExpressionSqlBuilder<T> _builder;
+        private readonly DbConnection _db;
+        private readonly ExpressionSqlBuilder<T> _builder;
 
-       public UpdateTableBuilder(IAccessDb db)
+        public UpdateTableBuilder(DbConnection db)
         {
             db.MustNotBeNull();
             _db = db;
-            _builder = new ExpressionSqlBuilder<T>(db.Provider.BuilderHelper);
-           _builder.Append("update ").WriteTableName();
-           _builder.Append(" set");
+            _builder = new ExpressionSqlBuilder<T>(db.GetProvider().BuilderHelper);
+            _builder.Append("update ").WriteTableName();
+            _builder.Append(" set");
         }
 
         public IBuildUpdateTable<T> Set(Expression<Func<T, object>> column, Expression<Func<T, object>> statement)
         {
-            _builder.Append(" {0}=".ToFormat(_db.Provider.EscapeName(column.Body.GetPropertyName())));
+            _builder.Append(" {0}=".ToFormat(_db.EscapeIdentifier(column.Body.GetPropertyName())));
             _builder.Write(statement);
             _builder.Append(",");
             return this;
@@ -43,7 +44,7 @@ namespace SqlFu
 
         public void Set(string column, object value)
         {
-            _builder.Append(" {0}=@{1},".ToFormat(_db.Provider.EscapeName(column), _builder.Parameters.CurrentIndex));
+            _builder.Append(" {0}=@{1},".ToFormat(_db.EscapeIdentifier(column), _builder.Parameters.CurrentIndex));
             _builder.Parameters.RegisterParameter(value);
         }
 
@@ -60,7 +61,7 @@ namespace SqlFu
             _builder.EndEnumeration();
             return _builder.ToString();
         }
-        
+
         public object[] GetParameters()
         {
             return _builder.Parameters.ToArray();

@@ -11,7 +11,7 @@ namespace Tests.DDL.SqlServer
 {
     public class AlterTableColumnTests:IDisposable
     {
-        private DbAccess _db;
+        private SqlFuConnection _db;
         private SqlServerDDLWriter _writer;
         private ModifyTableBuilder _table;
 

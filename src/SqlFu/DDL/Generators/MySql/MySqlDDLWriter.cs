@@ -6,7 +6,7 @@ namespace SqlFu.DDL.Generators.MySql
 {
     internal class MySqlDDLWriter : CommonDDLWriter
     {
-        public MySqlDDLWriter(IAccessDb db) : base(db, DbEngine.MySql)
+        public MySqlDDLWriter(SqlFuConnection db) : base(db, DbEngine.MySql)
         {
         }
 

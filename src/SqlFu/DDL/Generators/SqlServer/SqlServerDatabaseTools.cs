@@ -7,7 +7,7 @@ namespace SqlFu.DDL.Generators.SqlServer
 {
     internal class SqlServerDatabaseTools : CommonDatabaseTools
     {
-        public SqlServerDatabaseTools(DbAccess db) : base(db)
+        public SqlServerDatabaseTools(SqlFuConnection db) : base(db)
         {
         }
 

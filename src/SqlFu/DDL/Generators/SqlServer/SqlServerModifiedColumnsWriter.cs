@@ -3,9 +3,9 @@
 //    internal class SqlServerModifiedColumnsWriter
 //    {
 //        private readonly StringBuilder Builder;
-//        private readonly IAccessDb Db;
+//        private readonly DbConnection Db;
 
-//        public SqlServerModifiedColumnsWriter(StringBuilder builder,IAccessDb db)
+//        public SqlServerModifiedColumnsWriter(StringBuilder builder,DbConnection db)
 //        {
 //            Builder = builder;
 //            Db = db;

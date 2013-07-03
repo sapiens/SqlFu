@@ -6,7 +6,7 @@ namespace SqlFu.DDL.Generators.SqlServer
 {
     internal class SqlServerDDLWriter : CommonDDLWriter
     {
-        public SqlServerDDLWriter(IAccessDb db) : base(db, DbEngine.SqlServer)
+        public SqlServerDDLWriter(SqlFuConnection db) : base(db, DbEngine.SqlServer)
         {
         }
 

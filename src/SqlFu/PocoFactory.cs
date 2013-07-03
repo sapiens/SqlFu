@@ -70,16 +70,16 @@ namespace SqlFu
 
         private static readonly Func<IDataReader, dynamic> _dynamicPoco = rd =>
             {
-                var d = new ExpandoObject();
-                var o = d as IDictionary<string, object>;
                 object val;
                 var fc = rd.FieldCount;
+                KeyValuePair<string,object>[] data=new KeyValuePair<string, object>[fc];
                 for (int i = 0; i < fc; i++)
                 {
                     val = rd.GetValue(i);
-                    o.Add(rd.GetName(i), DBNull.Value.Equals(val) ? null : val);                                       
+                    data[i]=new KeyValuePair<string, object>(rd.GetName(i), DBNull.Value.Equals(val) ? null : val);
                 }
-                return d;
+
+                return new SqlFuDynamic(data);
             };
 
         private static readonly Func<IDataReader, byte[]> _pocoByteArray = rd => { return (byte[]) rd[0]; };
@@ -91,21 +91,21 @@ namespace SqlFu
                     var names = type.GetConstructors().First().GetParameters().Select(p => p.Name).ToArray();
                     if (names.Length > rd.FieldCount)
                     {
-                        throw new InvalidOperationException("Returned columns are too few to be used for creation of the requested anonymous type");
+                        throw new InvalidOperationException(
+                            "Returned columns are too few to be used for creation of the requested anonymous type");
                     }
 
                     var param = new object[names.Length];
 
                     for (var i = 0; i < names.Length; i++)
                     {
-                        param[i]=rd[names[i]];
+                        param[i] = rd[names[i]];
                     }
 
                     return Activator.CreateInstance(type, param.ToArray());
                 };
         }
-           
-            
+
 
         internal static Func<IDataReader, T> GetPocoMapper<T>(IDataReader rd, string sql)
         {
@@ -192,7 +192,7 @@ namespace SqlFu
                         il.Emit(OpCodes.Ldarg_0); //rd
                         il.Emit(OpCodes.Ldc_I4, i);
                         il.Emit(OpCodes.Callvirt, typeof (IMapComplexType).GetMethod("MapType").MakeGenericMethod(poco));
-                            //call MapType
+                        //call MapType
                     }
                     continue;
                 }
@@ -213,7 +213,7 @@ namespace SqlFu
             il.Emit(OpCodes.Ret);
         }
 
-      
+
         /// <summary>
         /// Read value and puts it on the stack
         /// </summary>
@@ -251,7 +251,7 @@ namespace SqlFu
             il.Emit(OpCodes.Br, end);
             il.MarkLabel(endIf);
 
-            var getter = typeof(IDataRecord).GetMethod("Get" + tp.Name, new[] { typeof(int) });
+            var getter = typeof (IDataRecord).GetMethod("Get" + tp.Name, new[] {typeof (int)});
             if (getter != null)
             {
                 il.EmitLoadMethodArgument(0);
@@ -263,7 +263,7 @@ namespace SqlFu
             {
                 //get converter delegate
                 il.Emit(OpCodes.Call,
-                        (typeof(PocoFactory).GetMethod("GetConverter", BindingFlags.Static | BindingFlags.NonPublic)).
+                        (typeof (PocoFactory).GetMethod("GetConverter", BindingFlags.Static | BindingFlags.NonPublic)).
                             MakeGenericMethod(tp));
 
                 //get reader value
@@ -272,7 +272,7 @@ namespace SqlFu
                 il.Emit(OpCodes.Call, _rdGetValueInfo); //poco,rd.GetValue(i)
 
                 //invoke delegate 
-                il.Emit(OpCodes.Call, (Expression.GetFuncType(typeof(object), tp)).GetMethod("Invoke"));
+                il.Emit(OpCodes.Call, (Expression.GetFuncType(typeof (object), tp)).GetMethod("Invoke"));
             }
             il.MarkLabel(end); //stack contains converted value
         }

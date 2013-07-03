@@ -7,7 +7,7 @@ namespace SqlFu.DDL.Generators.Sqlite
 {
     internal class SqliteDatabaseTools : CommonDatabaseTools
     {
-        public SqliteDatabaseTools(DbAccess db)
+        public SqliteDatabaseTools(SqlFuConnection db)
             : base(db)
         {
         }

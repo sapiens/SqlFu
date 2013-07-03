@@ -9,7 +9,7 @@ namespace Tests.DDL
     public abstract class CommonDatabaseToolsTests:IDisposable
     {
         private Stopwatch _t = new Stopwatch();
-        protected DbAccess Db;
+        protected SqlFuConnection Db;
         protected bool DontDispose;
         
         public CommonDatabaseToolsTests()
