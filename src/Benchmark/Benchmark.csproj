@@ -48,10 +48,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\DbExtensions.4.2.0\lib\net40\DbExtensions.dll</HintPath>
     </Reference>
-    <Reference Include="FluentData, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\FluentData.3.0.0.0\lib\FluentData.dll</HintPath>
-    </Reference>
     <Reference Include="Insight.Database, Version=2.3.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Insight.Database.2.3.1\lib\NET40\Insight.Database.dll</HintPath>
@@ -76,6 +72,15 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\ServiceStack.Text.3.9.54\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
+    <Reference Include="Simple.Data">
+      <HintPath>..\packages\Simple.Data.Core.0.18.3.1\lib\net40\Simple.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Simple.Data.Ado">
+      <HintPath>..\packages\Simple.Data.Ado.0.18.3.1\lib\net40\Simple.Data.Ado.dll</HintPath>
+    </Reference>
+    <Reference Include="Simple.Data.SqlServer">
+      <HintPath>..\packages\Simple.Data.SqlServer.0.18.3.1\lib\net40\Simple.Data.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -91,8 +96,8 @@
     <Compile Include="Config.cs" />
     <Compile Include="Massive\Massive.cs" />
     <Compile Include="Models\PetaPoco.cs" />
+    <Compile Include="Tests\SimpleDataTests.cs" />
     <Compile Include="Tests\DapperTests.cs" />
-    <Compile Include="Tests\FluentDataTests.cs" />
     <Compile Include="Tests\InsightDbTests.cs" />
     <Compile Include="Tests\MssiveTests.cs" />
     <Compile Include="Tests\PerformanceTests.cs" />

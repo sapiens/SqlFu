@@ -11,7 +11,7 @@
     <description>Fast, versatile micro-orm designed for flexibility and ease of use. Featuring Multi Poco Mapping by convention, Database Migration support, Fluent DDL Builder and Query Pagination out of the box. The .Net 4.5 version supports async queries.</description>
     <language>en-US</language>
     <tags>micro-orm sql orm database migration ddl builder query pagination async</tags>
-	<releaseNotes>Breaking changes! Read the docs before upgrade</releaseNotes>
+	<releaseNotes>BREAKING CHANGES! Read the docs before upgrade</releaseNotes>
          </metadata>
 <files>
         <file src="..\..\src\SqlFu\bin\Release\**\SqlFu*" target="lib"></file>

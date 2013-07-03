@@ -50,6 +50,7 @@ namespace Benchmark
                     mi.Invoke(cls, new object[] {bc});
                 }
             }
+
         }
 
 
@@ -77,6 +78,7 @@ namespace Benchmark
                 }
                
             }
+            _classes.Where(c => c is IDisposable).Cast<IDisposable>().ForEach(c => c.Dispose());
         }
 
     }

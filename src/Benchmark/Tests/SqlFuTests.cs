@@ -64,7 +64,7 @@ namespace Benchmark.Tests
             bc.Add(id =>
             {
                 _db.GetValue<string>("select title from sfposts where id=@0", 5);
-            }, "SqlFu scalar int");
+            }, "SqlFu scalar");
             
             bc.Add(id =>
             {

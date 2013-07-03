@@ -81,18 +81,9 @@ namespace Benchmark.Tests
             {
                 _cnx.Query<string>("select title from sfPosts where id=@id", new { id = 3 }).Single();
                 
-            }, "Dapper scalar int");
+            }, "Dapper scalar");
 
-            //bc.Add(id =>
-            //{
-            //    _cnx.Query<int?>("select topicid from sfPosts where id>@id order by id", new { id = 3 }).ToArray();
-
-            //}, "Dapper scalar nullable");
-            //bc.Add(id =>
-            //{
-            //    _cnx.Query<PostType>("select type from sfPosts where id>@id order by id", new { id = 3 }).ToArray();
-
-            //}, "Dapper scalar enum");
+            
         }
 
         public override void MultiPocoMapping(BenchmarksContainer bc)
