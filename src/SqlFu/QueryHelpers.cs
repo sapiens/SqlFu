@@ -22,7 +22,7 @@ namespace SqlFu
         /// <param name="args"></param>
         /// <returns></returns>
         public static T Get<T>(this DbConnection db, object id, string additionalPredicate = null, params object[] args)
-            where T : new()
+          
         {
             id.MustNotBeNull("id");
             var tp = typeof (T);
@@ -67,7 +67,7 @@ namespace SqlFu
         /// <param name="db"></param>
         /// <param name="condition"></param>
         /// <returns></returns>
-        public static T Get<T>(this DbConnection db, Expression<Func<T, bool>> condition) where T : new()
+        public static T Get<T>(this DbConnection db, Expression<Func<T, bool>> condition)
         {
             var builder = new ExpressionSqlBuilder<T>(db.GetProvider().BuilderHelper);
             builder
@@ -85,7 +85,7 @@ namespace SqlFu
         /// <param name="db"></param>
         /// <param name="condition"></param>
         /// <returns></returns>
-        public static IEnumerable<T> Query<T>(this DbConnection db, Expression<Func<T, bool>> condition) where T : new()
+        public static IEnumerable<T> Query<T>(this DbConnection db, Expression<Func<T, bool>> condition)
         {
             var builder = new ExpressionSqlBuilder<T>(db.GetProvider().BuilderHelper);
             builder

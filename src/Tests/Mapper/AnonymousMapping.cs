@@ -5,7 +5,7 @@ using Xunit;
 using System;
 using System.Diagnostics;
 
-namespace Tests
+namespace Tests.Mapper
 {
     public class AnonymousMapping
     {

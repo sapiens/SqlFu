@@ -90,7 +90,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Mapper\AnonymousMapping.cs" />
-    <Compile Include="Mapper\ComplexMapperTests.cs">
+    <Compile Include="Mapper\MultiPocoMapperTests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Config.cs">
@@ -125,12 +125,13 @@
     </Compile>
     <Compile Include="DDL\TableEditorTests.cs" />
     <Compile Include="Generic.cs" />
-    <Compile Include="ComplexTypeMapper.cs">
+    <Compile Include="Mapper\QueriesWithMultiPocoMapper.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Helpers\HelpersTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Mapper\SimpleMapper.cs" />
     <Compile Include="Providers\SqliteProviderTests.cs" />
     <Compile Include="Providers\PostgresProviderTests.cs" />
     <Compile Include="Providers\MySqlProviderTests.cs" />

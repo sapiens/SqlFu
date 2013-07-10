@@ -50,7 +50,7 @@ namespace SqlFu
         /// <param name="sql"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static T QuerySingle<T>(this DbConnection cnx, string sql, params object[] args) where T : new()
+        public static T QuerySingle<T>(this DbConnection cnx, string sql, params object[] args) 
         {
             using (var cmd = cnx.CreateAndSetupCommand(sql, args))
             {
@@ -58,12 +58,12 @@ namespace SqlFu
             }
         }
 
-        public static IEnumerable<T> Query<T>(this DbConnection cnx, string sql, params object[] args) where T : new()
+        public static IEnumerable<T> Query<T>(this DbConnection cnx, string sql, params object[] args) 
         {
             return Fetch<T>(cnx, sql, args);
         }
 
-        public static List<T> Fetch<T>(this DbConnection cnx, string sql, params object[] args) where T : new()
+        public static List<T> Fetch<T>(this DbConnection cnx, string sql, params object[] args) 
         {
             using (var cmd = cnx.CreateAndSetupCommand(sql, args))
             {

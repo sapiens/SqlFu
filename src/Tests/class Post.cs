@@ -11,12 +11,13 @@ namespace Tests
         Post,
         Page
     }
-    [Table("Posts")]
+    [Table("Posts",CreationOptions = IfTableExists.Ignore)]
     class Post
     {
         public Post()
         {
             CreatedOn = DateTime.Now;
+         
         }
         public int Id { get; set; }
         public int AuthorId { get; set; }
@@ -26,7 +27,18 @@ namespace Tests
         public PostType Type { get; set; }
         public int? TopicId { get; set; }
         public bool IsActive { get; set; }
-     
+        
+    }
+
+
+    class OtherPost
+    {
+        private OtherPost()
+        {
+           
+        }
+
+        public string Name { get; private set; }      
     }
 
 

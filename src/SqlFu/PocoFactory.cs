@@ -167,18 +167,24 @@ namespace SqlFu
         {
             il.DeclareLocal(poco);
             ComplexTypeMapper.DeclareILVariables(il);
-            var c = poco.GetConstructor(BindingFlags.CreateInstance | BindingFlags.NonPublic | BindingFlags.Public, null,
-                                        Type.EmptyTypes, null);
-            var cinfo = poco.GetConstructor(Type.EmptyTypes);
+            var cinfo = poco.GetConstructor(BindingFlags.CreateInstance | BindingFlags.NonPublic | BindingFlags.Public |BindingFlags.Instance,null,Type.EmptyTypes,null);
+            //var cinfo = poco.GetConstructor(Type.EmptyTypes);
+            //if (cinfo == null)
+            //{
+            //    throw new MissingMemberException("A public parameterless constructor is required for type " + poco);
+            //}
+
             if (cinfo == null)
             {
-                throw new MissingMemberException("A public parameterless constructor is required for type " + poco);
+                throw new MissingMemberException("A parameterless constructor is required for type " + poco);
             }
+
+
             il.Emit(OpCodes.Newobj, cinfo);
             il.Emit(OpCodes.Stloc_0); //saved at loc 0
 
 
-            var allp = poco.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty);
+            var allp = poco.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.SetProperty);
             string name;
             for (int i = 0; i < rd.FieldCount; i++)
             {
@@ -206,8 +212,8 @@ namespace SqlFu
 
                 //throw new InvalidCastException(string.Format("Can't convert {0} to {1} ",rd.GetFieldType(i).ToString(),prop.PropertyType.ToString()));
                 il.Emit(OpCodes.Ldloc_0); //poco
-                EmitGetColumnValue(il, i, prop.PropertyType); //we have a value here
-                il.Emit(OpCodes.Callvirt, prop.GetSetMethod()); //poco.property.setvalue
+                EmitGetColumnValue(il, i, prop.PropertyType); //we have a value here             
+                il.Emit(OpCodes.Callvirt, prop.GetSetMethod(true)); //poco.property.setvalue
             }
             il.Emit(OpCodes.Ldloc_0); //poco
             il.Emit(OpCodes.Ret);

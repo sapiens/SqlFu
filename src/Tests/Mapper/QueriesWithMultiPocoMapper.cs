@@ -5,14 +5,14 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 
-namespace Tests.Helpers
+namespace Tests.Mapper
 {
-    public class ComplexTypeMapper
+    public class QueriesWithMultiPocoMapper
     {
         private Stopwatch _t = new Stopwatch();
         private SqlFuConnection _db;
 
-        public ComplexTypeMapper()
+        public QueriesWithMultiPocoMapper()
         {
             _db = Config.GetDb();
         }
