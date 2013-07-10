@@ -23,11 +23,11 @@ namespace Tests.Helpers
         public void insert_sql()
         {
             Config.EmptyTable();
-            var id=_db.Insert(new Post{ Title = "Test", AuthorId = 1,TopicId = null, Type = PostType.Post, CreatedOn = DateTime.UtcNow}).InsertedId<int>();
-           Assert.Equal(1,id);
-            id=_db.Insert(new Post{ Title = "Test", AuthorId = 1,TopicId = null, Type = PostType.Post, CreatedOn = DateTime.UtcNow}).InsertedId<int>();
-           Assert.Equal(2,id);
-           
+            var id = _db.Insert(new Post { Title = "Test", AuthorId = 1, TopicId = null, Type = PostType.Post, CreatedOn = DateTime.UtcNow }).InsertedId<int>();
+            Assert.Equal(1, id);
+            id = _db.Insert(new Post { Title = "Test", AuthorId = 1, TopicId = null, Type = PostType.Post, CreatedOn = DateTime.UtcNow }).InsertedId<int>();
+            Assert.Equal(2, id);
+
         }
 
         [Fact]

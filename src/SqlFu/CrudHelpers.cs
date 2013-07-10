@@ -11,12 +11,7 @@ namespace SqlFu
 {
     public static class CrudHelpers
     {
-        //[Obsolete("Use QuerySingle")]
-        //public static T FirstOrDefault<T>(this DbConnection db, string sql, params object[] args)
-        //{
-        //    return db.QuerySingle<T>(sql, args);
-        //}
-
+     
         #region Insert
 
         /// <summary>

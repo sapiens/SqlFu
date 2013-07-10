@@ -14,7 +14,7 @@ namespace SqlFu
     public static class SqlFuDaoAsync
     {
 
-        public static async Task<List<T>> FetchAsync<T>(this DbConnection cnx,CancellationToken token, string sql, params object[] args) where T : new()
+        public static async Task<List<T>> FetchAsync<T>(this DbConnection cnx,CancellationToken token, string sql, params object[] args) 
         {
             using (var cmd = cnx.CreateAndSetupCommand(sql, args))
             {
@@ -60,7 +60,7 @@ namespace SqlFu
         /// <param name="sql"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static async Task<T> QuerySingleAsync<T>(this DbConnection cnx, CancellationToken token,string sql, params object[] args) where T : new()
+        public static async Task<T> QuerySingleAsync<T>(this DbConnection cnx, CancellationToken token,string sql, params object[] args) 
         {
             using (var cmd = cnx.CreateAndSetupCommand(sql, args))
             {
@@ -76,7 +76,7 @@ namespace SqlFu
         /// <param name="db"></param>
         /// <param name="condition"></param>
         /// <returns></returns>
-        public static async Task<T> GetAsync<T>(this DbConnection db,Expression<Func<T, bool>> condition,CancellationToken token) where T : new()
+        public static async Task<T> GetAsync<T>(this DbConnection db,Expression<Func<T, bool>> condition,CancellationToken token) 
         {
             var builder = new ExpressionSqlBuilder<T>(db.GetProvider().BuilderHelper);
             builder
@@ -94,7 +94,7 @@ namespace SqlFu
          /// <param name="db"></param>
          /// <param name="condition"></param>
          /// <returns></returns>
-         public static async Task<T> GetAsync<T>(this DbConnection db, Expression<Func<T, bool>> condition) where T : new()
+         public static async Task<T> GetAsync<T>(this DbConnection db, Expression<Func<T, bool>> condition)
          {
              return await db.GetAsync(condition, CancellationToken.None);
          }
@@ -106,7 +106,7 @@ namespace SqlFu
         /// <param name="db"></param>
         /// <param name="condition"></param>
         /// <returns></returns>
-        public static async Task<IEnumerable<T>> QueryAsync<T>(this DbConnection db, Expression<Func<T, bool>> condition,CancellationToken token) where T : new()
+        public static async Task<IEnumerable<T>> QueryAsync<T>(this DbConnection db, Expression<Func<T, bool>> condition,CancellationToken token) 
         {
             var builder = new ExpressionSqlBuilder<T>(db.GetProvider().BuilderHelper);
             builder
@@ -117,7 +117,7 @@ namespace SqlFu
             return await db.FetchAsync<T>(token,builder.ToString(), builder.Parameters.ToArray());
         }
 
-        public static async Task<IEnumerable<T>> QueryAsync<T>(this DbConnection db, Expression<Func<T, bool>> condition) where T : new()
+        public static async Task<IEnumerable<T>> QueryAsync<T>(this DbConnection db, Expression<Func<T, bool>> condition) 
         {
             return await db.QueryAsync(condition, CancellationToken.None);
         }

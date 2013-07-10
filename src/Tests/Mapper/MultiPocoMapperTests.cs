@@ -27,14 +27,14 @@ namespace Tests.Mapper
     {
         public PocoB Item { get; set; }
     }
-    public class ComplexMapperTests
+    public class MultiPocoMapperTests
     {
         private Stopwatch _t = new Stopwatch();
         private DefaultComplexTypeMapper _mapper;
         private Mock<IDataReader> _reader;
         private PocoA _poco;
 
-        public ComplexMapperTests()
+        public MultiPocoMapperTests()
         {
             _mapper = new DefaultComplexTypeMapper();
             _reader = new Mock<IDataReader>();
