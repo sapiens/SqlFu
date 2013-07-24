@@ -71,7 +71,7 @@ namespace SqlFu
             }
         }
 
-        internal static DbCommand CreateAndSetupCommand(this DbConnection cnx, string sql, params object[] args)
+        public static DbCommand CreateAndSetupCommand(this DbConnection cnx, string sql, params object[] args)
         {
             var provider = cnx.GetProvider();
             var cmd = cnx.CreateCommand();
