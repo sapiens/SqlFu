@@ -43,6 +43,14 @@ namespace SqlFu
             Init(cnxString, provider);
         }
 
+        public SqlFuConnection(DbConnection cnx,DbEngine engine)
+        {
+            cnx.MustNotBeNull();
+            _conex = cnx;
+            _provider = ProviderFactory.GetProvider(engine);
+            _conex.Open();
+        }
+
         private void Init(string cnxString, IHaveDbProvider provider)
         {
             cnxString.MustNotBeEmpty();
