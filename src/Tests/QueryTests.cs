@@ -154,6 +154,14 @@ namespace Tests.Helpers
 
         }
 
+        [Fact]
+        public void global_custom_converter()
+        {
+            PocoFactory.RegisterConverterFor<CustomObject>(o => new CustomObject(o.ToString()));
+            var custom = _db.GetValue<CustomObject>("select 'custom-value'");
+            Assert.Equal("custom-value", custom.CustomValue);
+        }
+
         private void Write(object format, params object[] param)
         {
             Console.WriteLine(format.ToString(), param);
@@ -162,6 +170,18 @@ namespace Tests.Helpers
         public void Dispose()
         {
            Config.EmptyTable();
+        }
+
+
+
+        public class CustomObject
+        {
+            public string CustomValue { get; private set; }
+
+            public CustomObject(string customValue)
+            {
+                CustomValue = customValue;
+            }
         }
     }
 }
