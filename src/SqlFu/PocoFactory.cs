@@ -201,7 +201,10 @@ namespace SqlFu
                 if (prop == null) continue;
                 if (prop.PropertyType.IsCustomObjectType())
                 {
-                    if (!prop.PropertyType.Implements<IEnumerable>()) continue;
+                    //check if the property type is an IEnumerable or has a converter registered (there may be a registered converter for a class)
+                    bool isEnumerable = prop.PropertyType.Implements<IEnumerable>();
+                    bool hasConverter = _converters.ContainsKey(prop.PropertyType.GetHashCode());
+                    if (!isEnumerable && !hasConverter) continue;
                 }
 
                 //throw new InvalidCastException(string.Format("Can't convert {0} to {1} ",rd.GetFieldType(i).ToString(),prop.PropertyType.ToString()));
