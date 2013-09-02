@@ -6,6 +6,7 @@ using SqlFu.DDL;
 
 namespace SqlFu
 {
+    [System.ComponentModel.DesignerCategory("Code")]
     public class SqlFuConnection : DbConnection
     {
         internal SqlFuConnection()
