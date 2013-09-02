@@ -1,4 +1,5 @@
-﻿using CavemanTools.Model;
+﻿using System.Data.SqlClient;
+using CavemanTools.Model;
 using CavemanTools.Model.ValueObjects;
 using SqlFu;
 using Xunit;
@@ -17,6 +18,17 @@ namespace Tests.Helpers
         {
             _db = Config.GetDb();
         }
+
+        [Fact]
+        public void sqlfu_using_another_dbconnection()
+        {
+            var conex = new SqlConnection(Setup.Connex);
+            using (var db = new SqlFuConnection(conex, DbEngine.SqlServer))
+            {
+                Assert.True(db.TableExists<Post>());
+            }
+        }
+
 
         [Fact]
         public void paged_query()
