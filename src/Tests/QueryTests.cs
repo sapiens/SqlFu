@@ -158,8 +158,8 @@ namespace Tests.Helpers
         public void global_custom_converter()
         {
             PocoFactory.RegisterConverterFor<CustomObject>(o => new CustomObject(o.ToString()));
-            var custom = _db.GetValue<CustomObject>("select 'custom-value'");
-            Assert.Equal("custom-value", custom.CustomValue);
+            var custom = _db.QuerySingle<TypeWithCustomObject>("select 'custom-value' as Value");
+            Assert.Equal("custom-value", custom.Value.CustomValue);
         }
 
         private void Write(object format, params object[] param)
@@ -173,6 +173,10 @@ namespace Tests.Helpers
         }
 
 
+        public class TypeWithCustomObject
+        {
+            public CustomObject Value { get; set; }           
+        }
 
         public class CustomObject
         {

@@ -50,7 +50,7 @@
     <Compile Include="IControlSqlStatement.cs" />
     <Compile Include="LastInsertId.cs" />
     <Compile Include="SqlFuConnection.cs">
-      
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="DbEngine.cs" />
     <Compile Include="DDL\Generators\AbstractCheckWriter.cs" />
