@@ -225,8 +225,8 @@
     <Compile Include="Providers\SqlServer\SqlServerProvider.cs" />
     <Compile Include="QueryHelpers.cs" />
     <Compile Include="QueryOnlyAttribute.cs" />
-    <Compile Include="SqlFuConnection.cs" />
-    
+    <Compile Include="SqlFuConnection.cs">
+      </Compile>
     <Compile Include="SqlFuDao.cs" />
     <Compile Include="SqlFuDaoAsync.cs" />
     <Compile Include="SqlFuDynamic.cs" />
