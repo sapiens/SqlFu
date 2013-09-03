@@ -73,7 +73,7 @@ namespace SqlFu.Providers
             if (idKey != null)
             {
                 cmd.CommandText += ";SELECT last_insert_rowid()";
-                var rez = cmd.ExecuteScalar();
+                var rez = cmd.GetRawValue();
                 return new LastInsertId(rez);
             }
             cmd.Execute();
