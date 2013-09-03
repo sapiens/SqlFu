@@ -5,6 +5,8 @@ using System.Data.Common;
 using System.Linq;
 using CavemanTools.Model;
 using SqlFu.DDL;
+using SqlFu.Expressions;
+using SqlFu.Internals;
 
 namespace SqlFu
 {
@@ -56,6 +58,19 @@ namespace SqlFu
             {
                 return cmd.Fetch<T>(firstRowOnly: true).FirstOrDefault();
             }
+        }
+
+        /// <summary>
+        /// Does a simple 'select * from T'
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="cnx"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> Query<T>(this DbConnection cnx)
+        {
+            var tableData = TableInfo.ForType(typeof (T));
+            var sql = "select * from {0}".ToFormat(cnx.GetProvider().EscapeName(tableData.Name));
+            return Query<T>(cnx, sql);
         }
 
         public static IEnumerable<T> Query<T>(this DbConnection cnx, string sql, params object[] args) 
