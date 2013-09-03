@@ -174,6 +174,20 @@ namespace Tests.Helpers
             Assert.Equal("custom-value", custom.Value.CustomValue);
         }
 
+        [Fact]
+        public void query_with_no_params_does_select_all()
+        {
+            _db.Insert(new Post
+                {
+                    Title = "Test",
+                    AuthorId = 1,
+                    TopicId = null,
+                    Type = PostType.Post,
+                    CreatedOn = DateTime.UtcNow
+                });
+            Assert.NotEmpty(_db.Query<Post>());
+        }
+
         private void Write(object format, params object[] param)
         {
             Console.WriteLine(format.ToString(), param);

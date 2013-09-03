@@ -78,6 +78,8 @@ namespace SqlFu
             return db.QuerySingle<T>(builder.ToString(), builder.Parameters.ToArray());
         }
 
+
+
         /// <summary>
         /// 
         /// </summary>
