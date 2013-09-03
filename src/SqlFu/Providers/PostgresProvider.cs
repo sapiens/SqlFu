@@ -80,7 +80,7 @@ namespace SqlFu.Providers
             {
                 cmd.CommandText += (" returning " + EscapeName(idKey));
             }
-            return new LastInsertId(cmd.ExecuteScalar());
+            return new LastInsertId(cmd.GetRawValue());
         }
 
         public override string ParamPrefix

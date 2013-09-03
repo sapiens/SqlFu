@@ -35,7 +35,7 @@ namespace SqlFu.Providers
         public override LastInsertId ExecuteInsert(DbCommand cmd, string idKey)
         {
             cmd.CommandText += ";SELECT LAST_INSERT_ID()";
-            var rez = cmd.ExecuteScalar();
+            var rez = cmd.GetRawValue();
             return new LastInsertId(rez);
         }
 

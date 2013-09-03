@@ -18,7 +18,7 @@ namespace SqlFu.Providers.SqlServer
             cmd.Execute();
             cmd.Reset();
             cmd.CommandText = "select @@IDENTITY as id";
-            var rez = cmd.ExecuteScalar();
+            var rez = cmd.GetRawValue();
             return new LastInsertId(rez);
         }
 

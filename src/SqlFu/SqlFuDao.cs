@@ -426,6 +426,27 @@ namespace SqlFu
 
         #region Command actions
 
+        /// <summary>
+        /// Identically with ExecuteScalar but has logging enabled
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <returns></returns>
+        public static object GetRawValue(this DbCommand cmd)
+        {
+            object rez;
+            try
+            {
+                rez = cmd.ExecuteScalar();
+                OnCommand(cmd);
+                return rez;
+            }
+            catch (Exception ex)
+            {
+                OnException(cmd, ex);
+                throw;
+            }
+        }
+
         public static T GetValue<T>(this DbCommand cmd, Func<object, T> converter)
         {
             object rez;

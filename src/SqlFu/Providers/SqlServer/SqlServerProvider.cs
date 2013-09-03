@@ -164,7 +164,8 @@ sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, bo
         {
             cmd.CommandText += ";Select SCOPE_IDENTITY() as id";
 
-            var rez = cmd.ExecuteScalar();
+            var rez = cmd.GetRawValue();
+          
             return new LastInsertId(rez);
         }
 
