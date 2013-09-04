@@ -102,7 +102,7 @@ namespace SqlFu
         {
             using (var cmd = cnx.CreateAndSetupCommand(sql, args))
             {
-                using (var reader = cmd.ExecuteReader())
+                using (var reader = cmd.ExecuteLoggedReader())
                 {
                     var list1 = MapReaderToModel<T1>(reader, cmd);
                     var list2 = MapReaderToModel<T2>(reader, cmd, true);
@@ -112,12 +112,33 @@ namespace SqlFu
             }
         }
 
+        /// <summary>
+        /// Calls OnCommand and OnError 
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <returns></returns>
+        public static DbDataReader ExecuteLoggedReader(this DbCommand cmd)
+        {
+            try
+            {
+                var reader = cmd.ExecuteReader();
+                OnCommand(cmd);
+                return reader;
+            }
+            catch (DbException ex)
+            {
+                OnException(cmd, ex);
+                throw;
+            }
+        }
+
+
         public static Tuple<IList<T1>, IList<T2>, IList<T3>> Fetch<T1, T2, T3>(this DbConnection cnx, string sql, params object[] args)
             where T1 : new() where T2 : new() where T3 : new()
         {
             using (var cmd = cnx.CreateAndSetupCommand(sql, args))
             {
-                using (var reader = cmd.ExecuteReader())
+                using (var reader = cmd.ExecuteLoggedReader())
                 {
                     var list1 = MapReaderToModel<T1>(reader, cmd);
                     var list2 = MapReaderToModel<T2>(reader, cmd, true);
@@ -133,7 +154,7 @@ namespace SqlFu
         {
             using (var cmd = cnx.CreateAndSetupCommand(sql, args))
             {
-                using (var reader = cmd.ExecuteReader())
+                using (var reader = cmd.ExecuteLoggedReader())
                 {
                     var list1 = MapReaderToModel<T1>(reader, cmd);
                     var list2 = MapReaderToModel<T2>(reader, cmd, true);
@@ -150,7 +171,7 @@ namespace SqlFu
         {
             using (var cmd = cnx.CreateAndSetupCommand(sql, args))
             {
-                using (var reader = cmd.ExecuteReader())
+                using (var reader = cmd.ExecuteLoggedReader())
                 {
                     var list1 = MapReaderToModel<T1>(reader, cmd);
                     var list2 = MapReaderToModel<T2>(reader, cmd, true);
@@ -168,7 +189,7 @@ namespace SqlFu
         {
             using (var cmd = cnx.CreateAndSetupCommand(sql, args))
             {
-                using (var reader = cmd.ExecuteReader())
+                using (var reader = cmd.ExecuteLoggedReader())
                 {
                     var list1 = MapReaderToModel<T1>(reader, cmd);
                     var list2 = MapReaderToModel<T2>(reader, cmd, true);
