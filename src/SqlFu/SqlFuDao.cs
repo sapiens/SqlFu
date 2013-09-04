@@ -95,6 +95,138 @@ namespace SqlFu
             return cmd;
         }
 
+        #region Multiple Resultsets
+
+        public static Tuple<IList<T1>, IList<T2>> Fetch<T1, T2>(this DbConnection cnx, string sql, params object[] args)
+            where T1 : new() where T2 : new()
+        {
+            using (var cmd = cnx.CreateAndSetupCommand(sql, args))
+            {
+                using (var reader = cmd.ExecuteLoggedReader())
+                {
+                    var list1 = MapReaderToModel<T1>(reader, cmd);
+                    var list2 = MapReaderToModel<T2>(reader, cmd, true);
+
+                    return new Tuple<IList<T1>, IList<T2>>(list1, list2);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Calls OnCommand and OnError 
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <returns></returns>
+        public static DbDataReader ExecuteLoggedReader(this DbCommand cmd)
+        {
+            try
+            {
+                var reader = cmd.ExecuteReader();
+                OnCommand(cmd);
+                return reader;
+            }
+            catch (DbException ex)
+            {
+                OnException(cmd, ex);
+                throw;
+            }
+        }
+
+
+        public static Tuple<IList<T1>, IList<T2>, IList<T3>> Fetch<T1, T2, T3>(this DbConnection cnx, string sql, params object[] args)
+            where T1 : new() where T2 : new() where T3 : new()
+        {
+            using (var cmd = cnx.CreateAndSetupCommand(sql, args))
+            {
+                using (var reader = cmd.ExecuteLoggedReader())
+                {
+                    var list1 = MapReaderToModel<T1>(reader, cmd);
+                    var list2 = MapReaderToModel<T2>(reader, cmd, true);
+                    var list3 = MapReaderToModel<T3>(reader, cmd, true);
+
+                    return new Tuple<IList<T1>, IList<T2>, IList<T3>>(list1, list2, list3);
+                }
+            }
+        }
+
+        public static Tuple<IList<T1>, IList<T2>, IList<T3>, IList<T4>> Fetch<T1, T2, T3, T4>(this DbConnection cnx, string sql, params object[] args)
+            where T1 : new() where T2 : new() where T3 : new() where T4 : new()
+        {
+            using (var cmd = cnx.CreateAndSetupCommand(sql, args))
+            {
+                using (var reader = cmd.ExecuteLoggedReader())
+                {
+                    var list1 = MapReaderToModel<T1>(reader, cmd);
+                    var list2 = MapReaderToModel<T2>(reader, cmd, true);
+                    var list3 = MapReaderToModel<T3>(reader, cmd, true);
+                    var list4 = MapReaderToModel<T4>(reader, cmd, true);
+
+                    return new Tuple<IList<T1>, IList<T2>, IList<T3>, IList<T4>>(list1, list2, list3, list4);
+                }
+            }
+        }
+
+        public static Tuple<IList<T1>, IList<T2>, IList<T3>, IList<T4>, IList<T5>> Fetch<T1, T2, T3, T4, T5>(this DbConnection cnx, string sql, params object[] args)
+            where T1 : new() where T2 : new() where T3 : new() where T4 : new() where T5 : new()
+        {
+            using (var cmd = cnx.CreateAndSetupCommand(sql, args))
+            {
+                using (var reader = cmd.ExecuteLoggedReader())
+                {
+                    var list1 = MapReaderToModel<T1>(reader, cmd);
+                    var list2 = MapReaderToModel<T2>(reader, cmd, true);
+                    var list3 = MapReaderToModel<T3>(reader, cmd, true);
+                    var list4 = MapReaderToModel<T4>(reader, cmd, true);
+                    var list5 = MapReaderToModel<T5>(reader, cmd, true);
+        
+                    return new Tuple<IList<T1>, IList<T2>, IList<T3>, IList<T4>, IList<T5>>(list1, list2, list3, list4, list5);
+                }
+            }
+        }
+
+        public static Tuple<IList<T1>, IList<T2>, IList<T3>, IList<T4>, IList<T5>, IList<T6>> Fetch<T1, T2, T3, T4, T5, T6>(this DbConnection cnx, string sql, params object[] args)
+            where T1 : new() where T2 : new() where T3 : new() where T4 : new() where T5 : new() where T6 : new()
+        {
+            using (var cmd = cnx.CreateAndSetupCommand(sql, args))
+            {
+                using (var reader = cmd.ExecuteLoggedReader())
+                {
+                    var list1 = MapReaderToModel<T1>(reader, cmd);
+                    var list2 = MapReaderToModel<T2>(reader, cmd, true);
+                    var list3 = MapReaderToModel<T3>(reader, cmd, true);
+                    var list4 = MapReaderToModel<T4>(reader, cmd, true);
+                    var list5 = MapReaderToModel<T5>(reader, cmd, true);
+                    var list6 = MapReaderToModel<T6>(reader, cmd, true);
+
+                    return new Tuple<IList<T1>, IList<T2>, IList<T3>, IList<T4>, IList<T5>, IList<T6>>(list1, list2, list3, list4, list5, list6);
+                }
+            }
+        }
+
+
+        internal static IList<TModel> MapReaderToModel<TModel>(IDataReader reader, IDbCommand command, bool useNextResult = false)
+        {
+            var results = new List<TModel>();
+
+            if (useNextResult)
+            {
+                if (!reader.NextResult())
+                {
+                    return results;
+                }
+            }
+
+            while (reader.Read())
+            {
+                var mapper = PocoFactory.GetPocoMapper<TModel>(reader, command.CommandText);
+                results.Add(mapper(reader));
+            }
+
+            return results;
+        }
+
+        #endregion
+
         #region Settings
 
         public static void ConnectionNameIs(string name)
