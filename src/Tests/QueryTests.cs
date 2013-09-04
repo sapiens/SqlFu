@@ -188,6 +188,19 @@ namespace Tests.Helpers
             Assert.NotEmpty(_db.Query<Post>());
         }
 
+
+        [Fact]
+        public void fetch_multiple_resultsets()
+        {
+            Config.EnsurePosts();
+            var sql = "select * from Posts; select * from Posts where Id=3";
+            var result = _db.Fetch<Post, Post>(sql);
+            Assert.NotEmpty(result.Item1);
+            Assert.Equal(1,result.Item2.Count);
+            Assert.Equal(3,result.Item2.First().Id);
+            Config.EmptyTable();
+        }
+
         private void Write(object format, params object[] param)
         {
             Console.WriteLine(format.ToString(), param);
