@@ -121,6 +121,20 @@ namespace SqlFu
             return db.GetValue<R>(builder.ToString(), builder.Parameters.ToArray());
         }
 
+        public static IEnumerable<R> QueryColumn<T, R>(this DbConnection db, Expression<Func<T, R>> selector,
+                                                       Expression<Func<T, bool>> criteria)
+        {
+            selector.MustNotBeNull();
+            var builder = new ExpressionSqlBuilder<T>(db.GetProvider().BuilderHelper);
+            builder
+                .WriteSelect()
+                .WriteSelectColumn(selector)
+                .WriteFrom()
+                .Where(criteria);
+
+            return db.Query<R>(builder.ToString(), builder.Parameters.ToArray());
+        }
+
         public static long Count<T>(this DbConnection db, Expression<Func<T, bool>> criteria = null)
         {
             var builder = new ExpressionSqlBuilder<T>(db.GetProvider().BuilderHelper);
