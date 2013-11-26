@@ -198,15 +198,6 @@
             <param name="o">Object</param>
             <returns></returns>
         </member>
-        <member name="M:System.Reflection.ReflectionUtils.ImplementsGenericInterface(System.Object,System.String,System.Type[])">
-            <summary>
-            
-            </summary>
-            <param name="o"></param>
-            <param name="interfaceName">The intuitive interface name</param>
-            <param name="genericType">Interface's generic arguments types</param>
-            <returns></returns>
-        </member>
         <member name="M:System.Reflection.ReflectionUtils.GetPropertyValue``1(System.Object,System.String)">
             <summary>
             Gets the value of a property
@@ -699,6 +690,29 @@
             <param name="defValue">Value to return if dictionary doesn't contain the key</param>
             <returns></returns>
         </member>
+        <member name="M:System.Collections.Generic.ListUtils.RemoveAll``1(System.Collections.Generic.IList{``0},System.Func{``0,System.Boolean})">
+            <summary>
+            Returns number of items removed
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="items"></param>
+            <param name="predicate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Model.ValueObjects.AbstractValueObject`1.#ctor(`0)">
+            <summary>
+            
+            </summary>
+            <exception cref="T:System.ArgumentException"></exception>
+            <param name="value"></param>
+        </member>
+        <member name="M:CavemanTools.Model.ValueObjects.AbstractValueObject`1.Validate(`0)">
+            <summary>
+            Is automatically invoked by the constructor
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
         <member name="T:CavemanTools.Model.ValueObjects.Email">
             <summary>
             
@@ -716,72 +730,6 @@
             <exception cref="T:System.ArgumentNullException"></exception>
             <param name="value">Value must not be empty</param>
         </member>
-        <member name="T:CavemanTools.Model.Validation.Attributes.ForbidWordsAttribute">
-            <summary>
-             Validates that a string doesn't contain unwanted words.
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Model.Validation.Attributes.ForbidWordsAttribute.#ctor(System.String)">
-            <summary>
-            
-            </summary>
-            <exception cref="T:System.ArgumentNullException"></exception>
-            <param name="words">Separate by comma</param>
-        </member>
-        <member name="P:CavemanTools.Model.Validation.Attributes.ForbidWordsAttribute.Forbidden">
-            <summary>
-             Gets the forbidden words list
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Model.Validation.Attributes.RegularExpressionAttribute">
-            <summary>
-            Validates value according to regular expression.
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Model.Validation.Attributes.RegularExpressionAttribute.#ctor(System.String)">
-            <summary>
-            
-            </summary>
-            <exception cref="T:System.ArgumentNullException"></exception>
-            <param name="pattern">Regex</param>
-        </member>
-        <member name="P:CavemanTools.Model.Validation.Attributes.RegularExpressionAttribute.Pattern">
-            <summary>
-            Gets the pattern for validation. 
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Model.Validation.Attributes.UrlFriendlyAttribute">
-            <summary>
-            Checks if value can be used "as is" without escaping in a url
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Model.Validation.Attributes.StringLengthAttribute">
-            <summary>
-            Validates if the value's length is between minimum and maximum length
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Model.Validation.Attributes.StringLengthAttribute.#ctor(System.Int32)">
-            <summary>
-            
-            </summary>
-            <exception cref="T:System.ArgumentOutOfRangeException">Maximum Length is negative</exception>
-            <param name="max">Maximum length</param>
-        </member>
-        <member name="P:CavemanTools.Model.Validation.Attributes.StringLengthAttribute.MaxLength">
-            <summary>
-            Maximum length for string
-            </summary>
-        </member>
-        <member name="P:CavemanTools.Model.Validation.Attributes.StringLengthAttribute.MinLength">
-            <summary>
-            Minimum lenght for string
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Model.Validation.Attributes.RequiredAttribute">
-            <summary>
-             Specify that a (non-empty) or blanc value is provided.
-            </summary>
-        </member>
         <member name="T:CavemanTools.Model.Validation.IAddError">
             <summary>
              Provide the functionality to collect multiple errors messages for the same key
@@ -796,27 +744,6 @@
         <member name="P:CavemanTools.Model.Validation.IAddError.Key">
             <summary>
             Field Name
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Model.Validation.Attributes.MinimumLengthAttribute">
-            <summary>
-            Validates that a string has mnimum length
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Model.Validation.Attributes.MinimumLengthAttribute.#ctor(System.Int32)">
-            <summary>
-            
-            </summary>
-            <param name="length">Minimum length</param>
-        </member>
-        <member name="P:CavemanTools.Model.Validation.Attributes.MinimumLengthAttribute.Length">
-            <summary>
-            Gets minimum length
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Model.Validation.Attributes.EmailAttribute">
-            <summary>
-            Validates a string as an email
             </summary>
         </member>
         <member name="T:CavemanTools.Model.Validation.ValidationBag">
@@ -857,133 +784,6 @@
             </summary>
             <param name="key">Error Key</param>
             <param name="erbag">Error Bag</param>
-        </member>
-        <member name="T:CavemanTools.Model.Validation.ValidationService`1">
-            <summary>
-            Provides functionality to validate ValidationAttributes both by declaration and instantiation
-            </summary>
-            <typeparam name="T">Type containing declarated validation attributes</typeparam>
-        </member>
-        <member name="M:CavemanTools.Model.Validation.ValidationService`1.GetClassValidator``1">
-            <summary>
-            Gets all the class validation attributes matching type
-            </summary>
-            <typeparam name="TA">Implements ValidationAttribute</typeparam>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Model.Validation.ValidationService`1.GetValidators``1(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
-            <summary>
-            Gets all the validation attributes matching type for the property
-            </summary>
-            <typeparam name="TA">ValidationAttribute inheritor</typeparam>
-            <param name="property">Expression Property</param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Model.Validation.ValidationService`1.GetValidators(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
-            <summary>
-            Gets all defiend validation attributes for property
-            </summary>
-            <param name="property">Expression property</param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Model.Validation.ValidationService`1.AddValidation(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.ComponentModel.DataAnnotations.ValidationAttribute)">
-            <summary>
-            Registers validator for a property
-            </summary>
-            <param name="property">Property expression</param>
-            <param name="validator">Validator</param>
-        </member>
-        <member name="M:CavemanTools.Model.Validation.ValidationService`1.ValidateObject(`0)">
-            <summary>
-            Validates object of type, calling the validators for each property
-            It calls both validators defined in this service as well as the declared attributes if any
-            </summary>
-            <param name="object">Object to validate</param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Model.Validation.ValidationService`1.ValidateObject(`0,CavemanTools.Model.Validation.IValidationDictionary)">
-            <summary>
-            Validates object of type, calling the validators for each property
-            It calls both validators defined in this service as well as the declared attributes if any
-            </summary>
-            <typeparam name="T">type of object</typeparam>
-            <param name="object">Object to validate</param>
-            <param name="errorBag">Validation error bag, can be null if you don't need errors</param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Model.Validation.ValidationService`1.ValidateValueFor(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Object,CavemanTools.Model.Validation.IValidationDictionary)">
-            <summary>
-            Validates the value according to property validators
-            </summary>
-            <param name="property">Property expression</param>
-            <param name="value">value to validate</param>
-            <param name="errorBag">Error bag, can be null</param>
-            <returns></returns>
-        </member>
-        <member name="M:CavemanTools.Model.Validation.ValidationService`1.ValidateValueForClass(System.Object,CavemanTools.Model.Validation.IAddError)">
-            <summary>
-            Validates value with the attributes decorating the class T
-            </summary>
-            <param name="value">Value</param>
-            <param name="errorBag">Error bag</param>
-            <returns></returns>
-        </member>
-        <member name="P:CavemanTools.Model.Validation.ValidationService`1.GetClassValidators">
-            <summary>
-            Gets the Validation Attributes decorating the class
-            </summary>
-        </member>
-        <member name="T:CavemanTools.Model.Validation.ValidationUtils">
-            <summary>
-            Used to validate objects
-            </summary>
-        </member>
-        <member name="M:CavemanTools.Model.Validation.ValidationUtils.Validate``1(``0)">
-            <summary>
-            Validate object properties using Data Annotations, registering the error messages in process
-            </summary>
-            <typeparam name="T">Type decorated with Validation Attributes</typeparam>
-            <param name="data">Object</param>		
-        </member>
-        <member name="M:CavemanTools.Model.Validation.ValidationUtils.Validate``1(``0,CavemanTools.Model.Validation.IValidationDictionary)">
-            <summary>
-            Validate object properties using Data Annotations, registering the error messages in process
-            </summary>
-            <typeparam name="T">Type decorated with Validation Attributes</typeparam>
-            <param name="data">Object</param>
-            <param name="errorBag">Error dictionary,can be null</param>
-        </member>
-        <member name="M:CavemanTools.Model.Validation.ValidationUtils.ValidateAs``1(System.Object)">
-            <summary>
-            Validates a value according to validation attributes of a class, ignoring the errors
-            </summary>
-            <typeparam name="T">Type decorated with validation attributes</typeparam>
-            <param name="value">Value to be validated</param>
-        </member>
-        <member name="M:CavemanTools.Model.Validation.ValidationUtils.ValidateAs``1(System.Object,CavemanTools.Model.Validation.IAddError)">
-            <summary>
-            Validates a value according to validation attributes of a class, registering error messages.
-            </summary>
-            <typeparam name="T">Type decorated with validation attributes</typeparam>
-            <param name="value">Value to be validated</param>
-            <param name="state">Error dictionary, can be null</param>
-        </member>
-        <member name="M:CavemanTools.Model.Validation.ValidationUtils.ValidateFor``1(System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
-            <summary>
-            Validates a value according to validation attributes of a property, ignoring the errors.
-            </summary>
-            <typeparam name="T">Type which contains property</typeparam>
-            <param name="value">Value to be validated</param>
-            <param name="property">Property decorated with validation attributes</param>
-        </member>
-        <member name="M:CavemanTools.Model.Validation.ValidationUtils.ValidateFor``1(System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},CavemanTools.Model.Validation.IValidationDictionary)">
-            <summary>
-            Validates a value according to validation attributes of a property, registering the error messages.
-            </summary>
-            <typeparam name="T">Type which contains property</typeparam>
-            <param name="value">Value to be validated</param>
-            <param name="property">Property decorated with validation attributes</param>
-            <param name="state">Error dictionary, can be null</param>
         </member>
         <member name="T:System.Collections.Generic.ModifiedSet`1">
             <summary>
@@ -1060,6 +860,14 @@
             <param name="instantiable">True to return only types that can be instantiated i.e no interfaces and no abstract classes</param>
             <returns></returns>
         </member>
+        <member name="M:System.Reflection.AssemblyExtensions.GetInstancesOfTypesDerivedFrom``1(System.Reflection.Assembly)">
+            <summary>
+            Searches and instantiate types derived from T
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="asm"></param>
+            <returns></returns>
+        </member>
         <member name="M:System.Reflection.AttributeUtils.GetCustomAttributes``1(System.Reflection.ICustomAttributeProvider)">
             <summary>
             Returns all custom attributes of specified type
@@ -1114,6 +922,55 @@
             <param name="o"></param>
             <returns></returns>
         </member>
+        <member name="M:CavemanTools.SessionId.ToString">
+            <summary>
+            Returns the fully qualified type name of this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> containing a fully qualified type name.
+            </returns>
+        </member>
+        <member name="M:CavemanTools.SessionId.Parse(System.String)">
+            <summary>
+            
+            </summary>
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.SessionId.#ctor(System.Byte[])">
+            <summary>
+            
+            </summary>
+            <param name="data"></param>
+        </member>
+        <member name="M:CavemanTools.SessionId.Equals(CavemanTools.SessionId)">
+            <summary>
+            Indicates whether the current object is equal to another object of the same type.
+            </summary>
+            <returns>
+            true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+            </returns>
+            <param name="other">An object to compare with this object.</param>
+        </member>
+        <member name="M:CavemanTools.SessionId.Equals(System.Object)">
+            <summary>
+            Indicates whether this instance and a specified object are equal.
+            </summary>
+            <returns>
+            true if <paramref name="obj"/> and this instance are the same type and represent the same value; otherwise, false.
+            </returns>
+            <param name="obj">Another object to compare to. </param>
+        </member>
+        <member name="M:CavemanTools.SessionId.GetHashCode">
+            <summary>
+            Returns the hash code for this instance.
+            </summary>
+            <returns>
+            A 32-bit signed integer that is the hash code for this instance.
+            </returns>
+        </member>
         <member name="M:CavemanTools.SingletonsRegistry.Register``1(``0)">
             <summary>
             Registers a singleton
@@ -1147,6 +1004,12 @@
             </summary>
             <param name="version">major.minor.patch[-preRelease][+build]</param>
         </member>
+        <member name="M:CavemanTools.SemanticVersion.#ctor(System.Version,System.String,System.String)">
+            <summary>
+            Creates semantic version from Version
+            </summary>
+            <param name="version">The Revision number is ignored</param>
+        </member>
         <member name="M:System.EncryptionUtils.Sha256(System.String)">
             <summary>
             Hash a string using the SHA256 algorithm. 32 bytes (hex): 64 unicode chars, 128 bytes
@@ -1161,7 +1024,7 @@
         </member>
         <member name="M:System.EncryptionUtils.Sha512(System.String)">
             <summary>
-            Hash a string using the SHA512 algorithm.  128 bytes(hex): 256 unicode chars
+            Hash a string using the SHA512 algorithm. 128 unicode chars, 256 bytes
             </summary>
         </member>
         <member name="M:System.EncryptionUtils.MD5(System.String)">
@@ -1295,6 +1158,14 @@
         <member name="M:System.ObjectExtend.Cast``1(System.Object)">
             <summary>
             Shorthand for lazy people to cast an object to a type
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="o"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.ObjectExtend.Is``1(System.Object)">
+            <summary>
+            Shortcut for 'object is type'
             </summary>
             <typeparam name="T"></typeparam>
             <param name="o"></param>
@@ -1524,6 +1395,15 @@
             <param name="parent"></param>
             <returns></returns>
         </member>
+        <member name="M:System.TypeExtensions.ImplementsGenericInterface(System.Object,System.String,System.Type[])">
+            <summary>
+            
+            </summary>
+            <param name="o"></param>
+            <param name="interfaceName">The intuitive interface name</param>
+            <param name="genericType">Interface's generic arguments types</param>
+            <returns></returns>
+        </member>
         <member name="M:System.TypeExtensions.GetGenericArgument(System.Type,System.Int32)">
             <summary>
             
@@ -1562,6 +1442,13 @@
             Returns the full name of type, including assembly but not version, public key etc, i.e: namespace.type, assembly
             </summary>
             <param name="t">Type</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.TypeExtensions.StripNamespaceAssemblyName(System.Type)">
+            <summary>
+            Returns namespace without the assembly name
+            </summary>
+            <param name="type"></param>
             <returns></returns>
         </member>
         <member name="M:System.StringUtils.MakeSlug(System.String)">
@@ -1632,13 +1519,13 @@
         </member>
         <member name="M:System.StringUtils.GenerateRandomString(System.String,System.Int32)">
             <summary>
-            Generates a random string of the specified length
+            Generates a random string of the specified length starting with prefix
             </summary>
-            <param name="a"></param>
+            <param name="prefix"></param>
             <param name="length"></param>
             <returns></returns>
         </member>
-        <member name="M:System.StringUtils.RandomString(System.Int32)">
+        <member name="M:System.StringUtils.CreateRandomString(System.Int32)">
             <summary>
             Generates a random string (only letters) of the specified length
             </summary>

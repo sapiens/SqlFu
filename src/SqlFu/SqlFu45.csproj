@@ -33,8 +33,9 @@
     <DocumentationFile>bin\Release\Net45\SqlFu.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CavemanTools">
-      <HintPath>..\packages\CavemanTools.dll</HintPath>
+    <Reference Include="CavemanTools, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\CavemanTools\Net45\CavemanTools.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -226,7 +227,7 @@
     <Compile Include="QueryHelpers.cs" />
     <Compile Include="QueryOnlyAttribute.cs" />
     <Compile Include="SqlFuConnection.cs">
-      </Compile>
+    </Compile>
     <Compile Include="SqlFuDao.cs" />
     <Compile Include="SqlFuDaoAsync.cs" />
     <Compile Include="SqlFuDynamic.cs" />
