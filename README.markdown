@@ -10,6 +10,10 @@ Latest version: 2.1.0 [Change Log](https://github.com/sapiens/SqlFu/wiki/ChangeL
 SqlFu uses Apache 2.0 license.
 
 
+### Note for contributors
+
+Please create your pull requests to target the "devel" branch. "Master" is only for released code. Thank you.
+
 ## Why should you use it
 The main USP (unique selling proposition - advantage) of SqlFu  is  **Versatility**. This is the reason I've developed it. I need it more flexibility and the micro-orm I was using (peta poco) didn't have it and if other micro-orms had it, they were too slow. 
 
