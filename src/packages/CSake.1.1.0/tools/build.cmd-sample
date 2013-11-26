@@ -1,0 +1,3 @@
+@echo off
+"[path to]\packages\csake[version number]\tools\csake.exe" build.cs %1
+pause
