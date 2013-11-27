@@ -1,0 +1,61 @@
+//uncomment to include reference to other assembly you might need (one directive per each)
+//#r "mycustom.dll"
+using System;
+using System.IO;
+using CSake;
+using NuGet;   //comment it out if you don't create nuget packs or manipulate nuspec files
+
+//don't use namespaces
+//any class you create will be considered an inner class of the CSakeWrapper class
+
+const string SlnFile=@"relative path to .sln file";
+
+const string ReleaseDir=@"relative path to/bin/Release";
+
+const string TempDir=@"temp";
+
+//for nuget
+const string PackageDir = @"temp/package";
+
+static string CurrentDir=Path.GetFullPath("./");
+
+public static void CleanUp()
+{
+    TempDir.CleanupDir();
+    SlnFile.MsBuildClean();         
+}
+
+//multiple deps: [Depends("Task1","Task2")]
+[Depends("CleanUp")] 
+[Default] //default task
+public static void Build()
+{
+    "Build Release".ToConsole();
+	SlnFile.MsBuildRelease();
+}
+
+//------------------------------ Utils ----------------
+
+//updates version in nuspec file
+static void UpdateVersion(string nuspecFile,string assemblyName)
+{
+    var nuspec=nuspecFile.AsNuspec();   
+    nuspec.Metadata.Version=GetVersion(assemblyName);
+    nuspec.Save(TempDir);    
+}
+
+//basePath= relative path for package files source. Usually is the project dir.
+static void BuildNuget(string nuspecFile,string basePath)
+{
+    if (!nuspecFile.EndsWith(".nuspec"))
+    {
+        nuspecFile+=".nuspec";
+    }
+    Path.Combine(TempDir,nuspecFile).CreateNuget(basePath,PackageDir);    
+}
+
+static string GetVersion(string asmName)
+{
+   return Path.Combine(ReleaseDir,asmName).GetAssemblyVersion().ToSemanticVersion().ToString();
+}
+

@@ -163,7 +163,7 @@ namespace Tests.Helpers
             PocoFactory.RegisterConverterFor<Email>(o=> new Email(o.ToString()));
             var em=_db.GetValue<Email>("select 'mike@test.com'");
             Assert.Equal("mike@test.com",em.Value);
-
+            PocoFactory.UnregisterConverters();
         }
 
         [Fact]
@@ -198,7 +198,7 @@ namespace Tests.Helpers
             Assert.NotEmpty(result.Item1);
             Assert.Equal(1,result.Item2.Count);
             Assert.Equal(3,result.Item2.First().Id);
-            Config.EmptyTable();
+          //  Config.EmptyTable();
         }
 
         private void Write(object format, params object[] param)

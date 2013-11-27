@@ -1,0 +1,1843 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CavemanTools</name>
+    </assembly>
+    <members>
+        <member name="M:CavemanTools.Data.JsonStruct.#ctor(System.String,CavemanTools.Data.JsonStatus)">
+            <summary>
+            Sets the status and inserts a message.
+            </summary>
+            <param name="message"></param>
+            <param name="status"></param>
+        </member>
+        <member name="T:System.EventArgs`1">
+            <summary>
+            Generic event args
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:System.AssertionsExtensions.MustBeUrlFriendly(System.String)">
+            <summary>
+            Throws if the value can't be used as-is in an url
+            </summary>
+            <param name="source"></param>
+        </member>
+        <member name="M:System.AssertionsExtensions.MustBe``1(System.Object)">
+            <summary>
+            Value type must be of specified type
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="value"></param>
+        </member>
+        <member name="M:System.AssertionsExtensions.MustImplement``1(System.Object)">
+            <summary>
+            Arugment must implement interface T
+            </summary>
+            <typeparam name="T">Inerface type</typeparam>
+            <param name="value"></param>
+        </member>
+        <member name="M:System.AssertionsExtensions.MustDeriveFrom``1(System.Object)">
+            <summary>
+            Argument must be an implementation or subclass of T
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="value"></param>
+        </member>
+        <member name="M:System.AssertionsExtensions.MustHaveValues``1(System.Collections.Generic.IEnumerable{``0},System.Boolean)">
+            <summary>
+            List must not be empty and must have non-null values
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list"></param>
+            <param name="throwWhenNullValues"></param>
+        </member>
+        <member name="M:System.Linq.Expressions.ExpressionExtensions.GetPropertyInfo``1(System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Returns reflection information for a property expression
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="property">Lambda returning the property</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Linq.Expressions.ExpressionExtensions.GetMethodInfo``1(System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Returns reflection information for a method call expression
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="method">Lambda with method call</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Linq.Expressions.ExpressionExtensions.InvolvesParameter(System.Linq.Expressions.Expression,System.Type)">
+            <summary>
+            True if expresion belongs to a parameter or is a method which has a parameter argument.
+            Doesn't handle lambdas
+            </summary>
+            <param name="node"></param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Linq.Expressions.ExpressionExtensions.BelongsToParameter(System.Linq.Expressions.Expression,System.Type)">
+            <summary>
+            True if expression belongs to a lambda argument (expression parameter)
+            </summary>
+            <param name="node"></param>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Linq.Expressions.ExpressionExtensions.IsParameter(System.Linq.Expressions.Expression,System.Type)">
+            <summary>
+            True if expression is a lambda argument 
+            </summary>
+            <param name="ex"></param>
+            <param name="type">Argument type</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Linq.Expressions.ExpressionExtensions.GetValue(System.Linq.Expressions.Expression)">
+            <summary>
+            Gets the value of an expresion if it's a property,field,constant or method call
+            </summary>
+            <exception cref="T:System.InvalidOperationException"></exception>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Linq.Expressions.ExpressionExtensions.GetValue(System.Linq.Expressions.MemberExpression)">
+            <summary>
+            Gets the value of the member access expression.
+            Works with properties, fields
+            </summary>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Linq.Expressions.ExpressionExtensions.CanReturnValue(System.Linq.Expressions.Expression)">
+            <summary>
+            True if the expression is of the type that can return a value (property,field,cosntnat, method call)
+            </summary>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Linq.Expressions.ExpressionExtensions.GetValue(System.Linq.Expressions.MethodCallExpression)">
+            <summary>
+            
+            </summary>
+            <exception cref="T:System.NotSupportedException"></exception>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Reflection.Emit.LCGUtils.EmitPushType(System.Reflection.Emit.ILGenerator,System.Type)">
+            <summary>
+            IL corresponding to push Type on stack
+            </summary>
+            <param name="il"></param>
+            <param name="tp"></param>
+        </member>
+        <member name="M:System.Reflection.Emit.LCGUtils.EmitUnboxValue(System.Reflection.Emit.ILGenerator,System.Type)">
+            <summary>
+            IL to unbox values, also handles Nullable
+            </summary>
+            <param name="il"></param>
+            <param name="type">value type</param>
+        </member>
+        <member name="M:System.Reflection.Emit.LCGUtils.EmitConsoleWriteLine(System.Reflection.Emit.ILGenerator)">
+            <summary>
+            Console.WriteLine for the value on the stack
+            </summary>
+            <param name="il"></param>
+        </member>
+        <member name="M:System.Reflection.Emit.LCGUtils.EmitDebugWriteLineForCurrentObject(System.Reflection.Emit.ILGenerator,System.String)">
+            <summary>
+            Shows message followed by current object from the top of the stack
+            </summary>
+            <param name="il"></param>
+            <param name="msg"></param>
+        </member>
+        <member name="M:System.Reflection.ReflectionUtils.Version(System.Reflection.Assembly)">
+            <summary>
+            Returns the assembly version
+            </summary>
+            <param name="asm"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Reflection.ReflectionUtils.GetStaticProperty``1(System.Object,System.String)">
+            <summary>
+            Used for resource localizing
+            </summary>
+            <param name="type"></param>
+            <exception cref="T:System.ArgumentException">If property was not found</exception>
+            <param name="propertyName">Public static property name</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Reflection.ReflectionUtils.SetValueFast(System.Reflection.PropertyInfo,System.Object,System.Object)">
+            <summary>
+            Fast setter. aprox 8x faster than simple Reflection
+            </summary>
+            <param name="a"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:System.Reflection.ReflectionUtils.GetValueFast(System.Reflection.PropertyInfo,System.Object)">
+            <summary>
+            Fast getter. aprox 5x faster than simple Reflection, aprox. 10x slower than manual get
+            </summary>
+            <param name="a"></param>	      
+        </member>
+        <member name="M:System.Reflection.ReflectionUtils.GetFactory(System.Type)">
+            <summary>
+            Gets delegate to quickly create instances of type using public parameterless constructor.
+            Use this only when you want to create LOTS of instances (dto scenario)
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Reflection.ReflectionUtils.IsExactlyType``1(System.Object)">
+            <summary>
+            Returns true if object is specifically of type. 
+            Use "is" operator to check if an object is an instance of a type that derives from type.
+            Returns false is T is nullable
+            </summary>
+            <typeparam name="T">any not nullable Type</typeparam>
+            <param name="o">Object</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Reflection.ReflectionUtils.GetPropertyValue``1(System.Object,System.String)">
+            <summary>
+            Gets the value of a property
+            </summary>
+            <typeparam name="T">Type of property value</typeparam>
+            <param name="object">Object to get value from</param>
+            <param name="propertyName">Property name</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Reflection.ReflectionUtils.GetPropertyValue(System.Object,System.String)">
+            <summary>
+            Gets the value of a public property
+            </summary>
+            <param name="object">Object to get value from</param>
+            <param name="property">Public property name</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Reflection.ReflectionUtils.CurrentFileVersion">
+            <summary>
+            Gets the file version of current executing assembly
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:System.Reflection.ReflectionUtils.CurrentAssemblyVersion">
+            <summary>
+            Gets the assembly version
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:System.Reflection.TypeFactory">
+            <summary>
+            For fast creation of types, useful for creating POCOs
+            </summary>
+        </member>
+        <member name="M:System.Reflection.TypeFactory.GetFactory(System.Type)">
+            <summary>
+            Gets factory to create instance of type using the public parameterless ctor.
+            Use it when you want to create many instances of the same type in different objects
+            Aprox, 1.3x faster than Activator, almost as fast a manual if you cache and reuse the delegate
+            </summary>
+            <param name="t"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.IResolveDependencies.ResolveOptional(System.Type)">
+            <summary>
+            If type is not registered return null
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.DependencyContainerWrapper.ResolveOptional(System.Type)">
+            <summary>
+            If type is not registered return null
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.DependencyContainerWrapper.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.IIGetCacheItem.Get``1(System.String,``0,System.Nullable{System.DateTimeOffset})">
+            <summary>
+            Gets typed object from cache or the supplied default value if the value doesn't exist.
+            Optionally set a new expiration date.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <param name="defaultValue">Value to return if the object doesn't exist in cache</param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.ICacheData.Add(System.String,System.Object,System.TimeSpan,System.Runtime.Caching.ChangeMonitor)">
+            <summary>
+            Tries to add value to cache.
+            Returns the existing value if any
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+            <param name="slidingExpiration"></param>
+            <param name="monitor"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.ICacheData.Add(System.String,System.Object,System.DateTimeOffset,System.Runtime.Caching.ChangeMonitor)">
+            <summary>
+            Tries to add value to cache.
+            Returns the existing value if any
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+            <param name="absoluteExpiration"></param>
+            <param name="monitor"></param>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.ICacheData.Set(System.String,System.Object,System.TimeSpan,System.Runtime.Caching.ChangeMonitor)">
+            <summary>
+            Adds or updates a key with the provided value.
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+            <param name="slidingExpiration"></param>
+            <param name="monitor"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.ICacheData.Set(System.String,System.Object,System.DateTimeOffset,System.Runtime.Caching.ChangeMonitor)">
+            <summary>
+            Adds or updates a key with the provided value.
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+            <param name="absoluteExpiration"></param>
+            <param name="monitor"></param>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.ICacheData.Refresh(System.String,System.DateTimeOffset)">
+            <summary>
+            Sets a new expiration date for the item
+            </summary>
+            <param name="key"></param>
+            <param name="absoluteExpiration"></param>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.ICacheData.GetUnderlyingCacheAs``1">
+            <summary>
+            Returns the underlying cache (the real caching object) used by this adapter.
+             </summary>
+            <typeparam name="T"></typeparam>
+            <exception cref="T:System.NotSupportedException"></exception>
+            <exception cref="T:System.InvalidCastException"></exception>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.LocalMemoryCache.Get``1(System.String,``0,System.Nullable{System.DateTimeOffset})">
+            <summary>
+            Gets typed object from cache or the supplied default value if the value doesn't exist.
+            Optionally set a new expiration date.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <param name="defaultValue">Value to return if the object doesn't exist in cache</param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.LocalMemoryCache.Add(System.String,System.Object,System.TimeSpan,System.Runtime.Caching.ChangeMonitor)">
+            <summary>
+            Tries to add value to cache.
+            Returns the existing value if any
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+            <param name="slidingExpiration"></param>
+            <param name="monitor"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.LocalMemoryCache.Add(System.String,System.Object,System.DateTimeOffset,System.Runtime.Caching.ChangeMonitor)">
+            <summary>
+            Tries to add value to cache.
+            Returns the existing value if any
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+            <param name="absoluteExpiration"></param>
+            <param name="monitor"></param>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.LocalMemoryCache.Set(System.String,System.Object,System.TimeSpan,System.Runtime.Caching.ChangeMonitor)">
+            <summary>
+            Adds or updates a key with the provided value.
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+            <param name="slidingExpiration"></param>
+            <param name="monitor"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.LocalMemoryCache.Set(System.String,System.Object,System.DateTimeOffset,System.Runtime.Caching.ChangeMonitor)">
+            <summary>
+            Adds or updates a key with the provided value.
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+            <param name="absoluteExpiration"></param>
+            <param name="monitor"></param>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.LocalMemoryCache.GetUnderlyingCacheAs``1">
+            <summary>
+            Returns the underlying cache (the real caching object) used by this adapter.
+             </summary>
+            <typeparam name="T"></typeparam>
+            <exception cref="T:System.NotSupportedException"></exception>
+            <exception cref="T:System.InvalidCastException"></exception>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.NullCache.Get``1(System.String,``0,System.Nullable{System.DateTimeOffset})">
+            <summary>
+            Gets typed object from cache or the supplied default value if the value doesn't exist.
+            Optionally set a new expiration date
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="key"></param>
+            <param name="defaultValue">Value to return if the object doesn't exist in cache</param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.NullCache.Add(System.String,System.Object,System.TimeSpan,System.Runtime.Caching.ChangeMonitor)">
+            <summary>
+            Tries to add value to cache.
+            Returns false if the value already exists
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+            <param name="slidingExpiration"></param>
+            <param name="monitor"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.NullCache.Add(System.String,System.Object,System.DateTimeOffset,System.Runtime.Caching.ChangeMonitor)">
+            <summary>
+            Tries to add value to cache.
+            Returns the existing value if any
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+            <param name="absoluteExpiration"></param>
+            <param name="monitor"></param>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.NullCache.Set(System.String,System.Object,System.TimeSpan,System.Runtime.Caching.ChangeMonitor)">
+            <summary>
+            Adds or updates a key with the provided value.
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+            <param name="slidingExpiration"></param>
+            <param name="monitor"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.NullCache.Set(System.String,System.Object,System.DateTimeOffset,System.Runtime.Caching.ChangeMonitor)">
+            <summary>
+            Adds or updates a key with the provided value.
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+            <param name="absoluteExpiration"></param>
+            <param name="monitor"></param>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.NullCache.GetUnderlyingCacheAs``1">
+            <summary>
+            Returns the implementor object of this interface.
+             </summary>
+            <typeparam name="T"></typeparam>
+            <exception cref="T:System.NotSupportedException"></exception>
+            <exception cref="T:System.InvalidCastException"></exception>
+            <returns></returns>
+        </member>
+        <member name="T:System.Collections.KeyValueDataStore">
+            <summary>
+             A simple bag object, where a string key can hold a list of string values
+            </summary>
+        </member>
+        <member name="T:System.Collections.Generic.ModifiedItem`1">
+            <summary>
+            Pair of old and new objects. Used by list comparator
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="T:CavemanTools.Logging.LoggingUtility">
+            <summary>
+            Contains extensions methods for log writing
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Logging.LoggingUtility.Write(CavemanTools.Logging.ILogWriter,System.String)">
+            <summary>
+            Writes DEBUG entry in log if logger is not null.
+            If null it does nothing
+            </summary>
+            <param name="logger"></param>
+            <param name="text">Log Entry Text</param>
+        </member>
+        <member name="M:CavemanTools.Logging.LoggingUtility.Write(CavemanTools.Logging.ILogWriter,System.String,System.Object[])">
+            <summary>
+            Writes and formats DEBUG entry in log if logger is not null.
+            If null it does nothing
+            </summary>
+            <param name="logger"></param>
+            <param name="text">Log Entry Format Text</param>
+            <param name="args">Format params</param>
+        </member>
+        <member name="M:CavemanTools.Logging.LoggingUtility.Write(CavemanTools.Logging.ILogWriter,CavemanTools.Logging.LogLevel,System.String)">
+            <summary>
+            Writes entry in log if logger is not null.
+            If null it does nothing
+            </summary>
+            <param name="logger"></param>
+            <param name="text">Log Entry Text</param>
+            <param name="level">Log Level</param>
+        </member>
+        <member name="M:CavemanTools.Logging.LoggingUtility.Write(CavemanTools.Logging.ILogWriter,CavemanTools.Logging.LogLevel,System.String,System.Object[])">
+            <summary>
+            Writes and formats entry in log if logger is not null.
+            If null it does nothing
+            </summary>
+            <param name="logger"></param>
+            <param name="text">Log Entry Format Text</param>
+            <param name="level">Log Level</param>
+            <param name="args">Format params</param>
+        </member>
+        <member name="T:CavemanTools.Logging.IWriteToLog">
+            <summary>
+            New name for an old interface
+            </summary>
+        </member>
+        <member name="T:CavemanTools.Logging.ILogWriter">
+            <summary>
+            Use to abstract the usage of an explicit logger (log4net, nlog etc)
+            Implement it or extend the LogWriteBase.
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Logging.ILogWriter.GetLogger``1">
+            <summary>
+            Should return the real logger implementation
+            </summary>
+            <typeparam name="T">Logger type</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Logging.ILogWriter.Log(CavemanTools.Logging.LogLevel,System.String)">
+            <summary>
+            Writes a log entry with the specified logging level
+            </summary>
+            <param name="level">Status</param>
+            <param name="text">Entry Text</param>
+        </member>
+        <member name="M:CavemanTools.Logging.ILogWriter.Log(CavemanTools.Logging.LogLevel,System.String,System.Object[])">
+            <summary>
+            Writes a formatted log entry with the specified logging level
+            </summary>
+            <param name="level">Status</param>
+            <param name="message">Entry Text</param>
+            <param name="args">List of arguments</param>
+        </member>
+        <member name="M:CavemanTools.Logging.FileLogger.GetLogger``1">
+            <summary>
+            Should return the real logger implementation
+            </summary>
+            <typeparam name="T">Logger type</typeparam>
+            <returns/>
+        </member>
+        <member name="M:CavemanTools.Logging.FileLogger.Log(CavemanTools.Logging.LogLevel,System.String)">
+            <summary>
+            Writes a log entry with the specified logging level
+            </summary>
+            <param name="level">Status</param><param name="text">Entry Text</param>
+        </member>
+        <member name="M:CavemanTools.Logging.FileLogger.Log(CavemanTools.Logging.LogLevel,System.String,System.Object[])">
+            <summary>
+            Writes a formatted log entry with the specified logging level
+            </summary>
+            <param name="level">Status</param><param name="message">Entry Text</param><param name="args">List of arguments</param>
+        </member>
+        <member name="T:CavemanTools.Logging.LogHelper">
+            <summary>
+            Not thread safe
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Logging.LogHelper.Register(CavemanTools.Logging.ILogWriter,System.String,System.Boolean)">
+            <summary>
+            Register a log, not thread safe
+            </summary>
+            <param name="log"></param>
+            <param name="name"></param>
+            <param name="isDefault"></param>
+        </member>
+        <member name="M:CavemanTools.Logging.LogHelper.GetLogger(System.String)">
+            <summary>
+            Returns the log matching the name
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Logging.LogHelper.OutputToConsole">
+            <summary>
+            Sets the default logger to be consoler. 
+            Logger name is "console"
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Logging.LogHelper.OutputTo(System.Action{System.String})">
+            <summary>
+            Sends all the logging to the writer.
+            Logger name is "devel"
+            </summary>
+            <param name="writer"></param>
+        </member>
+        <member name="P:CavemanTools.Logging.LogHelper.DefaultLogger">
+            <summary>
+            Gets the default registered log or the first registered log.
+            If no logger is defined, a null logger is returned
+            </summary>
+        </member>
+        <member name="T:System.Collections.Generic.IModifiedSet`1">
+            <summary>
+            INterface for the result of 2 sequences comparison
+            </summary>
+            <typeparam name="T">Implements IEquatable</typeparam>
+        </member>
+        <member name="P:System.Collections.Generic.IModifiedSet`1.Added">
+            <summary>
+            Gets the sequence of items added
+            </summary>
+        </member>
+        <member name="P:System.Collections.Generic.IModifiedSet`1.Removed">
+            <summary>
+            Gets the sequence of items removed
+            </summary>
+        </member>
+        <member name="P:System.Collections.Generic.IModifiedSet`1.Modified">
+            <summary>
+            Gets the sequence of items modified
+            </summary>
+        </member>
+        <member name="P:System.Collections.Generic.IModifiedSet`1.IsEmpty">
+            <summary>
+            Nothing has been added,removed or modified.
+            </summary>
+        </member>
+        <member name="M:System.Collections.Generic.ListUtils.HasTheSameElementsAs``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Checks if 2 enumerables have the same elements in the same order
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="first"></param>
+            <param name="second"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Collections.Generic.ListUtils.Compare``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Compares two sequences and returns the added or removed items.
+            </summary>
+            <typeparam name="T">Implements IEquatable</typeparam>
+            <param name="fresh">Recent sequence</param>
+            <param name="old">Older sequence used as base of comparison</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Collections.Generic.ListUtils.Compare``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0},System.Func{``0,``0,System.Boolean})">
+            <summary>
+            Compares two sequences and returns the added or removed items.
+            Use this when T doesn't implement IEquatable
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="fresh">Recent sequence</param>
+            <param name="old">Older sequence used as base of comparison</param>
+            <param name="match">function to check equality</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Collections.Generic.ListUtils.WhatChanged``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0},System.Func{``0,``0,System.Boolean})">
+            <summary>
+            Compares two sequences and returns the result.
+            This special case method is best used when you have identifiable objects that can change their content/value but not their id.
+            </summary>
+            <typeparam name="T">Implements IEquatable</typeparam>
+            <param name="fresh">Recent sequence</param>
+            <param name="old">Older sequence used as base of comparison</param>
+            <param name="detectChange">Delegate to determine if the items are identical.
+            First parameter is new item, second is the item used as base for comparison</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Collections.Generic.ListUtils.Update``1(System.Collections.Generic.IList{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Updates the old collection with new items, while removing the inexistent.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="old"></param>
+            <param name="fresh"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Collections.Generic.ListUtils.Update``1(System.Collections.Generic.IList{``0},System.Collections.Generic.IEnumerable{``0},System.Func{``0,``0,System.Boolean})">
+            <summary>
+            Updates the old collection with new items, while removing the inexistent.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="old"></param>
+            <param name="fresh"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Collections.Generic.ListUtils.IsNullOrEmpty``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Checks if a collection is null or empty duh!
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="items">collection</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Collections.Generic.ListUtils.GetValue``1(System.Collections.Generic.IDictionary{System.String,System.Object},System.String,``0)">
+            <summary>
+            Gets typed value from dictionary or a default value if key is missing
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="dic"></param>
+            <param name="key"></param>
+            <param name="defValue">Value to return if dictionary doesn't contain the key</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Collections.Generic.ListUtils.RemoveAll``1(System.Collections.Generic.IList{``0},System.Func{``0,System.Boolean})">
+            <summary>
+            Returns number of items removed
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="items"></param>
+            <param name="predicate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Model.ValueObjects.AbstractValueObject`1.#ctor(`0)">
+            <summary>
+            
+            </summary>
+            <exception cref="T:System.ArgumentException"></exception>
+            <param name="value"></param>
+        </member>
+        <member name="M:CavemanTools.Model.ValueObjects.AbstractValueObject`1.Validate(`0)">
+            <summary>
+            Is automatically invoked by the constructor
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CavemanTools.Model.ValueObjects.Email">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:CavemanTools.Model.ValueObjects.UrlSlug">
+            <summary>
+            Encapsulates the url friendly version of a string
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Model.ValueObjects.UrlSlug.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <param name="value">Value must not be empty</param>
+        </member>
+        <member name="T:CavemanTools.Model.Validation.Attributes.ForbidWordsAttribute">
+            <summary>
+             Validates that a string doesn't contain unwanted words.
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.Attributes.ForbidWordsAttribute.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <param name="words">Separate by comma</param>
+        </member>
+        <member name="P:CavemanTools.Model.Validation.Attributes.ForbidWordsAttribute.Forbidden">
+            <summary>
+             Gets the forbidden words list
+            </summary>
+        </member>
+        <member name="T:CavemanTools.Model.Validation.Attributes.RegularExpressionAttribute">
+            <summary>
+            Validates value according to regular expression.
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.Attributes.RegularExpressionAttribute.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <param name="pattern">Regex</param>
+        </member>
+        <member name="P:CavemanTools.Model.Validation.Attributes.RegularExpressionAttribute.Pattern">
+            <summary>
+            Gets the pattern for validation. 
+            </summary>
+        </member>
+        <member name="T:CavemanTools.Model.Validation.Attributes.UrlFriendlyAttribute">
+            <summary>
+            Checks if value can be used "as is" without escaping in a url
+            </summary>
+        </member>
+        <member name="T:CavemanTools.Model.Validation.Attributes.StringLengthAttribute">
+            <summary>
+            Validates if the value's length is between minimum and maximum length
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.Attributes.StringLengthAttribute.#ctor(System.Int32)">
+            <summary>
+            
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Maximum Length is negative</exception>
+            <param name="max">Maximum length</param>
+        </member>
+        <member name="P:CavemanTools.Model.Validation.Attributes.StringLengthAttribute.MaxLength">
+            <summary>
+            Maximum length for string
+            </summary>
+        </member>
+        <member name="P:CavemanTools.Model.Validation.Attributes.StringLengthAttribute.MinLength">
+            <summary>
+            Minimum lenght for string
+            </summary>
+        </member>
+        <member name="T:CavemanTools.Model.Validation.Attributes.RequiredAttribute">
+            <summary>
+             Specify that a (non-empty) or blanc value is provided.
+            </summary>
+        </member>
+        <member name="T:CavemanTools.Model.Validation.IAddError">
+            <summary>
+             Provide the functionality to collect multiple errors messages for the same key
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.IAddError.AddError(System.String)">
+            <summary>
+            Adds error for key
+            </summary>
+            <param name="error"></param>
+        </member>
+        <member name="P:CavemanTools.Model.Validation.IAddError.Key">
+            <summary>
+            Field Name
+            </summary>
+        </member>
+        <member name="T:CavemanTools.Model.Validation.Attributes.MinimumLengthAttribute">
+            <summary>
+            Validates that a string has mnimum length
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.Attributes.MinimumLengthAttribute.#ctor(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="length">Minimum length</param>
+        </member>
+        <member name="P:CavemanTools.Model.Validation.Attributes.MinimumLengthAttribute.Length">
+            <summary>
+            Gets minimum length
+            </summary>
+        </member>
+        <member name="T:CavemanTools.Model.Validation.Attributes.EmailAttribute">
+            <summary>
+            Validates a string as an email
+            </summary>
+        </member>
+        <member name="T:CavemanTools.Model.Validation.ValidationBag">
+            <summary>
+            Used to centralize multiple validations
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.ValidationBag.#ctor">
+            <summary>
+            DEfault validation state is invalid
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.ValidationBag.#ctor(System.Boolean)">
+            <summary>
+            
+            </summary>
+            <param name="init">State of bag: valid or invalid</param>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.ValidationBag.Add(System.Boolean)">
+            <summary>
+            Adds validation result
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="P:CavemanTools.Model.Validation.ValidationBag.IsValid">
+            <summary>
+            Gets if all the validations were successful
+            </summary>
+        </member>
+        <member name="T:CavemanTools.Model.Validation.ValidationItem">
+            <summary>
+            Default implementation to collect validation errors for the same item
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.ValidationItem.#ctor(System.String,CavemanTools.Model.Validation.IValidationDictionary)">
+            <summary>
+            
+            </summary>
+            <param name="key">Error Key</param>
+            <param name="erbag">Error Bag</param>
+        </member>
+        <member name="T:CavemanTools.Model.Validation.ValidationService`1">
+            <summary>
+            Provides functionality to validate ValidationAttributes both by declaration and instantiation
+            </summary>
+            <typeparam name="T">Type containing declarated validation attributes</typeparam>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.ValidationService`1.GetClassValidator``1">
+            <summary>
+            Gets all the class validation attributes matching type
+            </summary>
+            <typeparam name="TA">Implements ValidationAttribute</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.ValidationService`1.GetValidators``1(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Gets all the validation attributes matching type for the property
+            </summary>
+            <typeparam name="TA">ValidationAttribute inheritor</typeparam>
+            <param name="property">Expression Property</param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.ValidationService`1.GetValidators(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Gets all defiend validation attributes for property
+            </summary>
+            <param name="property">Expression property</param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.ValidationService`1.AddValidation(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.ComponentModel.DataAnnotations.ValidationAttribute)">
+            <summary>
+            Registers validator for a property
+            </summary>
+            <param name="property">Property expression</param>
+            <param name="validator">Validator</param>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.ValidationService`1.ValidateObject(`0)">
+            <summary>
+            Validates object of type, calling the validators for each property
+            It calls both validators defined in this service as well as the declared attributes if any
+            </summary>
+            <param name="object">Object to validate</param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.ValidationService`1.ValidateObject(`0,CavemanTools.Model.Validation.IValidationDictionary)">
+            <summary>
+            Validates object of type, calling the validators for each property
+            It calls both validators defined in this service as well as the declared attributes if any
+            </summary>
+            <typeparam name="T">type of object</typeparam>
+            <param name="object">Object to validate</param>
+            <param name="errorBag">Validation error bag, can be null if you don't need errors</param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.ValidationService`1.ValidateValueFor(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Object,CavemanTools.Model.Validation.IValidationDictionary)">
+            <summary>
+            Validates the value according to property validators
+            </summary>
+            <param name="property">Property expression</param>
+            <param name="value">value to validate</param>
+            <param name="errorBag">Error bag, can be null</param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.ValidationService`1.ValidateValueForClass(System.Object,CavemanTools.Model.Validation.IAddError)">
+            <summary>
+            Validates value with the attributes decorating the class T
+            </summary>
+            <param name="value">Value</param>
+            <param name="errorBag">Error bag</param>
+            <returns></returns>
+        </member>
+        <member name="P:CavemanTools.Model.Validation.ValidationService`1.GetClassValidators">
+            <summary>
+            Gets the Validation Attributes decorating the class
+            </summary>
+        </member>
+        <member name="T:CavemanTools.Model.Validation.ValidationUtils">
+            <summary>
+            Used to validate objects
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.ValidationUtils.Validate``1(``0)">
+            <summary>
+            Validate object properties using Data Annotations, registering the error messages in process
+            </summary>
+            <typeparam name="T">Type decorated with Validation Attributes</typeparam>
+            <param name="data">Object</param>		
+        </member>
+        <member name="M:CavemanTools.Model.Validation.ValidationUtils.Validate``1(``0,CavemanTools.Model.Validation.IValidationDictionary)">
+            <summary>
+            Validate object properties using Data Annotations, registering the error messages in process
+            </summary>
+            <typeparam name="T">Type decorated with Validation Attributes</typeparam>
+            <param name="data">Object</param>
+            <param name="errorBag">Error dictionary,can be null</param>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.ValidationUtils.ValidateAs``1(System.Object)">
+            <summary>
+            Validates a value according to validation attributes of a class, ignoring the errors
+            </summary>
+            <typeparam name="T">Type decorated with validation attributes</typeparam>
+            <param name="value">Value to be validated</param>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.ValidationUtils.ValidateAs``1(System.Object,CavemanTools.Model.Validation.IAddError)">
+            <summary>
+            Validates a value according to validation attributes of a class, registering error messages.
+            </summary>
+            <typeparam name="T">Type decorated with validation attributes</typeparam>
+            <param name="value">Value to be validated</param>
+            <param name="state">Error dictionary, can be null</param>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.ValidationUtils.ValidateFor``1(System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Object}})">
+            <summary>
+            Validates a value according to validation attributes of a property, ignoring the errors.
+            </summary>
+            <typeparam name="T">Type which contains property</typeparam>
+            <param name="value">Value to be validated</param>
+            <param name="property">Property decorated with validation attributes</param>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.ValidationUtils.ValidateFor``1(System.Object,System.Linq.Expressions.Expression{System.Func{``0,System.Object}},CavemanTools.Model.Validation.IValidationDictionary)">
+            <summary>
+            Validates a value according to validation attributes of a property, registering the error messages.
+            </summary>
+            <typeparam name="T">Type which contains property</typeparam>
+            <param name="value">Value to be validated</param>
+            <param name="property">Property decorated with validation attributes</param>
+            <param name="state">Error dictionary, can be null</param>
+        </member>
+        <member name="T:System.Collections.Generic.ModifiedSet`1">
+            <summary>
+            Default implementation of IModifiedSet.
+            The result of 2 sequences comparison
+            </summary>
+            <typeparam name="T">Implements IEquatable</typeparam>
+        </member>
+        <member name="M:CavemanTools.EnumUtils.AsValues``1">
+            <summary>
+            Gets enum as enumerable values.
+            </summary>
+            <typeparam name="T">EnumType</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.EnumUtils.AsValuesWithoutFirst``1">
+            <summary>
+            Gets enum as enumerable values, skipping the first (usually default,none) value
+            </summary>
+            <typeparam name="T">EnumType</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.EnumUtils.AsNamesWithoutFirst``1">
+            <summary>
+            Gets enum as enumerable values, skipping the first (usually default,none) value
+            </summary>
+            <typeparam name="T">EnumType</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.EnumUtils.Parse``1(System.String)">
+            <summary>
+            Parse string to enum
+            </summary>
+            <typeparam name="T">EnumType</typeparam>
+            <param name="value">Enum constant</param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.EnumUtils.GetRandom``1">
+            <summary>
+            Returns a random enum constant
+            </summary>
+            <typeparam name="T">EnumType</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.EnumUtils.GetRandomName``1">
+            <summary>
+            Returns a random enum name
+            </summary>
+            <typeparam name="T">EnumType</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:System.Linq.LinqExt.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})">
+            <summary>
+            Executes function for each sequence item
+            </summary>
+            <typeparam name="TSource">Sequence</typeparam>
+            <param name="source">Function to execute</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Linq.LinqExt.CastSilentlyTo``1(System.Collections.IEnumerable)">
+            <summary>
+            Tries to cast each item to the specified type. If it fails,  it just ignores the item
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="source"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Reflection.AssemblyExtensions.GetTypesDerivedFrom``1(System.Reflection.Assembly,System.Boolean)">
+            <summary>
+            Returns public types derived from T
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="asm"></param>
+            <param name="instantiable">True to return only types that can be instantiated i.e no interfaces and no abstract classes</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Reflection.AssemblyExtensions.GetInstancesOfTypesDerivedFrom``1(System.Reflection.Assembly)">
+            <summary>
+            Searches and instantiate types derived from T
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="asm"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Reflection.AttributeUtils.GetCustomAttributes``1(System.Reflection.ICustomAttributeProvider)">
+            <summary>
+            Returns all custom attributes of specified type
+            </summary>
+            <typeparam name="T">Attribute</typeparam>
+            <param name="provider">Custom attributes provider</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Reflection.AttributeUtils.GetCustomAttributes``1(System.Reflection.ICustomAttributeProvider,System.Boolean)">
+            <summary>
+            Returns all custom attributes of specified type
+            </summary>
+            <typeparam name="T">Attribute</typeparam>
+            <param name="provider">Custom attributes provider</param>
+            <param name="inherit">When true, look up the hierarchy chain for custom attribute </param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Reflection.AttributeUtils.GetSingleAttribute``1(System.Reflection.ICustomAttributeProvider)">
+            <summary>
+            Gets a single or the first custom attribute of specified type
+            </summary>
+            <typeparam name="T">Attribute</typeparam>
+            <param name="memberInfo">Custom Attribute provider</param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Percentage.#ctor(System.Decimal)">
+            <summary>
+            A percentage as a number.
+            Example: for 3%, it's 3 not .03
+            </summary>
+            <param name="value">Percentage amount</param>
+        </member>
+        <member name="M:CavemanTools.Percentage.Equals(CavemanTools.Percentage)">
+            <summary>
+            Indicates whether the current object is equal to another object of the same type.
+            </summary>
+            <returns>
+            true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+            </returns>
+            <param name="other">An object to compare with this object.</param>
+        </member>
+        <member name="T:System.Reflection.ObjectCreator">
+            <summary>
+            Create an object from type using the parameterless constructor.
+            Faster than Activator on average by 2x. Use it if you need to create many of objects of the same type at the same location
+            </summary>
+        </member>
+        <member name="M:System.PrivateReflectionDynamicObjectExtensions.AsDynamic(System.Object)">
+            <summary>
+            Use it only if you want to call private members via dynamic
+            </summary>
+            <param name="o"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.SessionId.ToString">
+            <summary>
+            Returns the fully qualified type name of this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> containing a fully qualified type name.
+            </returns>
+        </member>
+        <member name="M:CavemanTools.SessionId.Parse(System.String)">
+            <summary>
+            
+            </summary>
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.SessionId.#ctor(System.Byte[])">
+            <summary>
+            
+            </summary>
+            <param name="data"></param>
+        </member>
+        <member name="M:CavemanTools.SessionId.Equals(CavemanTools.SessionId)">
+            <summary>
+            Indicates whether the current object is equal to another object of the same type.
+            </summary>
+            <returns>
+            true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+            </returns>
+            <param name="other">An object to compare with this object.</param>
+        </member>
+        <member name="M:CavemanTools.SessionId.Equals(System.Object)">
+            <summary>
+            Indicates whether this instance and a specified object are equal.
+            </summary>
+            <returns>
+            true if <paramref name="obj"/> and this instance are the same type and represent the same value; otherwise, false.
+            </returns>
+            <param name="obj">Another object to compare to. </param>
+        </member>
+        <member name="M:CavemanTools.SessionId.GetHashCode">
+            <summary>
+            Returns the hash code for this instance.
+            </summary>
+            <returns>
+            A 32-bit signed integer that is the hash code for this instance.
+            </returns>
+        </member>
+        <member name="M:CavemanTools.SingletonsRegistry.Register``1(``0)">
+            <summary>
+            Registers a singleton
+            </summary>
+            <typeparam name="T">Reference type</typeparam>
+            <exception cref="T:System.InvalidOperationException">If an instance already exists</exception>
+            <param name="instance"></param>
+        </member>
+        <member name="M:CavemanTools.SingletonsRegistry.Get``1">
+            <summary>
+            Returns the instance of type or null
+            </summary>
+            <typeparam name="T">Reference type</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.SingletonsRegistry.Unregister``1(System.Boolean)">
+            <summary>
+            Unregisters the singleton for the provided type.
+            </summary>
+            <typeparam name="T">Reference type</typeparam>
+            <param name="dispose">true to dispose if the type implements IDisposable</param>
+        </member>
+        <member name="T:CavemanTools.SemanticVersion">
+            <summary>
+            Semantic version http://semver.org/
+            </summary>
+        </member>
+        <member name="M:CavemanTools.SemanticVersion.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="version">major.minor.patch[-preRelease][+build]</param>
+        </member>
+        <member name="M:CavemanTools.SemanticVersion.#ctor(System.Version,System.String,System.String)">
+            <summary>
+            Creates semantic version from Version
+            </summary>
+            <param name="version">The Revision number is ignored</param>
+        </member>
+        <member name="M:System.EncryptionUtils.Sha256(System.String)">
+            <summary>
+            Hash a string using the SHA256 algorithm. 32 bytes (hex): 64 unicode chars, 128 bytes
+            </summary>
+        </member>
+        <member name="M:System.EncryptionUtils.Sha1(System.String)">
+            <summary>
+            hash length is 40 unicode chars
+            </summary>
+            <param name="dt"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.EncryptionUtils.Sha512(System.String)">
+            <summary>
+            Hash a string using the SHA512 algorithm. 128 unicode chars, 256 bytes
+            </summary>
+        </member>
+        <member name="M:System.EncryptionUtils.MD5(System.String)">
+            <summary>
+            Creates MD5 sum from string, 16 bytes(hex): 32 unicode chars
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.EncryptionUtils.Encrypt(System.String,System.Byte[])">
+            <summary>
+            Encrypts using AES (Rijndael) standard
+            </summary>
+            <param name="data"></param>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.EncryptionUtils.EncryptAsString(System.String,System.String)">
+            <summary>
+            Returns encrypted data as Base64 string
+            </summary>
+            <param name="data"></param>
+            <param name="salt">Salt of 16 chars</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.EncryptionUtils.PadSecret(System.String)">
+            <summary>
+            Ensures secret length of 16 chars
+            </summary>
+            <param name="salt"></param>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+            <returns></returns>
+        </member>
+        <member name="M:System.EncryptionUtils.DecryptAsString(System.String,System.String)">
+            <summary>
+            Returns decrypted data from Base64 string
+            </summary>
+            <param name="data">Base 64 encoded encryption</param>
+            <param name="salt">Salt of 16 chars</param>
+            <exception cref="T:System.Security.Cryptography.CryptographicException"></exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+            <returns></returns>
+        </member>
+        <member name="M:System.EncryptionUtils.ToHexString(System.Byte[])">
+            <summary>
+            Generates hex representation of bytes
+            </summary>
+            <param name="data"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.EncryptionUtils.GenerateEncryptionKey(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="salt">32 bytes size (16 unicode length)</param>
+            <returns></returns>
+        </member>
+        <member name="T:System.Text.GenericStringParser`1">
+            <summary>
+            Generic string parser class
+            </summary>
+            <typeparam name="T">Type to parse string to</typeparam>
+        </member>
+        <member name="T:System.Text.IStringParser`1">
+            <summary>
+            Provides functionality to parse a string into object
+            </summary>
+            <typeparam name="T">Type</typeparam>
+        </member>
+        <member name="M:System.Text.IStringParser`1.Parse(System.String)">
+            <summary>
+            
+            </summary>
+            <exception cref="T:System.InvalidCastException"></exception>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Text.IStringParser`1.TryParse(System.String,`0@)">
+            <summary>
+            Tries to parse text into type. Returns true if successful
+            </summary>
+            <param name="text">Text to parse</param>
+            <param name="value">Value or default of type</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.ObjectExtend.ToDictionary(System.Object)">
+            <summary>
+            Creates dictionary from object properties.
+            </summary>
+            <param name="value">Object</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.ObjectExtend.ConvertTo(System.Object,System.Type)">
+            <summary>
+            Converts object to type.
+            Supports conversion to Enum, DateTime,TimeSpan and CultureInfo
+            </summary>
+            <exception cref="T:System.InvalidCastException"></exception>
+            <param name="data">Object to be converted</param>
+            <param name="tp">Type to convert to</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.ObjectExtend.ConvertTo``1(System.Object)">
+            <summary>
+            Tries to convert the object to type.
+            </summary>
+            <exception cref="T:System.InvalidCastException"></exception>
+            <exception cref="T:System.FormatException"></exception>
+            <typeparam name="T">Type to convert to</typeparam>
+            <param name="data">Object</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.ObjectExtend.SilentConvertTo``1(System.Object,``0)">
+            <summary>
+            Tries to convert the object to type.
+            If it fails it returns the specified default value.
+            </summary>
+            <typeparam name="T">Type to convert to</typeparam>
+            <param name="data">Object</param>
+            <param name="defaultValue">IF not set , the default for T is used</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.ObjectExtend.As``1(System.Object)">
+            <summary>
+            Shorthand for lazy people to cast an object to a type
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="o"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.ObjectExtend.Cast``1(System.Object)">
+            <summary>
+            Shorthand for lazy people to cast an object to a type
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="o"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Testing.ObjectExtensions.ToDebugString(System.Object,System.Text.StringBuilder)">
+            <summary>
+            Generates a string containing the properties and values of the object
+            </summary>
+            <param name="val"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.TimeUtils.Multiply(System.TimeSpan,System.Single)">
+            <summary>
+            Multiplies a time period by a number
+            </summary>
+            <param name="duration"></param>
+            <param name="modifier"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.TimeUtils.ToHuman(System.TimeSpan)">
+            <summary>
+            Outputs the 'human friendly' format (ex: 4 days ago). English only
+            </summary>
+            <param name="time"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CavemanTools.Special.OverridableOption`2">
+            <summary>
+            Agregates values from different sources for an option.
+            THe priority strategy selects the final value
+            </summary>
+            <typeparam name="TSource">Source Type</typeparam>
+            <typeparam name="TValue">Value Type</typeparam>
+        </member>
+        <member name="M:CavemanTools.Special.OverridableOption`2.#ctor(`0,`1)">
+            <summary>
+            Init with default source and default value
+            </summary>
+            <param name="defaultSource">key for default value</param>
+            <param name="defaultValue">default value</param>
+        </member>
+        <member name="M:CavemanTools.Special.OverridableOption`2.#ctor(`0,`1,System.Func{System.Collections.Generic.IDictionary{`0,`1},`1})">
+            <summary>
+            Init with default source and default value specifying priority strategy
+            </summary>
+            <param name="defaultSource">key for default value</param>
+            <param name="defaultValue">default value</param>
+            <param name="strategy">Priority sorting strategy</param>
+        </member>
+        <member name="M:CavemanTools.Special.OverridableOption`2.FromSource(`0,`1)">
+            <summary>
+            Adds value from a source
+            </summary>
+            <param name="src">Source id</param>
+            <param name="value">Option Value</param>
+        </member>
+        <member name="M:CavemanTools.Special.OverridableOption`2.IsValid(`1)">
+            <summary>
+            Checks if a value is valid.
+            Default checks if it's null
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="F:CavemanTools.Special.OverridableOption`2.Strategy">
+            <summary>
+             Priority sorting strategy
+            </summary>
+        </member>
+        <member name="P:CavemanTools.Special.OverridableOption`2.Value">
+            <summary>
+            Gets option's final value
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Strings.Serializers.Base64Unserialize(System.String)">
+            <summary>
+            Unserialize a base64 encoded string into name values
+            </summary>
+            <param name="value">Base64 encoded string</param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Strings.Serializers.Base64Serialize(System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            Serialize a name value collecting to base64 encoded string
+            </summary>
+            <param name="value">Base64 encoded string</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.StringParsers.Parse``1(System.String)">
+            <summary>
+            Parse string into object of type. Returns the default value if not successful.
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="value">String</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.StringParsers.Parse``1(System.String,System.Text.IStringParser{``0})">
+            <summary>
+            Parse string into object of type using the provided parser
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="value">String</param>
+            <param name="parser">Parser for the object</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.StringParsers.Parse``1(System.String,``0)">
+            <summary>
+            Parse string into object of type. Returns the provided value if not successful.
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="value">String</param>
+            <param name="defaultValue">Value to return if conversion fails</param>
+            <returns></returns>
+        </member>
+        <member name="T:CavemanTools.Model.IPagedResult`1">
+            <summary>
+            Paginated result set with the total number of items from a query.
+            Used for pagination.
+            </summary>
+            <typeparam name="T">Type of item</typeparam>
+        </member>
+        <member name="P:CavemanTools.Model.IPagedResult`1.Count">
+            <summary>
+            Gets the total number of items
+            </summary>
+        </member>
+        <member name="P:CavemanTools.Model.IPagedResult`1.LongCount">
+            <summary>
+            Gets total number of items
+            </summary>
+        </member>
+        <member name="P:CavemanTools.Model.IPagedResult`1.Items">
+            <summary>
+            Gets result items
+            </summary>
+        </member>
+        <member name="T:CavemanTools.Model.Validation.IValidationDictionary">
+            <summary>
+            Provide functionality to hold validation errors messages
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.IValidationDictionary.AddError(System.String,System.String)">
+            <summary>
+            Adds error message for key
+            </summary>
+            <param name="key">field identifier</param>
+            <param name="errorMessage">Error message</param>
+        </member>
+        <member name="P:CavemanTools.Model.Validation.IValidationDictionary.HasErrors">
+            <summary>
+            Returns true if there are errors messages
+            </summary>
+        </member>
+        <member name="P:CavemanTools.Model.Validation.IValidationDictionary.IsValid">
+            <summary>
+            Gets if object state is valid
+            </summary>
+        </member>
+        <member name="T:CavemanTools.Model.Validation.DefaultValidationWrapper">
+            <summary>
+            Collects error messages from validation
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.DefaultValidationWrapper.AddError(System.String,System.String)">
+            <summary>
+            Adds validation error message
+            </summary>
+            <param name="key">Key</param>
+            <param name="errorMessage">Text</param>
+        </member>
+        <member name="M:CavemanTools.Model.Validation.DefaultValidationWrapper.CopyTo(CavemanTools.Model.Validation.IValidationDictionary)">
+            <summary>
+            copies errors to another dictionary
+            </summary>
+            <param name="other"></param>
+        </member>
+        <member name="P:CavemanTools.Model.Validation.DefaultValidationWrapper.IsValid">
+            <summary>
+            Returns true if there are no error messages
+            </summary>
+        </member>
+        <member name="T:CavemanTools.Model.PagedResult`1">
+            <summary>
+            Holds limited result set and total number of items from a query.
+            Used for pagination.
+            </summary>
+            <typeparam name="T">Type of item</typeparam>
+        </member>
+        <member name="M:System.TypeExtensions.Implements``1(System.Type)">
+            <summary>
+            Used for checking if a class implements an interface
+            </summary>
+            <typeparam name="T">Interface</typeparam>
+            <param name="type">Class Implementing the interface</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.TypeExtensions.CreateInstance(System.Type)">
+            <summary>
+            Creates a new instance of type using a public parameterless constructor
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.TypeExtensions.Implements(System.Type,System.Type)">
+            <summary>
+            Used for checking if a class implements an interface
+            </summary>
+            <param name="type">Class Implementing the interface</param>
+            <param name="interfaceType">Type of an interface</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.TypeExtensions.DerivesFrom``1(System.Type)">
+            <summary>
+            True if the type implements of extends T
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.TypeExtensions.DerivesFrom(System.Type,System.Type)">
+            <summary>
+            True if the type implements of extends parent. 
+            Doesn't work with generics
+            </summary>
+            <param name="type"></param>
+            <param name="parent"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.TypeExtensions.ImplementsGenericInterface(System.Object,System.String,System.Type[])">
+            <summary>
+            
+            </summary>
+            <param name="o"></param>
+            <param name="interfaceName">The intuitive interface name</param>
+            <param name="genericType">Interface's generic arguments types</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.TypeExtensions.GetGenericArgument(System.Type,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="tp">Generic type</param>
+            <param name="index">0 based index of the generic argument</param>
+            <exception cref="T:System.InvalidOperationException">When the type is not generic</exception>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.ArgumentException"></exception>
+            <returns></returns>
+        </member>
+        <member name="M:System.TypeExtensions.IsUserDefinedClass(System.Type)">
+            <summary>
+            Checks if type is a reference but also not
+             a string, array, Nullable, enum
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.TypeExtensions.IsNullable(System.Type)">
+            <summary>
+            This always returns false if the type is taken from an instance.
+            That is always use typeof
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.TypeExtensions.AssemblyVersion(System.Type)">
+            <summary>
+            Returns the version of assembly containing type
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:System.TypeExtensions.GetFullTypeName(System.Type)">
+            <summary>
+            Returns the full name of type, including assembly but not version, public key etc, i.e: namespace.type, assembly
+            </summary>
+            <param name="t">Type</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.StringUtils.MakeSlug(System.String)">
+            <summary>
+            Creates url friendly slug of a string
+            </summary>
+            <param name="text"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.StringUtils.ToCulture(System.String)">
+            <summary>
+            Parses string to culture. Returns null if unsuccessful.
+            </summary>
+            <param name="lang"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.StringUtils.Cut(System.String,System.Int32)">
+            <summary>
+            Cuts the string to the specified length
+            </summary>
+            <param name="value">string</param>
+            <param name="length">maximum length</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.StringUtils.IsNullOrEmpty(System.String,System.Boolean)">
+            <summary>
+            Returns true if the string is empty 
+            </summary>
+            <param name="data"></param>
+            <param name="checkBlancs">trim blancs</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.StringUtils.ConvertToEncoding(System.String,System.Text.Encoding)">
+            <summary>
+            Converts strings form unicode to specified encoding
+            </summary>
+            <param name="s">String</param>
+            <param name="encoding">Encoding</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.StringUtils.Capitalize(System.String)">
+            <summary>
+            Capitalizes the first letter from string.
+            </summary>
+            <param name="s"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.StringUtils.ReadAsString(System.IO.Stream)">
+            <summary>
+            Reads the Stream as an UTF8 String
+            </summary>
+            <param name="data">Stream</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.StringUtils.IsEmail(System.String)">
+            <summary>
+            Returns true if teh string is a valid email format.
+            </summary>
+            <param name="text"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.StringUtils.GetFirstLine(System.String)">
+            <summary>
+            Returns the first line from a multilined string
+            </summary>
+            <param name="source"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.StringUtils.GenerateRandomString(System.String,System.Int32)">
+            <summary>
+            Generates a random string of the specified length starting with prefix
+            </summary>
+            <param name="prefix"></param>
+            <param name="length"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.StringUtils.CreateRandomString(System.Int32)">
+            <summary>
+            Generates a random string (only letters) of the specified length
+            </summary>
+            <param name="length">Maximum string length</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Text.TextUtils.RemoveLast(System.Text.StringBuilder)">
+            <summary>
+            Removes last character from builder
+            </summary>
+            <param name="sb"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Text.TextUtils.RemoveLastIfEquals(System.Text.StringBuilder,System.Char)">
+            <summary>
+            Remove last char if matches the provided value
+            </summary>
+            <param name="sb"></param>
+            <param name="value">value to check</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Text.TextUtils.RemoveLastIfEquals(System.Text.StringBuilder,System.String)">
+            <summary>
+            Remove last char if matches the provided value
+            </summary>
+            <param name="sb"></param>
+            <param name="value">value to check</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Xml.Xml.IsComment(System.Xml.XmlNode)">
+            <summary>
+            Returns true if an xml node is a comment
+            </summary>
+            <param name="node">XmlNode</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Xml.Xml.HasAttribute(System.Xml.XmlNode,System.String)">
+            <summary>
+            Returns true if the node has an attribute of specified name
+            </summary>
+            <param name="node">xmlNode</param>
+            <param name="name">Attribute name</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Xml.Xml.GetAttributeValue``1(System.Xml.XmlNode,System.String)">
+            <summary>
+            Gets the attribute value. If it doesn't exist it returns the default of the type
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="node"></param>
+            <param name="name">Name of attribute</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Xml.Xml.GetAttributeValue``1(System.Xml.XmlNode,System.String,``0)">
+            <summary>
+            Gets the attribute value. If it doesn't exist it returns the provided value
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="node"></param>
+            <param name="name">Name of attribute</param>
+            <param name="defaultValue">Value to return if attribute does not exists</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Xml.Xml.GetValue``1(System.Xml.XmlNode)">
+            <summary>
+            Gets value of xml as type.
+            Returns default of type if not existant or empty.
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Xml.Xml.GetValue``1(System.Xml.XmlNode,``0)">
+            <summary>
+            Gets value of xml as type.
+            Returns provided value if null.
+            </summary>
+            <typeparam name="T">Type</typeparam>
+            <param name="node"></param>
+            <param name="defaultValue">value if node is null</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Xml.Xml.AttributesToObject``1(System.Xml.XmlNode)">
+            <summary>
+            Converts xmlnode to object whose properties are the attributes names. 
+            </summary>
+            <typeparam name="T">Type with parameterless constructor</typeparam>
+            <param name="el"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Xml.Xml.ChildrenToObject``1(System.Xml.XmlNode)">
+            <summary>
+            Converts xmlnode to object whose properties are the xml children names. 
+            </summary>
+            <typeparam name="T">Type with parameterless constructor</typeparam>
+            <param name="el"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Xml.Xml.ChildrenToDictionary``2(System.Xml.XmlNode)">
+            <summary>
+            Converts xmlnode to Dictionary whose keys are the xml children names and values are children's inner text. 
+            </summary>
+            <typeparam name="T">Type with parameterless constructor</typeparam>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="M:System.Xml.Xml.AttributesToDictionary``2(System.Xml.XmlNode)">
+            <summary>
+            Converts xmlnode to Dictionary whose keys are the attributes names and values are attributes' inner text. 
+            </summary>
+            <typeparam name="T">Type with parameterless constructor</typeparam>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

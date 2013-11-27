@@ -122,12 +122,12 @@ namespace Tests
             var db = Setup.GetDb();
             
             EnsureDb();
-                //Config.EmptyTable();
+                EmptyTable();
                 //Console.WriteLine("ensuring 10 posts");
 
                 using (var t = db.BeginTransaction())
                 {
-                    for (int i = 0; i < 10; i++)
+                    for (int i = 0; i < 20; i++)
                     {
                         db.Insert(new Post {Title = "test" + i, AuthorId = 1, CreatedOn = DateTime.Now});
                     }
@@ -135,6 +135,14 @@ namespace Tests
                 }
            
             db.Dispose();
+        }
+
+        public static void CleanUp()
+        {
+            using (var db = GetDb())
+            {
+                db.Drop<Post>();
+            }
         }
     }
 }

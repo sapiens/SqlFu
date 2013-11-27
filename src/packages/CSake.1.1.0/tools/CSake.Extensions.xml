@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CSake.Extensions</name>
+    </assembly>
+    <members>
+        <member name="M:CSake.Extensions.ToConsole(System.String,System.Object[])">
+            <summary>
+            Equivalent to Console.WriteLine(mystring,args)
+            </summary>
+            <param name="data"></param>
+            <param name="args"></param>
+        </member>
+        <member name="M:CSake.Extensions.WriteError(System.String,System.Object[])">
+            <summary>
+            Writes to console using red colour
+            </summary>
+            <param name="data"></param>
+            <param name="args"></param>
+        </member>
+        <member name="M:CSake.Extensions.WriteInfo(System.String,System.Object[])">
+            <summary>
+            Writes to console using cyan colour
+            </summary>
+            <param name="data"></param>
+            <param name="args"></param>
+        </member>
+        <member name="M:CSake.Extensions.MkDir(System.String)">
+            <summary>
+            Creates a directory
+            </summary>
+            <param name="dirName">Directory path</param>
+        </member>
+        <member name="M:CSake.Extensions.DeleteDir(System.String)">
+            <summary>
+            Deletes the specified directory
+            </summary>
+            <param name="dirName">Directory path</param>
+        </member>
+        <member name="M:CSake.Extensions.CleanupDir(System.String)">
+            <summary>
+            Empties the specified directory
+            </summary>
+            <param name="dirName">Directory path</param>
+        </member>
+        <member name="M:CSake.Extensions.Exec(System.String,System.String[])">
+            <summary>
+            Runs executable with specified arguments. 
+            No new window is created and all output goes to console.
+            </summary>
+            <param name="file">Executable name</param>
+            <param name="args">Arguments list</param>
+            <returns>Process exit code</returns>
+        </member>
+        <member name="M:CSake.Extensions.MsBuildClean(System.String,System.String)">
+            <summary>
+            Invokes MSBuild.exe with Clean target and normal verbosity
+            </summary>
+            <param name="project">Project/solution file</param>
+            <param name="configuration">Default is "Release"</param>
+        </member>
+        <member name="M:CSake.Extensions.MsBuildRelease(System.String)">
+            <summary>
+            Invokes MSBuild.exe with Build target, Release configuration and no verbosity
+            </summary>
+            <param name="project">Project/solution file</param>
+        </member>
+        <member name="M:CSake.Extensions.AsNuspec(System.String)">
+            <summary>
+            Loads the specified file as a nuspec file (nuget manifest)
+            </summary>
+            <param name="filename"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CSake.Extensions.GetAssemblyVersion(System.String)">
+            <summary>
+            Treats the file as an assembly and returns its version
+            </summary>
+            <param name="filename">Path to assembly file</param>
+            <returns></returns>
+        </member>
+        <member name="M:CSake.Extensions.ToSemanticVersion(System.Version,System.String,System.String)">
+            <summary>
+            Creates a semantic version (http://semver.org/) from a Version allowing you to specify pre-release and build strings.
+            </summary>
+            <see cref="!:http://semver.org/"/>
+            <param name="version"></param>
+            <param name="preRelease">beta =&gt; 1.0.0-beta</param>
+            <param name="build">001 =&gt; 1.0.0-beta+001</param>
+            <returns></returns>
+        </member>
+        <member name="T:CSake.NuSpecFile">
+            <summary>
+            Wraps a nuspec file (nuget Manifest)
+             </summary>
+            <see cref="!:http://docs.nuget.org/docs/reference/nuspec-reference"/>
+        </member>
+        <member name="M:CSake.NuSpecFile.AddDependency(System.String,System.String,System.String)">
+            <summary>
+            Adds a dependency of the package
+            </summary>
+            <param name="id"></param>
+            <param name="version"></param>
+            <param name="framework"></param>
+        </member>
+        <member name="M:CSake.NuSpecFile.AddFile(System.String,System.String,System.String)">
+            <summary>
+            Specifies a file to be included in the package
+            </summary>
+            <param name="source">The location of the file or files to include. The path is relative to the NuSpec file unless an absolute path is specified. The wildcard character, *, is allowed. Using a double wildcard, **, implies a recursive directory search.</param>
+            <param name="target">This is a relative path to the directory within the package where the source files will be placed.</param>
+            <param name="exclude">The file or files to exclude. This is usually combined with a wildcard value in the `src` attribute. The `exclude` attribute can contain a semi-colon delimited list of files or a file pattern. Using a double wildcard, **, implies a recursive exclude pattern.</param>
+        </member>
+        <member name="M:CSake.NuSpecFile.Save(System.String)">
+            <summary>
+            Saves the changes into nuspec file
+            </summary>
+            <param name="outputDir">If name is null or empty it assumes it's the original directory</param>
+        </member>
+        <member name="P:CSake.NuSpecFile.Metadata">
+            <summary>
+            Gets the manifest metadata
+            </summary>        
+        </member>
+        <member name="P:CSake.NuSpecFile.Manifest">
+            <summary>
+            Gets the underlying nuget manifest
+            </summary>
+        </member>
+    </members>
+</doc>

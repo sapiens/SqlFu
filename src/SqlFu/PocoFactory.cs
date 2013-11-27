@@ -19,6 +19,11 @@ namespace SqlFu
             _converters.TryAdd(typeof (T).GetHashCode(), conv);
         }
 
+        public static void UnregisterConverters()
+        {
+            _converters.Clear();
+        }
+
         private static readonly ConcurrentDictionary<int, object> _converters = new ConcurrentDictionary<int, object>();
 
         internal static Func<object, T> GetConverter<T>()

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>csake</name>
+    </assembly>
+    <members>
+        <member name="M:CSake.Internals.CodeBlockReader.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="M:CSake.Internals.FileReader.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="M:CSake.Internals.IExecuteTask.Run">
+            <summary>
+            Doesn't run dependencies
+            </summary>
+        </member>
+        <member name="M:CSake.ScriptExecutor.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+    </members>
+</doc>
