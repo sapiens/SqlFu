@@ -9,6 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5C059A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlFu45", "SqlFu\SqlFu45.csproj", "{CB60CDE9-9BA9-4907-93A6-1EA4DFD9AF58}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5017866F-10A8-4086-B7F0-7ADBA7295EBB}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.markdown = ..\README.markdown
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
