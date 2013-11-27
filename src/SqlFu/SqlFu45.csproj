@@ -228,7 +228,7 @@
     <Compile Include="QueryHelpers.cs" />
     <Compile Include="QueryOnlyAttribute.cs" />
     <Compile Include="SqlFuConnection.cs">
-      </Compile>
+      
     </Compile>
     <Compile Include="SqlFuDao.cs" />
     <Compile Include="SqlFuDaoAsync.cs" />
