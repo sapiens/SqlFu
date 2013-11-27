@@ -20,9 +20,9 @@ namespace Tests.Expressions
         [Fact]
         public void count()
         {
-            Assert.Equal(10,_db.Count<Post>());
+            Assert.Equal(20,_db.Count<Post>());
             Assert.Equal(0,_db.Count<Post>(p=>p.Id>30));
-            Assert.Equal(10,_db.Count<Post>(p=>p.TopicId==null));
+            Assert.Equal(20,_db.Count<Post>(p=>p.TopicId==null));
         }
         
         [Fact]

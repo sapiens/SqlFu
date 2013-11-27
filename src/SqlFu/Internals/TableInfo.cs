@@ -34,7 +34,7 @@ namespace SqlFu.Internals
         {
             if (t.IsValueType || t == typeof (object))
                 throw new InvalidOperationException("A table can't be System.Object or just a value");
-            var tab = t.GetSingleAttribute<TableAttribute>();
+            var tab = t.GetSingleAttribute<TableAttribute>(true);
             if (tab != null)
             {
                 Name = tab.Name;
@@ -55,12 +55,12 @@ namespace SqlFu.Internals
             {
                 foreach (var p in t.GetProperties())
                 {
-                    var qr = p.GetSingleAttribute<QueryOnlyAttribute>();
+                    var qr = p.GetSingleAttribute<QueryOnlyAttribute>(true);
                     if (qr != null)
                     {
                         exclude.Add(p.Name);
                     }
-                    var tos = p.GetSingleAttribute<InsertAsStringAttribute>();
+                    var tos = p.GetSingleAttribute<InsertAsStringAttribute>(true);
                     if (tos != null)
                     {
                         tstring.Add(p.Name);

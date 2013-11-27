@@ -36,7 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CavemanTools">
-      <HintPath>..\packages\CavemanTools.dll</HintPath>
+      <HintPath>..\packages\CavemanTools\Net40\CavemanTools.dll</HintPath>
     </Reference>
     <Reference Include="Dapper">
       <HintPath>..\packages\Dapper.1.12.1\lib\net40\Dapper.dll</HintPath>

@@ -37,7 +37,7 @@ namespace SqlFu.DDL.Internals
 
         private void ProcessPrimaryKey()
         {
-            var att = _tp.GetSingleAttribute<PrimaryKeyAttribute>();
+            var att = _tp.GetSingleAttribute<PrimaryKeyAttribute>(true);
             if (att != null)
             {
                 _schema.Constraints.SetPrimaryKey(string.Join(",", att.Columns), att.Name);
@@ -54,11 +54,8 @@ namespace SqlFu.DDL.Internals
 
         private void ProcessIndexes()
         {
-#if !NET45
-            var att = _tp.GetCustomAttributes<IndexAttribute>();
-#else
-            var att = _tp.GetCustomAttributes<IndexAttribute>().ToArray();
-#endif
+            var att = _tp.GetModelAttributes<IndexAttribute>().ToArray();
+            
             if (att.Length > 0)
             {
                 foreach (var idx in att)
@@ -72,7 +69,7 @@ namespace SqlFu.DDL.Internals
         {
             foreach (var pi in _tp.GetProperties())
             {
-                var fk = pi.GetSingleAttribute<ForeignKeyAttribute>();
+                var fk = pi.GetSingleAttribute<ForeignKeyAttribute>(true);
                 if (fk != null)
                 {
                     _schema.Constraints.AddForeignKey(pi.Name, fk.ParentTable, fk.ParentColumn, fk.OnUpdate, fk.OnDelete,
@@ -85,13 +82,13 @@ namespace SqlFu.DDL.Internals
         {
             foreach (var pi in _tp.GetProperties())
             {
-                var opt = pi.GetSingleAttribute<ColumnOptionsAttribute>();
+                var opt = pi.GetSingleAttribute<ColumnOptionsAttribute>(true);
                 if (opt != null && opt.Ignore) continue;
 
 
                 var col = AddColumn(pi, opt ?? ColumnOptionsAttribute.Default);
 
-                var red = pi.GetCustomAttributes<RedefineForAttribute>();
+                var red = pi.GetModelAttributes<RedefineForAttribute>();
                 foreach (var def in red)
                 {
                     col.Redefine(def.Database, def.Definition);
@@ -103,7 +100,7 @@ namespace SqlFu.DDL.Internals
         {
             DbType type;
             var tp = pi.PropertyType;
-            var asString = pi.GetSingleAttribute<InsertAsStringAttribute>();
+            var asString = pi.GetSingleAttribute<InsertAsStringAttribute>(true);
             if (asString != null)
             {
                 type = DbType.String;
