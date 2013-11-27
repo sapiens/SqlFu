@@ -1,11 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
 using System.Text;
 using System.Reflection;
-using System.ComponentModel.DataAnnotations;
+
 
 namespace SqlFu
 {
@@ -54,6 +55,47 @@ namespace SqlFu
         {
             return !(t is ValueType) && (Type.GetTypeCode(t.GetType()) == TypeCode.Object);
         }
+
+        public static T[] GetModelAttributes<T>(this ICustomAttributeProvider self) where T : Attribute
+        {
+            // Try to get the attribute from self first.
+            var result = self.GetCustomAttributes<T>();
+            
+            if (result.Length==0)
+            {
+                // Attribute not found on self, so look for it in the metadata buddy class.
+                if (self is PropertyInfo)
+                {
+                    // Looking up a property attribute.
+                    var propInfo = (PropertyInfo)self;
+                    var propIndexParams = propInfo.GetIndexParameters();
+                    List<Type> propIndexTypes = new List<Type>();
+                    if (propIndexParams != null)
+                    {
+                        foreach (var p in propIndexParams)
+                        {
+                            propIndexTypes.Add(p.ParameterType);
+                        }
+                    }
+                    var metaTypeAttr = propInfo.DeclaringType.GetSingleAttribute<MetadataTypeAttribute>();
+                    if (metaTypeAttr != null)
+                    {
+                        var metaProp = metaTypeAttr.MetadataClassType.GetProperty(propInfo.Name, propInfo.PropertyType, propIndexTypes.ToArray());
+                        if (metaProp != null)
+                            result = metaProp.GetCustomAttributes<T>().ToArray();
+                    }
+                }
+                else
+                {
+                    // Looking up a class attribute.
+                    var metaTypeAttr = self.GetSingleAttribute<MetadataTypeAttribute>();
+                    if (metaTypeAttr != null)
+                        result = metaTypeAttr.MetadataClassType.GetCustomAttributes<T>().ToArray();
+                }
+            }
+            return result;
+        }
+
        
         /// <summary>
         /// Enhances the <see cref="GetSingleAttribute<T>"/> extension introduced in CavemanTools assembly by 

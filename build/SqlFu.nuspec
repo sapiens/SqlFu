@@ -12,6 +12,12 @@
     <language>en-US</language>
     <tags>micro-orm sql orm database migration ddl builder query pagination async</tags>
 	<!-- <releaseNotes>Added multiple results support</releaseNotes> -->
+    
+    <frameworkAssemblies>
+  
+  <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations"  />
+</frameworkAssemblies>
+    
          </metadata>
 <files>
         <file src="..\..\src\SqlFu\bin\Release\**\SqlFu*" target="lib"></file>
