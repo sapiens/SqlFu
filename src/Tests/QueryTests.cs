@@ -201,40 +201,7 @@ namespace Tests.Helpers
           //  Config.EmptyTable();
         }
 
-        [Fact]
-        public void global_custom_converter()
-        {
-            PocoFactory.RegisterConverterFor<CustomObject>(o => new CustomObject(o.ToString()));
-            var custom = _db.QuerySingle<TypeWithCustomObject>("select 'custom-value' as Value");
-            Assert.Equal("custom-value", custom.Value.CustomValue);
-        }
-
-        [Fact]
-        public void query_with_no_params_does_select_all()
-        {
-            _db.Insert(new Post
-                {
-                    Title = "Test",
-                    AuthorId = 1,
-                    TopicId = null,
-                    Type = PostType.Post,
-                    CreatedOn = DateTime.UtcNow
-                });
-            Assert.NotEmpty(_db.Query<Post>());
-        }
-
-
-        [Fact]
-        public void fetch_multiple_resultsets()
-        {
-            Config.EnsurePosts();
-            var sql = "select * from Posts; select * from Posts where Id=3";
-            var result = _db.Fetch<Post, Post>(sql);
-            Assert.NotEmpty(result.Item1);
-            Assert.Equal(1,result.Item2.Count);
-            Assert.Equal(3,result.Item2.First().Id);
-            Config.EmptyTable();
-        }
+    
 
         private void Write(object format, params object[] param)
         {
