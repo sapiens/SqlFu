@@ -77,7 +77,8 @@ namespace Tests.DDL
 [OK] nvarchar(max) NULL,
  CONSTRAINT [PK_Users] PRIMARY KEY ([Id]),
  CONSTRAINT [FK_Users_ParentT_name] FOREIGN KEY ([Name]) REFERENCES [ParentT]([ParentC]) ON DELETE CASCADE ON UPDATE NO ACTION);
-CREATE INDEX [ix_email] ON [Users] ([Email]);".Replace("\n", "\r\n");
+CREATE INDEX [ix_email] ON [Users] ([Email]);"//.Replace("\n", "\r\n")
+                                              ;
  
 
             var sql = builder.GetSql();

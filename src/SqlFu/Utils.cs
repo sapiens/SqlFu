@@ -105,42 +105,44 @@ namespace SqlFu
         /// </summary>
         public static T GetSingleAttribute<T>(this ICustomAttributeProvider self, bool alsoCheckMetadataType) where T : Attribute
         {
-            // Try to get the attribute from self first.
-            var result = self.GetSingleAttribute<T>();
+            if (alsoCheckMetadataType) return GetModelAttributes<T>(self).FirstOrDefault();
+            return self.GetSingleAttribute<T>();
+            //// Try to get the attribute from self first.
+            //var result = self.GetSingleAttribute<T>();
 
-            if (result == null && alsoCheckMetadataType)
-            {
-                // Attribute not found on self, so look for it in the metadata buddy class.
-                if (self is PropertyInfo)
-                {
-                    // Looking up a property attribute.
-                    var propInfo = (PropertyInfo)self;
-                    var propIndexParams = propInfo.GetIndexParameters();
-                    List<Type> propIndexTypes = new List<Type>();
-                    if (propIndexParams != null)
-                    {
-                        foreach (var p in propIndexParams)
-                        {
-                            propIndexTypes.Add(p.ParameterType);
-                        }
-                    }
-                    var metaTypeAttr = propInfo.DeclaringType.GetSingleAttribute<MetadataTypeAttribute>();
-                    if (metaTypeAttr != null)
-                    {
-                        var metaProp = metaTypeAttr.MetadataClassType.GetProperty(propInfo.Name, propInfo.PropertyType, propIndexTypes.ToArray());
-                        if (metaProp != null)
-                            result = metaProp.GetSingleAttribute<T>();
-                    }
-                }
-                else
-                {
-                    // Looking up a class attribute.
-                    var metaTypeAttr = self.GetSingleAttribute<MetadataTypeAttribute>();
-                    if (metaTypeAttr != null)
-                        result = metaTypeAttr.MetadataClassType.GetSingleAttribute<T>();
-                }
-            }
-            return result;
+            //if (result == null && alsoCheckMetadataType)
+            //{
+            //    // Attribute not found on self, so look for it in the metadata buddy class.
+            //    if (self is PropertyInfo)
+            //    {
+            //        // Looking up a property attribute.
+            //        var propInfo = (PropertyInfo)self;
+            //        var propIndexParams = propInfo.GetIndexParameters();
+            //        List<Type> propIndexTypes = new List<Type>();
+            //        if (propIndexParams != null)
+            //        {
+            //            foreach (var p in propIndexParams)
+            //            {
+            //                propIndexTypes.Add(p.ParameterType);
+            //            }
+            //        }
+            //        var metaTypeAttr = propInfo.DeclaringType.GetSingleAttribute<MetadataTypeAttribute>();
+            //        if (metaTypeAttr != null)
+            //        {
+            //            var metaProp = metaTypeAttr.MetadataClassType.GetProperty(propInfo.Name, propInfo.PropertyType, propIndexTypes.ToArray());
+            //            if (metaProp != null)
+            //                result = metaProp.GetSingleAttribute<T>();
+            //        }
+            //    }
+            //    else
+            //    {
+            //        // Looking up a class attribute.
+            //        var metaTypeAttr = self.GetSingleAttribute<MetadataTypeAttribute>();
+            //        if (metaTypeAttr != null)
+            //            result = metaTypeAttr.MetadataClassType.GetSingleAttribute<T>();
+            //    }
+            //}
+            //return result;
         }
     }
 }
