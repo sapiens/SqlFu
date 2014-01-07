@@ -112,12 +112,22 @@ namespace SqlFu.DDL.Generators.Sqlite
         {
             return "integer";
         }
+        
+		protected override string SmallInt()
+		{
+			return "integer";
+		}
+		
+		protected override string BigInt()
+		{
+			return "integer";
+		}
+		
 
         protected override string DateTimeOffset(string size)
         {
             return String(null);
         }
-
         #endregion
     }
 }
