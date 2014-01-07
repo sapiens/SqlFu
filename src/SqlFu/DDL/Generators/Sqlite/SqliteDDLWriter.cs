@@ -29,11 +29,11 @@ namespace SqlFu.DDL.Generators.Sqlite
 
         protected override void WriteTableName()
         {
-            Builder.Append(Escape(Table.Name));
             if (Table.CreationOption == IfTableExists.Ignore)
             {
-                Builder.Append(" if not exists");
+                Builder.Append("if not exists ");
             }
+            Builder.Append(Escape(Table.Name));
         }
 
         protected override AbstractColumnWriter GetColumnWriter()
