@@ -32,8 +32,19 @@ namespace Tests.DDL
             Table = Db.DatabaseTools.GetCreateTableBuilder(TableName,IfTableExists.Throw);
             Table.Columns
                 .Add("Id", DbType.Int32, isNullable: false, autoIncrement: true).AsPrimaryKey("pk_test")
-                .Add("Name", DbType.String, size: "50").AsUnique("uk_name")//.WithCheck("Name like '%a'","ck_name")
-                .Add("Uid", DbType.Guid);
+                .Add("Name", DbType.String, size: "50").AsUnique("uk_name")//.WithCheck("Name like '%a'","ck_name")+            	
+            	.Add("Uid", DbType.Guid)
+            	.Add("Int32", DbType.Int32)
+            	.Add("Int64", DbType.Int64)
+            	.Add("Int16", DbType.Int16)
+            	.Add("UInt16", DbType.UInt16)
+	          	.Add("UInt32", DbType.UInt32)
+            	.Add("UInt64", DbType.UInt64)
+	           	.Add("Single", DbType.Single)
+            	.Add("Double", DbType.Double)
+            	.Add("DateTime", DbType.DateTime)
+            	.Add("DateTimeOffset", DbType.DateTimeOffset);
+
             Table.TableOptionsFor(DbEngine.MySql, MySqlOptions.Table.AutoIncrementValueIs(1),MySqlOptions.Table.EngineIs(TableEngineType.InnoDb));
             Table.Constraints.AddCheck("Name like '%a'", "ck_name")
                  .IfDatabaseIs(DbEngine.PostgreSQL).Redefine("constraint ck_name check(\"Name\" like '%a')");
