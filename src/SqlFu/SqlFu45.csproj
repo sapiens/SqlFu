@@ -191,6 +191,7 @@
     <Compile Include="Migrations\Automatic\IAutomaticMigration.cs" />
     <Compile Include="Migrations\Automatic\MigrationTrack.cs" />
     <Compile Include="Migrations\DatabaseMigration.cs" />
+    <Compile Include="Migrations\Extensions.cs" />
     <Compile Include="Migrations\IConfigureMigrationsRunner.cs" />
     <Compile Include="Migrations\IManageMigrations.cs" />
     <Compile Include="Migrations\IMigrateSchema.cs" />
@@ -228,7 +229,6 @@
     <Compile Include="QueryHelpers.cs" />
     <Compile Include="QueryOnlyAttribute.cs" />
     <Compile Include="SqlFuConnection.cs">
-      
     </Compile>
     <Compile Include="SqlFuDao.cs" />
     <Compile Include="SqlFuDaoAsync.cs" />
