@@ -89,6 +89,11 @@ namespace SqlFu.DDL.Generators.SqlServer
             return "bit";
         }
 
+        protected override string Double()
+        {
+            return "float";
+        }
+
         protected override string DateTimeOffset(string size)
         {
             var hasSize = !size.IsNullOrEmpty();

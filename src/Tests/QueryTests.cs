@@ -210,7 +210,8 @@ namespace Tests.Helpers
 
         public void Dispose()
         {
-           Config.EmptyTable();
+          if (_db.TableExists<Post>())
+            Config.EmptyTable();
         }
 
 
