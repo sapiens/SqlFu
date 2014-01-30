@@ -1,13 +1,11 @@
-﻿using System.Data.Common;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Xunit;
-using System;
+﻿using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 using SqlFu;
+using Xunit;
 
-namespace Tests.SqlFu45
+namespace Tests
 {
     public class AyncQueriesTests:IDisposable
     {

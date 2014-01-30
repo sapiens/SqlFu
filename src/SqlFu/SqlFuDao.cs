@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
+using System.Text;
 using CavemanTools.Model;
 using SqlFu.DDL;
-using SqlFu.Expressions;
 using SqlFu.Internals;
 
 namespace SqlFu
 {
     public static class SqlFuDao
     {
+        public const char EscapeSqlMarker = '$';
         public static int ExecuteCommand(this DbConnection cnx, string sql, params object[] args)
         {
             return cnx.Execute(sql, args);
@@ -33,9 +34,65 @@ namespace SqlFu
             }
         }
 
+        public static string EscapeSql(this IHaveDbProvider provider, string sql)
+        {
+            if (sql.IsNullOrEmpty()) return sql;
+            if (sql.IndexOf(EscapeSqlMarker) < 0) return sql;
+            var sb = new StringBuilder(sql.Length*2);
+            bool inIdentifier = false;
+            char[] delimiters = new[] {',', ' ', '\t', '\n', '\r','=','<','>',':','(',')',']','+','-','*','/','%'};
+            List<char> identifier=new List<char>(16);
+            foreach (var c in sql)
+            {
+                if (inIdentifier)
+                {
+                    if (c==EscapeSqlMarker || delimiters.Any(d => d == c))
+                    {
+                        inIdentifier = false;
+                        if (c != EscapeSqlMarker)
+                        {
+                            sb.Append(provider.EscapeName(new string(identifier.ToArray())));
+                        }
+                        sb.Append(c);
+                        identifier.Clear();
+                    }
+                    else
+                    {
+                        identifier.Add(c);
+                    }
+                    continue;
+                }
+                if (c == EscapeSqlMarker)
+                {
+                    inIdentifier = true;
+                }
+                else
+                {
+                    sb.Append(c);
+                }                
+            }
+            if (identifier.Count > 0)
+            {
+                sb.Append(provider.EscapeName(new string(identifier.ToArray())));
+            }
+            return sb.ToString();
+        }
+
         public static string EscapeIdentifier(this DbConnection cnx, string identifier)
         {
             return cnx.GetProvider().EscapeName(identifier);
+        }
+        
+        /// <summary>
+        /// Escapes marked columns and table names from query. Identifier must be prefixed with '$'.
+        /// Example: select $column, $other as column1 from dbo.$table -> select [column], [other] as column1 from dbo.[table]
+        /// </summary>
+        /// <param name="cnx"></param>
+        /// <param name="sql"></param>
+        /// <returns></returns>
+        public static string EscapeSql(this DbConnection cnx, string sql)
+        {
+            return cnx.GetProvider().EscapeSql(sql);
         }
 
 
