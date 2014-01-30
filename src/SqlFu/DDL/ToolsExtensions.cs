@@ -10,8 +10,12 @@ namespace SqlFu
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="db"></param>
-        public static void Drop<T>(this DbConnection db)
+        public static void Drop<T>(this DbConnection db,bool checkIfExists=true)
         {
+            if (checkIfExists)
+            {
+                if (!db.TableExists<T>()) return;
+            }
             var ti = TableInfo.ForType(typeof (T));
             db.DatabaseTools().DropTable(ti.Name);
         }
