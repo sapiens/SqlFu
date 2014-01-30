@@ -525,7 +525,7 @@ namespace SqlFu
                     throw;
                 }
 
-                if (rez.Count > 0)
+                if (rez.LongCount >0)
                 {
                     statement.Setup(cmd);
                     rez.Items = cmd.Fetch<T>();

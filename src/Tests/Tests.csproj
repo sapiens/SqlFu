@@ -136,7 +136,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Mapper\SimpleMapper.cs" />
-    <Compile Include="ExtensionsTests.cs" />
+    <Compile Include="Extensions\EscapeSqlTests.cs" />
     <Compile Include="Providers\SqliteProviderTests.cs" />
     <Compile Include="Providers\PostgresProviderTests.cs" />
     <Compile Include="Providers\MySqlProviderTests.cs" />
