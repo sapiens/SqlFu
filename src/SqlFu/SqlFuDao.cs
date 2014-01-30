@@ -26,6 +26,24 @@ namespace SqlFu
             }
         }
 
+        /// <summary>
+        /// Gets the table name (if set with [Table]) or the type name
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="cnx"></param>
+        /// <param name="escape"></param>
+        /// <returns></returns>
+        public static string GetTableName<T>(this DbConnection cnx,bool escape=true)
+        {
+            var name= TableInfo.ForType(typeof (T)).Name;
+            if (escape)
+            {
+                return cnx.EscapeIdentifier(name);
+            }
+            return name;
+        }
+
+
         public static T GetValue<T>(this DbConnection cnx, string sql, params object[] args)
         {
             using (var cmd = cnx.CreateAndSetupCommand(sql, args))
