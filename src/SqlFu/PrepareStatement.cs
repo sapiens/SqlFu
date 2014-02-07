@@ -34,7 +34,10 @@ namespace SqlFu
         {
             cmd.CommandText = Provider.FormatSql(cmd.CommandText, ParamNames);
             Provider.OnCommandExecuting(cmd);
-            //todo escape columns and table names
+            if (SqlFuDao.EscapeMarkedIdentifiers)
+            {
+                cmd.CommandText = Provider.EscapeSql(cmd.CommandText);
+            }            
         }
 
         protected void SetupParameters(DbCommand cmd)
