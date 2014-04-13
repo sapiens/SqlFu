@@ -32,7 +32,7 @@ Read about the **[Advanced Features](https://github.com/sapiens/SqlFu/wiki)**
 
 ## User Friendly
  
- Intuitive usage and automatic multi poco mapping by convention, similar to EF. Multi poco mapping automatically works with pagination without any special setup. PLease be aware that SqlFu is a data mapper i.e it maps query results to POCOs, it doesn't do mapping like an ORM does (which allows you to build queries using Linq).
+ Intuitive usage and automatic multi poco mapping by convention, similar to EF. Multi poco mapping automatically works with pagination without any special setup. Please be aware that SqlFu is a data mapper i.e it maps query results to POCOs, it doesn't do mapping like an ORM does (which allows you to build queries using Linq).
 
 ##Usage
 
