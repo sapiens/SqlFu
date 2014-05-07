@@ -437,9 +437,11 @@ namespace SqlFu
                     if (cnt.GetType() == typeof (Int32))
                     {
                         rez.Count = (int) cnt;
+                        rez.LongCount = rez.Count;
                     }
                     else
                     {
+                        rez.Count = -1;
                         rez.LongCount = (long) cnt;
                     }
                     OnCommand(cmd);
@@ -450,7 +452,7 @@ namespace SqlFu
                     throw;
                 }
 
-                if (rez.Count > 0)
+                if (rez.Count > 0 || rez.LongCount > 0)
                 {
                     statement.Setup(cmd);
                     rez.Items = cmd.Fetch<T>();
