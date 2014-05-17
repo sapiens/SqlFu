@@ -18,10 +18,7 @@
   
   <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations"  />
 </frameworkAssemblies>
-      <dependencies>
-   <dependency id="CavemanTools" version="[3.4.0]" />   
-  </dependencies>
-
+    
          </metadata>
 <files>
         <file src="..\..\src\SqlFu\bin\Release\**\SqlFu*" target="lib"></file>

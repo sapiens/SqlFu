@@ -327,6 +327,7 @@ namespace SqlFu
                     {
                         Rollback();
                     }
+                    Connection.Close();
                     Connection.Dispose();
                     _conex = null;
                 }

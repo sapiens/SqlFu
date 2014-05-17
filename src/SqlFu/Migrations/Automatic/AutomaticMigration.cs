@@ -56,7 +56,7 @@ namespace SqlFu.Migrations.Automatic
         public void Untrack(params string[] schemas)
         {
             if (schemas.Length == 0) return;
-            _db.ExecuteCommand("delete from " + TableName + " where SchemaName in (@0)", schemas.ToList());
+            _db.ExecuteCommand("delete from " + _db.EscapeIdentifier(TableName) + " where {0} in (@0)".ToFormat(_db.EscapeIdentifier("SchemaName")), schemas.ToList());
         }
 
         private void AppendVersion(string schema, string version)
@@ -112,7 +112,7 @@ namespace SqlFu.Migrations.Automatic
 
         private string GetInstalledVersion(string schema)
         {
-            return _db.GetValue<string>("select Version from " + TableName + " where SchemaName=@0 order by Id desc",
+            return _db.GetValue<string>("select " + _db.EscapeIdentifier("Version") + " from " + _db.EscapeIdentifier(TableName) + " where {0}=@0 order by {1} desc".ToFormat(_db.EscapeIdentifier("SchemaName"),_db.EscapeIdentifier("Id")),
                                         schema);
         }
     }

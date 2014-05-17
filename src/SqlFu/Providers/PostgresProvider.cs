@@ -44,7 +44,7 @@ namespace SqlFu.Providers
         {
             int formidx;
             var body = GetPagingBody(sql, out formidx);
-            countSql = "select count(*) " + body;
+            countSql = "select count(*) " + RemoveLastOrderBy(body);
             selecSql = string.Format("{0} limit @{2} offset @{1}", sql, PreparePagedStatement.SkipParameterName,
                                      PreparePagedStatement.TakeParameterName);
         }

@@ -141,6 +141,7 @@ namespace Tests
         {
             using (var db = GetDb())
             {
+                if (db.TableExists<Post>())
                 db.Drop<Post>();
             }
         }

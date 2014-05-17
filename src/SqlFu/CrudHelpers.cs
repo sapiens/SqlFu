@@ -118,6 +118,18 @@ namespace SqlFu
 
         #endregion
 
+        public static LastInsertId Upsert<T>(this DbConnection db, T data,Expression<Func<T,bool>> predicate=null) where T:class
+        {
+            var res = LastInsertId.Empty;
+            var upd = predicate == null ? db.Update<T>(data) : db.Update<T>(data, predicate);
+            if (upd == 0)
+            {
+                res = db.Insert(data);
+            }
+            return res;
+        }
+
+
         #region Update
 
         /// <summary>

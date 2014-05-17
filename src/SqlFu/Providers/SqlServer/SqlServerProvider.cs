@@ -19,11 +19,13 @@ namespace SqlFu.Providers.SqlServer
 
         public const string ProviderName = "System.Data.SqlClient";
 
-        internal SqlServerProvider(string provider) : base(provider)
+        internal SqlServerProvider(string provider)
+            : base(provider)
         {
         }
 
-        public SqlServerProvider() : base(ProviderName)
+        public SqlServerProvider()
+            : base(ProviderName)
         {
         }
 
@@ -76,13 +78,35 @@ namespace SqlFu.Providers.SqlServer
             return string.Join(".", s.Split('.').Select(d => "[" + d + "]"));
         }
 
-        private static readonly Regex RxOrderBy =
-            new Regex(
-                @"\bORDER\s+BY\s+(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\w\(\)\.])+(?:\s+(?:ASC|DESC))?(?:\s*,\s*(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\w\(\)\.])+(?:\s+(?:ASC|DESC))?)*",
-                RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Singleline | RegexOptions.Compiled);
+        //private static readonly Regex RxOrderBy =
+        //    new Regex(
+        //        @"\bORDER\s+BY\s+(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\w\(\)\.])+(?:\s+(?:ASC|DESC))?(?:\s*,\s*(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\w\(\)\.])+(?:\s+(?:ASC|DESC))?)*",
+        //        RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Singleline | RegexOptions.Compiled);
 
         private static readonly ConcurrentDictionary<int, PagingInfo> PagingCache =
             new ConcurrentDictionary<int, PagingInfo>();
+
+        //string RemoveOrderBy(string body)
+        //{
+        //    var pos = body.IndexOf("order", StringComparison.OrdinalIgnoreCase);
+        //    if (pos < 0) return body;
+        //    return body.Substring(0,pos);
+        //}
+
+        void ProcessOrderBy(ref string body, ref string orderBy)
+        {
+            //var all = RxOrderBy.Matches(body);
+            //if (all.Count > 0)
+            //{
+            //    var m = all[all.Count - 1];
+            //    orderBy = m.Captures[0].Value;
+            //    body = body.Substring(0, m.Index);
+            //}
+            var pos = body.LastIndexOf("order", StringComparison.OrdinalIgnoreCase);
+            if (pos < 0) return;
+            orderBy = body.Substring(pos);
+            body = body.Substring(0, pos);
+        }
 
         public override void MakePaged(string sql, out string selecSql, out string countSql)
         {
@@ -98,14 +122,10 @@ namespace SqlFu.Providers.SqlServer
             int fromidx;
             var body = GetPagingBody(sql, out fromidx);
             selecSql = sql;
-            var all = RxOrderBy.Matches(body);
             string orderBy = "order by (select null)";
-            if (all.Count > 0)
-            {
-                var m = all[all.Count - 1];
-                orderBy = m.Captures[0].Value;
-                body = body.Substring(0, m.Index);
-            }
+
+            ProcessOrderBy(ref body, ref orderBy);
+
             countSql = "select count(*) " + body;
             var sidx = sql.IndexOf("select", StringComparison.InvariantCultureIgnoreCase);
             if (sidx < 0) throw new InvalidPagedSqlException(sql);
@@ -125,13 +145,13 @@ sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, bo
         }
 
 
-        static ConcurrentDictionary<Type,Tuple<bool,bool,bool>> _meta=new ConcurrentDictionary<Type, Tuple<bool, bool, bool>>();
+        static ConcurrentDictionary<Type, Tuple<bool, bool, bool>> _meta = new ConcurrentDictionary<Type, Tuple<bool, bool, bool>>();
 
         public override void SetupParameter(IDbDataParameter param, string name, object value)
         {
             base.SetupParameter(param, name, value);
             if (value == null) return;
-            
+
             var tp = value.GetType();
 
             Tuple<bool, bool, bool> meta;
@@ -144,7 +164,7 @@ sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, bo
 
             if (meta.Item1)
             {
-                param.Size = Math.Max(((string) value).Length + 1, 4000);
+                param.Size = Math.Max(((string)value).Length + 1, 4000);
             }
 
             else if (meta.Item2) //SqlGeography is a CLR Type
@@ -165,7 +185,7 @@ sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, bo
             cmd.CommandText += ";Select SCOPE_IDENTITY() as id";
 
             var rez = cmd.GetRawValue();
-          
+
             return new LastInsertId(rez);
         }
 
