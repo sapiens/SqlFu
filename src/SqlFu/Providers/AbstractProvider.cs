@@ -27,7 +27,14 @@ namespace SqlFu.Providers
             return _factory.CreateConnection();
         }
 
-    
+
+        protected string RemoveLastOrderBy(string body)
+        {
+            var pos = body.LastIndexOf("order", StringComparison.OrdinalIgnoreCase);
+            if (pos < 0) return body;
+            return body.Substring(0, pos);
+        }
+
         internal static string GetPagingBody(string sql, out int fromidx)
         {
             fromidx = sql.IndexOf("from", 0, StringComparison.InvariantCultureIgnoreCase);

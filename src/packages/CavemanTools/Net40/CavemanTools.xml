@@ -4,6 +4,13 @@
         <name>CavemanTools</name>
     </assembly>
     <members>
+        <member name="T:CavemanTools.LimitedList`1">
+            <summary>
+            Used to maintain a fixed sized list for history purposes.
+            Intended to support idempotency (by storing last n message ids)
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
         <member name="M:CavemanTools.Data.JsonStruct.#ctor(System.String,CavemanTools.Data.JsonStatus)">
             <summary>
             Sets the status and inserts a message.
@@ -393,13 +400,6 @@
             <exception cref="T:System.InvalidCastException"></exception>
             <returns></returns>
         </member>
-        <member name="T:CavemanTools.LimitedList`1">
-            <summary>
-            Used to maintain a fixed sized list for history purposes.
-            Intended to support idempotency (by storing last n message ids)
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
         <member name="M:CavemanTools.Model.ValueObjects.AbstractValueObject`1.#ctor(`0)">
             <summary>
             
@@ -785,10 +785,47 @@
             <param name="predicate"></param>
             <returns></returns>
         </member>
+        <member name="M:System.Collections.Generic.ListUtils.GetValueOrDefault``2(System.Collections.Generic.IDictionary{``0,``1},``0,``1)">
+            <summary>
+            Tries to get value for key and returns a provided value or default if key not found
+            </summary>
+            <typeparam name="T"></typeparam>
+            <typeparam name="V"></typeparam>
+            <param name="dict"></param>
+            <param name="key"></param>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
         <member name="T:CavemanTools.Model.ValueObjects.Email">
             <summary>
             
             </summary>
+        </member>
+        <member name="M:CavemanTools.Model.IdName.Equals(CavemanTools.Model.IdName)">
+            <summary>
+            Indicates whether the current object is equal to another object of the same type.
+            </summary>
+            <returns>
+            true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+            </returns>
+            <param name="other">An object to compare with this object.</param>
+        </member>
+        <member name="M:CavemanTools.Model.IdName.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
+            </summary>
+            <returns>
+            true if the specified object  is equal to the current object; otherwise, false.
+            </returns>
+            <param name="obj">The object to compare with the current object. </param>
+        </member>
+        <member name="M:CavemanTools.Model.IdName.GetHashCode">
+            <summary>
+            Serves as a hash function for a particular type. 
+            </summary>
+            <returns>
+            A hash code for the current <see cref="T:System.Object"/>.
+            </returns>
         </member>
         <member name="T:CavemanTools.Model.ValueObjects.UrlSlug">
             <summary>

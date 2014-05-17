@@ -1,13 +1,13 @@
-﻿using System.Data.SqlClient;
+﻿using System;
+using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Linq;
 using CavemanTools.Model;
 using CavemanTools.Model.ValueObjects;
 using SqlFu;
 using Xunit;
-using System;
-using System.Diagnostics;
-using System.Linq;
 
-namespace Tests.Helpers
+namespace Tests
 {
     public class QueryTests:IDisposable
     {

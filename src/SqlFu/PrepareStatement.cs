@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -35,6 +34,10 @@ namespace SqlFu
         {
             cmd.CommandText = Provider.FormatSql(cmd.CommandText, ParamNames);
             Provider.OnCommandExecuting(cmd);
+            if (SqlFuDao.EscapeMarkedIdentifiers)
+            {
+                cmd.CommandText = Provider.EscapeSql(cmd.CommandText);
+            }            
         }
 
         protected void SetupParameters(DbCommand cmd)

@@ -76,14 +76,46 @@ namespace SqlFu.Providers.SqlServer
             return string.Join(".", s.Split('.').Select(d => "[" + d + "]"));
         }
 
+<<<<<<< HEAD
         private static readonly Regex RxOrderBy =
             new Regex(
                 @"\bORDER\s+BY\s+(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\w\(\)\.])+(?:\s+(?:ASC|DESC))?(?:\s*,\s*(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\w\(\)\.])+(?:\s+(?:ASC|DESC))?)*",
                 RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Singleline | RegexOptions.Compiled);
+=======
+        //private static readonly Regex RxOrderBy =
+        //    new Regex(
+        //        @"\bORDER\s+BY\s+(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\w\(\)\.])+(?:\s+(?:ASC|DESC))?(?:\s*,\s*(?:\((?>\((?<depth>)|\)(?<-depth>)|.?)*(?(depth)(?!))\)|[\w\(\)\.])+(?:\s+(?:ASC|DESC))?)*",
+        //        RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Singleline | RegexOptions.Compiled);
+>>>>>>> origin/devel
 
         private static readonly ConcurrentDictionary<int, PagingInfo> PagingCache =
             new ConcurrentDictionary<int, PagingInfo>();
 
+<<<<<<< HEAD
+=======
+        //string RemoveOrderBy(string body)
+        //{
+        //    var pos = body.IndexOf("order", StringComparison.OrdinalIgnoreCase);
+        //    if (pos < 0) return body;
+        //    return body.Substring(0,pos);
+        //}
+
+        void ProcessOrderBy(ref string body, ref string orderBy)
+        {
+            //var all = RxOrderBy.Matches(body);
+            //if (all.Count > 0)
+            //{
+            //    var m = all[all.Count - 1];
+            //    orderBy = m.Captures[0].Value;
+            //    body = body.Substring(0, m.Index);
+            //}
+            var pos = body.LastIndexOf("order", StringComparison.OrdinalIgnoreCase);
+            if (pos < 0) return;
+            orderBy = body.Substring(pos);
+            body = body.Substring(0, pos);
+        }
+
+>>>>>>> origin/devel
         public override void MakePaged(string sql, out string selecSql, out string countSql)
         {
             PagingInfo info;
@@ -98,6 +130,7 @@ namespace SqlFu.Providers.SqlServer
             int fromidx;
             var body = GetPagingBody(sql, out fromidx);
             selecSql = sql;
+<<<<<<< HEAD
             var all = RxOrderBy.Matches(body);
             string orderBy = "order by (select null)";
             if (all.Count > 0)
@@ -106,6 +139,12 @@ namespace SqlFu.Providers.SqlServer
                 orderBy = m.Captures[0].Value;
                 body = body.Substring(0, m.Index);
             }
+=======
+            string orderBy = "order by (select null)";
+            
+            ProcessOrderBy(ref body,ref orderBy);
+            
+>>>>>>> origin/devel
             countSql = "select count(*) " + body;
             var sidx = sql.IndexOf("select", StringComparison.InvariantCultureIgnoreCase);
             if (sidx < 0) throw new InvalidPagedSqlException(sql);
