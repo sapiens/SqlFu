@@ -4,13 +4,6 @@
         <name>CavemanTools</name>
     </assembly>
     <members>
-        <member name="T:CavemanTools.LimitedList`1">
-            <summary>
-            Used to maintain a fixed sized list for history purposes.
-            Intended to support idempotency (by storing last n message ids)
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
         <member name="M:CavemanTools.Data.JsonStruct.#ctor(System.String,CavemanTools.Data.JsonStatus)">
             <summary>
             Sets the status and inserts a message.
@@ -399,6 +392,13 @@
             <exception cref="T:System.NotSupportedException"></exception>
             <exception cref="T:System.InvalidCastException"></exception>
             <returns></returns>
+        </member>
+        <member name="T:CavemanTools.LimitedList`1">
+            <summary>
+            Used to maintain a fixed sized list for history purposes.
+            Intended to support idempotency (by storing last n message ids)
+            </summary>
+            <typeparam name="T"></typeparam>
         </member>
         <member name="M:CavemanTools.Model.ValueObjects.AbstractValueObject`1.#ctor(`0)">
             <summary>
@@ -1003,6 +1003,12 @@
             <param name="inherit">True to lookup the hierarchy chain for the attribute</param>
             <returns></returns>
         </member>
+        <member name="M:CavemanTools.PasswordHash.ToString">
+            <summary>
+            Returns the hash as string of 92 chars
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:CavemanTools.Percentage.#ctor(System.Decimal)">
             <summary>
             A percentage as a number.
@@ -1240,6 +1246,17 @@
             Creates dictionary from object properties.
             </summary>
             <param name="value">Object</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.ObjectExtend.ReturnDefaultOrResult``2(``0,System.Func{``0,``1},``1)">
+            <summary>
+            
+            If object is not null invokes function else returns default of type
+            </summary>
+            <typeparam name="V"></typeparam>
+            <typeparam name="T"></typeparam>
+            <param name="item"></param>
+            <param name="invoke"></param>
             <returns></returns>
         </member>
         <member name="M:System.ObjectExtend.ConvertTo(System.Object,System.Type)">
