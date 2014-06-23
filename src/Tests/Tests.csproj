@@ -87,6 +87,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Expressions\DbExtrensionsMethodsTests.cs" />
+    <Compile Include="Expressions\GenerateSqlFromExpressionsTests.cs" />
     <Compile Include="Expressions\UpdateTableTests.cs" />
     <Compile Include="Expressions\WhereCriteriaTests.cs" />
     <Compile Include="DDL\FluentBuilderCreateTableTests.cs" />

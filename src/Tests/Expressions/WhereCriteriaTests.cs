@@ -167,7 +167,8 @@ namespace Tests.Expressions
         {
             Expression<Func<Post, bool>> data = p => p.Title.StartsWith("a");
             _w.Write(data);
-            Assert.Equal("[Title] like 'a%'", _sb.ToString());
+            Assert.Equal("[Title] like @0", _sb.ToString());
+            Assert.Equal("a%", _pm.ToArray()[0]);
         }
         
         [Fact]
@@ -175,16 +176,26 @@ namespace Tests.Expressions
         {
             Expression<Func<Post, bool>> data = p => p.Title.EndsWith("a");
             _w.Write(data);
-            Assert.Equal("[Title] like '%a'", _sb.ToString());
+            Assert.Equal("[Title] like @0", _sb.ToString());
+            Assert.Equal("%a", _pm.ToArray()[0]);
         }
-        
+
         [Fact]
-        public void title_contains_bla()
+        public void when_string_contains_quotes_they_should_be_escaped()
         {
-            Expression<Func<Post, bool>> data = p => p.Title.Contains("bla");
+            Expression<Func<Post, bool>> data = p => p.Title.Contains("don't cry for me argentina");
             _w.Write(data);
-            Assert.Equal("[Title] like '%bla%'", _sb.ToString());
+            Assert.Equal("[Title] like @0",_sb.ToString());
+            Assert.Equal("%don't cry for me argentina%",_pm.ToArray()[0]);
         }
+
+        //[Fact]
+        //public void title_contains_bla()
+        //{
+        //    Expression<Func<Post, bool>> data = p => p.Title.Contains("bla");
+        //    _w.Write(data);
+        //    Assert.Equal("[Title] like '%bla%'", _sb.ToString());
+        //}
 
         [Fact]
         public void title_length_less_than_3()
