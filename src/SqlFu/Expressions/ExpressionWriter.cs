@@ -278,13 +278,16 @@ namespace SqlFu.Expressions
             switch (node.Method.Name)
             {
                 case "StartsWith":
-                    value = "{0} like '{1}%'".ToFormat(_provider.EscapeName(name), arg);
+                    value = "{0} like @{1}".ToFormat(_provider.EscapeName(name), Parameters.CurrentIndex);
+                    Parameters.RegisterParameter(arg + "%");
                     break;
                 case "EndsWith":
-                    value = "{0} like '%{1}'".ToFormat(_provider.EscapeName(name), arg);
+                    value = "{0} like @{1}".ToFormat(_provider.EscapeName(name), Parameters.CurrentIndex);
+                    Parameters.RegisterParameter("%" + arg);
                     break;
                 case "Contains":
-                    value = "{0} like '%{1}%'".ToFormat(_provider.EscapeName(name), arg);
+                    value = "{0} like @{1}".ToFormat(_provider.EscapeName(name), Parameters.CurrentIndex);
+                    Parameters.RegisterParameter("%"+arg+"%");
                     break;
                 case "ToUpper":
                 case "ToUpperInvariant":
