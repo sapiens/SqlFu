@@ -4,6 +4,20 @@
         <name>CavemanTools</name>
     </assembly>
     <members>
+        <member name="T:CavemanTools.ManualContainerConfigAttribute">
+            <summary>
+            Marker for Di Container registration by convetions to skip types annotated with it. 
+            This is not automatic, you have to tell the container to ignore these types. 
+            Useful when you want some types to be named according to some convention but to configure it differentely in the Container
+            </summary>
+        </member>
+        <member name="T:CavemanTools.LimitedList`1">
+            <summary>
+            Used to maintain a fixed sized list for history purposes.
+            Intended to support idempotency (by storing last n message ids)
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
         <member name="M:CavemanTools.Data.JsonStruct.#ctor(System.String,CavemanTools.Data.JsonStatus)">
             <summary>
             Sets the status and inserts a message.
@@ -392,20 +406,6 @@
             <exception cref="T:System.NotSupportedException"></exception>
             <exception cref="T:System.InvalidCastException"></exception>
             <returns></returns>
-        </member>
-        <member name="T:CavemanTools.LimitedList`1">
-            <summary>
-            Used to maintain a fixed sized list for history purposes.
-            Intended to support idempotency (by storing last n message ids)
-            </summary>
-            <typeparam name="T"></typeparam>
-        </member>
-        <member name="T:CavemanTools.ManualContainerConfigAttribute">
-            <summary>
-            Marker for Di Container registration by convetions to skip types annotated with it. 
-            This is not automatic, you have to tell the container to ignore these types. 
-            Useful when you want some types to be named according to some convention but to configure it differentely in the Container
-            </summary>
         </member>
         <member name="P:CavemanTools.Model.IPagedInput.Page">
             <summary>
