@@ -3,7 +3,7 @@
 SqlFu is a **_versatile_** micro-orm (like dapper.net, peta poco , massive etc) for .Net 4.  SqlFu is Apache licensed.
 If you're wondering if there's a reason for yet another micro-orm [read this](http://www.sapiensworks.com/blog/post/2012/05/19/SqlFu-My-Versatile-Micro-Orm.aspx)
 
-Latest version: [2.3.2](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
+Latest version: [2.3.3](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
 
 **Version 2 is not compatbile with version 1**. [Read how to upgrade to SqlFu 2](https://github.com/sapiens/SqlFu/wiki/How-To-Upgrade-to-SqlFu2)
 
