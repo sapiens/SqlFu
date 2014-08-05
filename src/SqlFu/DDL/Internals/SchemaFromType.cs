@@ -85,7 +85,7 @@ namespace SqlFu.DDL.Internals
             var baseTP = tp;
             while (baseTP != null)
             {
-                props.AddRange(baseTP.GetProperties(BindingFlags.DeclaredOnly|BindingFlags.Public|BindingFlags.Instance).Reverse());
+                props.AddRange(baseTP.GetProperties(BindingFlags.DeclaredOnly|BindingFlags.Public|BindingFlags.Instance).Select(d=>tp.GetProperties().First(f=>f.Name==d.Name)).Reverse());
                 baseTP = baseTP.BaseType;
             }
             props.Reverse();
