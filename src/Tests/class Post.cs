@@ -27,6 +27,9 @@ namespace Tests
         public PostType Type { get; set; }
         public int? TopicId { get; set; }
         public bool IsActive { get; set; }
+        [QueryOnly]
+        [ColumnOptions(DefaultValue = "0")]
+        public int IgnoreWhenUpdate { get; set; }
         
     }
 

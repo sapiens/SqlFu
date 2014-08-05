@@ -42,6 +42,14 @@ namespace Tests.Helpers
         }
 
         [Fact]
+        public void update_with_expression_condition_ignores_queryonly_properties()
+        {
+            _db.Update<Post>(new {Title = "updated",IgnoreWhenUpdate=78},p=>p.Id==2);
+            var post = _db.Get<Post>(2);
+            Assert.Equal(0,post.IgnoreWhenUpdate);
+        }
+
+        [Fact]
         public void update_table_by_name()
         {
             
@@ -73,4 +81,6 @@ namespace Tests.Helpers
            Config.EmptyTable();
         }
     }
+
+
 }
