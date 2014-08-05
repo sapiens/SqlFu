@@ -69,21 +69,41 @@ namespace SqlFu.DDL.Internals
         {
             foreach (var pi in _tp.GetProperties())
             {
-                var fk = pi.GetSingleAttribute<ForeignKeyAttribute>(true);
-                if (fk != null)
+                var fks = pi.GetModelAttributes<ForeignKeyAttribute>();
+                foreach (var fk in fks)
                 {
                     _schema.Constraints.AddForeignKey(pi.Name, fk.ParentTable, fk.ParentColumn, fk.OnUpdate, fk.OnDelete,
-                                                      fk.KeyName);
+                                                    fk.KeyName);
                 }
             }
         }
 
+        //todo put in cavemantools
+        IEnumerable<PropertyInfo> GetProps(Type tp)
+        {
+            var props = new List<PropertyInfo>();
+            var baseTP = tp;
+            while (baseTP != null)
+            {
+                props.AddRange(baseTP.GetProperties(BindingFlags.DeclaredOnly|BindingFlags.Public|BindingFlags.Instance).Reverse());
+                baseTP = baseTP.BaseType;
+            }
+            props.Reverse();
+            return props;
+        }
+
         private void ProcessColumns()
         {
-            foreach (var pi in _tp.GetProperties())
+            foreach (var pi in GetProps(_tp)
+                //.GetProperties().OrderByDescending(d => d.ReflectedType==d.DeclaringType?0:1)
+                )
             {
-                var opt = pi.GetSingleAttribute<ColumnOptionsAttribute>(true);
+                //var opt = pi.GetSingleAttribute<ColumnOptionsAttribute>(true);
+
+                var opt = pi.GetModelAttributes<ColumnOptionsAttribute>().FirstOrDefault();
+                
                 if (opt != null && opt.Ignore) continue;
+                
 
 
                 var col = AddColumn(pi, opt ?? ColumnOptionsAttribute.Default);
