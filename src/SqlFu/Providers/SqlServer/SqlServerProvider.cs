@@ -19,11 +19,13 @@ namespace SqlFu.Providers.SqlServer
 
         public const string ProviderName = "System.Data.SqlClient";
 
-        internal SqlServerProvider(string provider) : base(provider)
+        internal SqlServerProvider(string provider)
+            : base(provider)
         {
         }
 
-        public SqlServerProvider() : base(ProviderName)
+        public SqlServerProvider()
+            : base(ProviderName)
         {
         }
 
@@ -121,9 +123,9 @@ namespace SqlFu.Providers.SqlServer
             var body = GetPagingBody(sql, out fromidx);
             selecSql = sql;
             string orderBy = "order by (select null)";
-            
-            ProcessOrderBy(ref body,ref orderBy);
-            
+
+            ProcessOrderBy(ref body, ref orderBy);
+
             countSql = "select count(*) " + body;
             var sidx = sql.IndexOf("select", StringComparison.InvariantCultureIgnoreCase);
             if (sidx < 0) throw new InvalidPagedSqlException(sql);
@@ -143,13 +145,13 @@ sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, bo
         }
 
 
-        static ConcurrentDictionary<Type,Tuple<bool,bool,bool>> _meta=new ConcurrentDictionary<Type, Tuple<bool, bool, bool>>();
+        static ConcurrentDictionary<Type, Tuple<bool, bool, bool>> _meta = new ConcurrentDictionary<Type, Tuple<bool, bool, bool>>();
 
         public override void SetupParameter(IDbDataParameter param, string name, object value)
         {
             base.SetupParameter(param, name, value);
             if (value == null) return;
-            
+
             var tp = value.GetType();
 
             Tuple<bool, bool, bool> meta;
@@ -162,7 +164,7 @@ sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, bo
 
             if (meta.Item1)
             {
-                param.Size = Math.Max(((string) value).Length + 1, 4000);
+                param.Size = Math.Max(((string)value).Length + 1, 4000);
             }
 
             else if (meta.Item2) //SqlGeography is a CLR Type
@@ -183,7 +185,7 @@ sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, bo
             cmd.CommandText += ";Select SCOPE_IDENTITY() as id";
 
             var rez = cmd.GetRawValue();
-          
+
             return new LastInsertId(rez);
         }
 

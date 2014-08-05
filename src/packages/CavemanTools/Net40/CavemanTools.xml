@@ -393,12 +393,54 @@
             <exception cref="T:System.InvalidCastException"></exception>
             <returns></returns>
         </member>
+        <member name="F:CavemanTools.Infrastructure.MessagingMediator.Resolver">
+            <summary>
+            It should return instance or null
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.MessagingMediator.QueryTo``1(System.Object)">
+            <summary>
+            Invokes the query handler which will take the specified argument as the input model
+            </summary>
+            <typeparam name="TOut">View model</typeparam>
+            <param name="model">Input model</param>
+            <returns></returns>
+        </member>
+        <member name="M:CavemanTools.Infrastructure.MessagingMediator.ExecuteAndReturn``1(System.Object)">
+            <summary>
+            Invokes a request (command) taking the specified argument as the input model and returns its result
+            </summary>
+            <typeparam name="TResult">Output model</typeparam>
+            <param name="input">Input model</param>
+            <returns></returns>
+        </member>
         <member name="T:CavemanTools.LimitedList`1">
             <summary>
             Used to maintain a fixed sized list for history purposes.
             Intended to support idempotency (by storing last n message ids)
             </summary>
             <typeparam name="T"></typeparam>
+        </member>
+        <member name="M:CavemanTools.Logging.IWriteToLog.Log(System.Object,CavemanTools.Logging.LogLevel,System.String,System.Object[])">
+            <summary>
+            Writes a formatted log entry with the specified logging level
+            </summary>
+            <param name="level">Status</param>
+            <param name="message">Entry Text</param>
+            <param name="args">List of arguments</param>
+        </member>
+        <member name="M:CavemanTools.Logging.LogManager.OutputToConsole">
+            <summary>
+            Sets the default logger to be consoler. 
+            Logger name is "console"
+            </summary>
+        </member>
+        <member name="M:CavemanTools.Logging.LogManager.OutputTo(System.Action{System.String})">
+            <summary>
+            Sends all the logging to the writer.
+            Logger name is "devel"
+            </summary>
+            <param name="writer"></param>
         </member>
         <member name="T:CavemanTools.ManualContainerConfigAttribute">
             <summary>
@@ -416,6 +458,16 @@
             <summary>
             How many items are on a page
             </summary>
+        </member>
+        <member name="M:CavemanTools.Model.Persistence.ModelTools.TryUpdateEntity(System.Action,System.Int32)">
+            <summary>
+            Executes the action which should update and store an entity.
+            If action throws <see cref="T:CavemanTools.Model.Persistence.NewerVersionExistsException"/> it's retried for the specified number of times.
+            Returns a result if the action was executed successfully(regardless of the number of tries).
+            </summary>
+            <param name="update"></param>
+            <param name="triesCount"></param>
+            <returns></returns>
         </member>
         <member name="M:CavemanTools.Model.ValueObjects.AbstractValueObject`1.#ctor(`0)">
             <summary>
@@ -599,11 +651,6 @@
             <param name="level">Log Level</param>
             <param name="args">Format params</param>
         </member>
-        <member name="T:CavemanTools.Logging.IWriteToLog">
-            <summary>
-            New name for an old interface
-            </summary>
-        </member>
         <member name="T:CavemanTools.Logging.ILogWriter">
             <summary>
             Use to abstract the usage of an explicit logger (log4net, nlog etc)
@@ -638,18 +685,6 @@
             </summary>
             <typeparam name="T">Logger type</typeparam>
             <returns/>
-        </member>
-        <member name="M:CavemanTools.Logging.FileLogger.Log(CavemanTools.Logging.LogLevel,System.String)">
-            <summary>
-            Writes a log entry with the specified logging level
-            </summary>
-            <param name="level">Status</param><param name="text">Entry Text</param>
-        </member>
-        <member name="M:CavemanTools.Logging.FileLogger.Log(CavemanTools.Logging.LogLevel,System.String,System.Object[])">
-            <summary>
-            Writes a formatted log entry with the specified logging level
-            </summary>
-            <param name="level">Status</param><param name="message">Entry Text</param><param name="args">List of arguments</param>
         </member>
         <member name="T:CavemanTools.Logging.LogHelper">
             <summary>
@@ -1520,6 +1555,14 @@
             </summary>
             <param name="types"></param>
             <param name="other">Optional ascending ordering function</param>
+            <returns></returns>
+        </member>
+        <member name="M:System.TypeExtensions.GetPropertiesInOrder(System.Type)">
+            <summary>
+            Usually get properties returns first the properties declared on the type, then properties declared on the base types.
+            This method will return properties as you expect it 
+            </summary>
+            <param name="tp"></param>
             <returns></returns>
         </member>
         <member name="M:System.TypeExtensions.OrderByAttribute``1(System.Collections.Generic.IEnumerable{``0})">

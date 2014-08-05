@@ -77,7 +77,8 @@ namespace SqlFu
                             propIndexTypes.Add(p.ParameterType);
                         }
                     }
-                    var metaTypeAttr = propInfo.DeclaringType.GetSingleAttribute<MetadataTypeAttribute>();
+                  //  var metaTypeAttr = propInfo.DeclaringType.GetSingleAttribute<MetadataTypeAttribute>();
+                    var metaTypeAttr = propInfo.ReflectedType.GetSingleAttribute<MetadataTypeAttribute>();
                     if (metaTypeAttr != null)
                     {
                         var metaProp = metaTypeAttr.MetadataClassType.GetProperty(propInfo.Name, propInfo.PropertyType, propIndexTypes.ToArray());

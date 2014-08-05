@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>SqlFu</id>
+    <version>0.0.1</version>
+    <title>SqlFu</title>
+    <authors>Mihai Mogosanu</authors>
+    <owners>Mihai Mogosanu</owners>
+    <projectUrl>https://github.com/sapiens/SqlFu</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Fast, versatile micro-orm designed for flexibility and ease of use. Featuring Multi Poco Mapping by convention, Database Migration support, Fluent DDL Builder, Async queries (.Net 4.5 only) and Query Pagination out of the box.</description>
+    <language>en-US</language>
+    <tags>micro-orm sql orm database migration ddl builder query pagination async</tags>
+
+	<!-- <releaseNotes>Added multiple results support</releaseNotes> -->
+    
+    <frameworkAssemblies>
+  
+  <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations"  />
+</frameworkAssemblies>
+      <dependencies>
+   <dependency id="CavemanTools" version="[3.4.0]" />   
+  </dependencies>
+
+         </metadata>
+<files>
+        <file src="..\..\src\SqlFu\bin\Release\**\SqlFu*" target="lib"></file>
+        
+    </files>
+    
+</package>
