@@ -37,7 +37,7 @@ namespace SqlFu.DDL.Internals
 
         private void ProcessPrimaryKey()
         {
-            var att = _tp.GetSingleAttribute<PrimaryKeyAttribute>(true);
+            var att = _tp.GetModelAttributes<PrimaryKeyAttribute>().FirstOrDefault();
             if (att != null)
             {
                 _schema.Constraints.SetPrimaryKey(string.Join(",", att.Columns), att.Name);
@@ -78,7 +78,7 @@ namespace SqlFu.DDL.Internals
             }
         }
 
-        //todo put in cavemantools
+     
         IEnumerable<PropertyInfo> GetProps(Type tp)
         {
             var props = new List<PropertyInfo>();
@@ -94,18 +94,13 @@ namespace SqlFu.DDL.Internals
 
         private void ProcessColumns()
         {
-            foreach (var pi in GetProps(_tp)
-                //.GetProperties().OrderByDescending(d => d.ReflectedType==d.DeclaringType?0:1)
-                )
+            foreach (var pi in GetProps(_tp))
             {
-                //var opt = pi.GetSingleAttribute<ColumnOptionsAttribute>(true);
-
                 var opt = pi.GetModelAttributes<ColumnOptionsAttribute>().FirstOrDefault();
                 
                 if (opt != null && opt.Ignore) continue;
                 
-
-
+                
                 var col = AddColumn(pi, opt ?? ColumnOptionsAttribute.Default);
 
                 var red = pi.GetModelAttributes<RedefineForAttribute>();
@@ -120,7 +115,7 @@ namespace SqlFu.DDL.Internals
         {
             DbType type;
             var tp = pi.PropertyType;
-            var asString = pi.GetSingleAttribute<InsertAsStringAttribute>(true);
+            var asString = pi.GetModelAttributes<InsertAsStringAttribute>().FirstOrDefault();
             if (asString != null)
             {
                 type = DbType.String;
