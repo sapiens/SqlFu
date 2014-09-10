@@ -43,7 +43,12 @@ namespace SqlFu
             var provider = db.GetProvider();
             List<object> args = null;
 
-            var arguments = data.ToDictionary();
+            IDictionary<string, object> arguments;
+            if (data.GetType().GetInterfaces().Contains(typeof(IDictionary<string, object>)))
+                arguments = (IDictionary<string, object>)data;
+            else
+                arguments = data.ToDictionary();
+
             if (tableInfo.InsertSql == null)
             {
                 var sb = new StringBuilder("Insert into");
