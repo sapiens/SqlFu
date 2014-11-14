@@ -127,7 +127,7 @@ namespace SqlFu.DDL.Generators
                     Builder.AppendLine().Append(ch).AppendLine(",");
                 }
             }
-            Builder.RemoveLastIfEquals(",\r\n");
+            Builder.RemoveLastIfEquals("," + Environment.NewLine);
         }
 
         protected virtual string GetAddConstraintPrefix()

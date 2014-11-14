@@ -179,6 +179,7 @@
     <Compile Include="IControlSqlStatement.cs" />
     <Compile Include="IDbProviderExpressionHelper.cs" />
     <Compile Include="Identity.cs" />
+    <Compile Include="IgnoreAttribute.cs" />
     <Compile Include="IHaveDbProvider.cs" />
     <Compile Include="IMapComplexType.cs" />
     <Compile Include="InsertAsStringAttribute.cs" />
