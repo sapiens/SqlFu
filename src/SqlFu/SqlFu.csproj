@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="DatabaseUnitOfWork.cs" />
     <Compile Include="Migrations\Extensions.cs" />
+    <Compile Include="IgnoreAttribute.cs" />
     <Compile Include="SqlFuConnection.cs" />
     <Compile Include="SqlFuDynamic.cs" />
     <Compile Include="IControlSqlStatement.cs" />
