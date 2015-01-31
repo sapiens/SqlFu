@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>PetaPoco.Core</id>
+    <version>5.0.1</version>
+    <title>PetaPoco.Core - A tiny ORMish thing for your POCOs (Core Only)</title>
+    <authors>Topten Software</authors>
+    <owners>Topten Software</owners>
+    <licenseUrl>http://www.toptensoftware.com/petapoco/license</licenseUrl>
+    <projectUrl>http://www.toptensoftware.com/petapoco/</projectUrl>
+    <iconUrl>http://www.toptensoftware.com/petapoco/nuget_icon.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>PetaPoco is a tiny, single file .NET data access layer inspired by Massive that works with both non-dynamic POCO objects and dynamics.
+
+This package includes the just the core PetaPoco library (ie: no T4 templates)</description>
+    <tags>ORM POCO MVC MVC2 MVC3 ASP.NET WebForms WebMatrix MySQL Database</tags>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Data" targetFramework="" />
+      <frameworkAssembly assemblyName="System.Configuration" targetFramework="" />
+    </frameworkAssemblies>
+  </metadata>
+</package>
