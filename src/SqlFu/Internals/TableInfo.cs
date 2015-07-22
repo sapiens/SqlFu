@@ -10,7 +10,7 @@ namespace SqlFu.Internals
 {
     internal class TableInfo
     {
-        public string Name { get; private set; }
+        public string Name { get; internal set; }
         public string PrimaryKey { get; private set; }
         public string[] Excludes { get; private set; }
         public string SelectSingleSql { get; set; }
