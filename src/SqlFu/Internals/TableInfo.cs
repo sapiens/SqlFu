@@ -10,7 +10,7 @@ namespace SqlFu.Internals
 {
     internal class TableInfo
     {
-        public string Name { get; private set; }
+        public string Name { get; internal set; }
         public string PrimaryKey { get; private set; }
         public string[] Excludes { get; private set; }
         public string SelectSingleSql { get; set; }
@@ -51,25 +51,33 @@ namespace SqlFu.Internals
 
             var exclude = new List<string>();
             var tstring = new List<string>();
+            var columns = new List<string>();
+
             if (t != typeof (ExpandoObject))
             {
                 foreach (var p in t.GetProperties())
                 {
-                    var qr = p.GetSingleAttribute<QueryOnlyAttribute>(true);
-                    if (qr != null)
+                    var ig = p.GetSingleAttribute<IgnoreAttribute>(true);
+                    if (ig == null)
                     {
-                        exclude.Add(p.Name);
-                    }
-                    var tos = p.GetSingleAttribute<InsertAsStringAttribute>(true);
-                    if (tos != null)
-                    {
-                        tstring.Add(p.Name);
+                        columns.Add(p.Name);
+
+                        var qr = p.GetSingleAttribute<QueryOnlyAttribute>(true);
+                        if (qr != null)
+                        {
+                            exclude.Add(p.Name);
+                        }
+                        var tos = p.GetSingleAttribute<InsertAsStringAttribute>(true);
+                        if (tos != null)
+                        {
+                            tstring.Add(p.Name);
+                        }
                     }
                 }
             }
             Excludes = exclude.ToArray();
             ConvertToString = tstring.ToArray();
-            Columns = t.GetProperties().Select(p => p.Name).ToArray();
+            Columns = columns.ToArray();
         }
 
         private static readonly ConcurrentDictionary<Type, TableInfo> _cache =

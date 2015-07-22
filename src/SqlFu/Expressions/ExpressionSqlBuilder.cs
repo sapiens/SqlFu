@@ -60,17 +60,7 @@ namespace SqlFu.Expressions
 
         public ExpressionSqlBuilder<T> WriteSelectAllColumns()
         {
-            var max = _ti.Columns.Length;
-            for (int i = 0; i < max; i++)
-            {
-                var c = _ti.Columns[i];
-                if (_ti.Excludes.Contains(c)) continue;
-                _sb.Append(_provider.EscapeName(c));
-                if (i < max - 1)
-                {
-                    _sb.Append(",");
-                }
-            }
+            _sb.Append(string.Join(",", _ti.Columns.Except(_ti.Excludes).Select(x => _provider.EscapeName(x))));
 
             return this;
         }
