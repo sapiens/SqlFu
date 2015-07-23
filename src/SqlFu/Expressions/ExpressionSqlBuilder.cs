@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using CavemanTools.Logging;
 using SqlFu.Internals;
 
 namespace SqlFu.Expressions
@@ -60,7 +62,8 @@ namespace SqlFu.Expressions
 
         public ExpressionSqlBuilder<T> WriteSelectAllColumns()
         {
-            _sb.Append(string.Join(",", _ti.Columns.Except(_ti.Excludes).Select(x => _provider.EscapeName(x))));
+            //_sb.Append(string.Join(",", _ti.Columns/*.Except(_ti.Excludes)*/.Select(x => _provider.EscapeName(x))));
+            _sb.Append(string.Join(",", _ti.Columns.Select(x => _provider.EscapeName(x))));
 
             return this;
         }

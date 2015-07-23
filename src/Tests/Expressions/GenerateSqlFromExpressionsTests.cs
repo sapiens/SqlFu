@@ -20,12 +20,12 @@ namespace Tests.Expressions
        // [ForeignKey("Player", "Id", OnDelete = ForeignKeyRelationCascade.NoAction)]
         public int PoolOwnerId { get; set; }
 
-        [QueryOnly]
+        [Ignore]
         [ColumnOptions(Ignore = true)]
         public List<Player> Players { get; set; }
 
         [QueryOnly]
-        [ColumnOptions(Ignore = true)]
+        //[ColumnOptions(Ignore = true)]
         public int PlayerCount { get; set; }
 
         [ColumnOptions(IsNullable = true)]
@@ -77,7 +77,7 @@ namespace Tests.Expressions
         private void GenerateSql()
         {
          
-                for (var i = 0; i < 100; i++)
+                for (var i = 0; i < 1; i++)
                 {
                     //var builder = new ExpressionSqlBuilder<Pool>(db.GetProvider().BuilderHelper);
                     //builder
