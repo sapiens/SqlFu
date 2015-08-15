@@ -98,6 +98,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Mapper\AnonymousMapping.cs" />
+    <Compile Include="Mapper\DynamicMapperTests.cs" />
     <Compile Include="Mapper\MultiPocoMapperTests.cs">
       <SubType>Code</SubType>
     </Compile>

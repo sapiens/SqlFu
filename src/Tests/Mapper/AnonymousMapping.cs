@@ -18,10 +18,13 @@ namespace Tests.Mapper
             _rd = new Mock<IDataReader>();
             var dt = new { Id = 23, Name = "" };
             _tp = dt.GetType();
+            _rd.Setup(d => d.GetName(0)).Returns("Id");
+            _rd.Setup(d => d.GetName(1)).Returns("Name");
+            _rd.Setup(d => d.GetName(2)).Returns("Extra");
             _rd.Setup(d => d["Id"]).Returns(11);
             _rd.Setup(d => d["Name"]).Returns("bla");
             _rd.Setup(d => d["Extra"]).Returns("bla");
-            _rd.Setup(d => d.FieldCount).Returns(2);
+            _rd.Setup(d => d.FieldCount).Returns(3);
         }
 
         [Fact]
