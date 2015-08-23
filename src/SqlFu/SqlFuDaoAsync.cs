@@ -18,7 +18,7 @@ namespace SqlFu
         {
             using (var cmd = cnx.CreateAndSetupCommand(sql, args))
             {
-                return await cmd.FetchAsync<T>(token);
+                return await cmd.FetchAsync<T>(token).ConfigureAwait(false);
             }
         }
 
@@ -30,7 +30,7 @@ namespace SqlFu
             try
             {
                 CommandBehavior behavior = firstRowOnly ? CommandBehavior.SingleRow : CommandBehavior.Default;
-                using (var reader = await cmd.ExecuteReaderAsync(behavior,cancellation))
+                using (var reader = await cmd.ExecuteReaderAsync(behavior, cancellation).ConfigureAwait(false))
                 {
                     SqlFuDao.OnCommand(cmd);
                     while (await reader.ReadAsync(cancellation))
@@ -64,7 +64,7 @@ namespace SqlFu
         {
             using (var cmd = cnx.CreateAndSetupCommand(sql, args))
             {
-                var data=await cmd.FetchAsync<T>(token,firstRowOnly: true);
+                var data = await cmd.FetchAsync<T>(token, firstRowOnly: true).ConfigureAwait(false);
                 return data.FirstOrDefault();
             }
         }
@@ -76,7 +76,7 @@ namespace SqlFu
         /// <param name="db"></param>
         /// <param name="condition"></param>
         /// <returns></returns>
-        public static async Task<T> GetAsync<T>(this DbConnection db,Expression<Func<T, bool>> condition,CancellationToken token) 
+        public static Task<T> GetAsync<T>(this DbConnection db,Expression<Func<T, bool>> condition,CancellationToken token) 
         {
             var builder = new ExpressionSqlBuilder<T>(db.GetProvider().BuilderHelper);
             builder
@@ -84,7 +84,7 @@ namespace SqlFu
                 .WriteSelectAllColumns()
                 .WriteFrom()
                 .Where(condition);
-            return await db.QuerySingleAsync<T>(token,builder.ToString(), builder.Parameters.ToArray());
+            return db.QuerySingleAsync<T>(token, builder.ToString(), builder.Parameters.ToArray());
         }
 
          /// <summary>
@@ -94,9 +94,9 @@ namespace SqlFu
          /// <param name="db"></param>
          /// <param name="condition"></param>
          /// <returns></returns>
-         public static async Task<T> GetAsync<T>(this DbConnection db, Expression<Func<T, bool>> condition)
+         public static Task<T> GetAsync<T>(this DbConnection db, Expression<Func<T, bool>> condition)
          {
-             return await db.GetAsync(condition, CancellationToken.None);
+             return db.GetAsync(condition, CancellationToken.None);
          }
 
         /// <summary>
@@ -114,12 +114,12 @@ namespace SqlFu
                 .WriteSelectAllColumns()
                 .WriteFrom()
                 .Where(condition);
-            return await db.FetchAsync<T>(token,builder.ToString(), builder.Parameters.ToArray());
+            return await db.FetchAsync<T>(token, builder.ToString(), builder.Parameters.ToArray()).ConfigureAwait(false);
         }
 
-        public static async Task<IEnumerable<T>> QueryAsync<T>(this DbConnection db, Expression<Func<T, bool>> condition) 
+        public static Task<IEnumerable<T>> QueryAsync<T>(this DbConnection db, Expression<Func<T, bool>> condition) 
         {
-            return await db.QueryAsync(condition, CancellationToken.None);
+            return db.QueryAsync(condition, CancellationToken.None);
         }
 
 
@@ -127,14 +127,14 @@ namespace SqlFu
         {
             using (var cmd = cnx.CreateAndSetupCommand(sql, args))
             {
-                return await cmd.ExecuteAsync(token);
+                return await cmd.ExecuteAsync(token).ConfigureAwait(false);
             }
         }
 
 
-        public static async Task<int> ExecuteAsync(this DbConnection cnx, string sql,params object[] args)
+        public static Task<int> ExecuteAsync(this DbConnection cnx, string sql,params object[] args)
         {
-            return await cnx.ExecuteAsync(CancellationToken.None, sql, args);
+            return cnx.ExecuteAsync(CancellationToken.None, sql, args);
         }
 
         public static async Task<int> ExecuteAsync(this DbCommand cmd,CancellationToken token)
@@ -142,7 +142,7 @@ namespace SqlFu
             int rez;
             try
             {
-                rez = await cmd.ExecuteNonQueryAsync(token);
+                rez = await cmd.ExecuteNonQueryAsync(token).ConfigureAwait(false);
                 SqlFuDao.OnCommand(cmd);
                 return rez;
             }
@@ -157,14 +157,14 @@ namespace SqlFu
         {
             using (var cmd = cnx.CreateAndSetupCommand(sql, args))
             {
-                return await cmd.GetValueAsync<T>(PocoFactory.GetConverter<T>(),token);
+                return await cmd.GetValueAsync<T>(PocoFactory.GetConverter<T>(), token).ConfigureAwait(false);
             }
         }
 
-        public static async Task<T> GetValueAsync<T>(this DbConnection cnx, string sql,
+        public static Task<T> GetValueAsync<T>(this DbConnection cnx, string sql,
                                                         params object[] args)
         {
-            return await cnx.GetValueAsync<T>(CancellationToken.None, sql, args);
+            return cnx.GetValueAsync<T>(CancellationToken.None, sql, args);
         }
 
         public static async Task<T> GetValueAsync<T>(this DbCommand cmd,Func<object, T> converter,CancellationToken token)
@@ -172,7 +172,7 @@ namespace SqlFu
             object rez;
             try
             {
-                rez = await cmd.ExecuteScalarAsync(token);
+                rez = await cmd.ExecuteScalarAsync(token).ConfigureAwait(false);
                 SqlFuDao.OnCommand(cmd);
                 return converter(rez);
             }
@@ -183,10 +183,10 @@ namespace SqlFu
             }
         }
 
-        public static async Task<PagedResult<T>> PagedQueryAsync<T>(this DbConnection cnx, long skip, int take, string sql,
+        public static Task<PagedResult<T>> PagedQueryAsync<T>(this DbConnection cnx, long skip, int take, string sql,
                                                                     params object[] args)
         {
-            return await cnx.PagedQueryAsync<T>(CancellationToken.None, skip, take, sql, args);
+            return cnx.PagedQueryAsync<T>(CancellationToken.None, skip, take, sql, args);
         }
 
 
@@ -200,7 +200,7 @@ namespace SqlFu
                 statement.SetupCount(cmd);
                 try
                 {
-                    var cnt = await cmd.ExecuteScalarAsync(token);
+                    var cnt = await cmd.ExecuteScalarAsync(token).ConfigureAwait(false);
                     cnt.MustNotBeNull();
                     if (cnt.GetType() == typeof(Int32))
                     {
@@ -221,7 +221,7 @@ namespace SqlFu
                 if (rez.Count > 0)
                 {
                     statement.Setup(cmd);
-                    rez.Items = await cmd.FetchAsync<T>(token);
+                    rez.Items = await cmd.FetchAsync<T>(token).ConfigureAwait(false);
                 }
 
                 return rez;
@@ -238,7 +238,7 @@ namespace SqlFu
         /// <param name="selector">Column selector</param>
         /// <param name="criteria">Selection criteria</param>
         /// <returns></returns>
-        public static async Task<R> GetColumnValueAsync<T, R>(this DbConnection db, Expression<Func<T, R>> selector,
+        public static Task<R> GetColumnValueAsync<T, R>(this DbConnection db, Expression<Func<T, R>> selector,
                                              Expression<Func<T, bool>> criteria,CancellationToken token)
         {
             selector.MustNotBeNull();
@@ -249,7 +249,7 @@ namespace SqlFu
                 .WriteFrom()
                 .Where(criteria);
 
-            return await db.GetValueAsync<R>(token,builder.ToString(), builder.Parameters.ToArray());
+            return db.GetValueAsync<R>(token,builder.ToString(), builder.Parameters.ToArray());
         }
 
          /// <summary>
@@ -261,10 +261,10 @@ namespace SqlFu
          /// <param name="selector">Column selector</param>
          /// <param name="criteria">Selection criteria</param>
          /// <returns></returns>
-         public static async Task<R> GetColumnValueAsync<T, R>(this DbConnection db, Expression<Func<T, R>> selector,
+         public static Task<R> GetColumnValueAsync<T, R>(this DbConnection db, Expression<Func<T, R>> selector,
                                                                Expression<Func<T, bool>> criteria)
          {
-             return await db.GetColumnValueAsync(selector, criteria, CancellationToken.None);
+             return  db.GetColumnValueAsync(selector, criteria, CancellationToken.None);
          }
     }
 }
