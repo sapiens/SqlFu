@@ -29,9 +29,9 @@ namespace SqlFu.DDL.Internals
             _schema = schema;
             _schema.Name = _ti.Name;
             _schema.CreationOption = _ti.CreationOptions;
+            ProcessPrimaryKey();
             ProcessColumns();
             ProcessIndexes();
-            ProcessPrimaryKey();
             ProcessForeignKeys();
         }
 

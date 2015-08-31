@@ -7,23 +7,24 @@ using System.Diagnostics;
 
 namespace Tests.DDL
 {
-   public partial class User
+    #region User Table
+    public partial class User
     {
-    
+
         public int Id { get; set; }
-        
+
         public string Name { get; set; }
-        
+
         public DateTime RegisteredAt { get; set; }
-        
+
         public Guid? UserId { get; set; }
-      
+
         public IfTableExists Options { get; set; }
-      
+
         public string Bla { get; set; }
 
         public byte[] Data { get; set; }
-      
+
         public string OK { get; set; }
     }
 
@@ -31,7 +32,7 @@ namespace Tests.DDL
     [MetadataType(typeof(UserMetaData))]
     public partial class User
     {
-        
+
     }
 
 
@@ -50,6 +51,29 @@ namespace Tests.DDL
         [ColumnOptions(IsNullable = true)]
         public string OK { get; set; }
     }
+    #endregion
+
+    #region Customer Table
+    public partial class Customer
+    {
+        public Guid Id { get; set; }
+
+        public string Name { get; set; }
+    }
+
+    [MetadataType(typeof(CustomerMetadata))]
+    public partial class Customer
+    {
+
+    }
+
+    [Table("Customers")]
+    [PrimaryKey("Id", AutoIncrement = false, Name = "PK_Customers")]
+    public class CustomerMetadata
+    {
+
+    }
+    #endregion
 
 
     public class FluentBuilderCreateTableTests
@@ -79,10 +103,25 @@ namespace Tests.DDL
  CONSTRAINT [FK_Users_ParentT_name] FOREIGN KEY ([Name]) REFERENCES [ParentT]([ParentC]) ON DELETE CASCADE ON UPDATE NO ACTION);
 CREATE INDEX [ix_email] ON [Users] ([Email]);"//.Replace("\n", "\r\n")
                                               ;
- 
+
 
             var sql = builder.GetSql();
-            Assert.Equal(result,sql);
+            Assert.Equal(result, sql);
+            Write(sql);
+        }
+
+        [Fact]
+        public void table_with_autoincrement_set_to_false()
+        {
+            var sb = Setup.GetDb();
+            var builder = sb.DatabaseTools.GetCreateTableBuilder<Customer>();
+            var result = @"create table [Customers] (
+[Id] uniqueidentifier NOT NULL,
+[Name] nvarchar(max) NOT NULL,
+ CONSTRAINT [PK_Customers] PRIMARY KEY ([Id]));";
+
+            var sql = builder.GetSql();
+            Assert.Equal(result, sql);
             Write(sql);
         }
 
