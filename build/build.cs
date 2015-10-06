@@ -34,7 +34,7 @@ public static void CleanUp()
 {
     TempDir.CleanupDir();
     SlnFile.MsBuildClean();           
-    SlnFile4.MsBuildClean();           
+  //  SlnFile4.MsBuildClean();           
 }
 
 
@@ -43,7 +43,7 @@ public static void CleanUp()
 public static void Build()
 {
     SlnFile.MsBuildRelease();
-    SlnFile4.MsBuildRelease();
+   // SlnFile4.MsBuildRelease();
     Built=true;
 }
 

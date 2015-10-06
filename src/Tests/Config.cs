@@ -10,7 +10,7 @@ namespace Tests
     
     public static class Setup
     {
-        public const string Connex = "Data Source=.;Initial Catalog=tempdb;Integrated Security=True;MultipleActiveResultSets=True";
+        public const string Connex = @"Server=.\sqlexpress;Initial Catalog=tempdb;Integrated Security=True;MultipleActiveResultSets=True";
         public const string SqliteConnex = @"data source={0};foreign keys=True";
         public const string MysqlConnex = @"Server=localhost;Database=mysql;Uid=root;Pwd=;Allow User Variables=True";
         public const string PostgresConnex = @"User ID=postgres;Password=123456;Host=localhost;Port=5432;Database=postgres;";

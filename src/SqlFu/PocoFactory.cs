@@ -44,15 +44,7 @@ namespace SqlFu
                             throw new InvalidCastException("Can't convert db null to value type");
                         }
                         return default(T);
-                    }
-                    //if (tp == typeof(int) || tp == typeof(int?) 
-                    //    || tp== typeof(string)
-                    //    || tp == typeof(long) || tp == typeof(long?)
-                    //    || tp == typeof(bool) || tp == typeof(bool?)
-                    //    )
-                    //{
-                    //    return (T) o;
-                    //}
+                    }                  
                     return o.ConvertTo<T>();
                 };
         }
@@ -75,19 +67,18 @@ namespace SqlFu
 
         private static readonly Func<IDataReader, dynamic> _dynamicPoco = rd =>
             {
-                object val;
-                var fc = rd.FieldCount;
-                KeyValuePair<string,object>[] data=new KeyValuePair<string, object>[fc];
-                for (int i = 0; i < fc; i++)
+                var columns = new string[rd.FieldCount];
+                for (var i = 0; i < rd.FieldCount; i++)
                 {
-                    val = rd.GetValue(i);
-                    data[i]=new KeyValuePair<string, object>(rd.GetName(i), DBNull.Value.Equals(val) ? null : val);
+                    columns[i] = rd.GetName(i);
                 }
 
-                return new SqlFuDynamic(data);
+                var result=new SqlFuDynamic(columns);
+                rd.GetValues(result.Values);
+                return result;
             };
 
-        private static readonly Func<IDataReader, byte[]> _pocoByteArray = rd => { return (byte[]) rd[0]; };
+        private static readonly Func<IDataReader, byte[]> _pocoByteArray = rd => (byte[]) rd[0];
 
         internal static Func<IDataReader, object> AnonMapper(Type type)
         {

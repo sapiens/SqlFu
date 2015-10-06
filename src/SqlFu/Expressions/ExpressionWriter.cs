@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
+using CavemanTools;
 
 namespace SqlFu.Expressions
 {
@@ -188,29 +189,31 @@ namespace SqlFu.Expressions
 
         protected override Expression VisitConstant(ConstantExpression node)
         {
-            if (node.Value != null)
-            {
-                if (node.Type == typeof (string))
-                {
-                    _sb.AppendFormat("'{0}'", node.Value);
-                }
-
-                else
-                {
-                    if (node.Type == typeof (bool))
-                    {
-                        _sb.Append(_provider.FormatBoolean((bool) node.Value));
-                    }
-                    else
-                    {
-                        _sb.Append(node.Value);
-                    }
-                }
-            }
-            else
+            if (node.Value == null)
             {
                 _sb.Append("null");
+                return node;
             }
+            
+            if (node.Type == typeof (string))
+            {
+                _sb.AppendFormat("'{0}'", node.Value);
+                return node;
+            }
+
+            if (node.Type == typeof (bool))
+            {
+                _sb.Append(_provider.FormatBoolean((bool) node.Value));
+                return node;
+            }
+            if (node.Type.IsEnum)
+            {
+                _sb.Append(Convert.ChangeType(node.Value, Enum.GetUnderlyingType(node.Type)));
+                return node;
+            }
+
+            _sb.Append(node.Value);
+
             return node;
         }
 

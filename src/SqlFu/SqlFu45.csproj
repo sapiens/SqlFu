@@ -33,9 +33,9 @@
     <DocumentationFile>bin\Release\Net45\SqlFu.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CavemanTools, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\CavemanTools\Net45\CavemanTools.dll</HintPath>
+    <Reference Include="CavemanTools, Version=3.41.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CavemanTools.3.41.0\lib\Net45\CavemanTools.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -232,7 +232,9 @@
     <Compile Include="TableAttribute.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
