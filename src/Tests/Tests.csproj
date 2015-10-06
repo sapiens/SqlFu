@@ -37,8 +37,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CavemanTools">
-      <HintPath>..\packages\CavemanTools\Net45\CavemanTools.dll</HintPath>
+    <Reference Include="CavemanTools, Version=3.41.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CavemanTools.3.41.0\lib\Net45\CavemanTools.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Mono.Security">
       <HintPath>..\packages\Npgsql.2.0.12.1\lib\net40\Mono.Security.dll</HintPath>

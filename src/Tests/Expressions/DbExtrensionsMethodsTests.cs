@@ -65,7 +65,7 @@ namespace Tests.Expressions
         [Fact]
         public void query()
         {
-            Assert.Equal(5,_db.Query<Post>(P => P.CreatedOn.Year <= 2014 && P.Id<=5).Count());
+            Assert.Equal(5,_db.Query<Post>(P => P.CreatedOn.Year <= DateTime.Now.Year && P.Id<=5).Count());
         }
 
         protected void Write(string format, params object[] param)
