@@ -1,6 +1,7 @@
 ﻿using SqlFu;
 using Xunit;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -66,6 +67,22 @@ namespace Tests.Expressions
         public void query()
         {
             Assert.Equal(5,_db.Query<Post>(P => P.CreatedOn.Year <= DateTime.Now.Year && P.Id<=5).Count());
+        }
+
+        [Fact]
+        public void query_where_value_in_list()
+        {
+            var idList = new List<int> {1, 2, 3};
+
+            Assert.Equal(3,_db.Query<Post>(P => idList.Contains(P.Id)).Count());
+        }
+
+        [Fact]
+        public void query_where_value_in_empty_list()
+        {
+            var emptyIdList = new List<int> ();
+
+            Assert.Equal(0,_db.Query<Post>(P => emptyIdList.Contains(P.Id)).Count());
         }
 
         protected void Write(string format, params object[] param)

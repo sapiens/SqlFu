@@ -163,6 +163,17 @@ namespace Tests.Expressions
         }
 
         [Fact]
+        public void contains_id_from_empty_list_()
+        {
+            var bla = new List<int>();
+
+            Expression<Func<Post, bool>> data = p => bla.Contains(p.Id);
+            _w.Write(data);
+            Assert.Equal("1 = 0",_sb.ToString());
+            Assert.Empty(_pm.ToArray());
+        }
+
+        [Fact]
         public void title_start_with_a()
         {
             Expression<Func<Post, bool>> data = p => p.Title.StartsWith("a");
