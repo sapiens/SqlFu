@@ -326,10 +326,18 @@ namespace SqlFu.Expressions
             {
                 throw new NotSupportedException("Contains must be invoked on a IList (array or List)");
             }
-            var param = meth.Arguments[pIdx].As<MemberExpression>();
 
-            _sb.Append(_provider.EscapeName(param.Member.Name)).AppendFormat(" in (@{0})", Parameters.CurrentIndex);
-            Parameters.RegisterParameter(list);
+            if (list.Count > 0)
+            {
+                var param = meth.Arguments[pIdx].As<MemberExpression>();
+
+                _sb.Append(_provider.EscapeName(param.Member.Name)).AppendFormat(" in (@{0})", Parameters.CurrentIndex);
+                Parameters.RegisterParameter(list);
+            }
+            else
+            {
+                _sb.Append("1 = 0");
+            }
         }
 
         private void HandleParameter(UnaryExpression node)
