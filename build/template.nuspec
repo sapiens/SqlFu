@@ -3,14 +3,14 @@
   <metadata>
     <id>SqlFu</id>
     <version>0.1.0</version>
-    <authors>Mihai Mogosanu</authors>
-    <owners>Mihai Mogosanu</owners>
+    <authors>Mike Mogosanu</authors>
+    <owners>Mike Mogosanu</owners>
     <licenseUrl>https://github.com/sapiens/SqlFu</licenseUrl>
     <projectUrl>https://github.com/sapiens/SqlFu</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>micro orm</description>
+    <description>Fast, versatile data mapper with helpers (micro-orm) to improve productivity when working with a RDBMS. Designed for flexibility and ease of use. Full async support for operations and helpers. INCOMPATIBLE with previous versions</description>
 	<summary>
-		Power tools for developing applications faster and with less code and using best practices. 
+		Warning! Breaking changes. 
 	</summary>
     <language>en-US</language>
     <tags>toolkit, library, tools, utility, lcg, reflection, guard, contracts, helpers</tags>
