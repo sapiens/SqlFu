@@ -4,6 +4,7 @@ using CavemanTools.Model;
 using CavemanTools.Model.ValueObjects;
 using DomainBus.Tests;
 using FluentAssertions;
+using SqlFu.Builders.CreateTable;
 using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 using SqlFu.Providers.SqlServer;
@@ -14,6 +15,8 @@ using Xunit.Abstractions;
 
 namespace SqlFu.Tests
 {
+
+   
     public class SomeOperations:IDisposable
     {
         private IDbFactory _getDb;
@@ -27,7 +30,7 @@ namespace SqlFu.Tests
                 c.AddProfile(SqlServer2012Provider.Instance, Setup.Connex);
                 c.AddSuffixTableConvention();
             });
-
+            
             _getDb = SqlFuManager.GetDbFactory();
 
             SetupTable();
@@ -84,7 +87,7 @@ namespace SqlFu.Tests
 
                 db.GetQueryValue(t => t.From<SomePost>().Where(d => d.State == SomeEnum.Last).AllColumns());
                
-                db.GetQueryValue(d => d.From<SomePost>().Select(c => new SomePost()));
+                db.GetSingle(d => d.From<SomePost>().Select(c => new SomePost()));
                 var id=db.Insert(new SomePost() {Title = "my title"}).GetInsertedId<int>();
                 
                 

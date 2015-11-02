@@ -42,7 +42,12 @@ namespace SqlFu
             return cnx.TableExists(info.Name, info.DbSchema);
         }
 
-
+        /// <summary>
+        /// Creates sql and executes table creation
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="cfg"></param>
         public static void CreateTableFrom<T>(this DbConnection db, Action<IConfigureTable<T>> cfg)
         {
             var provider = db.GetProvider();
