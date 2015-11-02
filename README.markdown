@@ -5,7 +5,7 @@ If you're wondering if there's a reason for yet another micro-orm [read this](ht
 
 Latest stable version: [2.3.11](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
 
-V3 alpha build: 201511021041 available. todo docs [Read a quick preview/usage](http://blog.sapiensworks.com/post/2015/11/02/SqlFu3-Alpha-Released)
+[V3 alpha build](http://blog.sapiensworks.com/post/2015/11/02/SqlFu3-Alpha-Released): **201511021041** available.
 
 **Version 2 is not compatbile with version 1**. [Read how to upgrade to SqlFu 2](https://github.com/sapiens/SqlFu/wiki/How-To-Upgrade-to-SqlFu2)
 
