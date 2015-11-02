@@ -1,3 +1,4 @@
+using System;
 using System.Data.Common;
 using System.Reflection;
 using CavemanTools;
@@ -22,6 +23,12 @@ namespace SqlFu.Migrations
         public SemanticVersion NextVersion { get; private set; }
         public string SchemaName { get; private set; }
         public abstract void Execute(DbConnection db);
+        
+        public void Rollback(DbConnection db)
+        {
+            throw new NotSupportedException("Placeholder for the future");
+        }
+
         public int Priority { get; private set; }
     }
 }

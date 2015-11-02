@@ -1,127 +1,152 @@
-//uncomment to include reference to other assembly you might need (one directive per each)
-//#r "mycustom.dll"
+
 using System;
 using System.IO;
-using System.Linq;
-using System.Collections.Generic;
-using CSake;
-using NuGet;   //comment it out if you don't create nuget packs or manipulate nuspec files
+using MakeSharp;
+using MakeSharp.MsBuild;
 
-//don't use namespaces
-//any class you create will be considered an inner class of the CSakeWrapper class
 
-const string SlnFile=@"../src/SqlFu.sln";
+//class h
+//{
+//    void b()
+//    {
+        Project.StaticName = "Sqlfu";
+        Solution.FileName = @"..\src\SqlFu.sln";  
+            
+		Project.Current.AssemblyExtension = "dll";
 
-const string SlnFile4=@"../src/SqlFu-Net4.sln";
 
-const string SlnDir=@"../src";
+//    }
+//}
 
-const string TempDir=@"temp";
 
-//for nuget
-const string PackageDir = @"temp/package";
 
-static string CurrentDir=Path.GetFullPath("./");
+public class clean
+ {
+     public void Run()
+     {
 
-static string[] Projects=new[]{"SqlFu"};
+	  BuildScript.TempDirectory.CleanupDir();
+      
+      Solution.Instance.FilePath.MsBuildClean();
+    }
 
-static string ReleaseDir=Path.Combine(SlnDir,"SqlFu","bin/Release");
-
-static bool Built=false;
-
-[SkipIf("Built",true)]
-public static void CleanUp()
-{
-    TempDir.CleanupDir();
-    SlnFile.MsBuildClean();           
-  //  SlnFile4.MsBuildClean();           
+   
 }
 
-
-[Depends("CleanUp")] 
-[SkipIf("Built",true)]
-public static void Build()
+public class UpdateVersion
 {
-    SlnFile.MsBuildRelease();
-   // SlnFile4.MsBuildRelease();
-    Built=true;
+
+    
+    public ITaskContext Context { get; set; }
+    public void Run() { 
+    var ver = Context.InitData.Get<string>("v");
+		if (ver == null)
+        {
+			//bump=minor|patch
+			var bump=Context.InitData.Get<string>("bump");			
+			ver=GetVersion(bump);
+			if (bump==null) return;
+        }
+        var info = Project.Current.GetAssemblyInfo();
+       
+       
+        info.Info.Version = info.Info.FileVersion = ver;
+        info.Save();
+      
+        ("Version updated to "+ver).ToConsole();
+        Context.Data["version"] = ver;
+    }
+
+    string GetVersion(string bump=null)
+    {
+        var info=Project.Current.GetAssemblyInfo();
+		if (bump=="minor") info.Info.BumpMinorVersion();
+		if (bump=="patch") info.Info.BumpPatchVersion();
+		Context.Data["version"] = info.Info.Version;
+        ("Using version "+info.Info.Version).ToConsole();
+		return info.Info.Version;
+    }
 }
 
 [Default]
-[Depends("Build")] 
-public static void Local()
+[Depends("clean","UpdateVersion")]
+public class build
 {
-    foreach(var project in Projects)
+    public ITaskContext Context { get; set; }
+
+    public void Run()
     {
-        var releaseDir=Path.GetFullPath(Path.Combine(SlnDir,project,"bin/Release"));
-        "robocopy".Exec(releaseDir,TempDir,"/E","/XN","/NS","/NC","/NJH","/NJS");
+        Solution.Instance.FilePath.MsBuildRelease();
     }
 }
 
-[Depends("Build")]
-public static void Pack()
-{
-   Pack("SqlFu",new[]{"CavemanTools"});
 
-}
-
-static void Pack(string project,string[] deps=null)
+[Depends("build")]
+public class pack
 {
-    PackageDir.MkDir();
-    var nuspecFile=Path.Combine(CurrentDir,project+".nuspec");
-    
-    Dictionary<string,string> depsVersions=new Dictionary<string,string>();
-    if (deps!=null)
+    public ITaskContext Context { get; set; }
+
+
+    public void Run()
     {
-        foreach(var dep in deps)
+        "template.nuspec".CreateNuget(s =>
         {
-            depsVersions[dep]=GetDepVersion(dep);            
-        }
-    }
-    
-    UpdateVersion(nuspecFile,project,depsVersions);
-    BuildNuget(project,Path.Combine(SlnDir,project));
-}
-
-//------------------------------ Utils ----------------
-
-//updates version in nuspec file
-static void UpdateVersion(string nuspecFile,string assemblyName,Dictionary<string,string> localDeps=null)
-{
-    var nuspec=nuspecFile.AsNuspec();   
-    nuspec.Metadata.Version=GetVersion(assemblyName);
-    if (localDeps!=null)
-    {
-        foreach(var kv in localDeps)
+            s.Metadata.Version = Context.Data["version"].ToString();
+			if (Context.InitData.HasArgument("pre"))
+            {
+                s.Metadata.Version +="-"+Context.InitData.Get<string>("pre")?? "pre";
+				if (Context.InitData.HasArgument("bld"))
+				{
+					s.Metadata.Version +="-"+DateTime.Now.ToString("yyyyMMddHHmm");
+				}
+            }
+			
+			var depVers=new Dictionary<string,string>();
+			
+			//depVers["SqlFu"]="3.0.0-alpha-build20150919";
+			
+            foreach (var dep in Project.Current.DepsList)
+            {
+							
+			   var ver = Project.Current.ReleasePathForAssembly(dep+".dll").GetAssemblyVersion();
+                s.AddDependency(dep, depVers.GetValueOrDefault(dep,ver.ToString(3)));
+            }
+                      
+        }, p =>
         {
-            nuspec.AddDependency(kv.Key,kv.Value);
-        }
+            p.OutputDir = BuildScript.TempDirName;
+            p.BasePath = Project.Current.Directory;
+          
+            p.BuildSymbols = true;
+            p.Publish = Context.InitData.HasArgument("push");
+
+        });
+        Context.Data["pkg"] = Path.Combine(BuildScript.TempDirName,
+            Project.Current.Name + "." + Context.Data["version"] + ".nupkg");
     }
-    nuspec.Save(TempDir);    
+
 }
 
-//basePath= relative path for package files source. Usually is the project dir.
-static void BuildNuget(string nuspecFile,string basePath)
+[Depends("pack")]
+public class local
 {
-    //if (!nuspecFile.EndsWith(".nuspec"))
-    //{
-      var project=nuspecFile;  
-        nuspecFile+=".nuspec";
-    //}
-    Path.Combine(TempDir,nuspecFile).CreateNuget(basePath,PackageDir);    
+
+    public ITaskContext Context { get; set; }
+    public void Run()
+    {
+        string[] args=new string[3];
+        args[0]=Path.Combine(BuildScript.TempDirName, "*.nupkg");
+        args[1] = @"e:\Libs\nuget";
+        args[2]="/Y";
+        "xcopy".Exec(args);
+
+    }
 }
 
-static string GetDepVersion(string asmName)
-{
-    return Path.Combine(ReleaseDir,"Net45",asmName+".dll").GetAssemblyVersion().ToSemanticVersion().ToString();
-}
 
-static string GetVersion(string asmName)
-{
-    return Path.Combine(GetReleaseDir(asmName),"Net45",asmName+".dll").GetAssemblyVersion().ToSemanticVersion().ToString();
-}
 
-static string GetReleaseDir(string project)
-{
- return Path.Combine(SlnDir,project,"bin","Release");
-}
+
+
+
+
+

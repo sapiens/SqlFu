@@ -4,8 +4,8 @@ using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using CavemanTools.Infrastructure;
-using CavemanTools.Logging;
 using SqlFu.Migrations.Automatic;
+using SqlFu.Migrations.Automatic.Models;
 
 namespace SqlFu.Migrations
 {
@@ -13,7 +13,7 @@ namespace SqlFu.Migrations
     {
         private readonly DbConnection _db;
         public const string DefaultSchemaName = "_GlobalSchema";
-        private ILogWriter _log = NullLogger.Instance;
+      
         private readonly List<Assembly> _asm = new List<Assembly>();
         private IResolveDependencies _resolver = ActivatorContainer.Instance;
 
@@ -27,7 +27,7 @@ namespace SqlFu.Migrations
             return new DatabaseMigration(db);
         }
 
-        public IConfigureMigrationsRunner SearchAssembly(params Assembly[] asm)
+        public IConfigureMigrationsRunner SearchMigrations(params Assembly[] asm)
         {
             _asm.AddRange(asm);
             return this;
@@ -39,12 +39,12 @@ namespace SqlFu.Migrations
             return this;
         }
 
-        public IConfigureMigrationsRunner WithLogger(ILogWriter logger)
-        {
-            logger.MustNotBeNull();
-            _log = logger;
-            return this;
-        }
+        //public IConfigureMigrationsRunner WithLogger(ILogWriter logger)
+        //{
+        //    logger.MustNotBeNull();
+        //    _log = logger;
+        //    return this;
+        //}
 
         public IConfigureMigrationsRunner WithResolver(IResolveDependencies resolver)
         {
@@ -53,12 +53,18 @@ namespace SqlFu.Migrations
             return this;
         }
 
+        public IConfigureMigrationsRunner WithResolver(Func<Type, object> resolver)
+        {
+            resolver.MustNotBeNull();
+            _resolver=new DependencyContainerWrapper(resolver);
+            return this;
+        }
+
         public IManageMigrations Build()
         {
             if (_resolver == null) throw new InvalidOperationException("Missing dependency resolver");
             var types = _asm
-                .SelectMany(a => AssemblyExtensions.GetTypesImplementing<IMigrationTask>(a, true)
-                                                   .Select(t => (IMigrationTask) _resolver.Resolve(t)))
+                .SelectMany(a => a.GetTypesDerivedFrom<IMigrationTask>(true).Select(t => (IMigrationTask) _resolver.Resolve(t)))
                 .Where(t => t.CurrentVersion != null)
                 .ToArray();
             if (types.Length == 0)
@@ -66,14 +72,18 @@ namespace SqlFu.Migrations
                 throw new MigrationNotFoundException("None of the provided assemblies contained SqlFu migrations");
             }
 
-            var runner = new MigrationTaskRunner(_db, _log);
+            var runner = new MigrationTaskRunner(_db);
 
             return new MigrationsManager(GetSchemaExecutors(types, runner), runner);
         }
 
         public IAutomaticMigration BuildAutomaticMigrator()
         {
-            return new AutomaticMigration(_db, Build(), _log);
+            SqlFuManager.Config.TableInfoFactory.Add(new TrackerMap().Info);
+            var types = _asm
+               .SelectMany(a => a.GetTypesDerivedFrom<IUninstallSchema>(true).Select(t => (IUninstallSchema)_resolver.Resolve(t)))
+               .ToArray();
+            return new AutomaticMigration(_db, Build(),types);
         }
 
         private IEnumerable<IMigrateSchema> GetSchemaExecutors(IEnumerable<IMigrationTask> tasks, IRunMigrations runner)
@@ -87,7 +97,12 @@ namespace SqlFu.Migrations
 
         public void PerformAutomaticMigrations(params string[] schemas)
         {
-            BuildAutomaticMigrator().Execute(schemas);
+            BuildAutomaticMigrator().Install(schemas);
+        }
+
+        public void Uninstall(params string[] schemas)
+        {
+            BuildAutomaticMigrator().Uninstall(schemas);
         }
     }
 }

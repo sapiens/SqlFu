@@ -12,6 +12,6 @@ namespace SqlFu.Migrations
         void MigrateToLatestFrom(string currentVersion);
         string LatestVersionAvailable { get; }
         int Priority { get; set; }
-        void InstallSchema();
+        void InstallSchema();      
     }
 }

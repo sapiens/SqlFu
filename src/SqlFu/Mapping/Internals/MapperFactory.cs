@@ -1,0 +1,75 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Reflection;
+using System.Reflection.Emit;
+using SqlFu.Configuration;
+
+namespace SqlFu.Mapping.Internals
+{
+    public class MapperFactory:IMapToPoco
+    {
+        private readonly IMapPocoManually _customMapper;
+        private readonly ITableInfoFactory _infoFactory;
+        private readonly IManageConverters _converters;
+       // private TypeBuilder _typeBuilder;
+
+        public MapperFactory(IMapPocoManually customMapper,ITableInfoFactory infoFactory,IManageConverters converters)
+        {
+            _customMapper = customMapper;
+            _infoFactory = infoFactory;
+            _converters = converters;
+          //  InitMethodsHost();
+        }
+
+        //void InitMethodsHost()
+        //{
+        //    var assemblyName = new AssemblyName("SqlFuMappersHostAssembly") { Version = new Version("1.0.0.0") };
+
+        //    var assemblyBuilder =
+        //        AppDomain.CurrentDomain.DefineDynamicAssembly(
+        //            assemblyName,
+        //            AssemblyBuilderAccess.RunAndSave);
+        //    var moduleBuilder = assemblyBuilder.DefineDynamicModule("DelegateHostAssembly", "DelegateHostAssembly.dll");
+        //    _typeBuilder = moduleBuilder.DefineType("DelegateHostAssembly." + "Mappers", TypeAttributes.Public);
+         
+        //}
+
+        public Dictionary<string, object> Mappers { get; } = new Dictionary<string, object>();
+
+        public T Map<T>(IDataReader reader, string queryId,string prefix=null)
+        {
+            if (_customMapper.HasMapper(typeof (T))) return _customMapper.Map<T>(reader);
+            queryId.MustNotBeEmpty();
+            var key = queryId + typeof (T);
+            var mapper = Mappers.GetValueOrDefault(key) as IMapReaderToPoco<T>;
+            if (mapper == null)
+            {
+                mapper = CreateMapper<T>(queryId);
+                Mappers.Add(key,mapper);
+            }
+            return mapper.Map(reader, prefix);
+        }
+
+        public IMapReaderToPoco<T> CreateMapper<T>(string queryId)
+        {
+            var type = typeof (T);
+            if (type.CheckIfAnonymousType())
+            {
+                return new AnonymousTypeMapper<T>();
+            }
+            
+            if (type == typeof (object))
+            {
+                return new DynamicMapper() as IMapReaderToPoco<T>;
+            }
+
+            if (type.IsValueType || type == typeof(string) || type==typeof(byte[]))
+            {
+                return new ValueTypeMapper<T>(_converters);
+            }
+            return new Mapper<T>(_infoFactory.GetInfo(type),this, queryId);
+            
+        }
+    }
+}

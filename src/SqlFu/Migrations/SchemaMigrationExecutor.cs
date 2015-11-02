@@ -67,9 +67,9 @@ namespace SqlFu.Migrations
             _runner.Run(
                 _tasks.Where(
                     t =>
-                    t.CurrentVersion.CompareTo(now) >= 0 &&
-                    (t.NextVersion != null && t.NextVersion.CompareTo(next) <= 0)).OrderBy(t => t.CurrentVersion).
-                       ToArray());
+                        t.CurrentVersion.CompareTo(now) >= 0 &&
+                        (t.NextVersion != null && t.NextVersion.CompareTo(next) <= 0)).OrderBy(t => t.CurrentVersion).
+                    ToArray());
         }
 
         public void MigrateToLatestFrom(string currentVersion)
@@ -77,8 +77,8 @@ namespace SqlFu.Migrations
             var vers = new SemanticVersion(currentVersion);
             _runner.Run(
                 _tasks.Where(t => t.CurrentVersion.CompareTo(vers) >= 0 && (t.NextVersion != null))
-                      .OrderBy(t => t.CurrentVersion)
-                      .ToArray());
+                    .OrderBy(t => t.CurrentVersion)
+                    .ToArray());
         }
 
         public string LatestVersionAvailable
@@ -103,5 +103,7 @@ namespace SqlFu.Migrations
             }
             _runner.Run(task);
         }
+
+       
     }
 }

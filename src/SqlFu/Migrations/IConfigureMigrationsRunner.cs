@@ -1,16 +1,17 @@
+using System;
 using System.Reflection;
 using CavemanTools.Infrastructure;
-using CavemanTools.Logging;
 using SqlFu.Migrations.Automatic;
 
 namespace SqlFu.Migrations
 {
     public interface IConfigureMigrationsRunner
     {
-        IConfigureMigrationsRunner SearchAssembly(params Assembly[] asm);
+        IConfigureMigrationsRunner SearchMigrations(params Assembly[] asm);
         IConfigureMigrationsRunner SearchAssemblyOf<T>();
-        IConfigureMigrationsRunner WithLogger(ILogWriter logger);
+      
         IConfigureMigrationsRunner WithResolver(IResolveDependencies resolver);
+        IConfigureMigrationsRunner WithResolver(Func<Type,object> resolver);
         IManageMigrations Build();
 
         IAutomaticMigration BuildAutomaticMigrator();
@@ -21,5 +22,12 @@ namespace SqlFu.Migrations
         /// </summary>
         /// <param name="schemas"></param>
         void PerformAutomaticMigrations(params string[] schemas);
+
+        /// <summary>
+        /// Uninstalls the specified schemas or all of them
+        /// </summary>
+        /// <param name="schemas"></param>
+        /// <returns></returns>
+        void Uninstall(params string[] schemas);
     }
 }

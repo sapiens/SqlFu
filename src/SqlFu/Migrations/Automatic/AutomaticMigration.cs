@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
-using CavemanTools.Logging;
+using SqlFu.Migrations.Automatic.Models;
 
 namespace SqlFu.Migrations.Automatic
 {
@@ -11,20 +11,23 @@ namespace SqlFu.Migrations.Automatic
     {
         private readonly DbConnection _db;
         private readonly IManageMigrations _migrations;
+        private readonly IEnumerable<IUninstallSchema> _unistallers;
         private readonly IRunMigrations _runner;
-        internal const string TableName = "SqlFuMigrationTracker";
-        internal const string SchemaName = "AutomaticMigration";
+        internal const string TableName = "_SqlFuMigrationTracker";
+        internal const string SchemaName = "_AutomaticMigration";
 
-        public AutomaticMigration(DbConnection db, IManageMigrations migrations, ILogWriter logger)
+        public AutomaticMigration(DbConnection db, IManageMigrations migrations,IEnumerable<IUninstallSchema> unistallers)
         {
             _db = db;
             _migrations = migrations;
-            _runner = new MigrationTaskRunner(db, logger);
-            UpdateSelf();
+            _unistallers = unistallers;
+            _runner = new MigrationTaskRunner(db);
+           
         }
 
-        public void Execute(params string[] schemas)
+        public void Install(params string[] schemas)
         {
+            UpdateSelf();
             IEnumerable<IMigrateSchema> tasks = _migrations.Schemas;
             if (schemas.Length > 0)
             {
@@ -37,8 +40,8 @@ namespace SqlFu.Migrations.Automatic
                     var version = GetInstalledVersion(schema.SchemaName);
                     if (version.IsNullOrEmpty())
                     {
-                        schema.InstallSchema();
-                        AppendVersion(schema.SchemaName, schema.LatestVersionAvailable);
+                       schema.InstallSchema();
+                       AppendVersion(schema.SchemaName, schema.LatestVersionAvailable);
                     }
                     else
                     {
@@ -53,18 +56,40 @@ namespace SqlFu.Migrations.Automatic
             }
         }
 
-        public void Untrack(params string[] schemas)
+
+
+        public void Uninstall(params string[] schemas)
         {
             if (schemas.Length == 0) return;
-            _db.ExecuteCommand("delete from " + _db.EscapeIdentifier(TableName) + " where {0} in (@0)".ToFormat(_db.EscapeIdentifier("SchemaName")), schemas.ToList());
+            UpdateSelf();
+            
+            using (var t = _migrations.StartUnitOfWork())
+            {
+                
+                var tasks = _unistallers.Where(s => schemas.Any(d => d == s.SchemaName && d!=SchemaName));
+
+                foreach (var task in tasks)
+                {
+                    task.Uninstall(_db);
+                }
+                _db.DeleteFrom<SqlFuMigrationTracker>(d => schemas.Contains(d.SchemaName));
+                t.Commit();
+            }
+                              
+        }
+
+        public void SelfDestroy()
+        {
+            _db.DropTable<SqlFuMigrationTracker>();
         }
 
         private void AppendVersion(string schema, string version)
         {
-            _db.Insert(new MigrationTrack
+            _db.Insert(new SqlFuMigrationTracker()
                 {
                     SchemaName = schema,
-                    Version = version
+                    Version = version,
+                    TimeOfUpdate = DateTime.UtcNow
                 });
         }
 
@@ -74,7 +99,7 @@ namespace SqlFu.Migrations.Automatic
 
             using (var t = _db.BeginTransaction())
             {
-                if (!_db.DatabaseTools().TableExists(TableName))
+                if (!_db.TableExists<SqlFuMigrationTracker>())
                 {
                     migrator.InstallSchema();
                     AppendVersion(SchemaName, migrator.LatestVersionAvailable);
@@ -112,8 +137,15 @@ namespace SqlFu.Migrations.Automatic
 
         private string GetInstalledVersion(string schema)
         {
-            return _db.GetValue<string>("select " + _db.EscapeIdentifier("Version") + " from " + _db.EscapeIdentifier(TableName) + " where {0}=@0 order by {1} desc".ToFormat(_db.EscapeIdentifier("SchemaName"),_db.EscapeIdentifier("Id")),
-                                        schema);
+            return
+                _db.From<SqlFuMigrationTracker>()
+                    .Select(d => d.Version)
+                    .Where(d => d.SchemaName == schema)
+                    .OrderByDescending<SqlFuMigrationTracker>(d => d.Id)
+                    .Limit(1)
+                    .GetValue();
+            //return _db.GetValue<string>("select " + _db.EscapeIdentifier("Version") + " from " + _db.EscapeIdentifier(TableName) + " where {0}=@0 order by {1} desc".ToFormat(_db.EscapeIdentifier("SchemaName"),_db.EscapeIdentifier("Id")),
+            //                            schema);
         }
     }
 }

@@ -6,5 +6,6 @@ namespace SqlFu.Migrations
     {
         void Run(params IMigrationTask[] tasks);
         IUnitOfWork StartUnitOfWork();
+        void Uninstall(params IUninstallSchema[] tasks);
     }
 }

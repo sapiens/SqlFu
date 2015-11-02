@@ -8,12 +8,12 @@ namespace SqlFu.Migrations
     public class MigrationTaskRunner : IRunMigrations
     {
         private readonly DbConnection _db;
-        private readonly ILogWriter _logger;
+        
 
-        public MigrationTaskRunner(DbConnection db, ILogWriter logger)
+        public MigrationTaskRunner(DbConnection db)
         {
             _db = db;
-            _logger = logger;
+            
         }
 
         public void Run(params IMigrationTask[] tasks)
@@ -25,15 +25,15 @@ namespace SqlFu.Migrations
                 {
                     if (task.NextVersion == null)
                     {
-                        _logger.Info("Installing database schema '{1}' with version {0}", task.CurrentVersion,
+                        this.LogInfo("Installing database schema '{1}' with version {0}", task.CurrentVersion,
                                      task.SchemaName);
                     }
                     else
                     {
-                        _logger.Info("Executing '{2}' migration from version {0} to version {1}", task.CurrentVersion,
+                        this.LogInfo("Executing '{2}' migration from version {0} to version {1}", task.CurrentVersion,
                                      task.NextVersion, task.SchemaName);
                     }
-                    task.Execute(_db);
+               task.Execute(_db);
                 }
                 t.Commit();
             }
@@ -42,6 +42,21 @@ namespace SqlFu.Migrations
         public IUnitOfWork StartUnitOfWork()
         {
             return new DatabaseUnitOfWork(_db.BeginTransaction());
+        }
+
+        public void Uninstall(params IUninstallSchema[] tasks)
+        {
+            if (tasks.IsNullOrEmpty()) return;
+            using (var t = _db.BeginTransaction())
+            {
+                foreach (var task in tasks)
+                {
+                    this.LogInfo("Uninstalling '{0}'", task.SchemaName);
+                    
+                    task.Uninstall(_db);
+                }
+                t.Commit();
+            }
         }
     }
 }

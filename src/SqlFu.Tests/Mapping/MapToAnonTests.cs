@@ -1,0 +1,63 @@
+﻿using System;
+using System.Data.SqlClient;
+using CavemanTools.Logging;
+using CavemanTools.Testing;
+using DomainBus.Tests;
+using FluentAssertions;
+using SqlFu.Mapping;
+using SqlFu.Mapping.Internals;
+using Xunit;
+using Xunit.Abstractions;
+
+namespace SqlFu.Tests.Mapping
+{
+    public class MapToAnonTests
+    {
+        public MapToAnonTests(ITestOutputHelper x)
+        {
+            x.Logger();
+        
+        }
+
+        [Fact]
+        public void map_to_projection()
+        {
+          
+            var data = new {Id = 0, Title = "hi",MyEnum=SortOrder.Ascending};
+            var mapper = CreateMapper(data);
+            var reader = Setup.FakeReader(r =>
+            {
+                r.Clear();
+                r["Id"] = 25;
+                r["Title"] = "bla";
+                r["MyEnum"] = SortOrder.Descending.ToString();
+            });
+
+            var m = ManualMapper.For(data, r =>
+            {
+                return new {Id = (int) r["Id"],Title=r["Title"].ToString(),MyEnum=(SortOrder) Enum.Parse(typeof(SortOrder),r["MyEnum"].ToString())};
+            });
+
+            Setup.DoBenchmark(10000, new[]{
+                new BenchmarkAction(i =>
+                {
+                    mapper.Map(reader, "");
+                }),
+                new BenchmarkAction(i =>
+                {
+                    m.Map(reader);
+                }),
+            });
+
+            var result = mapper.Map(reader, "");    
+            result.Id.Should().Be(25);
+            result.Title.Should().Be("bla");
+            result.MyEnum.Should().Be(SortOrder.Descending);
+        }
+
+        AnonymousTypeMapper<T> CreateMapper<T>(T data)
+        {
+            return new AnonymousTypeMapper<T>();
+        }
+    }
+}
