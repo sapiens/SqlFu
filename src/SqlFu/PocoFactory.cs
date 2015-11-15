@@ -103,7 +103,7 @@ namespace SqlFu
         }
 
 
-        internal static Func<IDataReader, T> GetPocoMapper<T>(IDataReader rd, string sql)
+        public static Func<IDataReader, T> GetPocoMapper<T>(IDataReader rd, string sql)
         {
             var poco = typeof (T);
 
