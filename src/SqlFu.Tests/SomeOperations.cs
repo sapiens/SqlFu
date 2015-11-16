@@ -139,7 +139,7 @@ namespace SqlFu.Tests
         [Fact]
         public void map_value_object()
         {
-            SqlFuManager.Config.MapValueObject<Email>(e=>e.Value);
+            SqlFuManager.Config.MapValueObject<Email>(e=>e.Value,o=>new Email(o.ToString()));
 
             _getDb.Do(db =>
             {

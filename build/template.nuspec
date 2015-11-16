@@ -13,7 +13,7 @@
 		Warning! Breaking changes. 
 	</summary>
     <language>en-US</language>
-    <tags>toolkit, library, tools, utility, lcg, reflection, guard, contracts, helpers</tags>
+    <tags>sql, micro-orm, database, helpers</tags>
   </metadata> 
 <files>
         <file src="bin\Release\**\SqlFu*" target="lib\Net45"></file>
