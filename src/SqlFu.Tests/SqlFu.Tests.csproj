@@ -74,6 +74,7 @@
     <Compile Include="Builders\CrudBuilderTests.cs" />
     <Compile Include="Builders\SelectTests.cs" />
     <Compile Include="Builders\UpdateBuilderTests.cs" />
+    <Compile Include="Builders\WhereCriteriaTests.cs" />
     <Compile Include="Executors\QueryExtensionsTests.cs" />
     <Compile Include="Mapping\MapToAnonTests.cs" />
     <Compile Include="Mapping\ValueMapperTests.cs" />

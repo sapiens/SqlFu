@@ -27,7 +27,8 @@ namespace SqlFu
             var cmd = cnx.CreateCommand();
             cmd.CommandText = cfg.SqlText;
             if (cfg.IsStoredProcedure) cmd.CommandType=CommandType.StoredProcedure;
-            cmd.CommandText = provider.FormatSql(cmd.CommandText, cmd.SetupParameters(provider,cfg.Args));
+            var paramNames = cmd.SetupParameters(provider,cfg.Args);
+            cmd.CommandText = provider.FormatSql(cmd.CommandText, paramNames);
             provider.OnCommandExecuting(cmd);
             cfg.ApplyOptions(cmd);
             return cmd;

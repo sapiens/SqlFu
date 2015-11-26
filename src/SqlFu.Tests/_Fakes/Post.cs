@@ -9,10 +9,10 @@ namespace SqlFu.Tests._Fakes
     {
         public int SomeId { get; set; }
         public Guid Id { get; set; }
-        public string Name { get; protected set; }
+        public string Title { get; protected set; }
         public IdName Author { get; set; }
         public Email Email { get; set; }
-
+        public DateTime CreatedOn { get; set; }
 
     }
 }

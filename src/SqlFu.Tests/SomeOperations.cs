@@ -81,8 +81,14 @@ namespace SqlFu.Tests
         [Fact]
         public void crud()
         {
-            _getDb.Do(db =>
-            {
+            //todo check for proper MapTo<> functionality. Map to an object that has additional properties, collections
+			_getDb.Do(db =>
+			{
+
+			    var ids = new Guid[] {Guid.Empty, Guid.Empty};
+                
+			    db.Query(t => t.From<SomePost>().Where(d => ids.Contains(d.UId)).AllColumns());
+             
                 var func = db.GetDbFunctions();
 
                 db.GetQueryValue(t => t.From<SomePost>().Where(d => d.State == SomeEnum.Last).AllColumns());

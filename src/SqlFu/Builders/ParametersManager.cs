@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SqlFu.Builders
 {
@@ -31,7 +32,8 @@ namespace SqlFu.Builders
 
         public ParametersManager AddValues(params object[] value)
         {
-            _params.AddRange(value);
+            if (value.Length==1) _params.Add(value[0]);
+            else _params.AddRange(value);
             return this;
         }       
 

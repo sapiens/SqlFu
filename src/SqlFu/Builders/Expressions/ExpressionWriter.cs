@@ -333,10 +333,12 @@ namespace SqlFu.Builders.Expressions
             {
                 throw new NotSupportedException("Contains must be invoked on a IList (array or List)");
             }
+          
             if (list.Count > 0)
             {
                 var param = meth.Arguments[pIdx].As<MemberExpression>();
                 _sb.Append(GetColumnName(param));
+               
                 _sb.AppendFormat(" in (@{0})", Parameters.CurrentIndex);
                 Parameters.AddValues(list);
             }

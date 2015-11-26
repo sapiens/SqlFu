@@ -70,7 +70,7 @@ namespace SqlFu.Tests.Mapping
             {
                 r["Name"] = "hey00";
             }));
-            post.Name.Should().Be("hey00");
+            post.Title.Should().Be("hey00");
             post.Version.ShouldAllBeEquivalentTo(new byte[] {0,1});
         }
 
