@@ -88,6 +88,14 @@ namespace SqlFu.Tests
 			    var ids = new Guid[] {Guid.Empty, Guid.Empty};
                 
 			    db.Query(t => t.From<SomePost>().Where(d => ids.Contains(d.UId)).AllColumns());
+			    db.Query(t =>
+			    {
+			        var crit= t.From<SomePost>()
+			            .Where(d => ids.Contains(d.UId));
+                    if (true) crit=crit.And(d=>true);
+                    return crit.AllColumns();
+                    
+			    });
              
                 var func = db.GetDbFunctions();
 
@@ -147,17 +155,26 @@ namespace SqlFu.Tests
         {
             SqlFuManager.Config.MapValueObject<Email>(e=>e.Value,o=>new Email(o.ToString()));
 
+            //_getDb.Do(db =>
+            //{
+                
+            //    db.CreateTableFrom<EmailStore>(t =>
+            //    {
+            //        t.Column(d => d.Data, c => c.DbTypeIs("varchar").HasSize(200));
+            //        t.IfTableExists(IfTableExists.DropIt);
+            //    });
+            //    db.Insert(new EmailStore() {Data = new Email("test@bla.com")});
+            //    db.DropTable<EmailStore>();
+            //});
+
+            SqlFuManager.Config.MapValueObject<SomeEnum>(d=>d.ToString());
             _getDb.Do(db =>
             {
-                
-                db.CreateTableFrom<EmailStore>(t =>
-                {
-                    t.Column(d => d.Data, c => c.DbTypeIs("varchar").HasSize(200));
-                });
-                db.Insert(new EmailStore() {Data = new Email("test@bla.com")});
-                db.DropTable<EmailStore>();
-            });
+             //   db.Query<dynamic>("select * from Posts where state=@0", SomeEnum.First);
 
+                Func<SomeEnum>  en=()=> SomeEnum.First;
+               db.Query<SomePost>(f => f.From<SomePost>().Where(d => d.State == en()).AllColumns());
+            });
         }
 
         class ItemsRow

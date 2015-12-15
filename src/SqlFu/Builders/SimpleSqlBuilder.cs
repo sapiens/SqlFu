@@ -10,7 +10,7 @@ using SqlFu.Providers;
 
 namespace SqlFu.Builders
 {
-    public class SimpleSqlBuilder<T>:IWhere<T>
+    public class SimpleSqlBuilder<T>:IWhere<T>,IConnectWhere<T>,IConnectHaving<T>
     {
         private readonly HelperOptions _options;
         private readonly IDbProvider _provider;
@@ -101,7 +101,17 @@ namespace SqlFu.Builders
             return this;
         }
 
-        public ISort<T> Where(Expression<Func<T, bool>> criteria)
+       
+        public IHaving<T> GroupBy(params Expression<Func<T, object>>[] columns)
+        {
+            if (columns.Length == 0) return this;
+            _sb.Append("group by ");
+            columns.Select(c=>_writer.GetExpressionSql(c)).ForEach(t=>_sb.Append($"{t},"));
+            _sb.RemoveLast().AppendLine();
+            return this;
+        }
+
+        IConnectWhere<T> IWhere<T>.Where(Expression<Func<T, bool>> criteria)
         {
             _sb.Append("where ");
             _writer.WriteCriteria(criteria);
@@ -109,7 +119,7 @@ namespace SqlFu.Builders
             return this;
         }
 
-        public ISort<T> Having(Expression<Func<T, bool>> criteria)
+        IConnectHaving<T> IHaving<T>.Having(Expression<Func<T, bool>> criteria)
         {
             _sb.Append("having ");
             _writer.WriteCriteria(criteria);
@@ -117,12 +127,35 @@ namespace SqlFu.Builders
             return this;
         }
 
-        public IHaving<T> GroupBy(params Expression<Func<T, object>>[] columns)
+        IConnectWhere<T> IConnectWhere<T>.And(Expression<Func<T, bool>> criteria)
         {
-            if (columns.Length == 0) return this;
-            _sb.Append("group by ");
-            columns.Select(c=>_writer.GetExpressionSql(c)).ForEach(t=>_sb.Append($"{t},"));
-            _sb.RemoveLast().AppendLine();
+            _sb.Append("and ");
+            _writer.WriteCriteria(criteria);
+            _sb.AppendLine();
+            return this;
+        }
+
+        public IConnectHaving<T> Or(Expression<Func<T, bool>> criteria)
+        {
+            _sb.Append("or ");
+            _writer.WriteCriteria(criteria);
+            _sb.AppendLine();
+            return this;
+        }
+
+        public IConnectHaving<T> And(Expression<Func<T, bool>> criteria)
+        {
+            _sb.Append("and ");
+            _writer.WriteCriteria(criteria);
+            _sb.AppendLine();
+            return this;
+        }
+
+        IConnectWhere<T> IConnectWhere<T>.Or(Expression<Func<T, bool>> criteria)
+        {
+            _sb.Append("or ");
+            _writer.WriteCriteria(criteria);
+            _sb.AppendLine();
             return this;
         }
     }

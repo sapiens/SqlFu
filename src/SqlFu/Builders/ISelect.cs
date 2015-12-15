@@ -9,4 +9,6 @@ namespace SqlFu.Builders
         IGenerateSql<TProj> Select<TProj>(Expression<Func<T, TProj>> selector,bool distinct=false);
 
     }
+
+  
 }

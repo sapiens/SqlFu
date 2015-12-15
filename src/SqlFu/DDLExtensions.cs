@@ -35,7 +35,7 @@ namespace SqlFu
         {
             return cnx.GetProvider().DatabaseTools.TableExists(cnx, name,schema);
         }
-
+        //todo view exists, sproc exists
         public static bool TableExists<T>(this DbConnection cnx)
         {
            var info = SqlFuManager.Config.TableInfoFactory.GetInfo(typeof(T));
