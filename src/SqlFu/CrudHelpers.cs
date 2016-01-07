@@ -53,7 +53,15 @@ namespace SqlFu
             return new UpdateBuilder<T>(db,opt);
         }
 
-        public static IBuildUpdateTableFrom<T> Update<T>(this DbConnection db, Action<IHelperOptions> cfg, Func<IUpdateColumns, IColumnsToUpdate<T>> columns) where  T:class 
+        /// <summary>
+        /// Perform update table with data from an anonymous object
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="cfg">Configure name and other</param>
+        /// <param name="columns">Select which columns to update from an anonymous object</param>
+        /// <returns></returns>
+        public static IBuildUpdateTableFrom<T> UpdateFrom<T>(this DbConnection db, Action<IHelperOptions> cfg, Func<IUpdateColumns, IColumnsToUpdate<T>> columns) where  T:class 
         {
             var options=new HelperOptions(); 
             var u = new UpdateColumns();

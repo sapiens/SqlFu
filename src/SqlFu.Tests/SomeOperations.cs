@@ -113,7 +113,7 @@ namespace SqlFu.Tests
                 rez[0].Total.Should().Be(1);
                 db.Update<SomePost>().Set(d => d.Title, "changed").Where(d => d.Id == id).Execute().Should().Be(1);
 
-                db.Update(o =>
+                db.UpdateFrom(o =>
                 {
                     o.TableName = "Posts";
                     o.DbSchema = "dbo";
