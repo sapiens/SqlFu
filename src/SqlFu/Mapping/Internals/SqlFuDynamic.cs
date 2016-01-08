@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Dynamic;
 
 namespace SqlFu.Mapping.Internals
@@ -15,9 +16,14 @@ namespace SqlFu.Mapping.Internals
             _values=new object[_columns.Length];
         }
 
-        public object[] Values
+        internal object[] Values
         {
             get { return _values; }            
+        }
+
+        public override IEnumerable<string> GetDynamicMemberNames()
+        {
+            return _columns;
         }
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
