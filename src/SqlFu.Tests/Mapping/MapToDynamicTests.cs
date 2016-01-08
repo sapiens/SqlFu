@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Dynamic;
+using System.Linq;
 using CavemanTools.Testing;
 using DomainBus.Tests;
 using FluentAssertions;
@@ -32,11 +34,11 @@ namespace SqlFu.Tests.Mapping
                 return d;
             });
 
-            var b = new BenchmarkAction(i => sut.Map(reader, ""));
-            Setup.DoBenchmark(500, b,new BenchmarkAction(i=>
-            {
-                m.Map(reader);
-            }));
+            //var b = new BenchmarkAction(i => sut.Map(reader, ""));
+            //Setup.DoBenchmark(500, b,new BenchmarkAction(i=>
+            //{
+            //    m.Map(reader);
+            //}));
             dynamic poco = sut.Map(reader, "");
             AssertionExtensions.Should((object) poco.Id).Be(Guid.Empty);
             AssertionExtensions.Should((object) poco.Name).Be("bla");
@@ -45,5 +47,19 @@ namespace SqlFu.Tests.Mapping
            
         }
 
+        [Fact]
+        public void sqlfu_dynamic_can_be_cast_to_read_only_IDictionary()
+        {
+            var data=new SqlFuDynamic(new [] {"Id","Name"});
+            Array.Copy(new object[] {1,"Test"},data.ColumnValues,2);
+            dynamic dyn = data;
+            var dict = (IDictionary<string, object>) dyn;
+            dict["Id"].Should().Be(1);
+            dict["Name"].Should().Be("Test");
+            dict.IsReadOnly.Should().BeTrue();
+            dict.Count.Should().Be(2);
+            dict.First().Key.Should().Be("Id");
+            dict.First().Value.Should().Be(1);
+        }
     }
 }
