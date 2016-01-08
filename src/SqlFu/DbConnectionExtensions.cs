@@ -172,6 +172,16 @@ namespace SqlFu
             return list;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="cnx"></param>
+        /// <param name="cfg">Sql and command arguments</param>
+        /// <param name="processor">True/False to continue processing</param>
+        /// <param name="anonModel">Map to</param>
+        /// <param name="firstRowOnly"></param>
+        /// <returns></returns>
         public static void QueryAndProcess<T>(this DbConnection cnx, Action<IConfigureCommand> cfg,
             Func<T, bool> processor, T anonModel = default(T),
             bool firstRowOnly = false) 
@@ -181,6 +191,23 @@ namespace SqlFu
             cnx.QueryAndProcess(cmdConfig,processor,anonModel,firstRowOnly);
         }
 
+        public static void QueryAndProcess<T>(this DbConnection cnx, Func<IBuildQueryFrom, IGenerateSql<T>> sqlBuilder,
+            Func<T, bool> processor, bool firstRowOnly = false)
+        {
+            cnx.QueryAndProcess(sqlBuilder(cnx.GetSqlBuilder()).GetCommandConfiguration(), processor, default(T), firstRowOnly);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="cnx"></param>
+        /// <param name="cfg">Sql and command arguments</param>
+        /// <param name="processor">True/False to continue processing</param>
+        /// <param name="token"></param>
+        /// <param name="anonModel">Map to</param>
+        /// <param name="firstRowOnly"></param>
+        /// <returns></returns>
         public static Task QueryAndProcessAsync<T>(this DbConnection cnx, Action<IConfigureCommand> cfg,
             Func<T, bool> processor,CancellationToken token, T anonModel = default(T),
             bool firstRowOnly = false)
@@ -189,6 +216,24 @@ namespace SqlFu
             cfg(cmdConfig);
             return cnx.QueryAndProcessAsync(cmdConfig,processor,token,anonModel,firstRowOnly);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="cnx"></param>
+        /// <param name="sqlBuilder">Sql builder</param>
+        /// <param name="processor">True/False to continue processing</param>
+        /// <param name="token"></param>
+        /// <param name="firstRowOnly"></param>
+        /// <returns></returns>
+        public static Task QueryAndProcessAsync<T>(this DbConnection cnx, Func<IBuildQueryFrom, IGenerateSql<T>> sqlBuilder,
+           Func<T, bool> processor, CancellationToken token,
+           bool firstRowOnly = false)
+        {
+            return cnx.QueryAndProcessAsync(sqlBuilder(cnx.GetSqlBuilder()).GetCommandConfiguration(), processor, token,default(T), firstRowOnly);
+        }
+
 
         internal static void QueryAndProcess<T>(this DbConnection cnx, CommandConfiguration cfg,Func<T,bool> processor, T anonModel =default(T),
            bool firstRowOnly=false)
@@ -403,8 +448,7 @@ namespace SqlFu
 
         #endregion
 
-
-       //todo sproc support
+    
 
       
 
