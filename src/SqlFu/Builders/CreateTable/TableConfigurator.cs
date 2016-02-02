@@ -43,9 +43,7 @@ namespace SqlFu.Builders.CreateTable
 
         public IConfigureTable<T> TableName(string name, string schema = null)
         {
-            name.MustNotBeEmpty();
-            _data.Name = name;
-            _data.Schema = schema;
+            _data.TableName=new TableName(name,schema);            
             return this;
         }
 

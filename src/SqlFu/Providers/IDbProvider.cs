@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Data;
 using System.Data.Common;
-using System.Reflection.Emit;
 using CavemanTools.Model;
 using SqlFu.Builders;
-using SqlFu.Configuration.Internals;
 
 namespace SqlFu.Providers
 {
@@ -29,14 +26,21 @@ namespace SqlFu.Providers
         string ProviderId { get; }
         DbConnection CreateConnection();
         string GetColumnType(Type type);
-        //bool DbTypeHasPrecision(Type type);
-        //bool DbTypeHasSize(Type type);
-        //string GetTypeMaxSize(Type type);
+       
         IDatabaseTools DatabaseTools { get; }
 
+        /// <summary>
+        /// Formats table index create options
+        /// </summary>
+        /// <param name="idxDef"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
         string FormatIndexOptions(string idxDef,string options="");
         
-
+        /// <summary>
+        /// For genrate create table statements
+        /// </summary>
+        /// <returns></returns>
         string GetIdentityKeyword();
         
 

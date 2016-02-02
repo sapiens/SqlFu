@@ -17,6 +17,7 @@
   </PropertyGroup>
   <ItemGroup>
     <DnxInvisibleFolder Include="Migrations\" />
+    <DnxInvisibleFolder Include="Providers\SqlServer\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\DNX\Microsoft.DNX.targets" Condition="'$(VSToolsPath)' != ''" />
 </Project>

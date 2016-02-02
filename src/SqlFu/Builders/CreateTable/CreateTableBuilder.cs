@@ -24,7 +24,7 @@ namespace SqlFu.Builders.CreateTable
         public string GetSql(TableCreationData data)
         {
             _data = data;
-            _tableName = _provider.EscapeTableName(data.Name, data.Schema);
+            _tableName = _provider.EscapeTableName(data.TableName);
             _sb.AppendLine("create table " + _tableName + "(");
             AddColumns(data.Columns);
             AddConstraints(data.PrimaryKey);
@@ -44,7 +44,7 @@ namespace SqlFu.Builders.CreateTable
                 sb.Append("create ");
                 if (idx.IsUnique) sb.Append("unique ");
                 sb.Append("index ");
-                sb.Append(idx.Name ?? "ix_" + _data.Name + "_" + DateTime.Now.Ticks);
+                sb.Append(idx.Name ?? "ix_" + _data.TableName.DDLUsableString + "_" + DateTime.Now.Ticks);
                 sb.Append($" on {_tableName}(");
                 idx.Columns.ForEach(n =>
                 {
@@ -64,7 +64,7 @@ namespace SqlFu.Builders.CreateTable
                 _sb.Append("foreign key (");
                 fk.Columns.ForEach(col => _sb.Append(_provider.EscapeIdentifier(col) + ","));
                 _sb.RemoveLast().Append(")");
-                _sb.Append(" references " + _provider.EscapeTableName(fk.ParentTable.Name, fk.ParentTable.Schema) + "(");
+                _sb.Append(" references " + _provider.EscapeTableName(fk.ParentTable) + "(");
                 fk.ParentColumns.ForEach(col => _sb.Append(_provider.EscapeIdentifier(col) + ","));
                 _sb.RemoveLast().Append(")");
                 if (fk.OnUpdate != ForeignKeyRelationCascade.NotSet)
@@ -85,7 +85,7 @@ namespace SqlFu.Builders.CreateTable
             if (primaryKey == null) return;
             var sb=new StringBuilder();
 
-            var name = primaryKey.Name.IsNullOrEmpty()?"pk_" + (_data.Schema ?? "") + _data.Name:primaryKey.Name;
+            var name = primaryKey.Name.IsNullOrEmpty()?"pk_" + _data.TableName.DDLUsableString:primaryKey.Name;
 
             sb.Append($"constraint {name} primary key (");
             primaryKey.Columns.ForEach(c =>

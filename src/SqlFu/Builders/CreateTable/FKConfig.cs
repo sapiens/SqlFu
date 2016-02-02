@@ -26,7 +26,7 @@ namespace SqlFu.Builders.CreateTable
         public IConfigureForeignKeys<T, TParent> Reference(params Expression<Func<TParent, object>>[] columns)
         {
             var info = _infos.GetInfo(typeof (TParent));
-            _data.ParentTable = new TableName(info.Name,info.DbSchema);
+            _data.ParentTable = info.Table;
             _data.ParentColumns = columns.GetNames().ToArray();
             return this;
         }

@@ -14,28 +14,19 @@ namespace SqlFu.Builders.CreateTable
             Type = type;
         }
 
-        public string Name { get; set; }
-        public string Schema { get; set; }
-
+        public TableName TableName { get; internal set; }
+        
         public void Update(TableInfo info)
         {
-            if (Name.IsNullOrEmpty())
+            if (TableName == null)
             {
-                Name = info.Name;
+                TableName = info.Table;
             }
             else
             {
-                info.Name = Name;
+                info.Table = TableName;
             }
-
-            if (Schema.IsNullOrEmpty())
-            {
-                Schema = info.DbSchema;
-            }
-            else
-            {
-                info.DbSchema = Schema;
-            }
+           
             var auto = Columns.Find(d => d.IsIdentity);
             if (auto != null)
             {

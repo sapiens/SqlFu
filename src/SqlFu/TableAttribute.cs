@@ -3,7 +3,7 @@ using SqlFu.Configuration.Internals;
 
 namespace SqlFu
 {
-    public class TableAttribute:Attribute,ITableInfo
+    public class TableAttribute:Attribute
     {
         public string Name { get; set; }
         public string DbSchema { get; set; }

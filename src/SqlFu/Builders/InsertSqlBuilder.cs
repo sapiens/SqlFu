@@ -53,7 +53,7 @@ namespace SqlFu.Builders
         {
             var builder = new StringBuilder();
             if (_options.IdentityColumn.IsNullOrEmpty()) _options.IdentityColumn = _info.IdentityColumn;
-            builder.AppendFormat("insert into {0} (", _info.EscapeName(_provider, _options.TableName, _options.DbSchema));
+            builder.AppendFormat("insert into {0} (", _info.EscapeName(_provider, _options.Table));
 
             GetInsertableColumns()
                  .ForEach(n =>

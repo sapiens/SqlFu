@@ -10,7 +10,7 @@ namespace SqlFu
         public static void DropTable<T>(this DbConnection cnx)
         {
           var info = SqlFuManager.Config.TableInfoFactory.GetInfo(typeof(T));
-            cnx.DropTable(info.Name, info.DbSchema);
+            cnx.DropTable(info.Table.Name, info.Table.Schema);
           
         }
 
@@ -32,13 +32,13 @@ namespace SqlFu
 
         public static bool TableExists(this DbConnection cnx, string name, string schema = null)
         {
-            return cnx.GetProvider().DatabaseTools.TableExists(cnx, name,schema);
+            return cnx.GetProvider().DatabaseTools.TableExists(cnx,new TableName(name,schema));
         }
         //todo view exists, sproc exists
         public static bool TableExists<T>(this DbConnection cnx)
         {
            var info = SqlFuManager.Config.TableInfoFactory.GetInfo(typeof(T));
-            return cnx.TableExists(info.Name, info.DbSchema);
+            return cnx.GetProvider().DatabaseTools.TableExists(cnx,info.Table);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace SqlFu
                 switch (tcfg.Data.CreationOptions)
                 {
                     case IfTableExists.Throw:
-                        throw new TableExistsException(tcfg.Data.Name);
+                        throw new TableExistsException(tcfg.Data.TableName);
                     case IfTableExists.DropIt:
                         db.DropTable<T>();
                         break;

@@ -40,7 +40,7 @@ namespace SqlFu.Configuration.Internals
         public TableInfo GetInfo(Type pocoType) => _cache.GetValueOrCreate(pocoType, () =>
         {
             var table = GetName(pocoType);
-           var info= new TableInfo(pocoType, _converter) {Name = table.Name, DbSchema = table.Schema};
+           var info= new TableInfo(pocoType, _converter,table);
             info.HandleAttributeOverride();
             return info;
         });

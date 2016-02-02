@@ -4,8 +4,8 @@ namespace SqlFu.Configuration.Internals
 {
     public class TableExistsException : Exception
     {
-        public TableExistsException(string name)
-            : base(string.Format("A table named '{0}' already exists", name))
+        public TableExistsException(TableName table)
+            : base($"A table named '{table}' already exists")
         {
         }
     }

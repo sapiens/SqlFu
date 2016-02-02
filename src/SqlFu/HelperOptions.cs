@@ -8,6 +8,8 @@ namespace SqlFu
     {
         public string TableName { get; set; }
         public string DbSchema { get; set; }
-        public Action<DbCommand> CmdOptions { get; set; } = Empty.ActionOf<DbCommand>();
+        public Action<DbCommand> CmdOptions { get; set; } = Empty.ActionOf<DbCommand>(); 
+        
+        public  TableName Table=>new TableName(TableName,DbSchema);
     }
 }

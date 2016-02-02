@@ -35,7 +35,7 @@ namespace SqlFu.Builders
         private void WriteFrom(IDbProvider provider, TableInfo info)
         {
             _sb.Append(
-                $" from {provider.EscapeIdentifier(info.EscapeName(provider, _options.TableName, _options.DbSchema))}")
+                $" from {provider.EscapeTableName(info.Table)}")
                 .AppendLine();
         }
 
