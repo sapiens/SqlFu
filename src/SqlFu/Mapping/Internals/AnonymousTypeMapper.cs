@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -12,7 +13,7 @@ namespace SqlFu.Mapping.Internals
         private Func<object[], T> _mapper;
 
         private static MethodInfo EnumParser = typeof (Enum).GetMethods(BindingFlags.Static | BindingFlags.Public).First(m=>m.Name=="Parse" && m.GetParameters().Length==2);
-        public T Map(IDataReader reader, string parentPrefix = "")
+        public T Map(DbDataReader reader, string parentPrefix = "")
         {
             if (_mapper == null)
             {
@@ -23,7 +24,7 @@ namespace SqlFu.Mapping.Internals
                 for (var i = 0; i < reader.FieldCount; i++)
                 {
                     Expression getValue = Expression.ArrayIndex(input, Expression.Constant(i));
-                    if (props[i].PropertyType.IsEnum && reader.GetFieldType(i) == typeof (string))
+                    if (props[i].PropertyType.IsEnumType() && (reader.GetFieldType(i) == typeof (string)))
                     {
                         getValue = Expression.Call(EnumParser, Expression.Constant(props[i].PropertyType),Expression.Convert(getValue,typeof(string)));
                     }

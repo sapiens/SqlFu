@@ -258,7 +258,7 @@ namespace SqlFu
 
         public static PagedResult<T> FetchPaged<T>(this DbConnection db,Action<IConfigureCommand> cfg,Pagination page,T anonModel=null) where T:class
         {
-            typeof(T).MustComplyWith(t=>t!=typeof(object),"Dynamic types are not supported");
+            typeof(T).Must(t=>t!=typeof(object),"Dynamic types are not supported");
             var cmd=new CommandConfiguration();
             cfg(cmd);
             var builder = new PagedQueryBuilder(db.GetPocoInfo<T>(), db.GetProvider());
@@ -303,7 +303,7 @@ namespace SqlFu
 
          public static async Task<PagedResult<T>> FetchPagedAsync<T>(this DbConnection db,Action<IConfigureCommand> cfg,Pagination page,CancellationToken token,T anonModel=null) where T:class
         {
-            typeof(T).MustComplyWith(t => t != typeof(object), "Dynamic types are not supported");
+            typeof(T).Must(t => t != typeof(object), "Dynamic types are not supported");
             var cmd=new CommandConfiguration();
             cfg(cmd);
             var builder = new PagedQueryBuilder(db.GetPocoInfo<T>(), db.GetProvider());

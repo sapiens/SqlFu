@@ -19,14 +19,15 @@ namespace SqlFu.Configuration.Internals
             
             Columns =
                 t.GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                    .Where(m => m.MemberType == MemberTypes.Property)
+                    .Where(m => m.IsProperty())
                     .Cast<PropertyInfo>()
                     .Select((m,idx) => new ColumnInfo(this, m) {PocoIdx = idx,HasConverter = converter.HasConverter(m.PropertyType)}).ToArray();
         }
 
         public void HandleAttributeOverride()
         {
-            var attrib = Type.GetCustomAttribute<TableAttribute>(false);
+            var attrib = Type.GetSingleAttribute<TableAttribute>(false);
+            
             if (attrib == null) return;
             Name = attrib.Name;
             DbSchema = attrib.DbSchema;

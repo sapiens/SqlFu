@@ -1,18 +1,19 @@
 using System;
 using System.Data;
+using System.Data.Common;
 
 namespace SqlFu.Mapping
 {
     public class ManualMapper<T> : IMapReaderToPoco<T>
     {
-        private readonly Func<IDataReader, T> _map;
+        private readonly Func<DbDataReader, T> _map;
 
-        public ManualMapper(Func<IDataReader,T> map)
+        public ManualMapper(Func<DbDataReader,T> map)
         {
             _map = map;
         }
 
-        public T Map(IDataReader reader, string parentPrefix = "")
+        public T Map(DbDataReader reader, string parentPrefix = "")
         {
             return _map(reader);
         }
@@ -20,7 +21,7 @@ namespace SqlFu.Mapping
 
     public class ManualMapper
     {
-        public static ManualMapper<T> For<T>(T anon, Func<IDataReader, T> map)
+        public static ManualMapper<T> For<T>(T anon, Func<DbDataReader, T> map)
         {
             return new ManualMapper<T>(map);
         }

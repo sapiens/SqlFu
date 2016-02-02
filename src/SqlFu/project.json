@@ -13,21 +13,25 @@
             }
         },
         "dotnet5.4": {
+            "compilationOptions": {
+                "define": ["COREFX"]
+            },
             "dependencies": {
                 "Microsoft.CSharp": "4.0.1-beta-23516",
                 "System.Collections": "4.0.11-beta-23516",
                 "System.Linq": "4.0.1-beta-23516",
+                "System.Linq.Expressions": "4.0.11-beta-23516",
                 "System.Runtime": "4.0.21-beta-23516",
                 "System.Threading": "4.0.11-beta-23516",
                 "System.Data.Common": "4.0.1-*",
-                "System.Data.SqlClient": "4.0.0-beta-23516",
+
                 "System.Reflection": "4.1.0-beta-23516",
                 "System.Reflection.Extensions": "4.0.1-beta-23516"
             }
         }
     },
-    "compileExclude": ["Migrations","_old"],
+    "compileExclude": ["Migrations","Providers/SqlServer"],
     "dependencies": {
-        "CavemanTools": "4.0.0-*"
+        "CavemanTools": "4.0.0-pre-6" 
     }
 }

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Data.Common;
 using CavemanTools.Logging;
-using SqlFu.Providers.SqlServer;
+
 
 namespace SqlFu
 {
-    public abstract class DbTest : IDisposable
+   /* public abstract class DbTest : IDisposable
     {
         protected DbConnection _db;
         public static string Connex = @"Data Source=.\SQLExpress;Initial Catalog=tempdb;Integrated Security=True;MultipleActiveResultSets=True;Asynchronous Processing=True";
@@ -25,5 +25,5 @@ namespace SqlFu
         {
             _db.Dispose();
         }
-    }
+    }*/
 }

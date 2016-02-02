@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using SqlFu.Builders.CreateTable;
 using SqlFu.Builders.Expressions;
@@ -57,11 +58,6 @@ namespace SqlFu
             return provider.EscapeIdentifier(col.Name);
         }
 
-        //public static string GetColumnName(this ITableInfoFactory factory, MemberExpression member,IEscapeIdentifier provider)
-        //{
-        //    return factory.GetInfo(member.Expression.Type).GetColumnName(member, provider);
-        //}
-
         /// <summary>
         /// Returns the underlying type, usually int. Works with nullables too
         /// </summary>
@@ -69,18 +65,18 @@ namespace SqlFu
         /// <returns></returns>
         public static Type GetUnderlyingTypeForEnum(this Type type)
         {
-            if (!type.IsNullable()) return type.GetEnumUnderlyingType();
-            return type.GetGenericArgument().GetEnumUnderlyingType();
+            if (!type.IsNullable()) return Enum.GetUnderlyingType(type);
+            return Enum.GetUnderlyingType(type.GetGenericArgument());
         }
-        
+
         /// <summary>
         /// Is Enum or nullable of Enum
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static bool IsEnum(this Type type)
+        public static bool IsEnumType(this Type type)
         {
-            return type.IsEnum || (type.IsNullable() && type.GetGenericArgument().IsEnum);
+            return type.IsEnum() || (type.IsNullable() && type.GetGenericArgument().IsEnum());
         }
        
         public static string GetUniqueHash(this string data)
@@ -88,10 +84,10 @@ namespace SqlFu
             return Convert.ToBase64String(data.MurmurHash());
         }
 
-        public static string FormatCommand(this IDbCommand cmd)
+        public static string FormatCommand(this DbCommand cmd)
         {
             return FormatCommand(cmd.CommandText,
-                                 (cmd.Parameters.Cast<IDbDataParameter>()
+                                 (cmd.Parameters.Cast<DbParameter>()
                                      .ToDictionary(p => p.ParameterName, p => p.Value)));
         }
 
@@ -125,14 +121,13 @@ namespace SqlFu
 
         public static bool IsCustomObjectType(this Type t)
         {
-            return t.IsClass && (Type.GetTypeCode(t) == TypeCode.Object);
+            return t.IsClass() && (t.GetTypeCode() == TypeCode.Object);
         }
 
         public static bool IsCustomObject<T>(this T t)
         {
-            return !(t is ValueType) && (Type.GetTypeCode(t.GetType()) == TypeCode.Object);
+            var type = typeof(T);
+            return !type.IsValueType()&& (type.GetTypeCode() == TypeCode.Object);
         }
-
-       
     }
 }

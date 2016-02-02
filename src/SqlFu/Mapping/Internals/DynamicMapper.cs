@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Data.Common;
 
 namespace SqlFu.Mapping.Internals
 {
@@ -6,7 +7,7 @@ namespace SqlFu.Mapping.Internals
     {
         private string[] _columns;
         
-        public object Map(IDataReader reader, string parentPrefix)
+        public object Map(DbDataReader reader, string parentPrefix)
         {
             if (_columns == null)
             {

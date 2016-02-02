@@ -56,7 +56,7 @@ namespace SqlFu.Providers.SqlServer
 
         public override string GetColumnType(Type type)
         {
-            if (type.IsEnum()) type=type.GetUnderlyingTypeForEnum();
+            if (type.IsEnumType()) type=type.GetUnderlyingTypeForEnum();
             return DbTypes.GetValueOrDefault(type);
         }
 
@@ -104,7 +104,7 @@ namespace SqlFu.Providers.SqlServer
         protected override DbFunctions GetFunctions() => new SqlServerFunctions();
         
 
-        public override void SetupParameter(IDbDataParameter param, string name, object value)
+        public override void SetupParameter(DbParameter param, string name, object value)
         {
             base.SetupParameter(param, name, value);
             

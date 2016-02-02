@@ -12,7 +12,7 @@ namespace SqlFu.Providers
     {
         DbFunctions Functions { get; }
 
-        void SetupParameter(IDbDataParameter dbDataParameter, string key, object value);
+        void SetupParameter(DbParameter dbDataParameter, string key, object value);
         /// <summary>
         /// Replaces @ with provider parameter prefix
         /// </summary>

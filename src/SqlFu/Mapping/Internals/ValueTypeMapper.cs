@@ -1,4 +1,5 @@
 using System.Data;
+using System.Data.Common;
 
 namespace SqlFu.Mapping.Internals
 {
@@ -11,7 +12,7 @@ namespace SqlFu.Mapping.Internals
             _converters = converters;
         }
 
-        public T Map(IDataReader reader, string parentPrefix = "")
+        public T Map(DbDataReader reader, string parentPrefix = "")
         {
             return _converters.Convert<T>(reader.GetValue(0));
         }

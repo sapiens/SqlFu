@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq.Expressions;
 using System.Reflection;
 using SqlFu.Configuration.Internals;
@@ -9,8 +10,6 @@ namespace SqlFu.Mapping.Internals
 {
     class PopulatePocoGenerator<T>
     {
-        private readonly ParameterExpression _converter;
-        private ParameterExpression _pocoExpr;
         private ParameterExpression _valuesExpr;
         private ParameterExpression _readerExpr;
         private MethodInfo _readValue;
@@ -19,47 +18,33 @@ namespace SqlFu.Mapping.Internals
 
         public PopulatePocoGenerator()
         {
-            _converter = Expression.Parameter(typeof(IManageConverters),"converter");
-            _pocoExpr = Expression.Parameter(typeof(T), "poco");
+            Converter = Expression.Parameter(typeof(IManageConverters),"converter");
+            PocoExpr = Expression.Parameter(typeof(T), "poco");
             _customMapExpr = Expression.Parameter(typeof (IMapToPoco), "mapper");
-            _readerExpr = Expression.Parameter(typeof (IDataReader), "reader");
-            _readValue = typeof(IDataRecord).GetMethod("GetValues", new[] { typeof(object[]) });
+            _readerExpr = Expression.Parameter(typeof (DbDataReader), "reader");
+            _readValue = typeof(DbDataReader).GetMethod("GetValues", new[] { typeof(object[]) });
         }
 
-        public ParameterExpression PocoExpr
-        {
-            get { return _pocoExpr; }
-        }
+        public ParameterExpression PocoExpr { get; }
 
-          
 
-        public ParameterExpression Converter
-        {
-            get { return _converter; }
-        }
+        public ParameterExpression Converter { get; }
 
-        public ParameterExpression ReaderExpr
-        {
-            get { return _readerExpr; }
-        }
+        public ParameterExpression ReaderExpr => _readerExpr;
 
-        public ParameterExpression CustomMapExpr
-        {
-            get { return _customMapExpr; }
-        }
+        public ParameterExpression CustomMapExpr => _customMapExpr;
 
-        public ParameterExpression ValuesVar
-        {
-            get { return _arr; }
-        }
+        public ParameterExpression ValuesVar => _arr;
 
-      
 
         public Expression AssignCustomMappedValue(ColumnInfo data, string prefix,string queryId)
         {
             prefix = prefix + data.Name + "_";
             var callCustomMapper = Expression.Call(_customMapExpr,
-                typeof (IMapToPoco).GetMethod("Map").MakeGenericMethod(data.Type), _readerExpr,Expression.Constant(queryId),Expression.Constant(prefix));
+
+                typeof (IMapToPoco).GetMethod("Map")
+
+                .MakeGenericMethod(data.Type), _readerExpr,Expression.Constant(queryId),Expression.Constant(prefix));
             return Expression.Assign(GetPropertyExpression(data), callCustomMapper);
         }
 

@@ -81,7 +81,7 @@ namespace SqlFu
         /// <param name="processor">Result processor</param>
         /// <param name="mapper"></param>
         /// <param name="firstRowOnly"></param>
-        public static void QueryAndProcess<T>(this DbCommand cmd, Func<T, bool> processor, Func<IDataReader, T> mapper = null,
+        public static void QueryAndProcess<T>(this DbCommand cmd, Func<T, bool> processor, Func<DbDataReader, T> mapper = null,
                                      bool firstRowOnly = false)
         {
             try
@@ -106,7 +106,7 @@ namespace SqlFu
             }
         }
 
-        //public static IEnumerable<T> Query<T>(this DbCommand cmd, Func<IDataReader, T> mapper = null,
+        //public static IEnumerable<T> Query<T>(this DbCommand cmd, Func<DbDataReader, T> mapper = null,
         //                                   bool firstRowOnly = false)
         //{
         //    DbDataReader reader = null;
@@ -152,7 +152,7 @@ namespace SqlFu
         //    reader.Close();
         //}
 
-        public static List<T> Fetch<T>(this DbCommand cmd, Func<IDataReader, T> mapper = null,
+        public static List<T> Fetch<T>(this DbCommand cmd, Func<DbDataReader, T> mapper = null,
                                     bool firstRowOnly = false)
         {
             var rez = firstRowOnly ? new List<T>(1) : new List<T>();
@@ -230,7 +230,7 @@ namespace SqlFu
         /// <param name="mapper"></param>
         /// <param name="firstRowOnly"></param>
         /// <returns></returns>
-        public static async Task QueryAndProcessAsync<T>(this DbCommand cmd, CancellationToken cancellation, Func<T, bool> processor, Func<IDataReader, T> mapper = null,
+        public static async Task QueryAndProcessAsync<T>(this DbCommand cmd, CancellationToken cancellation, Func<T, bool> processor, Func<DbDataReader, T> mapper = null,
                                       bool firstRowOnly = false)
         {
             try
@@ -255,7 +255,7 @@ namespace SqlFu
             }
         }
 
-        public static async Task<List<T>> FetchAsync<T>(this DbCommand cmd, CancellationToken cancellation, Func<IDataReader, T> mapper = null,
+        public static async Task<List<T>> FetchAsync<T>(this DbCommand cmd, CancellationToken cancellation, Func<DbDataReader, T> mapper = null,
                                       bool firstRowOnly = false)
         {
             var rez = firstRowOnly ? new List<T>(1) : new List<T>();

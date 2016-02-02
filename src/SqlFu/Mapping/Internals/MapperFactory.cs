@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Reflection;
 using System.Reflection.Emit;
 using SqlFu.Configuration;
@@ -19,25 +20,13 @@ namespace SqlFu.Mapping.Internals
             _customMapper = customMapper;
             _infoFactory = infoFactory;
             _converters = converters;
-          //  InitMethodsHost();
+       
         }
 
-        //void InitMethodsHost()
-        //{
-        //    var assemblyName = new AssemblyName("SqlFuMappersHostAssembly") { Version = new Version("1.0.0.0") };
-
-        //    var assemblyBuilder =
-        //        AppDomain.CurrentDomain.DefineDynamicAssembly(
-        //            assemblyName,
-        //            AssemblyBuilderAccess.RunAndSave);
-        //    var moduleBuilder = assemblyBuilder.DefineDynamicModule("DelegateHostAssembly", "DelegateHostAssembly.dll");
-        //    _typeBuilder = moduleBuilder.DefineType("DelegateHostAssembly." + "Mappers", TypeAttributes.Public);
-         
-        //}
-
+      
         public Dictionary<string, object> Mappers { get; } = new Dictionary<string, object>();
 
-        public T Map<T>(IDataReader reader, string queryId,string prefix=null)
+        public T Map<T>(DbDataReader reader, string queryId,string prefix=null)
         {
             if (_customMapper.HasMapper(typeof (T))) return _customMapper.Map<T>(reader);
             queryId.MustNotBeEmpty();
@@ -64,7 +53,7 @@ namespace SqlFu.Mapping.Internals
                 return new DynamicMapper() as IMapReaderToPoco<T>;
             }
 
-            if (type.IsValueType || type == typeof(string) || type==typeof(byte[]))
+            if (type.IsValueType() || type == typeof(string) || type==typeof(byte[]))
             {
                 return new ValueTypeMapper<T>(_converters);
             }

@@ -13,7 +13,7 @@ namespace SqlFu.Executors
     public static class PrepareStatement
     {
 
-        public static IDbDataParameter AddParam(this DbCommand cmd, IDbProvider provider, string name, object value)
+        public static DbParameter AddParam(this DbCommand cmd, IDbProvider provider, string name, object value)
         {
             var p = cmd.CreateParameter();
             provider.SetupParameter(p,name,value);
@@ -31,7 +31,7 @@ namespace SqlFu.Executors
             StringBuilder sb = new StringBuilder();
             var lastParamCount = args.Length;
           
-            IDbDataParameter p = null;
+            DbParameter p = null;
 
             foreach (var kv in paramDict)
             {

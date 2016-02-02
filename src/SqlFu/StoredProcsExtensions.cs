@@ -72,11 +72,11 @@ namespace SqlFu
             var data = new SProcInput();
             input(data);
 
-            var output = new List<IDbDataParameter>();
+            var output = new List<DbParameter>();
             var provider = db.GetProvider();
 
-            IDbDataParameter par = null;
-            IDbDataParameter returnValue = null;
+            DbParameter par = null;
+            DbParameter returnValue = null;
 
             var cmdConfig = new CommandConfiguration();
             cmdConfig.IsStoredProcedure = true;
@@ -121,11 +121,11 @@ namespace SqlFu
             var data = new SProcInput();
             input(data);
 
-            var output = new List<IDbDataParameter>();
+            var output = new List<DbParameter>();
             var provider = db.GetProvider();
 
-            IDbDataParameter par = null;
-            IDbDataParameter returnValue = null;
+            DbParameter par = null;
+            DbParameter returnValue = null;
 
             var cmdConfig = new CommandConfiguration();
             cmdConfig.IsStoredProcedure = true;

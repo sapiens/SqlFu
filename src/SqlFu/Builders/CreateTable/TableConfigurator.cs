@@ -26,7 +26,7 @@ namespace SqlFu.Builders.CreateTable
         private void AddDefaultColumns()
         {
             _data.Columns.AddRange(typeof (T).GetMembers(BindingFlags.Public | BindingFlags.Instance)
-                .Where(m => m.MemberType == MemberTypes.Property || m.MemberType == MemberTypes.Field)
+                .Where(m => m.Is<PropertyInfo>() || m.Is<FieldInfo>())
                 .Select(GetColumn));
         }
 
@@ -37,7 +37,7 @@ namespace SqlFu.Builders.CreateTable
             var type=col.Type= info.GetMemberType();
             col.DbType = _provider.GetColumnType(type);
             var notnull = new[] { typeof(string), typeof(byte[]) };
-            if ((type.IsClass && !notnull.Contains(type))|| type.IsNullable()) col.IsNull = true;
+            if ((type.IsClass() && !notnull.Contains(type))|| type.IsNullable()) col.IsNull = true;
             return col;
         }
 

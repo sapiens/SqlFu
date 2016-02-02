@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -31,7 +32,7 @@ namespace SqlFu.Mapping.Internals
 
         object _sync=new object();
       
-        public T Map(IDataReader reader, string parentPrefix="")
+        public T Map(DbDataReader reader, string parentPrefix="")
         {
             lock (_sync)
             {
@@ -46,7 +47,7 @@ namespace SqlFu.Mapping.Internals
             return result;
         }
 
-        private void ConfigureIndexes(IDataReader reader,string prefix)
+        private void ConfigureIndexes(DbDataReader reader,string prefix)
         {
             InitColumnsIndexes();
             for (var i = 0; i < reader.FieldCount; i++)
@@ -61,8 +62,8 @@ namespace SqlFu.Mapping.Internals
         }
 
         private int[] _indexes;
-        private Action<T, IDataReader, IManageConverters, IMapToPoco> _mapper;
-        void Populate(T poco, IDataReader reader, string parentPrefix)
+        private Action<T, DbDataReader, IManageConverters, IMapToPoco> _mapper;
+        void Populate(T poco, DbDataReader reader, string parentPrefix)
         {
             if (_mapper == null)
             {
@@ -96,14 +97,14 @@ namespace SqlFu.Mapping.Internals
 //                var methBldr = _typeBuilder.DefineMethod(name, MethodAttributes.Public | MethodAttributes.Static);
                
                 //typeof(T).get
-                _mapper=Expression.Lambda<Action<T, IDataReader, IManageConverters, IMapToPoco>>
+                _mapper=Expression.Lambda<Action<T, DbDataReader, IManageConverters, IMapToPoco>>
                     (body, populator.PocoExpr, populator.ReaderExpr, populator.Converter, populator.CustomMapExpr)
                     .Compile();
                 //var t = _typeBuilder.CreateType();
                 
 
-                //_mapper =Delegate.CreateDelegate(typeof (Action<T, IDataReader, IManageConverters, IMapToPoco>),t.GetMethod(name,BindingFlags.Static|BindingFlags.Public)) as
-                //        Action<T, IDataReader, IManageConverters, IMapToPoco>;
+                //_mapper =Delegate.CreateDelegate(typeof (Action<T, DbDataReader, IManageConverters, IMapToPoco>),t.GetMethod(name,BindingFlags.Static|BindingFlags.Public)) as
+                //        Action<T, DbDataReader, IManageConverters, IMapToPoco>;
 
             }
             _mapper(poco, reader, _converter, _customMapper);
@@ -118,7 +119,7 @@ namespace SqlFu.Mapping.Internals
 
 
         private TableInfo _info;
-        private readonly TypeBuilder _typeBuilder;
+       
         private readonly IManageConverters _converter;
         private readonly IMapToPoco _customMapper;
         private readonly string _queryId;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 
 namespace SqlFu.Mapping.Internals
 {
@@ -8,7 +9,7 @@ namespace SqlFu.Mapping.Internals
     {
         Dictionary<Type,object>  _mappers=new Dictionary<Type, object>();
 
-        public void Register<T>(Func<IDataReader, T> mapper)
+        public void Register<T>(Func<DbDataReader, T> mapper)
         {
             mapper.MustNotBeNull();
             _mappers[typeof (T)] = mapper;
@@ -19,9 +20,9 @@ namespace SqlFu.Mapping.Internals
             return _mappers.ContainsKey(tp);
         }
 
-        public T Map<T>(IDataReader reader)
+        public T Map<T>(DbDataReader reader)
         {
-            var func = _mappers[typeof (T)] as Func<IDataReader, T>;
+            var func = _mappers[typeof (T)] as Func<DbDataReader, T>;
             return func(reader);
         }
     }

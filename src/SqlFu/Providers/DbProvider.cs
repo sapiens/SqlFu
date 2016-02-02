@@ -1,12 +1,76 @@
 using System;
-using System.Data;
+
 using System.Data.Common;
+using System.Linq;
 using CavemanTools.Model;
 using SqlFu.Builders;
 
 namespace SqlFu.Providers
 {
-    using System.Data.SqlClient;
+
+    public class NullProvider : DbProvider
+    {
+        public NullProvider(string dialect, string providerName) : base(dialect, providerName)
+        {
+        }
+
+        protected override DbFunctions GetFunctions()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string ParamPrefix { get; }
+        public override string EscapeIdentifier(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string GetColumnType(Type type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string GetIdentityKeyword()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool IsDbBusy(DbException ex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool IsUniqueViolation(DbException ex, string keyName = "")
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string GetSqlForDropTableIfExists(string name, string schema = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string AddReturnInsertValue(string values, string identityColumn)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IDbProviderExpressions GetExpressionsHelper()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string FormatQueryPagination(string sql, Pagination page, ParametersManager pm)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override IDatabaseTools GetTools()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 
     public abstract class DbProvider : IDbProvider
     {
@@ -14,7 +78,7 @@ namespace SqlFu.Providers
 
         protected DbProvider(string dialect,string providerName)
         {
-            SqlClientFactory.Instance.
+         
             _factory = DbProviderFactory.GetFactory(providerName);
             ProviderId = dialect;
             _func=new Lazy<DbFunctions>(GetFunctions);
@@ -49,7 +113,7 @@ namespace SqlFu.Providers
 
         public string FormatSql(string sql, string[] paramNames)
         {
-            Array.ForEach(paramNames, p => { sql = sql.Replace("@" + p, ParamPrefix + p); });
+            paramNames.ForEach(p => { sql = sql.Replace("@" + p, ParamPrefix + p); });
             return sql;
         }
 

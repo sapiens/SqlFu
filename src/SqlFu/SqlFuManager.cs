@@ -1,17 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
-using System.Linq;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using CavemanTools.Logging;
-using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 using SqlFu.Executors;
 using SqlFu.Providers;
-using SqlFu.Providers.SqlServer;
+
 
 namespace SqlFu
 {
@@ -82,7 +77,8 @@ namespace SqlFu
             cfg(Config);
         }
 
-        public static IDbProvider DefaultProvider { get; set; }=SqlServer2012Provider.Instance;
+        //todo set a null provider
+        public static IDbProvider DefaultProvider { get; set; }
 
        public static DbConnection OpenConnection(IDbProvider provider,string connectionString)
         {
@@ -178,7 +174,7 @@ namespace SqlFu
             return Config.Converters.Convert<T>;
         }
 
-        public static Func<IDataReader, T> GetMapper<T>(Func<IDataReader, T> mapper,string cmdText)
+        public static Func<DbDataReader, T> GetMapper<T>(Func<DbDataReader, T> mapper,string cmdText)
         {
             if (mapper != null) return mapper;
             return reader => config.MapperFactory.Map<T>(reader, cmdText.GetUniqueHash());

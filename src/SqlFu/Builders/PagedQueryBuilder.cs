@@ -55,7 +55,7 @@ namespace SqlFu.Builders
 
         internal static string GetPagingBody(string sql, out int fromidx)
         {
-            fromidx = sql.IndexOf("from", 0, StringComparison.InvariantCultureIgnoreCase);
+            fromidx = sql.IndexOf("from", 0, StringComparison.OrdinalIgnoreCase);
             if (fromidx < 0) throw new InvalidPagedSqlException("sql");
             return sql.Substring(fromidx);
         }

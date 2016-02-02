@@ -40,7 +40,7 @@ namespace SqlFu.Builders.Expressions
 
         public string GetColumnName(MemberInfo column)
         {
-            return _factory.GetInfo(column.ReflectedType).GetColumnName(column.Name,_escape);
+            return _factory.GetInfo(column.GetMemberType()).GetColumnName(column.Name,_escape);
         }
         
 
