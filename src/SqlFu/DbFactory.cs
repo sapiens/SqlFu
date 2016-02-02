@@ -12,7 +12,7 @@ namespace SqlFu
         private  IDbProvider _provider;
         private  string _connectionString;
 
-        public DbFactory(SqlProfile profile)
+        public DbFactory(DbAccessProfile profile)
         {
             Assign(profile);
         }
@@ -22,7 +22,7 @@ namespace SqlFu
             
         }
 
-        internal void Assign(SqlProfile profile)
+        internal void Assign(DbAccessProfile profile)
         {
             _provider = profile.Provider;
             _connectionString = profile.ConnectionString;

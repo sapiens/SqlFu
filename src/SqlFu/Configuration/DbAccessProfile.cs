@@ -2,7 +2,7 @@
 
 namespace SqlFu.Configuration
 {
-    public class SqlProfile
+    public class DbAccessProfile
     {
         public string Name { get; set; }
         public IDbProvider Provider { get; set; }
