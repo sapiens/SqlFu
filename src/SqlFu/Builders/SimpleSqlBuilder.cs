@@ -40,7 +40,7 @@ namespace SqlFu.Builders
         }
 
         
-
+        //todo change to SelectAll
         public IGenerateSql<T> AllColumns(bool distinct=false)
         {
             var sb=new StringBuilder();

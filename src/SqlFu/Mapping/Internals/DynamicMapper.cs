@@ -17,7 +17,7 @@ namespace SqlFu.Mapping.Internals
                 }
             }
             var result = new SqlFuDynamic(_columns);
-            reader.GetValues(result.Values);
+            reader.GetValues(result.ColumnValues);
             return result;
 
         }       
