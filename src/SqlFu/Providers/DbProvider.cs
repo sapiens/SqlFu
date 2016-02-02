@@ -99,14 +99,15 @@ namespace SqlFu.Providers
             param.Value = value ?? DBNull.Value;
         }
 
-        public string EscapeTableName(string name, string schema = "")
+        public string EscapeTableName(TableName table)
         {
-            if (!schema.IsNullOrEmpty())
+            var schema = "";
+            if (!table.Schema.IsNullOrEmpty())
             {
                 schema = EscapeIdentifier(schema)+".";
             }
 
-            return schema + EscapeIdentifier(name);
+            return schema + EscapeIdentifier(table.Name);
         }
 
         public abstract string ParamPrefix { get; }

@@ -40,8 +40,8 @@ namespace SqlFu
         {
             return new Insertable<T>()
             {
-                DbSchema = info.DbSchema,
-                TableName = info.Name,
+                DbSchema = info.Table.Schema,
+                TableName = info.Table.Name,
                 IdentityColumn = info.IdentityColumn
             };
         }
