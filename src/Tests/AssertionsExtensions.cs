@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using CavemanTools.Logging;
 using Xunit.Abstractions;
 
-namespace DomainBus.Tests
+namespace Tests
 {
     public static class AssertionsExtensions
     {

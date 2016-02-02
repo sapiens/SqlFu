@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Data.Common;
 using System.Threading.Tasks;
-using FluentAssertions;
-using SqlFu.Tests.Providers;
-using SqlFu.Tests._Fakes;
+using SqlFu;
+using Tests.Providers;
 using Xunit;
 
-namespace SqlFu.Tests.Builders
+
+namespace Tests.Builders
 {
     public class CrudBuilderTests:IDisposable
     {

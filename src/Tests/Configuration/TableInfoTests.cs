@@ -2,13 +2,13 @@
 using CavemanTools.Logging;
 using FakeItEasy;
 using FluentAssertions;
-using SqlFu.Builders.CreateTable;
+using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 using SqlFu.Mapping;
-using SqlFu.Tests._Fakes;
+using Tests._Fakes;
 using Xunit;
 
-namespace SqlFu.Tests.Configuration
+namespace Tests.Configuration
 {
     public class TableInfoTests
     {
@@ -32,7 +32,7 @@ namespace SqlFu.Tests.Configuration
         [Fact]
         public void table_name_is_type_name()
         {
-            _sut.Name.Should().Be("MapperPost");
+            _sut.Table.Name.Should().Be("MapperPost");
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace SqlFu.Tests.Configuration
         {
             var sut=new TableInfo(typeof(Post),_manageConverters);
             sut.HandleAttributeOverride();
-            sut.Name.Should().Be("SomePost");
+            sut.Table.Name.Should().Be("SomePost");
             sut.IdentityColumn.Should().Be("SomeId");
         }
 
@@ -51,7 +51,7 @@ namespace SqlFu.Tests.Configuration
             factory.AddNamingConvention(t=>t==typeof(MapperPost),t=> new TableName("Post1"));
 
             var info = factory.GetInfo(typeof (MapperPost));
-            info.Name.Should().Be("Post1");
+            info.Table.Name.Should().Be("Post1");
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace SqlFu.Tests.Configuration
             factory.AddNamingConvention(t => t == typeof(Post), t => new TableName("Post1"));
 
             var info = factory.GetInfo(typeof(Post));
-            info.Name.Should().Be("SomePost");
+            info.Table.Name.Should().Be("SomePost");
         }
     }
 }

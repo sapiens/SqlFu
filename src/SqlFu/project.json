@@ -1,5 +1,5 @@
 ﻿{
-  "version": "1.0.0-*",
+  "version": "3.0.0-beta-*",
   "description": "SqlFu1 Class Library",
   "authors": [ "t" ],
   "tags": [ "" ],
@@ -7,10 +7,16 @@
   "licenseUrl": "",
 
     "frameworks": {
-       
+
+        "net46": {
+            "frameworkAssemblies": {
+                "System.Data": "4.0.0.0"
+            }
+        },
+
         "dotnet5.4": {
             "compilationOptions": {
-                "define": ["COREFX"]
+                "define": [ "COREFX" ]
             },
             "dependencies": {
                 "Microsoft.CSharp": "4.0.1-beta-23516",

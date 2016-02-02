@@ -1,8 +1,6 @@
-﻿using System;
-using SqlFu.Tests._Fakes;
-using Xunit;
+﻿using Xunit;
 
-namespace SqlFu.Tests.Providers.MsSql
+namespace Tests.Providers.MsSql
 {
     public class DatabaseToolsTests
     {

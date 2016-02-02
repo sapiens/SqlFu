@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Data.SqlClient;
-using CavemanTools.Logging;
 using CavemanTools.Testing;
-using DomainBus.Tests;
-using FluentAssertions;
 using SqlFu.Mapping;
-using SqlFu.Mapping.Internals;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SqlFu.Tests.Mapping
+namespace Tests.Mapping
 {
     public class MapToAnonTests
     {

@@ -1,9 +1,7 @@
-﻿using DomainBus.Tests;
-using FluentAssertions;
-using Xunit;
+﻿using Xunit;
 using Xunit.Abstractions;
 
-namespace SqlFu.Tests.Mapping
+namespace Tests.Mapping
 {
     public class ValueMapperTests
     {

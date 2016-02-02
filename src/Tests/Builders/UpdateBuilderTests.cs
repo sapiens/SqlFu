@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Data.Common;
-using DomainBus.Tests;
 using FluentAssertions;
+using SqlFu;
+using SqlFu.Builders;
 using SqlFu.Builders.CreateTable;
-using SqlFu.Configuration.Internals;
-using SqlFu.Tests._Fakes;
+using Tests._Fakes;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SqlFu.Tests.Builders
+namespace Tests.Builders
 {
     public class UpdateBuilderTests:IDisposable
     {
@@ -17,7 +17,7 @@ namespace SqlFu.Tests.Builders
         public UpdateBuilderTests(ITestOutputHelper x)
         {
             x.Logger();
-            _db = Setup.GetConnection();
+         //   _db = Setup.GetConnection();
             _db.CreateTableFrom<SomeData>(tc =>
             {
                 tc.IfTableExists(IfTableExists.DropIt);

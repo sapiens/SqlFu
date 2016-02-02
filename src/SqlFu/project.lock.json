@@ -2,6 +2,42 @@
   "locked": false,
   "version": 2,
   "targets": {
+    ".NETFramework,Version=v4.6": {
+      "CavemanTools/4.0.0-pre-6": {
+        "type": "package",
+        "dependencies": {
+          "FluentAssertions": "4.2.1"
+        },
+        "frameworkAssemblies": [
+          "Microsoft.CSharp",
+          "mscorlib",
+          "System",
+          "System.Core",
+          "System.Xml"
+        ],
+        "compile": {
+          "lib/net46/CavemanTools.dll": {}
+        },
+        "runtime": {
+          "lib/net46/CavemanTools.dll": {}
+        }
+      },
+      "FluentAssertions/4.2.1": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.Xml",
+          "System.Xml.Linq"
+        ],
+        "compile": {
+          "lib/net45/FluentAssertions.Core.dll": {},
+          "lib/net45/FluentAssertions.dll": {}
+        },
+        "runtime": {
+          "lib/net45/FluentAssertions.Core.dll": {},
+          "lib/net45/FluentAssertions.dll": {}
+        }
+      }
+    },
     ".NETPlatform,Version=v5.4": {
       "CavemanTools/4.0.0-pre-6": {
         "type": "package",
@@ -518,6 +554,78 @@
         },
         "runtime": {
           "lib/dotnet/System.Xml.XDocument.dll": {}
+        }
+      }
+    },
+    ".NETFramework,Version=v4.6/win7-x86": {
+      "CavemanTools/4.0.0-pre-6": {
+        "type": "package",
+        "dependencies": {
+          "FluentAssertions": "4.2.1"
+        },
+        "frameworkAssemblies": [
+          "Microsoft.CSharp",
+          "mscorlib",
+          "System",
+          "System.Core",
+          "System.Xml"
+        ],
+        "compile": {
+          "lib/net46/CavemanTools.dll": {}
+        },
+        "runtime": {
+          "lib/net46/CavemanTools.dll": {}
+        }
+      },
+      "FluentAssertions/4.2.1": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.Xml",
+          "System.Xml.Linq"
+        ],
+        "compile": {
+          "lib/net45/FluentAssertions.Core.dll": {},
+          "lib/net45/FluentAssertions.dll": {}
+        },
+        "runtime": {
+          "lib/net45/FluentAssertions.Core.dll": {},
+          "lib/net45/FluentAssertions.dll": {}
+        }
+      }
+    },
+    ".NETFramework,Version=v4.6/win7-x64": {
+      "CavemanTools/4.0.0-pre-6": {
+        "type": "package",
+        "dependencies": {
+          "FluentAssertions": "4.2.1"
+        },
+        "frameworkAssemblies": [
+          "Microsoft.CSharp",
+          "mscorlib",
+          "System",
+          "System.Core",
+          "System.Xml"
+        ],
+        "compile": {
+          "lib/net46/CavemanTools.dll": {}
+        },
+        "runtime": {
+          "lib/net46/CavemanTools.dll": {}
+        }
+      },
+      "FluentAssertions/4.2.1": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.Xml",
+          "System.Xml.Linq"
+        ],
+        "compile": {
+          "lib/net45/FluentAssertions.Core.dll": {},
+          "lib/net45/FluentAssertions.dll": {}
+        },
+        "runtime": {
+          "lib/net45/FluentAssertions.Core.dll": {},
+          "lib/net45/FluentAssertions.dll": {}
         }
       }
     },
@@ -3474,6 +3582,9 @@
   "projectFileDependencyGroups": {
     "": [
       "CavemanTools >= 4.0.0-pre-6"
+    ],
+    ".NETFramework,Version=v4.6": [
+      "fx/System.Data >= 4.0.0"
     ],
     ".NETPlatform,Version=v5.4": [
       "Microsoft.CSharp >= 4.0.1-beta-23516",

@@ -1,4 +1,5 @@
 using CavemanTools.Model.Persistence;
+using SqlFu.Builders;
 using SqlFu.Builders.CreateTable;
 using SqlFu.Configuration.Internals;
 

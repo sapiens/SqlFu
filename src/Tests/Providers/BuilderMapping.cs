@@ -1,8 +1,7 @@
 using System;
-using SqlFu.Configuration;
-using SqlFu.Tests._Fakes;
+using Tests._Fakes;
 
-namespace SqlFu.Tests.Providers
+namespace Tests.Providers
 {
    
     public class SomePost

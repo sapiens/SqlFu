@@ -2,7 +2,7 @@
 using SqlFu.Mapping.Internals;
 using Xunit;
 
-namespace SqlFu.Tests.Mapping
+namespace Tests.Mapping
 {
     public class MapperFactoryTests
     {

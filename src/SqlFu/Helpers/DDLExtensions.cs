@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Common;
+using SqlFu.Builders;
 using SqlFu.Builders.CreateTable;
 using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;

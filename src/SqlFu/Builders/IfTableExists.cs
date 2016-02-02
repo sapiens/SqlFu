@@ -1,4 +1,4 @@
-﻿namespace SqlFu.Configuration.Internals
+﻿namespace SqlFu.Builders
 {
     public enum IfTableExists
     {

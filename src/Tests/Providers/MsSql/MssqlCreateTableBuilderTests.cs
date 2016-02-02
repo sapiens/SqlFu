@@ -1,11 +1,8 @@
 using System;
 using System.Data.Common;
 using CavemanTools.Logging;
-using FluentAssertions;
-using SqlFu.Configuration.Internals;
-using Xunit;
 
-namespace SqlFu.Tests.Providers.MsSql
+namespace Tests.Providers.MsSql
 {
 
     public class MyCreateDropPoco

@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Linq;
-using System.Reflection;
-using CavemanTools.Logging;
 using CavemanTools.Testing;
-using DomainBus.Tests;
 using FluentAssertions;
 using SqlFu.Mapping;
 using SqlFu.Mapping.Internals;
-using SqlFu.Tests._Fakes;
+using Tests._Fakes;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace SqlFu.Tests.Mapping
+namespace Tests.Mapping
 {
     public class PocoMapperTests
     {

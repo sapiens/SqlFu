@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
-namespace SqlFu.Tests._Fakes
+namespace Tests._Fakes
 {
     public class FakeReader:IDataReader
     {

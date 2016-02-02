@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Data.Common;
 using System.Linq;
 using CavemanTools.Logging;
 using CavemanTools.Model.ValueObjects;
 using CavemanTools.Testing;
-using SqlFu.Builders;
-using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 using SqlFu.Mapping.Internals;
-using SqlFu.Providers.SqlServer;
-using SqlFu.Tests._Fakes;
+using Tests._Fakes;
 
-namespace SqlFu.Tests
+namespace Tests
 {
     public class Setup
     {
@@ -30,11 +26,11 @@ namespace SqlFu.Tests
         }
 
     
-        public static DbConnection GetConnection()
-        {
-            SqlFuManager.UseLogManager();
-            return SqlFuManager.OpenConnection(SqlServer2012Provider.Instance, Connex);
-        }
+        //public static DbConnection GetConnection()
+        //{
+        //    SqlFuManager.UseLogManager();
+        //    return SqlFuManager.OpenConnection(SqlServer2012Provider.Instance, Connex);
+        //}
 
         public static void DoBenchmark(int iterations=500, params BenchmarkAction[] actions)
         {
@@ -68,9 +64,9 @@ namespace SqlFu.Tests
             return data;
         }
 
-        public static CustomMappers UserMappers()
+        public static CustomMappersConfiguration UserMappers()
         {
-            var r = new CustomMappers();
+            var r = new CustomMappersConfiguration();
             r.Register(d=> new Address(d["Address"] as string));
             return r;
         }

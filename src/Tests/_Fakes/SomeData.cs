@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SqlFu.Tests._Fakes
+namespace Tests._Fakes
 {
     public class SomeData
     {

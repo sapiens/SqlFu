@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Data.Common;
-using System.Threading;
 using System.Threading.Tasks;
-using FluentAssertions;
-using SqlFu.Tests.Providers;
-using SqlFu.Tests._Fakes;
+using SqlFu;
+using Tests.Providers;
 using Xunit;
 
-namespace SqlFu.Tests.Executors
+namespace Tests.Executors
 {
     public class QueryExtensionsTests:IDisposable
     {
@@ -18,7 +16,7 @@ namespace SqlFu.Tests.Executors
             
             
 
-            _db = Setup.GetConnection();
+           // _db = Setup.GetConnection();
 
          //   _db.CreateTableFrom<SomePost>();
         }
