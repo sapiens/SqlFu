@@ -14,10 +14,7 @@ namespace SqlFu
     {
         static SqlFuConfig config=new SqlFuConfig();
 
-        public static SqlFuConfig Config
-        {
-            get { return config; }
-        }
+        public static SqlFuConfig Config => config;
 
         public static void ResetConfig()
         {

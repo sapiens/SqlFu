@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using SqlFu.Builders.CreateTable;
 using SqlFu.Builders.Expressions;
+using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 using SqlFu.Providers;
 
@@ -119,10 +118,7 @@ namespace SqlFu
             return sb.ToString();
         }
 
-        public static bool IsCustomObjectType(this Type t)
-        {
-            return t.IsClass() && (t.GetTypeCode() == TypeCode.Object);
-        }
+        public static bool IsCustomObjectType(this Type t) => t.IsClass() && (t.GetTypeCode() == TypeCode.Object);
 
         public static bool IsCustomObject<T>(this T t)
         {

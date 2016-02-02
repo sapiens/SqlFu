@@ -1,6 +1,6 @@
 using System;
 
-namespace SqlFu
+namespace SqlFu.Configuration
 {
     public class TableName
     {

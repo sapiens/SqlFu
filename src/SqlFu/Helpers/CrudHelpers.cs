@@ -8,8 +8,7 @@ using SqlFu.Configuration.Internals;
 
 namespace SqlFu
 {
-
-   
+    
     public static class CrudHelpers
     {
 

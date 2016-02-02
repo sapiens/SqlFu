@@ -1,4 +1,5 @@
 ﻿using System.Data.Common;
+using SqlFu.Configuration;
 
 namespace SqlFu.Providers
 {

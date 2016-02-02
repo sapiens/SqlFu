@@ -19,5 +19,9 @@
     <DnxInvisibleFolder Include="Migrations\" />
     <DnxInvisibleFolder Include="Providers\SqlServer\" />
   </ItemGroup>
+  <ItemGroup>
+    <DnxInvisibleContent Include="packages.config" />
+    <DnxInvisibleContent Include="SqlFu.xproj.DotSettings" />
+  </ItemGroup>
   <Import Project="$(VSToolsPath)\DNX\Microsoft.DNX.targets" Condition="'$(VSToolsPath)' != ''" />
 </Project>

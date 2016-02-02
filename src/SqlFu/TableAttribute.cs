@@ -1,5 +1,4 @@
 ﻿using System;
-using SqlFu.Configuration.Internals;
 
 namespace SqlFu
 {

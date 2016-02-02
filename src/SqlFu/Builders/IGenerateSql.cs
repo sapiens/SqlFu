@@ -1,4 +1,4 @@
-namespace SqlFu
+namespace SqlFu.Builders
 {
     public interface IGenerateSql
     {

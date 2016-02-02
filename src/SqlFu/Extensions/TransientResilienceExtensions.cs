@@ -6,7 +6,7 @@ using CavemanTools.Model.Persistence;
 
 namespace SqlFu
 {
-    public static class SqlExtensions
+    public static class TransientResilienceExtensions
     {
 
         public static T Do<T>(this IDbFactory dbFactory,Func<DbConnection,T> action)
@@ -80,26 +80,7 @@ namespace SqlFu
         
         }
 
-        /// <summary>
-        /// Checks is the exception was thrown because an unique constraint was violated.
-        /// Can be used to implement idempotency e.g you can treat primary key violations as duplicate operations
-        /// </summary>
-        /// <param name="db"></param>
-        /// <param name="ex"></param>
-        /// <param name="keyName"></param>
-        /// <returns></returns>
-        public static bool IsUniqueViolation(this DbConnection db, DbException ex, string keyName = null)
-            => db.GetProvider().IsUniqueViolation(ex, keyName);
-
-        //public static bool TableIsDeleted(this DbException ex, string name)
-        //{
-        //    if (ex.Message.Contains("Invalid object name '{0}'".ToFormat(name)))
-        //    {
-        //        "SqlStorage".LogWarn("Table {0} doesn't exist", name);
-        //        return true;
-        //    }
-        //    return false;
-        //}
+       
 
 
     }

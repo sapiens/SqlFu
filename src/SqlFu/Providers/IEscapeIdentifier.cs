@@ -1,4 +1,6 @@
-﻿namespace SqlFu.Providers
+﻿using SqlFu.Configuration;
+
+namespace SqlFu.Providers
 {
     public interface IEscapeIdentifier
     {

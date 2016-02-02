@@ -4,6 +4,7 @@ using System.Data.Common;
 using System.Linq;
 using CavemanTools.Model;
 using SqlFu.Builders;
+using SqlFu.Configuration;
 
 namespace SqlFu.Providers
 {

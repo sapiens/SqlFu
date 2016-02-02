@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 
 namespace SqlFu.Builders.CreateTable
