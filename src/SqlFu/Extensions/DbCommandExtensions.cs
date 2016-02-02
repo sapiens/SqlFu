@@ -10,11 +10,6 @@ namespace SqlFu
 {
     public static class DbCommandExtensions
     {
-        public static DbCommand CreateAndSetupCommand(this DbConnection cnx, string sql, params object[] args)
-        {
-            return CreateAndSetupCommand(cnx, new CommandConfiguration(sql, args));
-        }
-
         /// <summary>
         /// Sets the commands sql and parameters, takes care of provider specific functionality. At the end, the command is ready to execute
         /// </summary>
@@ -43,7 +38,7 @@ namespace SqlFu
                 SqlFuManager.Config.OnCommand(cmd);
                 return rez;
             }
-            catch (Exception ex)
+            catch (DbException ex)
             {
                 SqlFuManager.Config.OnException(cmd, ex);
                 throw;
@@ -106,51 +101,6 @@ namespace SqlFu
             }
         }
 
-        //public static IEnumerable<T> Query<T>(this DbCommand cmd, Func<DbDataReader, T> mapper = null,
-        //                                   bool firstRowOnly = false)
-        //{
-        //    DbDataReader reader = null;
-
-        //    try
-        //    {
-        //        CommandBehavior behavior = firstRowOnly ? CommandBehavior.SingleRow : CommandBehavior.Default;
-
-        //        reader = cmd.ExecuteReader(behavior);
-        //    }
-        //    catch (DbException ex)
-        //    {
-               
-        //        SqlFuManager.Config.OnException(cmd, ex);
-        //        throw;
-        //    }
-
-        //    SqlFuManager.Config.OnCommand(cmd);
-        //    var hasRows = true;
-        //    T poco = default(T);
-        //    while (hasRows)
-        //    {
-        //        try
-        //        {
-        //            hasRows = reader.Read();
-        //            poco = SqlFuManager.GetMapper(mapper, cmd.CommandText)(reader);
-        //        }
-        //        catch (DbException ex)
-        //        {
-        //            reader.Close();
-        //            SqlFuManager.Config.OnException(cmd, ex);
-        //            throw;
-        //        }
-        //        catch (Exception)
-        //        {
-        //            reader.Close();
-        //            throw;
-        //        }
-        //        yield return poco;
-        //        if (firstRowOnly) yield break;
-        //    }
-           
-        //    reader.Close();
-        //}
 
         public static List<T> Fetch<T>(this DbCommand cmd, Func<DbDataReader, T> mapper = null,
                                     bool firstRowOnly = false)
@@ -163,26 +113,7 @@ namespace SqlFu
                 return true;
             },mapper,firstRowOnly);
             return rez;
-            //try
-            //{
-            //    CommandBehavior behavior = firstRowOnly ? CommandBehavior.SingleRow : CommandBehavior.Default;
-            //    using (var reader = cmd.ExecuteReader(behavior))
-            //    {
-            //        SqlFuManager.Config.OnCommand(cmd);
-            //        while (reader.Read())
-            //        {
-            //            rez.Add(SqlFuManager.GetMapper(mapper, cmd.CommandText)(reader));
-            //            if (firstRowOnly) break;
-            //        }
-            //    }
-
-            //    return rez;
-            //}
-            //catch (DbException ex)
-            //{
-            //    SqlFuManager.Config.OnException(cmd, ex);
-            //    throw;
-            //}
+           
         }
 
         #region Async
@@ -265,26 +196,7 @@ namespace SqlFu
                 return true;
             },mapper,firstRowOnly);
             return rez;
-            //try
-            //{
-            //    CommandBehavior behavior = firstRowOnly ? CommandBehavior.SingleRow : CommandBehavior.Default;
-            //    using (var reader = await cmd.ExecuteReaderAsync(behavior, cancellation).ConfigureAwait(false))
-            //    {
-            //        SqlFuManager.Config.OnCommand(cmd);
-            //        while (await reader.ReadAsync(cancellation).ConfigureAwait(false))
-            //        {
-            //            rez.Add(SqlFuManager.GetMapper(mapper, cmd.CommandText)(reader));
-            //            if (firstRowOnly) break;
-            //        }
-            //    }
-
-            //    return rez;
-            //}
-            //catch (DbException ex)
-            //{
-            //    SqlFuManager.Config.OnException(cmd, ex);
-            //    throw;
-            //}
+            
         } 
         #endregion
     }

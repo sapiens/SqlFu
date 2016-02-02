@@ -235,7 +235,7 @@ namespace SqlFu
         }
 
 
-        internal static void QueryAndProcess<T>(this DbConnection cnx, CommandConfiguration cfg,Func<T,bool> processor, T anonModel =default(T),
+        internal static void QueryAndProcess<T>(this DbConnection cnx, CommandConfiguration cfg,Func<T, bool> processor, T anonModel =default(T),
            bool firstRowOnly=false)
         {
            using (var cmd = cnx.CreateAndSetupCommand(cfg))
@@ -338,7 +338,7 @@ namespace SqlFu
             return db.GetValueAsync<T>(builder(db.GetSqlBuilder()).GetCommandConfiguration(),token);
         }
 
-        public static T GetSingle<T>(this DbConnection db, Expression<Func<T,bool>> criteria=null,Expression<Func<T,object>> orderBy=null)
+        public static T GetSingle<T>(this DbConnection db, Expression<Func<T, bool>> criteria=null,Expression<Func<T, object>> orderBy=null)
         {
             return db.GetSingle(d =>
 
@@ -349,7 +349,7 @@ namespace SqlFu
                 );
         }
 
-        public static Task<T> GetSingleAsync<T>(this DbConnection db, CancellationToken cancel,Expression<Func<T,bool>> criteria=null,Expression<Func<T,object>> orderBy=null)
+        public static Task<T> GetSingleAsync<T>(this DbConnection db, CancellationToken cancel,Expression<Func<T, bool>> criteria=null,Expression<Func<T, object>> orderBy=null)
         {
             return db.GetSingleAsync(d =>
 
@@ -413,7 +413,7 @@ namespace SqlFu
         /// <param name="db"></param>
         /// <param name="builder"></param>
         /// <returns></returns>
-        public static List<TProj> Query<TProj>(this DbConnection db,Func<IBuildQueryFrom,IGenerateSql<TProj>> builder)
+        public static List<TProj> Query<TProj>(this DbConnection db,Func<IBuildQueryFrom, IGenerateSql<TProj>> builder)
         {
             builder.MustNotBeNull();
             var built = builder(db.GetSqlBuilder());
@@ -433,7 +433,7 @@ namespace SqlFu
         /// <param name="db"></param>
         /// <param name="builder"></param>
         /// <returns></returns>
-        public static async Task<List<TProj>> QueryAsync<TProj>(this DbConnection db,Func<IBuildQueryFrom,IGenerateSql<TProj>> builder,CancellationToken token)
+        public static async Task<List<TProj>> QueryAsync<TProj>(this DbConnection db,Func<IBuildQueryFrom, IGenerateSql<TProj>> builder,CancellationToken token)
         {
             builder.MustNotBeNull();
             var built = builder(db.GetSqlBuilder());
@@ -448,15 +448,10 @@ namespace SqlFu
 
         #endregion
 
-    
-
-      
-
-
-
-
-        
-
+        public static DbCommand CreateAndSetupCommand(this DbConnection cnx, string sql, params object[] args)
+        {
+            return DbCommandExtensions.CreateAndSetupCommand(cnx, new CommandConfiguration(sql, args));
+        }
     }
     
    

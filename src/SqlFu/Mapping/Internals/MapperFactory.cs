@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Reflection;
-using System.Reflection.Emit;
 using SqlFu.Configuration;
 
 namespace SqlFu.Mapping.Internals
@@ -35,7 +33,14 @@ namespace SqlFu.Mapping.Internals
             if (mapper == null)
             {
                 mapper = CreateMapper<T>(queryId);
-                Mappers.Add(key,mapper);
+                try
+                {
+                    Mappers.Add(key, mapper);
+                }
+                catch (ArgumentException)
+                {
+                    //we ignore it, a mapper is already available
+                }
             }
             return mapper.Map(reader, prefix);
         }

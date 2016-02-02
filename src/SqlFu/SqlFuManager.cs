@@ -134,33 +134,7 @@ namespace SqlFu
             {
                 return sqlfu.Provider;
             }
-            //var type = cnx.GetType().Name;
-
-            //if (type.Equals("SqlConnection", StringComparison.InvariantCultureIgnoreCase))
-            //{
-            //    return new SqlServerProvider();
-            //}
-
-            //if (type.StartsWith("MySql"))
-            //{
-            //    return new MySqlProvider();
-            //}
-
-            //if (type.StartsWith("Npgsql"))
-            //{
-            //    return new PostgresProvider();
-            //}
-
-            //if (type.StartsWith("SQLite"))
-            //{
-            //    return new SqliteProvider();
-            //}
-
-            //if (type.Equals("SqlCeConnection", StringComparison.InvariantCultureIgnoreCase))
-            //{
-            //    return new SqlServerCEProvider();
-            //}
-
+          
             throw new NotSupportedException("Only SqlFu connections are supported");
         }
         
@@ -174,7 +148,7 @@ namespace SqlFu
         public static Func<DbDataReader, T> GetMapper<T>(Func<DbDataReader, T> mapper,string cmdText)
         {
             if (mapper != null) return mapper;
-            return reader => config.MapperFactory.Map<T>(reader, cmdText.GetUniqueHash());
+            return reader => config.MapperFactory.Map<T>(reader, cmdText.GetCachingId());
         }
         
     }

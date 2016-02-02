@@ -73,22 +73,14 @@ namespace SqlFu
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static bool IsEnumType(this Type type)
-        {
-            return type.IsEnum() || (type.IsNullable() && type.GetGenericArgument().IsEnum());
-        }
-       
-        public static string GetUniqueHash(this string data)
-        {
-            return Convert.ToBase64String(data.MurmurHash());
-        }
+        public static bool IsEnumType(this Type type) => type.IsEnum() || (type.IsNullable() && type.GetGenericArgument().IsEnum());
 
-        public static string FormatCommand(this DbCommand cmd)
-        {
-            return FormatCommand(cmd.CommandText,
-                                 (cmd.Parameters.Cast<DbParameter>()
-                                     .ToDictionary(p => p.ParameterName, p => p.Value)));
-        }
+       
+        public static string GetCachingId(this string data) => Convert.ToBase64String(data.MurmurHash());
+
+        public static string FormatCommand(this DbCommand cmd) => 
+            FormatCommand(cmd.CommandText,
+            (cmd.Parameters.Cast<DbParameter>().ToDictionary(p => p.ParameterName, p => p.Value)));
 
         public static bool IsListParam(this object data)
         {

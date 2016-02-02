@@ -60,9 +60,9 @@ namespace SqlFu
       
         #region Events
 
-        private Action<DbCommand, Exception> _onException = (s, e) => { };
+        private Action<DbCommand, DbException> _onException = (s, e) => { };
 
-        public Action<DbCommand, Exception> OnException
+        public Action<DbCommand, DbException> OnException
         {
             get { return _onException; }
             set
