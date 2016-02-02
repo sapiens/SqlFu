@@ -1,5 +1,8 @@
 ﻿namespace SqlFu.Providers
 {
+    /// <summary>
+    /// Singleton
+    /// </summary>
     public class DbFunctions
     {
         public long Count<T>(T column)

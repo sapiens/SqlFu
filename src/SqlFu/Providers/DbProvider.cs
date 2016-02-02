@@ -9,79 +9,15 @@ using SqlFu.Configuration;
 namespace SqlFu.Providers
 {
 
-    public class NullProvider : DbProvider
-    {
-        public NullProvider(string dialect, string providerName) : base(dialect, providerName)
-        {
-        }
-
-        protected override DbFunctions GetFunctions()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string ParamPrefix { get; }
-        public override string EscapeIdentifier(string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string GetColumnType(Type type)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string GetIdentityKeyword()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool IsDbBusy(DbException ex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool IsUniqueViolation(DbException ex, string keyName = "")
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string GetSqlForDropTableIfExists(string name, string schema = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string AddReturnInsertValue(string values, string identityColumn)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override IDbProviderExpressions GetExpressionsHelper()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string FormatQueryPagination(string sql, Pagination page, ParametersManager pm)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override IDatabaseTools GetTools()
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-
+ 
     public abstract class DbProvider : IDbProvider
     {
         private DbProviderFactory _factory;
 
-        protected DbProvider(string dialect,string providerName)
+        protected DbProvider(DbProviderFactory factory,string providerId)
         {
-         
-            _factory = DbProviderFactory.GetFactory(providerName);
-            ProviderId = dialect;
+            _factory = factory;
+            ProviderId = providerId;
             _func=new Lazy<DbFunctions>(GetFunctions);
         }
 
@@ -89,13 +25,16 @@ namespace SqlFu.Providers
 
         public DbFunctions Functions => _func.Value;        
         
-
+        /// <summary>
+        /// Db specific functions, an inheritor of DbFunctions
+        /// </summary>
+        /// <returns></returns>
         protected abstract DbFunctions GetFunctions();
 
         public virtual void SetupParameter(DbParameter param, string name, object value)
         {
             name = name ?? "";
-            param.ParameterName = string.Concat(ParamPrefix, name);
+            param.ParameterName = ParamPrefix+name;
             value = SqlFuManager.Config.Converters.ConvertValueObject(value);
             param.Value = value ?? DBNull.Value;
         }
