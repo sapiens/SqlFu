@@ -12,7 +12,7 @@ namespace SqlFu
         
         public static DbConnection GetConnection()
         {
-            LogManager.OutputToConsole();
+            LogManager.OutputToTrace();
            
             return SqlFuManager.OpenConnection(SqlServer2012Provider.Instance, Connex);
         }
