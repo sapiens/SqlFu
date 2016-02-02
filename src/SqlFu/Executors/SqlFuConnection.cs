@@ -6,7 +6,8 @@ using SqlFu.Providers;
 
 namespace SqlFu.Executors
 {
-    [DesignerCategory("Code")]
+
+    //[DesignerCategory("Code")]
     public class SqlFuConnection : DbConnection
     {
         //internal SqlFuConnection()

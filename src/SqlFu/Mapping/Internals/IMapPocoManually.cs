@@ -1,11 +1,12 @@
 using System;
-using System.Data;
+
+using System.Data.Common;
 
 namespace SqlFu.Mapping.Internals
 {
     public interface IMapPocoManually
     {
         bool HasMapper(Type tp);
-        T Map<T>(IDataReader reader);
+        T Map<T>(DbDataReader reader);
     }
 }

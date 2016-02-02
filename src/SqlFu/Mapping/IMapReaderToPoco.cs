@@ -1,14 +1,15 @@
 using System.Data;
+using System.Data.Common;
 
 namespace SqlFu.Mapping
 {
     public interface IMapReaderToPoco<T>
     {
-        T Map(IDataReader reader, string parentPrefix = ""); 
+        T Map(DbDataReader reader, string parentPrefix = ""); 
     }
 
     public interface IMapToPoco
     {
-        T Map<T>(IDataReader reader, string queryId,string parentPrefix = "");
+        T Map<T>(DbDataReader reader, string queryId,string parentPrefix = "");
     }
 }

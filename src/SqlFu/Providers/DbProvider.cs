@@ -6,13 +6,16 @@ using SqlFu.Builders;
 
 namespace SqlFu.Providers
 {
+    using System.Data.SqlClient;
+
     public abstract class DbProvider : IDbProvider
     {
         private DbProviderFactory _factory;
 
         protected DbProvider(string dialect,string providerName)
         {
-            _factory = DbProviderFactories.GetFactory(providerName);
+            SqlClientFactory.Instance.
+            _factory = DbProviderFactory.GetFactory(providerName);
             ProviderId = dialect;
             _func=new Lazy<DbFunctions>(GetFunctions);
         }
@@ -24,7 +27,7 @@ namespace SqlFu.Providers
 
         protected abstract DbFunctions GetFunctions();
 
-        public virtual void SetupParameter(IDbDataParameter param, string name, object value)
+        public virtual void SetupParameter(DbParameter param, string name, object value)
         {
             name = name ?? "";
             param.ParameterName = string.Concat(ParamPrefix, name);
