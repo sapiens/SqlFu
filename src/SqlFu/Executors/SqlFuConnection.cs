@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Data;
 using System.Data.Common;
 using SqlFu.Providers;
@@ -7,39 +6,9 @@ using SqlFu.Providers;
 namespace SqlFu.Executors
 {
 
-    //[DesignerCategory("Code")]
     public class SqlFuConnection : DbConnection
     {
-        //internal SqlFuConnection()
-        //{
-        //    var cnx = ConfigurationManager.ConnectionStrings[0];
-        //    if (cnx == null)
-        //        throw new InvalidOperationException(
-        //            "I need a connection! Either call SqlFu.ConnectionStringIs() method or define a connection in config file. If there are more than one connection defined, call SqlFu.ConnectionNameIs() method");
-
-        //    Init(cnx.ConnectionString, ProviderFactory.GetProviderByName(cnx.ProviderName));
-        //}
-
-        //public SqlFuConnection(string connectionStringName)
-        //{
-        //    var cnx = ConfigurationManager.ConnectionStrings[connectionStringName];
-        //    if (cnx == null)
-        //        throw new InvalidOperationException(
-        //            "Can't find connection '{0}' in the configuration file.".ToFormat(connectionStringName));
-
-        //    Init(cnx.ConnectionString, ProviderFactory.GetProviderByName(cnx.ProviderName));
-        //}
-
-        //public SqlFuConnection(string cnxString, string provider)
-        //{
-        //    Init(cnxString, ProviderFactory.GetProviderByName(provider));
-        //}
-
-        //public SqlFuConnection(string cnxString, DbEngine provider)
-        //{
-        //    Init(cnxString, ProviderFactory.GetProvider(provider));
-        //}
-
+      
         public SqlFuConnection(IDbProvider provider, string cnxString)
         {
             Init(cnxString, provider);
@@ -66,17 +35,7 @@ namespace SqlFu.Executors
         }
 
 
-        //public StoredProcedureResult ExecuteStoredProcedure(string sprocName, object arguments = null)
-        //{
-        //    return Connection.ExecuteStoredProcedure(sprocName, arguments);
-        //}
-
-
-        //public IDatabaseTools DatabaseTools
-        //{
-        //    get { return Provider.GetTools(this); }
-        //}
-
+    
         private DbConnection _conex;
 
      
@@ -196,18 +155,12 @@ namespace SqlFu.Executors
         private int _tLevel;
 
 
-        public int TransactionDepth
-        {
-            get { return _tLevel; }
-        }
+        public int TransactionDepth => _tLevel;
 
         /// <summary>
         /// Gets the underlying connection
         /// </summary>
-        public DbConnection Connection
-        {
-            get { return _conex; }
-        }
+        public DbConnection Connection => _conex;
 
         private DbTransaction _trans;
 
@@ -290,15 +243,9 @@ namespace SqlFu.Executors
                 _db = null;
             }
 
-            protected override DbConnection DbConnection
-            {
-                get { return _db.Connection; }
-            }
+            protected override DbConnection DbConnection => _db.Connection;
 
-            public override IsolationLevel IsolationLevel
-            {
-                get { return _db._trans.IsolationLevel; }
-            }
+            public override IsolationLevel IsolationLevel => _db._trans.IsolationLevel;
         }
 
         #endregion
@@ -307,19 +254,14 @@ namespace SqlFu.Executors
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
+            if (!disposing) return;
+            if (Connection == null) return;
+            if (_trans != null)
             {
-                if (Connection != null)
-                {
-                    if (_trans != null)
-                    {
-                        Rollback();
-                    }
-                    Connection.Close();
-                    Connection.Dispose();
-                    _conex = null;
-                }
-            }
+                Rollback();
+            }    
+            Connection.Dispose();
+            _conex = null;
         }
     }
 }
