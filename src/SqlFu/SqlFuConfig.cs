@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using System.Data.Common;
-using SqlFu.Builders.CreateTable;
 using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 using SqlFu.Mapping.Internals;
@@ -12,39 +10,25 @@ namespace SqlFu
 {
     public class SqlFuConfig
     {
-        private CustomMappers _customMappers = new CustomMappers();
-        private ConvertersManager _converters = new ConvertersManager();
-        private TableInfoFactory _tableInfoFactory;
-        private MapperFactory _mapperFactory;
+        private readonly CustomMappersConfiguration _customMappers = new CustomMappersConfiguration();
+        private readonly ConvertersManager _converters = new ConvertersManager();
+        private readonly TableInfoFactory _tableInfoFactory;
 
         public SqlFuConfig()
         {
             _tableInfoFactory = new TableInfoFactory(_converters);
-
-            _mapperFactory = new MapperFactory(_customMappers, _tableInfoFactory, _converters);
+            MapperFactory = new MapperFactory(_customMappers, _tableInfoFactory, _converters);
         }
 
-        public CustomMappers CustomMappers
-        {
-            get { return _customMappers; }
-        }
+        public CustomMappersConfiguration CustomMappers => _customMappers;
 
-        public ConvertersManager Converters
-        {
-            get { return _converters; }
-        }
+        public ConvertersManager Converters => _converters;
 
-        public TableInfoFactory TableInfoFactory
-        {
-            get { return _tableInfoFactory; }
-        }
+        public TableInfoFactory TableInfoFactory => _tableInfoFactory;
 
-        public MapperFactory MapperFactory
-        {
-            get { return _mapperFactory; }
-        }
+        public MapperFactory MapperFactory { get; }
 
-        public void TableForPoco<T>(Action<ITableInfo> cfg)
+        public void ConfigureTableForPoco<T>(Action<ITableInfo> cfg)
         {
             cfg.MustNotBeNull();
             var table = TableInfoFactory.GetInfo(typeof (T));
@@ -73,37 +57,7 @@ namespace SqlFu
             TableInfoFactory.AddNamingConvention(match, convention);
         }
 
-        //#region Connection info
-
-        //private string _connectionString;
-        //public string ConnectionString
-        //{
-        //    get
-        //    {
-        //        if (_connectionString.IsNullOrEmpty())
-        //        {
-        //            _connectionString = GetConnectionString(ConnectionName);
-        //        }
-        //        return _connectionString;
-        //    }
-        //    set
-        //    {
-        //        _connectionString = value;
-        //    }
-        //}
-
-        //public string GetConnectionString(string name)
-        //{
-        //    if (name.IsNullOrEmpty())
-        //    {
-        //        return ConfigurationManager.ConnectionStrings[0].ConnectionString;
-        //    }
-        //    return ConfigurationManager.ConnectionStrings[name].ConnectionString;
-        //}
-
-        //public string ConnectionName { get; set; } 
-        //#endregion
-
+      
         #region Events
 
         private Action<DbCommand, Exception> _onException = (s, e) => { };
@@ -148,10 +102,7 @@ namespace SqlFu
         }
 
         private Action<DbConnection> _onOpenConex = c => { };
-        private string conexName;
-        private string connString;
-
-
+      
         public Action<DbConnection> OnOpenConnection
         {
             get { return _onOpenConex; }
@@ -167,16 +118,16 @@ namespace SqlFu
 
 
 
-        private Dictionary<string, SqlProfile> _profiles = new Dictionary<string, SqlProfile>();
+        private Dictionary<string, DbAccessProfile> _profiles = new Dictionary<string, DbAccessProfile>();
 
         public void AddProfile(IDbProvider provider, string connectionString, string name = "default")
         {
             provider.MustNotBeNull();
-            _profiles[name] = new SqlProfile() {ConnectionString = connectionString, Name = name, Provider = provider};
+            _profiles[name] = new DbAccessProfile() {ConnectionString = connectionString, Name = name, Provider = provider};
 
         }
 
-        public SqlProfile GetProfile(string name) => _profiles[name];
+        public DbAccessProfile GetProfile(string name) => _profiles[name];
 
     }
 }

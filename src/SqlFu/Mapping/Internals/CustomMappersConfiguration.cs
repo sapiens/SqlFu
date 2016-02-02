@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 
 namespace SqlFu.Mapping.Internals
 {
-    public class CustomMappers : IRegisterCustomMappers, IMapPocoManually
+    public class CustomMappersConfiguration : IRegisterCustomMappers, IMapPocoManually
     {
         Dictionary<Type,object>  _mappers=new Dictionary<Type, object>();
 
