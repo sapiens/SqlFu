@@ -1,5 +1,4 @@
 using System;
-using System.Data.Common;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
@@ -69,28 +68,5 @@ namespace SqlFu.Builders.Crud
             _writer.Parameters.AddValues(_converters.ConvertValueObject(value));
             return this;
         }
-    }
-
-    public interface IExecuteCustomSql
-    {
-        int Execute(CommandConfiguration cfg);
-        Task<int> ExecuteAsync(CommandConfiguration cfg,CancellationToken cancel);
-    }
-
-    public class CustomSqlExecutor:IExecuteCustomSql
-    {
-        private readonly DbConnection _db;
-       
-        public CustomSqlExecutor(DbConnection db)
-        {
-            _db = db;
-           
-        }
-
-
-        public int Execute(CommandConfiguration cfg) => _db.Execute(cfg);
-
-        public Task<int> ExecuteAsync(CommandConfiguration cfg, CancellationToken cancel)
-            => _db.ExecuteAsync(cfg, cancel);
     }
 }

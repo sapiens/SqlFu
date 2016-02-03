@@ -3,7 +3,6 @@ using System.Data.Common;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using CavemanTools;
 using SqlFu.Builders;
 using SqlFu.Builders.Crud;
 using SqlFu.Configuration.Internals;
@@ -37,15 +36,13 @@ namespace SqlFu
 
             return db.GetValueAsync<InsertedId>(builder.GetCommandConfiguration(), cancel);
         }
-        static Insertable<T> CreateInsertOptions<T>(this TableInfo info)
-        {
-            return new Insertable<T>()
+        static Insertable<T> CreateInsertOptions<T>(this TableInfo info) => 
+            new Insertable<T>()
             {
                 DbSchema = info.Table.Schema,
                 TableName = info.Table.Name,
                 IdentityColumn = info.IdentityColumn
             };
-        }
 
         public static IBuildUpdateTable<T> Update<T>(this DbConnection db,Action<IHelperOptions> cfg=null)
         {

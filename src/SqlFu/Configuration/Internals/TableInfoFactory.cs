@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using SqlFu.Builders.CreateTable;
 using SqlFu.Mapping;
 
 namespace SqlFu.Configuration.Internals
@@ -22,22 +21,23 @@ namespace SqlFu.Configuration.Internals
             info.Converter = _converter;
          }
 
-        List<Tuple<Func<Type,bool>,Func<Type,TableName>>> _naming=new List<Tuple<Func<Type, bool>, Func<Type, TableName>>>();
+        List<Tuple<Func<Type,bool>,Func<Type,TableName>>> _conventions=new List<Tuple<Func<Type, bool>, Func<Type, TableName>>>();
 
         public void AddNamingConvention(Func<Type, bool> match, Func<Type, TableName> convention)
         {
-            _naming.Add(new Tuple<Func<Type, bool>, Func<Type, TableName>>(match,convention));
+            _conventions.Add(new Tuple<Func<Type, bool>, Func<Type, TableName>>(match,convention));
         }
 
 
         TableName GetName(Type type)
         {
-            var convention = _naming.Find(d => d.Item1(type));
+            var convention = _conventions.Find(d => d.Item1(type));
             if (convention==null) return new TableName(type.Name);
             return convention.Item2(type);
         }
 
-        public TableInfo GetInfo(Type pocoType) => _cache.GetValueOrCreate(pocoType, () =>
+        public TableInfo GetInfo(Type pocoType) 
+            => _cache.GetValueOrCreate(pocoType, () =>
         {
             var table = GetName(pocoType);
            var info= new TableInfo(pocoType, _converter,table);

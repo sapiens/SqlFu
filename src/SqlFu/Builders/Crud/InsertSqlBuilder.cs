@@ -10,9 +10,9 @@ namespace SqlFu.Builders.Crud
 {
     public class InsertSqlBuilder:IGenerateSql
     {
-        protected readonly TableInfo _info;
+        private readonly TableInfo _info;
         private readonly object _data;
-        protected readonly IDbProvider _provider;
+        private readonly IDbProvider _provider;
         private readonly InsertSqlOptions _options;
 
         public InsertSqlBuilder(TableInfo info,object data,IDbProvider provider,InsertSqlOptions options)
@@ -34,7 +34,7 @@ namespace SqlFu.Builders.Crud
             return new CommandConfiguration(_info.SqlCache.InsertSql,GetValues()) {ApplyOptions = _options.CmdOptions};
         }
 
-      
+        
         private string Build()
         {
             var columns = GetInsertColumns();
@@ -42,22 +42,18 @@ namespace SqlFu.Builders.Crud
             return $"{columns} \n {values}";
         }
 
-        private object[] GetValues()
-        {
-           // var voMapper = SqlFuManager.Config.Converters;
-            return GetInsertableColumns().Select(c => _data.GetPropertyValue(c)).ToArray();
-        }
+        private object[] GetValues() => GetInsertableColumns().Select(c => _data.GetPropertyValue(c)).ToArray();
 
         private string GetInsertColumns()
         {
             var builder = new StringBuilder();
             if (_options.IdentityColumn.IsNullOrEmpty()) _options.IdentityColumn = _info.IdentityColumn;
-            builder.AppendFormat("insert into {0} (", _info.EscapeName(_provider, _options.Table));
+            builder.Append($"insert into {_info.EscapeName(_provider, _options.Table)} (");
 
             GetInsertableColumns()
                  .ForEach(n =>
                  {
-                     builder.AppendFormat("{0},", _provider.EscapeIdentifier(n));
+                     builder.Append($"{ _provider.EscapeIdentifier(n)},");
                  });
 
             builder.RemoveLastIfEquals(',').Append(")");
