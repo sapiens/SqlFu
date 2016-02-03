@@ -12,10 +12,7 @@ namespace SqlFu
     public static class StoredProcsExtensions
     {
 
-        static bool IsOutput(string name)
-        {
-            return name.StartsWith("_");
-        }
+        static bool IsOutput(string name) => name.StartsWith("_");
 
 
         public static SProcResult<T> QuerySProc<T>(this DbConnection db, Action<SProcInput> input)
@@ -28,7 +25,17 @@ namespace SqlFu
             }) as SProcResult<T>;
         }
 
-
+        /// <summary>
+        /// Executes sproc and maps the result. For just executing a sp, use 'ExecuteSProc'
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="procName"></param>
+        /// <param name="cancel"></param>
+        /// <param name="args">Arguments as an anonymous object, output parameters names must be prefixed with _ </param>
+        /// <example>
+        /// QuerySProc("sprocName",new{Id=1,_OutValue=""})
+        /// </example>
+        /// <returns></returns>
         public static Task<SProcResult<T>> QuerySProcAsync<T>(this DbConnection db, string procName,CancellationToken cancel,object args=null)
         {
             return db.QuerySProcAsync<T>(s =>
@@ -185,6 +192,17 @@ namespace SqlFu
             });
         }
 
+        /// <summary>
+        /// Executes sproc. If you want to map a result from it, use 'QuerySProc'
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="procName"></param>
+        /// <param name="cancel"></param>
+        /// <param name="args">Arguments as an anonymous object, output parameters names must be prefixed with _ </param>
+        /// <example>
+        /// ExecuteSProc("sprocName",new{Id=1,_OutValue=""})
+        /// </example>
+        /// <returns></returns>
         public static Task<SProcResult> ExecuteSProcAsync(this DbConnection db, string procName,CancellationToken cancel,object args=null)
         {
             return db.ExecuteSProcAsync(s =>
