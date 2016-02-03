@@ -22,8 +22,8 @@ namespace SqlFu.Builders.Expressions
         void WriteExpression(Expression expression);
         void Write<T>(Expression<Func<T, object>> expression);
 
-        void Append(string sql);
-        // Expression Visit(Expression node);      
+        void Append(string sql,bool withNewLine=false);
+        void AppendLine();
 
     }
 }

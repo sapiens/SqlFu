@@ -666,7 +666,14 @@ namespace SqlFu.Builders.Expressions
             WriteExpression(expression);
         }
 
-        public void Append(string sql) => _sb.Append(sql);
+        public void Append(string sql,bool newLine=false)
+        {
+            if (newLine) _sb.AppendLine(sql);
+            else _sb.Append(sql);
+        }
+
+        public void AppendLine() => _sb.AppendLine();
+
     }
 
     

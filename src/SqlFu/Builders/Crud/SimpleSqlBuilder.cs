@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 using System.Text;
 using CavemanTools.Model;
 using SqlFu.Builders.Expressions;
-using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 using SqlFu.Providers;
 
@@ -18,29 +17,24 @@ namespace SqlFu.Builders.Crud
         private readonly IExpressionWriter _writer;
         private StringBuilder _sb;
 
-        public SimpleSqlBuilder(HelperOptions options,IDbProvider provider,ITableInfoFactory infos)
+        public SimpleSqlBuilder(HelperOptions options,IDbProvider provider,TableInfo info,IExpressionWriter writer)
         {
             _options = options;
             _provider = provider;
-            _info = infos.GetInfo(typeof(T));
+            _info = info;
+
+            _writer = writer;
+            _sb = _writer.SqlBuffer;
             
-            _sb=new StringBuilder();
-            var helper=new ExpressionWriterHelper(infos,provider);
-            _writer = helper.CreateExpressionWriter(_sb);
             WriteFrom(provider, _info);
             
      
         }
 
-        private void WriteFrom(IDbProvider provider, TableInfo info)
-        {
-            _sb.Append(
-                $" from {provider.EscapeTableName(info.Table)}")
-                .AppendLine();
-        }
+        private void WriteFrom(IDbProvider provider, TableInfo info) 
+            => _writer.Append($" from {provider.EscapeTableName(info.Table)}",true);
 
-        
-    
+
         public IGenerateSql<T> SelectAll(bool distinct=false)
         {
             var sb=new StringBuilder();
@@ -61,11 +55,9 @@ namespace SqlFu.Builders.Crud
             return new BuiltSql<TResult>(_sb.ToString(), _writer.Parameters.ToArray(),_options);
         }
 
-        public IGenerateSql<TProj> Select<TProj>(Expression<Func<T, TProj>> selector, bool distinct = false)
-        {
-            return Select<TProj>(_writer.GetSelectColumnsSql(selector), distinct);
-        }
-        
+        public IGenerateSql<TProj> Select<TProj>(Expression<Func<T, TProj>> selector, bool distinct = false) 
+            => Select<TProj>(_writer.GetSelectColumnsSql(selector), distinct);
+
         public ISelect<T> Limit(int take, long offset = 0)
         {
             _sb=new StringBuilder(_provider.FormatQueryPagination(_sb.ToString(), Pagination.Create(offset,take), _writer.Parameters));
@@ -82,15 +74,15 @@ namespace SqlFu.Builders.Crud
         {
             if (!ordered)
             {
-                _sb.Append("order by ");
+                _writer.Append("order by ");
                 ordered = true;
             }
             else
             {
-                _sb.Append(",");
+                _writer.Append(",");
             }
             _writer.WriteColumn(column);
-            if (!asc) _sb.Append(" desc");
+            if (!asc) _writer.Append(" desc");
             _sb.AppendLine();
         }
 
@@ -105,57 +97,57 @@ namespace SqlFu.Builders.Crud
         public IHaving<T> GroupBy(params Expression<Func<T, object>>[] columns)
         {
             if (columns.Length == 0) return this;
-            _sb.Append("group by ");
-            columns.Select(c=>_writer.GetExpressionSql(c)).ForEach(t=>_sb.Append($"{t},"));
+            _writer.Append("group by ");
+            columns.Select(c=>_writer.GetExpressionSql(c)).ForEach(t=>_writer.Append($"{t},"));
             _sb.RemoveLast().AppendLine();
             return this;
         }
 
         IConnectWhere<T> IWhere<T>.Where(Expression<Func<T, bool>> criteria)
         {
-            _sb.Append("where ");
+            _writer.Append("where ");
             _writer.WriteCriteria(criteria);
-            _sb.AppendLine();
+            _writer.AppendLine();
             return this;
         }
 
         IConnectHaving<T> IHaving<T>.Having(Expression<Func<T, bool>> criteria)
         {
-            _sb.Append("having ");
+            _writer.Append("having ");
             _writer.WriteCriteria(criteria);
-            _sb.AppendLine();
+            _writer.AppendLine();
             return this;
         }
 
         IConnectWhere<T> IConnectWhere<T>.And(Expression<Func<T, bool>> criteria)
         {
-            _sb.Append("and ");
+            _writer.Append("and ");
             _writer.WriteCriteria(criteria);
-            _sb.AppendLine();
+            _writer.AppendLine();
             return this;
         }
 
         public IConnectHaving<T> Or(Expression<Func<T, bool>> criteria)
         {
-            _sb.Append("or ");
+            _writer.Append("or ");
             _writer.WriteCriteria(criteria);
-            _sb.AppendLine();
+            _writer.AppendLine();
             return this;
         }
 
         public IConnectHaving<T> And(Expression<Func<T, bool>> criteria)
         {
-            _sb.Append("and ");
+            _writer.Append("and ");
             _writer.WriteCriteria(criteria);
-            _sb.AppendLine();
+            _writer.AppendLine();
             return this;
         }
 
         IConnectWhere<T> IConnectWhere<T>.Or(Expression<Func<T, bool>> criteria)
         {
-            _sb.Append("or ");
+            _writer.Append("or ");
             _writer.WriteCriteria(criteria);
-            _sb.AppendLine();
+            _writer.AppendLine();
             return this;
         }
     }

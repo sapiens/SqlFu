@@ -1,6 +1,7 @@
 using System;
 using System.Data.Common;
 using CavemanTools.Model;
+using SqlFu.Mapping;
 
 
 namespace SqlFu.Providers
@@ -30,7 +31,7 @@ namespace SqlFu.Providers
         /// <returns></returns>
         protected abstract DbFunctions GetFunctions();
 
-        protected ConvertersManager Converters= SqlFuManager.Config.Converters;
+        protected IManageConverters Converters= SqlFuManager.Config.Converters;
 
         public virtual void SetupParameter(DbParameter param, string name, object value)
         {

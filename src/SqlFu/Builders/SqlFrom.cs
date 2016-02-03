@@ -1,5 +1,6 @@
 using System;
 using SqlFu.Builders.Crud;
+using SqlFu.Builders.Expressions;
 using SqlFu.Configuration;
 using SqlFu.Providers;
 
@@ -20,15 +21,19 @@ namespace SqlFu.Builders
         {
             var data = new HelperOptions();
             cfg?.Invoke(data);
-            return new SimpleSqlBuilder<T>(data,_provider,_infos);
+            return SqlBuilder<T>(data);
         }
+
+        IWhere<T> SqlBuilder<T>(HelperOptions options)=> new SimpleSqlBuilder<T>(
+                options, _provider, _infos.GetInfo(typeof(T))
+                , new ExpressionWriterHelper(_infos, _provider).CreateExpressionWriter());
 
         public IWhere<T> FromAnonymous<T>(T anon, Action<IHelperOptions> options) where T : class
         {
             var data=new HelperOptions();
             options.MustNotBeNull();
             options(data);
-            return new SimpleSqlBuilder<T>(data, _provider, _infos);
+            return SqlBuilder<T>(data);
         }
     }
 }

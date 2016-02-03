@@ -17,15 +17,15 @@ namespace SqlFu.Builders.Crud
         private readonly IExecuteCustomSql _executor;
         private readonly IExpressionWriter _writer;
         private readonly IEscapeIdentifier _utils;
-        private readonly IManageConverters _converters;
+     //   private readonly IManageConverters _converters;
         
 
-        public UpdateTableBuilder(IExecuteCustomSql executor,IExpressionWriter writer,IEscapeIdentifier utils,IManageConverters converters,HelperOptions options)
+        public UpdateTableBuilder(IExecuteCustomSql executor,IExpressionWriter writer,IEscapeIdentifier utils,/*IManageConverters converters,*/HelperOptions options)
         {
             _executor = executor;
             _writer = writer;
             _utils = utils;
-            _converters = converters;
+          //  _converters = converters;
             _options = options;
             
             _writer.Append($"update {utils.EscapeTableName(options.Table)} set ");
@@ -65,7 +65,8 @@ namespace SqlFu.Builders.Crud
         public IBuildUpdateTable<T> Set(string propertyName, object value)
         {
             _writer.Append($"{_utils.EscapeIdentifier(propertyName)}=@{_writer.Parameters.CurrentIndex},");
-            _writer.Parameters.AddValues(_converters.ConvertValueObject(value));
+            //_writer.Parameters.AddValues(_converters.ConvertValueObject(value));
+            _writer.Parameters.AddValues(value);
             return this;
         }
     }

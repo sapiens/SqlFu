@@ -49,7 +49,7 @@ namespace SqlFu
             var opt = new HelperOptions();
             cfg?.Invoke(opt);
             var executor = new CustomSqlExecutor(db);
-            return new UpdateTableBuilder<T>(executor, db.CreateExpressionWriter(), db.GetProvider(), SqlFuManager.Config.Converters, opt);
+            return new UpdateTableBuilder<T>(executor, db.CreateExpressionWriter(), db.GetProvider(),/* SqlFuManager.Config.Converters,*/ opt);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace SqlFu
             cfg(options);
             var builder = columns(u) as UpdateColumns.CreateBuilder<T>;
             var executor=new CustomSqlExecutor(db);
-            var updater=new UpdateTableBuilder<T>(executor,db.CreateExpressionWriter(),db.GetProvider(),SqlFuManager.Config.Converters,options);
+            var updater=new UpdateTableBuilder<T>(executor,db.CreateExpressionWriter(),db.GetProvider(),/*SqlFuManager.Config.Converters,*/options);
             builder.PopulateBuilder(updater);
             return updater;
         }
