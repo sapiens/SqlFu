@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -32,10 +31,7 @@ namespace SqlFu.Builders.Expressions
 
         public ParametersManager Parameters { get; } = new ParametersManager();
 
-        public ExpressionWriterHelper Helper
-        {
-            get { return _helper; }
-        }
+        public ExpressionWriterHelper Helper => _helper;
 
 
         protected override Expression VisitUnary(UnaryExpression node)
@@ -284,7 +280,8 @@ namespace SqlFu.Builders.Expressions
             {
                 firstArg=node.Arguments[0].GetValue();
             }
-            string value = null;
+            firstArg.MustNotBeNull();
+            string value = "";
             switch (node.Method.Name)
             {
                 case "StartsWith":
@@ -292,11 +289,11 @@ namespace SqlFu.Builders.Expressions
                     Parameters.AddValues(firstArg + "%");
                     break;
                 case "EndsWith":
-                    value = "{0} like @{1}".ToFormat(name, Parameters.CurrentIndex);
+                    value = $"{name} like @{Parameters.CurrentIndex}";
                     Parameters.AddValues("%" + firstArg);
                     break;
                 case "Contains":
-                    value = "{0} like @{1}".ToFormat(name, Parameters.CurrentIndex);
+                    value = $"{name} like @{Parameters.CurrentIndex}";
                     Parameters.AddValues("%"+firstArg+"%");
                     break;
                 case "ToUpper":
@@ -384,13 +381,7 @@ namespace SqlFu.Builders.Expressions
             }
         }
 
-        //private void WriteColumnName(MemberExpression node)
-        //{
-        //    var col = _info.Columns.FirstOrDefault(c => c.PropertyInfo.Name == node.Member.Name);
-        //    if (col==null) throw new InvalidOperationException("There is no column mapped to '{0}'".ToFormat(node.Member.Name));
-        //    _sb.Append(_provider.EscapeIdentifier(col.Name));
-        //}
-
+        
         /// <summary>
         /// For properties of a parameter property.
         /// Used to for properties that can be translated into db functions
@@ -490,9 +481,7 @@ namespace SqlFu.Builders.Expressions
                     case ExpressionType.MemberInit:
                           VisitProjection(col.Body as MemberInitExpression);
                           break;
-                    //case ExpressionType.Parameter:
-                    //      _sb.AppendFormat("{0}.*", Manager.GetTableAlias(col.Body.As<ParameterExpression>().Type));                        
-                    //      break;
+                   
                     default:
                           Visit(col.Body);
                           break;
@@ -509,14 +498,13 @@ namespace SqlFu.Builders.Expressions
         private void VisitProjection(MemberInitExpression columns)
         {
             var node = columns;
-                //columns.Body as NewExpression;
-            var i = 0;
+            
             foreach (var arg in node.Bindings.Cast<MemberAssignment>())
             {
                 _sb.AppendLine();
                 Visit(arg.Expression);
                 _sb.AppendFormat(" as {0},", arg.Member.Name);
-                i++;
+              
             }
             _sb.RemoveLast();
         }

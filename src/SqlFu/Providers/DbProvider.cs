@@ -5,6 +5,7 @@ using System.Linq;
 using CavemanTools.Model;
 using SqlFu.Builders;
 using SqlFu.Configuration;
+using SqlFu.Mapping.Internals;
 
 namespace SqlFu.Providers
 {
@@ -31,11 +32,14 @@ namespace SqlFu.Providers
         /// <returns></returns>
         protected abstract DbFunctions GetFunctions();
 
+        protected ConvertersManager Converters= SqlFuManager.Config.Converters;
+
         public virtual void SetupParameter(DbParameter param, string name, object value)
         {
-            name = name ?? "";
+            name.MustNotBeEmpty();
+            //name = name ?? "";
             param.ParameterName = ParamPrefix+name;
-            value = SqlFuManager.Config.Converters.ConvertValueObject(value);
+            value = Converters.ConvertValueObject(value);
             param.Value = value ?? DBNull.Value;
         }
 
