@@ -3,7 +3,9 @@ using System.Data.Common;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using CavemanTools;
 using SqlFu.Builders;
+using SqlFu.Builders.Crud;
 using SqlFu.Configuration.Internals;
 
 namespace SqlFu
@@ -49,7 +51,8 @@ namespace SqlFu
         {
             var opt = new HelperOptions();
             cfg?.Invoke(opt);
-            return new UpdateBuilder<T>(db,opt);
+            var executor = new CustomSqlExecutor(db);
+            return new UpdateTableBuilder<T>(executor, db.CreateExpressionWriter(), db.GetProvider(), SqlFuManager.Config.Converters, opt);
         }
 
         /// <summary>
@@ -66,7 +69,8 @@ namespace SqlFu
             var u = new UpdateColumns();
             cfg(options);
             var builder = columns(u) as UpdateColumns.CreateBuilder<T>;
-            var updater=new UpdateBuilder<T>(db,options);
+            var executor=new CustomSqlExecutor(db);
+            var updater=new UpdateTableBuilder<T>(executor,db.CreateExpressionWriter(),db.GetProvider(),SqlFuManager.Config.Converters,options);
             builder.PopulateBuilder(updater);
             return updater;
         }
@@ -74,14 +78,14 @@ namespace SqlFu
 
         public static int DeleteFrom<T>(this DbConnection db,Expression<Func<T, bool>> criteria=null)
         {
-            var builder=new DeleteBuilder(db.GetTableName<T>(),db.CreateWriterHelper().CreateExpressionWriter());
+            var builder=new DeleteTableBuilder(db.GetTableName<T>(),db.CreateWriterHelper().CreateExpressionWriter());
             if (criteria!=null) builder.WriteCriteria(criteria);
             return db.Execute(builder.GetCommandConfiguration());
         }
 
         public static Task<int> DeleteFromAsync<T>(this DbConnection db,CancellationToken token,Expression<Func<T, bool>> criteria=null)
         {
-            var builder=new DeleteBuilder(db.GetTableName<T>(), db.CreateWriterHelper().CreateExpressionWriter());
+            var builder=new DeleteTableBuilder(db.GetTableName<T>(), db.CreateWriterHelper().CreateExpressionWriter());
             if (criteria!=null) builder.WriteCriteria(criteria);
             return db.ExecuteAsync(builder.GetCommandConfiguration(),token);
         }

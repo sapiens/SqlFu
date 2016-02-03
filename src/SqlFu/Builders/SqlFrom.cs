@@ -1,4 +1,5 @@
 using System;
+using SqlFu.Builders.Crud;
 using SqlFu.Configuration;
 using SqlFu.Providers;
 

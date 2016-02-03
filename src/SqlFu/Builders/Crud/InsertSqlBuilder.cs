@@ -6,7 +6,7 @@ using System.Text;
 using SqlFu.Configuration.Internals;
 using SqlFu.Providers;
 
-namespace SqlFu.Builders
+namespace SqlFu.Builders.Crud
 {
     public class InsertSqlBuilder:IGenerateSql
     {
@@ -64,10 +64,8 @@ namespace SqlFu.Builders
             return builder.ToString();
         }
 
-        private IEnumerable<string> GetInsertableColumns()
-        {
-            return _info.Columns.Select(d => d.Name).Where(c => c != _options.IdentityColumn && !_options.IgnoreColumns.Contains(c));
-        }
+        private IEnumerable<string> GetInsertableColumns() 
+            => _info.Columns.Select(d => d.Name).Where(c => c != _options.IdentityColumn && !_options.IgnoreColumns.Contains(c));
 
         private string GetValuesPlaceholders()
         {

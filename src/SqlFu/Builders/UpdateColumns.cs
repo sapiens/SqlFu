@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
+using SqlFu.Builders.Crud;
 using SqlFu.Configuration;
 
 namespace SqlFu.Builders
@@ -26,7 +27,7 @@ namespace SqlFu.Builders
                return this;
            }
 
-           public void PopulateBuilder(UpdateBuilder<T> builder)
+           public void PopulateBuilder(UpdateTableBuilder<T> builder)
            {
                _data.ToDictionary().Where(kv=>!_ignore.Contains(kv.Key))
                     .ForEach(kv=>builder.Set(kv.Key,kv.Value));

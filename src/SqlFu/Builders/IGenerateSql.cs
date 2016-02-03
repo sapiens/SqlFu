@@ -4,4 +4,9 @@ namespace SqlFu.Builders
     {
        CommandConfiguration GetCommandConfiguration();   
     }
+
+    public interface IGenerateSql<T> : IGenerateSql
+    {
+        IGenerateSql<TProjection> MapTo<TProjection>();
+    }
 }

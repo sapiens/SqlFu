@@ -1,11 +1,12 @@
 using System;
 using System.Linq.Expressions;
+using System.Text;
 
 namespace SqlFu.Builders.Expressions
 {
     public interface IExpressionWriter
     {
-        // StringBuilder SqlBuffer { get; }
+        StringBuilder SqlBuffer { get; }
         ParametersManager Parameters { get; }
         IExpressionWriterHelper Helper { get; }
         void Write<T>(Expression<Func<T, bool>> criteria);

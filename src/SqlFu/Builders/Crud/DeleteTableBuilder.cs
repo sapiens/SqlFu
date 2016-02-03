@@ -1,14 +1,14 @@
 using System.Linq.Expressions;
 using SqlFu.Builders.Expressions;
 
-namespace SqlFu.Builders
+namespace SqlFu.Builders.Crud
 {
-    public class DeleteBuilder :IGenerateSql
+    public class DeleteTableBuilder :IGenerateSql
     {
         private readonly IExpressionWriter _writer;
       
 
-        public DeleteBuilder(string tableName,IExpressionWriter writer)
+        public DeleteTableBuilder(string tableName,IExpressionWriter writer)
         {
             _writer = writer;
             _writer.Append($"delete from {tableName} ");

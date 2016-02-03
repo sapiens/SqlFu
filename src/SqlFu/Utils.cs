@@ -22,6 +22,9 @@ namespace SqlFu
         /// <returns></returns>
         public static IExpressionWriterHelper CreateWriterHelper(this DbConnection db) => new ExpressionWriterHelper(db.SqlFuConfig().TableInfoFactory,db.GetProvider());
 
+        public static IExpressionWriter CreateExpressionWriter(this DbConnection db)
+            => db.CreateWriterHelper().CreateExpressionWriter();
+
         /// <summary>
         /// Every type named '[something][suffix]' will use the table name 'something'
         /// </summary>

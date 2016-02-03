@@ -8,7 +8,7 @@ using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 using SqlFu.Providers;
 
-namespace SqlFu.Builders
+namespace SqlFu.Builders.Crud
 {
     public class SimpleSqlBuilder<T>:IWhere<T>,IConnectWhere<T>,IConnectHaving<T>
     {
