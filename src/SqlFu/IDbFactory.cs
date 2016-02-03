@@ -9,6 +9,6 @@ namespace SqlFu
     {
         IDbProvider Provider { get; }
         DbConnection Create(DbConnection db=null);
-        Task<DbConnection> CreateAsync(CancellationToken cancel);
+        Task<DbConnection> CreateAsync(CancellationToken cancel, DbConnection db = null);
     }
 }

@@ -28,13 +28,7 @@ namespace SqlFu
             _connectionString = profile.ConnectionString;
         }
 
-        //public DbFactory(IDbProvider provider,string connectionString)
-        //{
-        //    _provider = provider;
-        //    _connectionString = connectionString;
-        //}
-
-        public IDbProvider Provider => _provider;
+       public IDbProvider Provider => _provider;
         
         public DbConnection Create(DbConnection db=null)
         {
@@ -42,9 +36,10 @@ namespace SqlFu
             return SqlFuManager.OpenConnection(_provider, _connectionString);           
         }
 
-        public Task<DbConnection> CreateAsync(CancellationToken cancel)
+        public Task<DbConnection> CreateAsync(CancellationToken cancel, DbConnection db = null)
         {
-           return SqlFuManager.OpenConnectionAsync(_provider, _connectionString,cancel);
+            if (db != null) return Task.FromResult((DbConnection)new SqlFuConnection(db, _provider));
+            return SqlFuManager.OpenConnectionAsync(_provider, _connectionString,cancel);
         }
     }
 
