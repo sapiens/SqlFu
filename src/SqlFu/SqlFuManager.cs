@@ -120,7 +120,12 @@ namespace SqlFu
         }
 
 
-
+        /// <summary>
+        /// Returns the table information that will be used for the poco
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <returns></returns>
         public static TableInfo GetPocoInfo<T>(this DbConnection db)
         {
             return Config.TableInfoFactory.GetInfo(typeof (T));

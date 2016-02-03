@@ -37,7 +37,6 @@ namespace SqlFu.Configuration.Internals
 
         public string IdentityColumn { get; set; }
         
-        //public TableName TableName { get; set; }=new TableName();
         public TableSqlCache SqlCache { get; private set; }=new TableSqlCache();
 
         public PagedBuilderResult PagedSql { get; set; }

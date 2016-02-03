@@ -36,15 +36,16 @@ namespace SqlFu
         {
             return cnx.GetProvider().DatabaseTools.TableExists(cnx,new TableName(name,schema));
         }
+
         //todo view exists, sproc exists
         public static bool TableExists<T>(this DbConnection cnx)
         {
-           var info = SqlFuManager.Config.TableInfoFactory.GetInfo(typeof(T));
+            var info = cnx.GetPocoInfo<T>();
             return cnx.GetProvider().DatabaseTools.TableExists(cnx,info.Table);
         }
 
         /// <summary>
-        /// Creates sql and executes table creation
+        /// Generates and execute the table creation sql using the specified poco as the table representation
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="db"></param>
