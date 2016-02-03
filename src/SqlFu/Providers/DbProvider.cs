@@ -1,16 +1,14 @@
 using System;
-
 using System.Data.Common;
-using System.Linq;
 using CavemanTools.Model;
-using SqlFu.Builders;
-using SqlFu.Configuration;
-using SqlFu.Mapping.Internals;
+
 
 namespace SqlFu.Providers
 {
+    using SqlFu.Builders;
+    using SqlFu.Configuration;
+    using SqlFu.Mapping.Internals;
 
- 
     public abstract class DbProvider : IDbProvider
     {
         private Func<DbConnection> _factory;
@@ -37,7 +35,6 @@ namespace SqlFu.Providers
         public virtual void SetupParameter(DbParameter param, string name, object value)
         {
             name.MustNotBeEmpty();
-            //name = name ?? "";
             param.ParameterName = ParamPrefix+name;
             value = Converters.ConvertValueObject(value);
             param.Value = value ?? DBNull.Value;
@@ -98,7 +95,12 @@ namespace SqlFu.Providers
         public abstract string FormatQueryPagination(string sql, Pagination page, ParametersManager pm);
 
         protected abstract IDatabaseTools InitTools();
-        public abstract IDbProviderExpressions GetExpressionsHelper();
+
+        private IDbProviderExpressions _expr;
+
+        public IDbProviderExpressions GetExpressionsHelper()
+            => _expr ?? (_expr = InitExpressionHelper());
+        protected abstract IDbProviderExpressions InitExpressionHelper();
 
         public static string Escape(string s,string startId,string endId)
         {

@@ -15,7 +15,12 @@ namespace SqlFu
 {
     public static class Utils
     {
-        internal static ExpressionWriterHelper CreateWriterHelper(this DbConnection db) => new ExpressionWriterHelper(db.SqlFuConfig().TableInfoFactory,db.GetProvider());
+        /// <summary>
+        /// Used in helpers to generate sql
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public static IExpressionWriterHelper CreateWriterHelper(this DbConnection db) => new ExpressionWriterHelper(db.SqlFuConfig().TableInfoFactory,db.GetProvider());
 
         /// <summary>
         /// Every type named '[something][suffix]' will use the table name 'something'
@@ -36,15 +41,9 @@ namespace SqlFu
         public static DbFunctions GetDbFunctions(this DbConnection db) => db.GetProvider().Functions;
         public static T GetDbFunctions<T>(this DbConnection db) where T:DbFunctions => db.GetProvider().Functions as T;
 
-        public static SqlFuConfig SqlFuConfig(this DbConnection db)
-        {
-            return SqlFuManager.Config;
-        }
+        public static SqlFuConfig SqlFuConfig(this DbConnection db) => SqlFuManager.Config;
 
-        public static TableInfo GetTableInfo(this Type type)
-        {
-            return SqlFuManager.Config.TableInfoFactory.GetInfo(type);
-        }
+        public static TableInfo GetTableInfo(this Type type) => SqlFuManager.Config.TableInfoFactory.GetInfo(type);
 
         public static string GetColumnName(this TableInfo info, MemberExpression member, IEscapeIdentifier provider)
         {
@@ -82,13 +81,8 @@ namespace SqlFu
             FormatCommand(cmd.CommandText,
             (cmd.Parameters.Cast<DbParameter>().ToDictionary(p => p.ParameterName, p => p.Value)));
 
-        public static bool IsListParam(this object data)
-        {
-            if (data == null) return false;
-           
-            return data is IEnumerable && !(data is string) && !(data is byte[]);
-         
-        }
+        public static bool IsListParam(this object data) => 
+            data is IEnumerable && !(data is string) && !(data is byte[]);
 
         public static string FormatCommand(string sql, IDictionary<string, object> args)
         {
@@ -98,11 +92,11 @@ namespace SqlFu
             sb.Append(sql);
             if (args != null && args.Count > 0)
             {
-                sb.Append("\n");
+                sb.AppendLine();
                 foreach (var kv in args)
                 {
-                    sb.AppendFormat("\t -> {0} [{1}] = \"", kv.Key,kv.Value?.GetType().Name ?? "null");
-                    sb.Append(kv.Value).Append("\"\n");
+                    sb.Append($"\t -> {kv.Key} [{kv.Value?.GetType().Name ?? "null"}] = \"");
+                    sb.Append(kv.Value).AppendLine();
                 }
 
                 sb.Remove(sb.Length - 1, 1);

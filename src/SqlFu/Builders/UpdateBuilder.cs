@@ -14,7 +14,7 @@ namespace SqlFu.Builders
         private readonly DbConnection _db;
         private readonly HelperOptions _options;
         private StringBuilder _sb;
-        private ExpressionWriter _writer;
+        private IExpressionWriter _writer;
         private IDbProvider _provider;
 
         public UpdateBuilder(DbConnection db,HelperOptions options)
@@ -34,7 +34,8 @@ namespace SqlFu.Builders
             return this;
         }
 
-        CommandConfiguration GetCommandConfig() => new CommandConfiguration("update "+_db.GetPocoInfo<T>().EscapeName(_provider,_options.Table)+" set " +_sb.RemoveLastIfEquals(','),_writer.Parameters.ToArray()) {ApplyOptions = _options.CmdOptions};
+        CommandConfiguration GetCommandConfig() 
+            => new CommandConfiguration("update "+_db.GetPocoInfo<T>().EscapeName(_provider,_options.Table)+" set " +_sb.RemoveLastIfEquals(','),_writer.Parameters.ToArray()) {ApplyOptions = _options.CmdOptions};
 
         public int Execute() => _db.Execute(GetCommandConfig());
 

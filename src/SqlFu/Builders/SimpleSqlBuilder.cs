@@ -15,7 +15,7 @@ namespace SqlFu.Builders
         private readonly HelperOptions _options;
         private readonly IDbProvider _provider;
         private readonly TableInfo _info;
-        private readonly ExpressionWriter _writer;
+        private readonly IExpressionWriter _writer;
         private StringBuilder _sb;
 
         public SimpleSqlBuilder(HelperOptions options,IDbProvider provider,ITableInfoFactory infos)

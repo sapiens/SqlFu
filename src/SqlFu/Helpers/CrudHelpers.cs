@@ -74,14 +74,14 @@ namespace SqlFu
 
         public static int DeleteFrom<T>(this DbConnection db,Expression<Func<T, bool>> criteria=null)
         {
-            var builder=new DeleteBuilder<T>(db);
+            var builder=new DeleteBuilder(db.GetTableName<T>(),db.CreateWriterHelper().CreateExpressionWriter());
             if (criteria!=null) builder.WriteCriteria(criteria);
             return db.Execute(builder.GetCommandConfiguration());
         }
 
         public static Task<int> DeleteFromAsync<T>(this DbConnection db,CancellationToken token,Expression<Func<T, bool>> criteria=null)
         {
-            var builder=new DeleteBuilder<T>(db);
+            var builder=new DeleteBuilder(db.GetTableName<T>(), db.CreateWriterHelper().CreateExpressionWriter());
             if (criteria!=null) builder.WriteCriteria(criteria);
             return db.ExecuteAsync(builder.GetCommandConfiguration(),token);
         }

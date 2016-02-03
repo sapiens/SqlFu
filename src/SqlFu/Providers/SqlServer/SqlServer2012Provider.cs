@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Reflection;
 using CavemanTools.Logging;
 using CavemanTools.Model;
 using SqlFu.Builders;
@@ -13,27 +14,19 @@ namespace SqlFu.Providers.SqlServer
     /// </summary>
     public class SqlServer2012Provider:DbProvider
     {
-        static Lazy<SqlServer2012Provider> _instance=new Lazy<SqlServer2012Provider>(()=>new SqlServer2012Provider());
-
-        public static SqlServer2012Provider Instance => _instance.Value;
-        
-
+       
         public const string Id = "SqlServer2012";
-        private const string ProviderName = "System.Data.SqlClient";
-
+      
         public readonly SqlServerDbType DbTypes=new SqlServerDbType();
       
 //        public readonly MsSqlFunctions Functions=new MsSqlFunctions();
 
-        public SqlServer2012Provider():base(Id,ProviderName)
+        public SqlServer2012Provider(Func<DbConnection> factory):base(factory,Id)
         {
             
         }
 
-        public override string ParamPrefix
-        {
-            get { return "@"; }
-        }
+        public override string ParamPrefix => "@";
 
         public override string FormatIndexOptions(string idxDef, string options = "")
         {
@@ -60,12 +53,7 @@ namespace SqlFu.Providers.SqlServer
             return DbTypes.GetValueOrDefault(type);
         }
 
-        public override string GetIdentityKeyword()
-        {
-          
-              return "identity(1,1)";
-           
-        }
+        public override string GetIdentityKeyword() => "identity(1,1)";
 
         public override bool IsDbBusy(DbException ex)
         {
@@ -94,12 +82,7 @@ namespace SqlFu.Providers.SqlServer
             throw new NotImplementedException();
         }
 
-        public string GetSqlForDropTableIfExists(string name, string schema = null)
-        {
-            var table = this.EscapeTableName(name, schema);
-          return $"IF OBJECT_ID('{table}', 'U') IS NOT NULL DROP TABLE {table}";
-        }
-
+       
         public override string AddReturnInsertValue(string values, string identityColumn)
         {
             if (identityColumn.IsNullOrEmpty()) return values;
@@ -108,6 +91,8 @@ namespace SqlFu.Providers.SqlServer
 
         protected override DbFunctions GetFunctions() => new SqlServerFunctions();
         
+
+
 
         public override void SetupParameter(DbParameter param, string name, object value)
         {
@@ -126,14 +111,15 @@ namespace SqlFu.Providers.SqlServer
 
             if (tp == typeof (DateTime))
             {
-                if (value.Cast<DateTime>().Year < 1753)
+                var dt = (DateTime) value;
+                if (dt.Year < 1753)
                 {
                     param.DbType=DbType.DateTime2;
                 }
                 return;
             }
 
-            if (tp.IsValueType) return;
+            if (tp.IsValueType()) return;
 
             if (tp.Name == "SqlGeography") //SqlGeography is a CLR Type
             {
@@ -150,10 +136,7 @@ namespace SqlFu.Providers.SqlServer
         }
 
       
-        public override IDbProviderExpressions GetExpressionsHelper()
-        {
-            return new SqlServer2012Expressions();
-        }
+      
 
         public override string FormatQueryPagination(string sql, Pagination page, ParametersManager pm)
         {
@@ -162,13 +145,8 @@ namespace SqlFu.Providers.SqlServer
             return string.Format("{2} OFFSET @{0} ROWS FETCH NEXT @{1} ROWS ONLY",pm.CurrentIndex-2,pm.CurrentIndex-1 ,sql);
         }
 
-        protected override IDatabaseTools InitTools()
-        {
-            return new SqlServerDbTools();
-        }
-
-     
-
-      
+        protected override IDatabaseTools InitTools() => new SqlServerDbTools(this);
+        protected override IDbProviderExpressions InitExpressionHelper()
+        =>new SqlServer2012Expressions();
     }
 }

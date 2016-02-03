@@ -10,7 +10,7 @@ using SqlFu.Providers;
 
 namespace SqlFu.Builders.Expressions
 {
-    public class ExpressionWriter : ExpressionVisitor
+    public class ExpressionWriter : ExpressionVisitor, IExpressionWriter
     {
         private StringBuilder _sb;
         private readonly IDbProviderExpressions _provider;
@@ -29,9 +29,10 @@ namespace SqlFu.Builders.Expressions
             _helper = helper;
         }
 
+        public StringBuilder SqlBuffer => _sb;
         public ParametersManager Parameters { get; } = new ParametersManager();
 
-        public ExpressionWriterHelper Helper => _helper;
+        public IExpressionWriterHelper Helper => _helper;
 
 
         protected override Expression VisitUnary(UnaryExpression node)
@@ -77,6 +78,8 @@ namespace SqlFu.Builders.Expressions
             return Expression.Equal(left, Expression.Constant(value));
         }
 
+        public override string ToString() => _sb.ToString();
+        
 
         protected override Expression VisitBinary(BinaryExpression node)
         {
@@ -662,6 +665,8 @@ namespace SqlFu.Builders.Expressions
         {
             WriteExpression(expression);
         }
+
+        public void Append(string sql) => _sb.Append(sql);
     }
 
     

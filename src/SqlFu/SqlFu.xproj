@@ -17,7 +17,6 @@
   </PropertyGroup>
   <ItemGroup>
     <DnxInvisibleFolder Include="Migrations\" />
-    <DnxInvisibleFolder Include="Providers\SqlServer\" />
   </ItemGroup>
   <ItemGroup>
     <DnxInvisibleContent Include="packages.config" />

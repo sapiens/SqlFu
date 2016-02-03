@@ -3,12 +3,11 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using SqlFu.Configuration;
-using SqlFu.Configuration.Internals;
 using SqlFu.Providers;
 
 namespace SqlFu.Builders.Expressions
 {
-    public class ExpressionWriterHelper
+    public class ExpressionWriterHelper : IExpressionWriterHelper
     {
         private readonly ITableInfoFactory _factory;
         private readonly IDbProvider _escape;
@@ -51,9 +50,7 @@ namespace SqlFu.Builders.Expressions
             return info.GetColumnName(member, _escape);
         }
 
-        public ExpressionWriter CreateExpressionWriter(StringBuilder sb)
-        {
-            return new ExpressionWriter(_escape.GetExpressionsHelper(), this, sb);
-        }
+        public IExpressionWriter CreateExpressionWriter(StringBuilder sb=null) 
+            => new ExpressionWriter(_escape.GetExpressionsHelper(), this,sb);
     }
 }

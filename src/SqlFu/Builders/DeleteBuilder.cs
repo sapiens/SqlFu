@@ -1,33 +1,25 @@
-using System.Data.Common;
 using System.Linq.Expressions;
-using System.Text;
 using SqlFu.Builders.Expressions;
 
 namespace SqlFu.Builders
 {
-    public class DeleteBuilder<T>:IGenerateSql
+    public class DeleteBuilder :IGenerateSql
     {
-        private readonly ExpressionWriter _writer;
-        private StringBuilder _sb;
+        private readonly IExpressionWriter _writer;
+      
 
-        public DeleteBuilder(DbConnection db)
+        public DeleteBuilder(string tableName,IExpressionWriter writer)
         {
-            _sb=new StringBuilder();
-            _writer = db.CreateWriterHelper().CreateExpressionWriter(_sb);
-
-            var name = db.GetPocoInfo<T>().EscapeName(db.GetProvider());
-            _sb.Append($"delete from {name} ");
+            _writer = writer;
+            _writer.Append($"delete from {tableName} ");
         }
 
         public void WriteCriteria(LambdaExpression expr)
         {
-            _sb.Append("where ");
+            _writer.Append("where ");
             _writer.WriteCriteria(expr);
         }
 
-        public CommandConfiguration GetCommandConfiguration()
-        {
-            return new CommandConfiguration(_sb.ToString(),_writer.Parameters.ToArray());
-        }
+        public CommandConfiguration GetCommandConfiguration() => new CommandConfiguration(_writer.ToString(),_writer.Parameters.ToArray());
     }
 }
