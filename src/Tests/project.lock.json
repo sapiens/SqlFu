@@ -7741,6 +7741,7 @@
       "fx/System.Data >= 4.0.0"
     ],
     "DNXCore,Version=v5.0": [
+      "System.Data.Common >= 4.0.1-*",
       "Microsoft.CSharp >= 4.0.1-beta-23516",
       "System.Collections >= 4.0.11-beta-23516",
       "System.Linq >= 4.0.1-beta-23516",

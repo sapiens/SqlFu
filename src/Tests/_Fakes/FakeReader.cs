@@ -1,20 +1,18 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Data;
+using System.Data.Common;
 using System.Linq;
 
 namespace Tests._Fakes
 {
-    public class FakeReader:IDataReader
+    public class FakeReader:DbDataReader
     {
-        public void Dispose()
-        {
-            
-        }
+       
         Dictionary<string,object> _values=new Dictionary<string, object>();
             Dictionary<int,string> _names=new Dictionary<int, string>();
 
-        private void Add(string key, object value)
+        public void Add(string key, object value)
         {
             _values[key] = value;
             if (_names.Any(d=>d.Value==key)) return;
@@ -32,156 +30,146 @@ namespace Tests._Fakes
 
         private int idx = 0;
 
-        public string GetName(int i)
+        public override string GetName(int i)
         {
             return _names[i];
         }
 
-        public string GetDataTypeName(int i)
+        public override string GetDataTypeName(int i)
         {
             throw new NotImplementedException();
         }
 
-        public Type GetFieldType(int i)
+        public override IEnumerator GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Type GetFieldType(int i)
         {
             return GetValue(i).GetType();
         }
 
-        public object GetValue(int i)
+        public override object GetValue(int i)
         {
            return this[GetName(i)];
         }
 
-        public int GetValues(object[] values)
+        public override int GetValues(object[] values)
         {
             Array.Copy(_values.Values.ToArray(),values,_values.Count);
             return _values.Count;
         }
 
-        public int GetOrdinal(string name)
+        public override int GetOrdinal(string name)
         {
             throw new NotImplementedException();
         }
 
-        public bool GetBoolean(int i)
+        public override bool GetBoolean(int i)
         {
             throw new NotImplementedException();
         }
 
-        public byte GetByte(int i)
+        public override byte GetByte(int i)
         {
             throw new NotImplementedException();
         }
 
-        public long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
+        public override long GetBytes(int i, long fieldOffset, byte[] buffer, int bufferoffset, int length)
         {
             throw new NotImplementedException();
         }
 
-        public char GetChar(int i)
+        public override char GetChar(int i)
         {
             throw new NotImplementedException();
         }
 
-        public long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
+        public override long GetChars(int i, long fieldoffset, char[] buffer, int bufferoffset, int length)
         {
             throw new NotImplementedException();
         }
 
-        public Guid GetGuid(int i)
+        public override Guid GetGuid(int i)
         {
             throw new NotImplementedException();
         }
 
-        public short GetInt16(int i)
+        public override short GetInt16(int i)
         {
             throw new NotImplementedException();
         }
 
-        public int GetInt32(int i)
+        public override int GetInt32(int i)
         {
             throw new NotImplementedException();
         }
 
-        public long GetInt64(int i)
+        public override long GetInt64(int i)
         {
             throw new NotImplementedException();
         }
 
-        public float GetFloat(int i)
+        public override float GetFloat(int i)
         {
             throw new NotImplementedException();
         }
 
-        public double GetDouble(int i)
+        public override double GetDouble(int i)
         {
             throw new NotImplementedException();
         }
 
-        public string GetString(int i)
+        public override string GetString(int i)
         {
             throw new NotImplementedException();
         }
 
-        public decimal GetDecimal(int i)
+        public override decimal GetDecimal(int i)
         {
             throw new NotImplementedException();
         }
 
-        public DateTime GetDateTime(int i)
+        public override DateTime GetDateTime(int i)
         {
             throw new NotImplementedException();
         }
 
-        public IDataReader GetData(int i)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsDBNull(int i)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int FieldCount { get { return _values.Count; } }
         
 
-        public object this[int i]
+        public override bool IsDBNull(int i)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int FieldCount { get { return _values.Count; } }
+        public override bool HasRows { get; }
+
+
+        public override object this[int i]
         {
             get { throw new NotImplementedException(); }
         }
 
-        public object this[string name]
+        public override object this[string name]
         {
-            get { return _values[name]; }
-            set
-            {
-                Add(name,value);
-            }
+            get { return _values[name]; }            
         }
 
-        public void Close()
+
+        public override bool NextResult()
         {
             throw new NotImplementedException();
         }
 
-        public DataTable GetSchemaTable()
+        public override bool Read()
         {
             throw new NotImplementedException();
         }
 
-        public bool NextResult()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Read()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int Depth { get; private set; }
-        public bool IsClosed { get; private set; }
-        public int RecordsAffected { get; private set; }
+        public override int Depth { get; }
+        public override bool IsClosed { get;  }
+        public override int RecordsAffected { get;  }
     }
 }

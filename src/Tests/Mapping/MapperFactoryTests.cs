@@ -27,7 +27,7 @@ namespace Tests.Mapping
             _sut.Map<object>(Setup.FakeReader(), "1");
             _sut.Map<dynamic>(Setup.FakeReader(), "1");
             _sut.Mappers.Count.Should().Be(1);
-        }      
+        }
 
     }
 }
