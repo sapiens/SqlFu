@@ -22,7 +22,7 @@ namespace SqlFu.Builders
             return new SimpleSqlBuilder<T>(data,_provider,_infos);
         }
 
-        public IWhere<T> From<T>(T anon, Action<IHelperOptions> options) where T : class
+        public IWhere<T> FromAnonymous<T>(T anon, Action<IHelperOptions> options) where T : class
         {
             var data=new HelperOptions();
             options.MustNotBeNull();
