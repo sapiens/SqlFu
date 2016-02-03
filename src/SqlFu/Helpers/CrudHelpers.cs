@@ -49,6 +49,7 @@ namespace SqlFu
             var opt = new HelperOptions();
             cfg?.Invoke(opt);
             var executor = new CustomSqlExecutor(db);
+            opt.EnsureTableName(db.GetPocoInfo<T>());
             return new UpdateTableBuilder<T>(executor, db.CreateExpressionWriter(), db.GetProvider(),/* SqlFuManager.Config.Converters,*/ opt);
         }
 
@@ -65,6 +66,7 @@ namespace SqlFu
             var options=new HelperOptions(); 
             var u = new UpdateColumns();
             cfg(options);
+            options.EnsureTableName(db.GetPocoInfo<T>());
             var builder = columns(u) as UpdateColumns.CreateBuilder<T>;
             var executor=new CustomSqlExecutor(db);
             var updater=new UpdateTableBuilder<T>(executor,db.CreateExpressionWriter(),db.GetProvider(),/*SqlFuManager.Config.Converters,*/options);

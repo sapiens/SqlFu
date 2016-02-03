@@ -5,6 +5,7 @@ using FluentAssertions;
 using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 using SqlFu.Mapping;
+using Tests.Data;
 using Tests._Fakes;
 using Xunit;
 

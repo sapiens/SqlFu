@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Tests._Fakes
+namespace Tests.Data
 {
     public class SomeData
     {

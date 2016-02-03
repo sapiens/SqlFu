@@ -3,8 +3,12 @@ using System.Linq;
 using CavemanTools.Logging;
 using CavemanTools.Model.ValueObjects;
 using CavemanTools.Testing;
+using FakeItEasy;
+using SqlFu.Builders.Expressions;
 using SqlFu.Configuration.Internals;
 using SqlFu.Mapping.Internals;
+using SqlFu.Providers;
+using Tests.Data;
 using Tests._Fakes;
 
 namespace Tests
@@ -29,6 +33,12 @@ namespace Tests
             
 
         }
+
+        public static IExpressionWriter FakeWriter() =>  A.Fake<IExpressionWriter>();
+      
+
+
+
         public static ConvertersManager Converters()
         {
             var r= new ConvertersManager();
@@ -72,6 +82,8 @@ namespace Tests
             r.Register(d=> new Address(d["Address"] as string));
             return r;
         }
+
+        public static TableInfo GetTableInfo<T>()=>new TableInfo(typeof(T),Converters());
 
 
         public static MapperFactory MapperFactory()

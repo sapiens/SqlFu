@@ -4,6 +4,7 @@ using CavemanTools.Testing;
 using FluentAssertions;
 using SqlFu.Mapping;
 using SqlFu.Mapping.Internals;
+using Tests.Data;
 using Tests._Fakes;
 using Xunit;
 using Xunit.Abstractions;

@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using SqlFu.Builders.Expressions;
-using SqlFu.Mapping;
 using SqlFu.Providers;
 
 namespace SqlFu.Builders.Crud

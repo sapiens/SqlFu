@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using SqlFu.Builders;
-using SqlFu.Builders.CreateTable;
 using SqlFu.Mapping;
 using SqlFu.Providers;
 

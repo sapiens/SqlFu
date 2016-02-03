@@ -1,4 +1,5 @@
 using System;
+using Tests.Data;
 using Tests._Fakes;
 
 namespace Tests.Providers

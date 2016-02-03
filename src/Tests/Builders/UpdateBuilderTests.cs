@@ -1,48 +1,47 @@
 ﻿using System;
-using System.Data.Common;
+using System.Linq.Expressions;
+using System.Text;
+using FakeItEasy;
 using FluentAssertions;
-using SqlFu;
-using SqlFu.Builders;
-using SqlFu.Builders.CreateTable;
+using SqlFu.Builders.Crud;
 using Tests._Fakes;
 using Xunit;
 using Xunit.Abstractions;
+using SqlFu;
+using SqlFu.Builders.Expressions;
+using SqlFu.Configuration.Internals;
+using Tests.Data;
 
 namespace Tests.Builders
 {
-    //public class UpdateBuilderTests:IDisposable
-    //{
-    //    private DbConnection _db;
+    public class UpdateBuilderTests
+    {
+        private IExpressionWriter _writer;
+        private HelperOptions _options;
+        private UpdateTableBuilder<Post> _sut;
+        private FakeSqlExecutor _executor;
+        private StringBuilder _sb;
 
-    //    public UpdateBuilderTests(ITestOutputHelper x)
-    //    {
-    //        x.Logger();
-    //     //   _db = Setup.GetConnection();
-    //        _db.CreateTableFrom<SomeData>(tc =>
-    //        {
-    //            tc.IfTableExists(IfTableExists.DropIt);
-    //            tc.ColumnSize(d => d.Name, 50);
-    //        });
-    //    }
 
-    //    [Fact]
-    //    public void set_fields()
-    //    {
-    //        _db.Insert(new SomeData() {Id=2,Name="34"});
+        public UpdateBuilderTests(ITestOutputHelper x)
+        {
+            _writer = Setup.FakeWriter();
+            _sb=new StringBuilder();
+            A.CallTo(() => _writer.SqlBuffer).Returns(_sb);
+            _executor=new FakeSqlExecutor();
+            _options=new HelperOptions();
+            _options.EnsureTableName(Setup.GetTableInfo<Post>());
+            _sut =new UpdateTableBuilder<Post>(_executor,_writer,FakeEscapeIdentifier.Instance,_options);
+        }
 
-    //        _db.Update<SomeData>().Set(d => d.Counter, d => d.Counter + 1).Set(d=>d.Name,"ch")
-    //            .Set(d=>d.Time,DateTime.UtcNow)
-    //            .Execute();
+        
+        [Fact]
+        public void set_fields()
+        {
+            A.CallTo(() => _writer.WriteColumn(A<LambdaExpression>._)).Invokes(o => _sb.Append("SomeId"));
+           _sut.Set(d => d.SomeId, 34).Where(d => d.Id == Guid.Empty).Execute();
+            _executor.Result.SqlText.Should().Be("update SomePost set  where ");
+        }
 
-    //        _db.QueryValue(t => t.From<SomeData>().Where(d => d.Id == 2).Select(d => d.Counter)).Should().Be(1);
-    //        var rez = _db.GetRow<SomeData>(t => t.Id == 2);
-    //        rez.Name.Should().Be("ch");
-
-    //    }
-
-    //    public void Dispose()
-    //    {
-    //       _db.Dispose();            
-    //    }
-    //}
+    }
 }

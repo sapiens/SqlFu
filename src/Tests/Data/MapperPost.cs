@@ -1,4 +1,4 @@
-﻿namespace Tests._Fakes
+﻿namespace Tests.Data
 {
     public class MapperPost:Post
     {

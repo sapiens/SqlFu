@@ -3,7 +3,7 @@ using CavemanTools.Model;
 using CavemanTools.Model.ValueObjects;
 using SqlFu;
 
-namespace Tests._Fakes
+namespace Tests.Data
 {
     [Table("SomePost",IdentityColumn = "SomeId")]
     public class Post
