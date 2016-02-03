@@ -34,8 +34,8 @@ namespace Tests.Builders
                 .Set(d=>d.Time,DateTime.UtcNow)
                 .Execute();
 
-            _db.GetQueryValue(t => t.From<SomeData>().Where(d => d.Id == 2).Select(d => d.Counter)).Should().Be(1);
-            var rez = _db.GetSingle<SomeData>(t => t.Id == 2);
+            _db.QueryValue(t => t.From<SomeData>().Where(d => d.Id == 2).Select(d => d.Counter)).Should().Be(1);
+            var rez = _db.GetRow<SomeData>(t => t.Id == 2);
             rez.Name.Should().Be("ch");
 
         }

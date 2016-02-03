@@ -11,7 +11,8 @@ namespace SqlFu
 {
     public static class DbConnectionExtensions
     {
-        public static int Execute(this DbConnection cnx, CommandConfiguration cfg)
+        #region Internal
+        internal static int Execute(this DbConnection cnx, CommandConfiguration cfg)
         {
             using (var cmd = cnx.CreateAndSetupCommand(cfg))
             {
@@ -19,7 +20,7 @@ namespace SqlFu
             }
         }
 
-        public static async Task<int> ExecuteAsync(this DbConnection cnx, CommandConfiguration cfg, CancellationToken token)
+        internal static async Task<int> ExecuteAsync(this DbConnection cnx, CommandConfiguration cfg, CancellationToken token)
         {
             using (var cmd = cnx.CreateAndSetupCommand(cfg))
             {
@@ -27,6 +28,45 @@ namespace SqlFu
             }
         }
 
+        
+        internal static T GetValue<T>(this DbConnection db, CommandConfiguration cfg)
+        {
+            using (var cmd = db.CreateAndSetupCommand(cfg))
+            {
+                return cmd.GetValue<T>();
+            }
+            
+        }
+
+        internal static async Task<T> GetValueAsync<T>(this DbConnection db, CommandConfiguration cfg, CancellationToken token)
+        {
+            using (var cmd = db.CreateAndSetupCommand(cfg))
+            {
+                return await cmd.GetValueAsync<T>(token).ConfigureAwait(false);
+            }
+        }
+
+        internal static void QueryAndProcess<T>(this DbConnection cnx, CommandConfiguration cfg, Func<T, bool> processor, T anonModel = default(T),
+          bool firstRowOnly = false)
+        {
+            using (var cmd = cnx.CreateAndSetupCommand(cfg))
+            {
+                cmd.QueryAndProcess(processor, firstRowOnly: firstRowOnly);
+            }
+        }
+
+        internal static async Task QueryAndProcessAsync<T>(this DbConnection db, CommandConfiguration cfg, Func<T, bool> processor, CancellationToken token, T anonModel = default(T),
+          bool firstRowOnly = false)
+        {
+
+            using (var cmd = db.CreateAndSetupCommand(cfg))
+            {
+                await cmd.QueryAndProcessAsync(token, processor, firstRowOnly: firstRowOnly).ConfigureAwait(false);
+            }
+        }
+        #endregion
+        
+        #region Execute
         public static int Execute(this DbConnection cnx, Action<IConfigureCommand> cfg)
         {
             var cmd = new CommandConfiguration();
@@ -47,15 +87,9 @@ namespace SqlFu
             cfg(cmd);
             return cnx.ExecuteAsync(cmd,token);
         }
+        #endregion
 
-        public static T GetValue<T>(this DbConnection db, CommandConfiguration cfg)
-        {
-            using (var cmd = db.CreateAndSetupCommand(cfg))
-            {
-                return cmd.GetValue<T>();
-            }
-            
-        }
+        #region  GetValue
 
         public static T GetValue<T>(this DbConnection db, Action<IConfigureCommand> cfg)
         {
@@ -70,13 +104,7 @@ namespace SqlFu
         public static Task<T> GetValueAsync<T>(this DbConnection cnx,CancellationToken token ,string sql, params object[] args)
           => cnx.GetValueAsync<T>(c => c.Sql(sql, args),token);
 
-        public static async Task<T> GetValueAsync<T>(this DbConnection db, CommandConfiguration cfg, CancellationToken token)
-        {
-            using (var cmd = db.CreateAndSetupCommand(cfg))
-            {
-                return await cmd.GetValueAsync<T>(token).ConfigureAwait(false);
-            }
-        }
+       
 
         public static Task<T> GetValueAsync<T>(this DbConnection db, Action<IConfigureCommand> cfg, CancellationToken token)
         {
@@ -85,35 +113,35 @@ namespace SqlFu
             return GetValueAsync<T>(db,cmd, token);
         }
 
-
-        internal static async Task QueryAndProcessAsync<T>(this DbConnection db, CommandConfiguration cfg, Func<T, bool> processor, CancellationToken token,T anonModel = default(T),
-            bool firstRowOnly = false) 
+        /// <summary>
+        /// Returns a single value from the query.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static T QueryValue<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> builder)
         {
-        
-            using (var cmd = db.CreateAndSetupCommand(cfg))
-            {
-                await cmd.QueryAndProcessAsync(token,processor,firstRowOnly:firstRowOnly).ConfigureAwait(false);
-            }
+            return db.GetValue<T>(builder(db.GetSqlBuilder()).GetCommandConfiguration());
         }
 
-        ///// <summary>
-        ///// Gets a single row then maps it to a poco
-        ///// </summary>
-        //public static T QuerySingle<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> builder) where T : class
-        //{
-        //    var cc = builder(db.GetSqlBuilder());
-        //    return db.GetSingle<T>(c=>c.Import(cc.GetCommandConfiguration()));
-        //}
+        /// <summary>
+        ///  Returns a single value from the query.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="builder"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public static Task<T> QueryValueAsync<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> builder, CancellationToken token)
+        {
+            return db.GetValueAsync<T>(builder(db.GetSqlBuilder()).GetCommandConfiguration(), token);
+        }
 
-        ///// <summary>
-        ///// Gets a single row then maps it to a poco
-        ///// </summary>
-        //public static Task<T> QuerySingleAsync<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> builder,CancellationToken token) where T : class
-        //{
-        //    var cc = builder(db.GetSqlBuilder());
-        //    return db.GetSingleAsync<T>(c=>c.Import(cc.GetCommandConfiguration()),token);
-        //}
 
+        #endregion
+
+        #region Get row
         /// <summary>
         /// Gets a single row then maps it to a poco
         /// </summary>
@@ -122,7 +150,7 @@ namespace SqlFu
         /// <param name="cfg"></param>
         /// <param name="anonModel">Anonymous type</param>
         /// <returns></returns>
-        public static T FetchSingle<T>(this DbConnection db, Action<IConfigureCommand> cfg, T anonModel = null) where T : class
+        public static T GetRow<T>(this DbConnection db, Action<IConfigureCommand> cfg, T anonModel = null) where T : class
         {
             T rez = null;
              db.QueryAndProcess(cfg, d =>
@@ -142,7 +170,7 @@ namespace SqlFu
         /// <param name="cfg"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static async Task<T> FetchSingleAsync<T>(this DbConnection db, Action<IConfigureCommand> cfg, CancellationToken token, T anonModel = null) where T : class
+        public static async Task<T> GetRowAsync<T>(this DbConnection db, Action<IConfigureCommand> cfg, CancellationToken token, T anonModel = null) where T : class
         {
             T rez = null;
             await db.QueryAndProcessAsync(cfg, d =>
@@ -154,7 +182,84 @@ namespace SqlFu
         }
 
 
+        /// <summary>
+        /// Gets a single row then maps it to a poco
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="builder"></param>    
+        /// <returns></returns>
+        public static T QueryRow<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> builder)
+        {
+            builder.MustNotBeNull();
+            var built = builder(db.GetSqlBuilder());
+            T rez = default(T);
+            db.QueryAndProcess<T>(built.GetCommandConfiguration(), d =>
+            {
+                rez = d;
+                return false;
+            }, firstRowOnly: true);
+            return rez;
+        }
+        /// <summary>
+        /// Gets a single row then maps it to a poco
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="builder"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public static async Task<T> QueryRowAsync<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> builder, CancellationToken token)
+        {
+            builder.MustNotBeNull();
+            var built = builder(db.GetSqlBuilder());
+            T rez = default(T);
+            await db.QueryAndProcessAsync<T>(built.GetCommandConfiguration(), d =>
+            {
+                rez = d;
+                return false;
+            }, token, firstRowOnly: true).ConfigureAwait(false);
+            return rez;
+        }
 
+
+        public static T GetSingleRow<T>(this DbConnection db, Expression<Func<T, bool>> criteria = null, Expression<Func<T, object>> orderBy = null)
+        {
+
+            return db.QueryRow(d =>
+
+                d.From<T>().Where(criteria ?? (f => true))
+                    .OrderBy(orderBy ?? (f => 1))
+                    .Limit(1)
+                    .SelectAll()
+                );
+        }
+
+        public static Task<T> GetSingleRowAsync<T>(this DbConnection db, CancellationToken cancel, Expression<Func<T, bool>> criteria = null, Expression<Func<T, object>> orderBy = null)
+        {
+            return db.QueryRowAsync(d =>
+
+                d.From<T>().Where(criteria ?? (f => 1 == 1))
+                    .OrderBy(orderBy ?? (f => 1))
+                    .Limit(1)
+                    .SelectAll()
+                , cancel);
+
+        }
+
+
+        #endregion
+
+        #region Fetch
+
+        /// <summary>
+        /// Runs a query and returns the results as a List
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="cnx"></param>
+        /// <param name="cfg"></param>
+        /// <param name="anonModel"></param>
+        /// <returns></returns>
         public static List<T> Fetch<T>(this DbConnection cnx, Action<IConfigureCommand> cfg, T anonModel = default(T))
         {
             var list=new List<T>();
@@ -163,6 +268,15 @@ namespace SqlFu
             },anonModel);
             return list;
         }
+
+        /// <summary>
+        /// Runs a query and returns the results as a List
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="cnx"></param>
+        /// <param name="cfg"></param>
+        /// <param name="anonModel"></param>
+        /// <returns></returns>
         public static async Task<List<T>> FetchAsync<T>(this DbConnection cnx, Action<IConfigureCommand> cfg,CancellationToken token ,T anonModel = default(T))
         {
             var list=new List<T>();
@@ -172,8 +286,76 @@ namespace SqlFu
             return list;
         }
 
+
         /// <summary>
-        /// 
+        /// Synonym for Fetch.For now, it exists for compatibility reasons
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="sql"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>     
+        public static List<T> Query<T>(this DbConnection db, string sql, params object[] args) => db.Fetch<T>(c => c.Sql(sql, args));
+        /// <summary>
+        /// Synonym for FetchAsync.For now, it exists for compatibility reasons
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="token"></param>
+        /// <param name="sql"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static Task<List<T>> QueryAsync<T>(this DbConnection db, CancellationToken token, string sql, params object[] args) => db.FetchAsync<T>(c => c.Sql(sql, args), token);
+
+
+
+        /// <summary>
+        /// It's Fetch with a strongly typed builder
+        /// </summary>
+        /// <typeparam name="TProj"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static List<TProj> Query<TProj>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<TProj>> builder)
+        {
+            builder.MustNotBeNull();
+            var built = builder(db.GetSqlBuilder());
+            var list = new List<TProj>();
+            db.QueryAndProcess<TProj>(built.GetCommandConfiguration(), d =>
+            {
+                list.Add(d);
+                return true;
+            });
+            return list;
+        }
+
+        /// <summary>
+        /// It's Fetch with a strongly typed builder
+        /// </summary>
+        /// <typeparam name="TProj"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="builder"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public static async Task<List<TProj>> QueryAsync<TProj>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<TProj>> builder, CancellationToken token)
+        {
+            builder.MustNotBeNull();
+            var built = builder(db.GetSqlBuilder());
+            var list = new List<TProj>();
+            await db.QueryAndProcessAsync<TProj>(built.GetCommandConfiguration(), d =>
+            {
+                list.Add(d);
+                return true;
+            }, token).ConfigureAwait(false);
+            return list;
+        }
+
+        #endregion
+
+        #region QueryAndProcess
+        /// <summary>
+        /// Processes each row (as a strongly typed poco) as it is read.
+        /// Used to process a big stream of results.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="cnx"></param>
@@ -188,9 +370,18 @@ namespace SqlFu
         {
             var cmdConfig = new CommandConfiguration();
             cfg(cmdConfig);
-            cnx.QueryAndProcess(cmdConfig,processor,anonModel,firstRowOnly);
+            cnx.QueryAndProcess(cmdConfig,processor,anonModel,firstRowOnly); 
         }
 
+        /// <summary>
+        /// Processes each row (as a strongly typed poco) as it is read.
+        /// Used to process a big stream of results.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="cnx"></param>
+        /// <param name="sqlBuilder"></param>
+        /// <param name="processor">True/False to continue processing</param>
+        /// <param name="firstRowOnly"></param>
         public static void QueryAndProcess<T>(this DbConnection cnx, Func<IBuildQueryFrom, IGenerateSql<T>> sqlBuilder,
             Func<T, bool> processor, bool firstRowOnly = false)
         {
@@ -198,7 +389,8 @@ namespace SqlFu
         }
 
         /// <summary>
-        /// 
+        /// Processes each row (as a strongly typed poco) as it is read.
+        /// Used to process a big stream of results. 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="cnx"></param>
@@ -218,7 +410,8 @@ namespace SqlFu
         }
 
         /// <summary>
-        /// 
+        /// Processes each row (as a strongly typed poco) as it is read.
+        /// Used to process a big stream of results. 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="cnx"></param>
@@ -235,26 +428,9 @@ namespace SqlFu
         }
 
 
-        internal static void QueryAndProcess<T>(this DbConnection cnx, CommandConfiguration cfg,Func<T, bool> processor, T anonModel =default(T),
-           bool firstRowOnly=false)
-        {
-           using (var cmd = cnx.CreateAndSetupCommand(cfg))
-            {
-                cmd.QueryAndProcess(processor,firstRowOnly:firstRowOnly);
-            }
-        }
+        #endregion
 
-
-        /// <summary>
-        /// Returns the escaped table name for that poco
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="cnx"></param>
-        /// <returns></returns>
-        public static string GetTableName<T>(this DbConnection cnx)
-        {
-            return SqlFuManager.Config.TableInfoFactory.GetInfo(typeof(T)).EscapeName(cnx.GetProvider());
-        }
+        #region Paged queries
 
         public static PagedResult<T> FetchPaged<T>(this DbConnection db,Action<IConfigureCommand> cfg,Pagination page,T anonModel=null) where T:class
         {
@@ -317,141 +493,33 @@ namespace SqlFu
             result.Items = await db.FetchAsync<T>(c => c.Sql(data.PagedSql, data.Args).WithCommandOptions(cmd.ApplyOptions),token).ConfigureAwait(false);
             return result;
         }
-
-        #region Strongly typed queries
+        #endregion
 
         /// <summary>
         /// Used to build a query string using expressions
         /// </summary>
         /// <param name="db"></param>
         /// <returns></returns>
-        public static IBuildQueryFrom GetSqlBuilder(this DbConnection db)=> new SqlFrom(db.GetProvider(),db.SqlFuConfig().TableInfoFactory);
-        
-
-        public static T GetQueryValue<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> builder)
-        {
-            return db.GetValue<T>(builder(db.GetSqlBuilder()).GetCommandConfiguration());
-        }
-
-        public static Task<T> GetQueryValueAsync<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> builder,CancellationToken token)
-        {
-            return db.GetValueAsync<T>(builder(db.GetSqlBuilder()).GetCommandConfiguration(),token);
-        }
-
-        public static T GetSingle<T>(this DbConnection db, Expression<Func<T, bool>> criteria=null,Expression<Func<T, object>> orderBy=null)
-        {
-            return db.GetSingle(d =>
-
-                d.From<T>().Where(criteria ?? (f => 1 == 1))
-                    .OrderBy(orderBy ?? (f => 1))
-                    .Limit(1)
-                    .AllColumns()
-                );
-        }
-
-        public static Task<T> GetSingleAsync<T>(this DbConnection db, CancellationToken cancel,Expression<Func<T, bool>> criteria=null,Expression<Func<T, object>> orderBy=null)
-        {
-            return db.GetSingleAsync(d =>
-
-                d.From<T>().Where(criteria ?? (f => 1 == 1))
-                    .OrderBy(orderBy ?? (f => 1))
-                    .Limit(1)
-                    .AllColumns()
-                ,cancel);
-
-        }
+        public static IBuildQueryFrom GetSqlBuilder(this DbConnection db) => new SqlFrom(db.GetProvider(), db.SqlFuConfig().TableInfoFactory);
 
         /// <summary>
-        /// Gets a single row then maps it to a poco
+        /// Returns the ready to be used inside a query table name for that poco
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="db"></param>
-        /// <param name="builder"></param>    
+        /// <param name="cnx"></param>
         /// <returns></returns>
-        public static T GetSingle<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> builder)
-        {
-            builder.MustNotBeNull();
-            var built = builder(db.GetSqlBuilder());
-            T rez = default(T);
-            db.QueryAndProcess<T>(built.GetCommandConfiguration(), d =>
-            {
-                rez = d;
-                return false;
-            },firstRowOnly:true);
-            return rez;
-        }
-        /// <summary>
-        /// Gets a single row then maps it to a poco
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="db"></param>
-        /// <param name="builder"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        public static async Task<T> GetSingleAsync<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> builder,CancellationToken token)
-        {
-            builder.MustNotBeNull();
-            var built = builder(db.GetSqlBuilder());
-            T rez = default(T);
-            await db.QueryAndProcessAsync<T>(built.GetCommandConfiguration(), d =>
-            {
-                rez = d;
-                return false;
-            },token,firstRowOnly:true).ConfigureAwait(false);
-            return rez;
-        }
-
-        public static List<T> Query<T>(this DbConnection db, string sql, params object[] args) => db.Fetch<T>(c => c.Sql(sql, args));
-
-        public static Task<List<T>> QueryAsync<T>(this DbConnection db,CancellationToken token ,string sql, params object[] args) => db.FetchAsync<T>(c => c.Sql(sql, args),token);
+        public static string GetTableName<T>(this DbConnection cnx) => SqlFuManager.Config.TableInfoFactory.GetInfo(typeof(T)).EscapeName(cnx.GetProvider());
 
 
         /// <summary>
-        /// It's Query with the sql built with a strongly typed builder
+        /// To be used by custom helpers
         /// </summary>
-        /// <typeparam name="TProj"></typeparam>
-        /// <param name="db"></param>
-        /// <param name="builder"></param>
+        /// <param name="cnx"></param>
+        /// <param name="sql"></param>
+        /// <param name="args"></param>
         /// <returns></returns>
-        public static List<TProj> Query<TProj>(this DbConnection db,Func<IBuildQueryFrom, IGenerateSql<TProj>> builder)
-        {
-            builder.MustNotBeNull();
-            var built = builder(db.GetSqlBuilder());
-            var list=new List<TProj>();
-            db.QueryAndProcess<TProj>(built.GetCommandConfiguration(), d =>
-            {
-                list.Add(d);
-                return true;
-            });
-            return list;
-        }
-        
-        /// <summary>
-        /// It's Query with the sql built with a strongly typed builder
-        /// </summary>
-        /// <typeparam name="TProj"></typeparam>
-        /// <param name="db"></param>
-        /// <param name="builder"></param>
-        /// <returns></returns>
-        public static async Task<List<TProj>> QueryAsync<TProj>(this DbConnection db,Func<IBuildQueryFrom, IGenerateSql<TProj>> builder,CancellationToken token)
-        {
-            builder.MustNotBeNull();
-            var built = builder(db.GetSqlBuilder());
-            var list=new List<TProj>();
-            await db.QueryAndProcessAsync<TProj>(built.GetCommandConfiguration(), d =>
-            {
-                list.Add(d);
-                return true;
-            },token).ConfigureAwait(false);
-            return list;
-        }       
-
-        #endregion
-
-        public static DbCommand CreateAndSetupCommand(this DbConnection cnx, string sql, params object[] args)
-        {
-            return DbCommandExtensions.CreateAndSetupCommand(cnx, new CommandConfiguration(sql, args));
-        }
+        public static DbCommand CreateAndSetupCommand(this DbConnection cnx, string sql, params object[] args) => 
+            cnx.CreateAndSetupCommand(new CommandConfiguration(sql, args));
     }
     
    

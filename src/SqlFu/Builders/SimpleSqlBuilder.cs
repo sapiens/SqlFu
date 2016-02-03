@@ -41,7 +41,7 @@ namespace SqlFu.Builders
 
         
         //todo change to SelectAll
-        public IGenerateSql<T> AllColumns(bool distinct=false)
+        public IGenerateSql<T> SelectAll(bool distinct=false)
         {
             var sb=new StringBuilder();
             _info.Columns.Select(c=>c.Name)
