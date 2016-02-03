@@ -179,16 +179,16 @@
           "ref/dotnet5.1/System.Console.dll": {}
         }
       },
-      "System.Data.Common/4.0.1-beta-23516": {
+      "System.Data.Common/4.0.1-rc2-23728": {
         "type": "package",
         "dependencies": {
-          "System.Collections": "4.0.10",
+          "System.Collections": "4.0.0",
           "System.Collections.NonGeneric": "4.0.0",
-          "System.Globalization": "4.0.10",
+          "System.Globalization": "4.0.0",
           "System.IO": "4.0.0",
           "System.Resources.ResourceManager": "4.0.0",
-          "System.Runtime": "4.0.20",
-          "System.Runtime.Extensions": "4.0.10",
+          "System.Runtime": "4.0.0",
+          "System.Runtime.Extensions": "4.0.0",
           "System.Text.RegularExpressions": "4.0.0",
           "System.Threading.Tasks": "4.0.0"
         },
@@ -196,7 +196,7 @@
           "ref/dotnet5.1/System.Data.Common.dll": {}
         },
         "runtime": {
-          "lib/dotnet5.4/System.Data.Common.dll": {}
+          "lib/dotnet5.1/System.Data.Common.dll": {}
         }
       },
       "System.Diagnostics.Debug/4.0.10": {
@@ -867,16 +867,16 @@
           "ref/dotnet5.1/System.Console.dll": {}
         }
       },
-      "System.Data.Common/4.0.1-beta-23516": {
+      "System.Data.Common/4.0.1-rc2-23728": {
         "type": "package",
         "dependencies": {
-          "System.Collections": "4.0.10",
+          "System.Collections": "4.0.0",
           "System.Collections.NonGeneric": "4.0.0",
-          "System.Globalization": "4.0.10",
+          "System.Globalization": "4.0.0",
           "System.IO": "4.0.0",
           "System.Resources.ResourceManager": "4.0.0",
-          "System.Runtime": "4.0.20",
-          "System.Runtime.Extensions": "4.0.10",
+          "System.Runtime": "4.0.0",
+          "System.Runtime.Extensions": "4.0.0",
           "System.Text.RegularExpressions": "4.0.0",
           "System.Threading.Tasks": "4.0.0"
         },
@@ -884,7 +884,7 @@
           "ref/dotnet5.1/System.Data.Common.dll": {}
         },
         "runtime": {
-          "lib/dotnet5.4/System.Data.Common.dll": {}
+          "lib/dotnet5.1/System.Data.Common.dll": {}
         }
       },
       "System.Diagnostics.Debug/4.0.10": {
@@ -1483,16 +1483,16 @@
           "ref/dotnet5.1/System.Console.dll": {}
         }
       },
-      "System.Data.Common/4.0.1-beta-23516": {
+      "System.Data.Common/4.0.1-rc2-23728": {
         "type": "package",
         "dependencies": {
-          "System.Collections": "4.0.10",
+          "System.Collections": "4.0.0",
           "System.Collections.NonGeneric": "4.0.0",
-          "System.Globalization": "4.0.10",
+          "System.Globalization": "4.0.0",
           "System.IO": "4.0.0",
           "System.Resources.ResourceManager": "4.0.0",
-          "System.Runtime": "4.0.20",
-          "System.Runtime.Extensions": "4.0.10",
+          "System.Runtime": "4.0.0",
+          "System.Runtime.Extensions": "4.0.0",
           "System.Text.RegularExpressions": "4.0.0",
           "System.Threading.Tasks": "4.0.0"
         },
@@ -1500,7 +1500,7 @@
           "ref/dotnet5.1/System.Data.Common.dll": {}
         },
         "runtime": {
-          "lib/dotnet5.4/System.Data.Common.dll": {}
+          "lib/dotnet5.1/System.Data.Common.dll": {}
         }
       },
       "System.Diagnostics.Debug/4.0.10": {
@@ -2330,15 +2330,16 @@
         "System.Console.nuspec"
       ]
     },
-    "System.Data.Common/4.0.1-beta-23516": {
+    "System.Data.Common/4.0.1-rc2-23728": {
       "type": "package",
       "serviceable": true,
-      "sha512": "fMYiiL3/cXaozWH08y/kB25BZf6eBf5EWxBZnjDECNBRkaJgsa4/0S6543NK11UpsWYYHBUFsX4roSq8GddkpA==",
+      "sha512": "8XbiUEwL2JTQbn3OF3Y6g7xiM9Ve/9ykbVh0UDCECiKAeNGtgJbyGZ6d76D+SYPqsqutXapkaar3me127FOVxQ==",
       "files": [
-        "lib/dotnet5.4/System.Data.Common.dll",
+        "lib/dotnet5.1/System.Data.Common.dll",
         "lib/MonoAndroid10/_._",
         "lib/MonoTouch10/_._",
-        "lib/net46/System.Data.Common.dll",
+        "lib/net45/System.Data.Common.dll",
+        "lib/portable-net45+win8+wp8+wpa81/System.Data.Common.dll",
         "lib/xamarinios10/_._",
         "lib/xamarinmac20/_._",
         "ref/dotnet5.1/de/System.Data.Common.xml",
@@ -2354,11 +2355,22 @@
         "ref/dotnet5.1/zh-hant/System.Data.Common.xml",
         "ref/MonoAndroid10/_._",
         "ref/MonoTouch10/_._",
-        "ref/net46/System.Data.Common.dll",
+        "ref/net45/System.Data.Common.dll",
+        "ref/portable-net45+win8+wp8+wpa81/de/System.Data.Common.xml",
+        "ref/portable-net45+win8+wp8+wpa81/es/System.Data.Common.xml",
+        "ref/portable-net45+win8+wp8+wpa81/fr/System.Data.Common.xml",
+        "ref/portable-net45+win8+wp8+wpa81/it/System.Data.Common.xml",
+        "ref/portable-net45+win8+wp8+wpa81/ja/System.Data.Common.xml",
+        "ref/portable-net45+win8+wp8+wpa81/ko/System.Data.Common.xml",
+        "ref/portable-net45+win8+wp8+wpa81/ru/System.Data.Common.xml",
+        "ref/portable-net45+win8+wp8+wpa81/System.Data.Common.dll",
+        "ref/portable-net45+win8+wp8+wpa81/System.Data.Common.xml",
+        "ref/portable-net45+win8+wp8+wpa81/zh-hans/System.Data.Common.xml",
+        "ref/portable-net45+win8+wp8+wpa81/zh-hant/System.Data.Common.xml",
         "ref/xamarinios10/_._",
         "ref/xamarinmac20/_._",
-        "System.Data.Common.4.0.1-beta-23516.nupkg",
-        "System.Data.Common.4.0.1-beta-23516.nupkg.sha512",
+        "System.Data.Common.4.0.1-rc2-23728.nupkg",
+        "System.Data.Common.4.0.1-rc2-23728.nupkg.sha512",
         "System.Data.Common.nuspec"
       ]
     },

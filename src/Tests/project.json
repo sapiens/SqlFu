@@ -9,7 +9,8 @@
         "SqlFu": "3.0.0-beta-*",
         "xunit": "2.2.0-beta1-build3239",
         "FluentAssertions": "4.2.1",
-        "xunit.runner.dnx": "2.1.0-rc1-build204"
+        "xunit.runner.dnx": "2.1.0-rc1-build204"        
+    
     },
     "commands": {
         "test": "xunit.runner.dnx"
@@ -19,22 +20,12 @@
   "frameworks": {
     "dnx46": {
         "dependencies": {
-            "FakeItEasy": "1.25.3"
+        "FakeItEasy": "1.25.3"
         },
         "frameworkAssemblies": {
             "System.Data": "4.0.0.0"
         }
-    },
-    "dnxcore50": {
-        "dependencies": {
-            "System.Data.Common": "4.0.1-*",
-            "Microsoft.CSharp": "4.0.1-beta-23516",
-            "System.Collections": "4.0.11-beta-23516",
-            "System.Linq": "4.0.1-beta-23516",
-            "System.Runtime": "4.0.21-beta-23516",
-            "System.Threading": "4.0.11-beta-23516"
-
-        }
     }
+  
   }
 }

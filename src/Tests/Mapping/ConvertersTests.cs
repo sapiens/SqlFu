@@ -12,8 +12,7 @@ namespace Tests.Mapping
 
         public ConvertersTests()
         {
-           LogManager.OutputToConsole();
-            _sut = new ConvertersManager();
+           _sut = new ConvertersManager();
 
         }
 

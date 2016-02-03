@@ -1,6 +1,7 @@
 ﻿using System;
 using CavemanTools.Model;
 using CavemanTools.Model.ValueObjects;
+using SqlFu;
 
 namespace Tests._Fakes
 {
