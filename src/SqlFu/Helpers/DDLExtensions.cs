@@ -11,19 +11,12 @@ namespace SqlFu
     {
         public static void DropTable<T>(this DbConnection cnx)
         {
-          var info = SqlFuManager.Config.TableInfoFactory.GetInfo(typeof(T));
-            cnx.DropTable(info.Table.Name, info.Table.Schema);
-          
+          var info = cnx.GetPocoInfo<T>();
+           cnx.DropTable(info.Table.Name, info.Table.Schema);          
         }
 
-        public static void DropTable(this DbConnection cnx, string name, string schema = "")
-        {
-            var provider = cnx.GetProvider();
-            using (var cmd = cnx.CreateAndSetupCommand(provider.GetSqlForDropTableIfExists(name,schema)))
-            {
-                cmd.Execute();
-            }
-        }
+        public static void DropTable(this DbConnection cnx, string name, string schema = "") 
+            => cnx.GetProvider().DatabaseTools.DropTableIfExists(cnx,new TableName(name,schema));
 
         public static void Truncate<T>(this DbConnection db)
         {
@@ -32,12 +25,9 @@ namespace SqlFu
             db.Execute($"truncate {name}");
         }
 
-        public static bool TableExists(this DbConnection cnx, string name, string schema = null)
-        {
-            return cnx.GetProvider().DatabaseTools.TableExists(cnx,new TableName(name,schema));
-        }
+        public static bool TableExists(this DbConnection cnx, string name, string schema = null) 
+            => cnx.GetProvider().DatabaseTools.TableExists(cnx,new TableName(name,schema));
 
-        //todo view exists, sproc exists
         public static bool TableExists<T>(this DbConnection cnx)
         {
             var info = cnx.GetPocoInfo<T>();

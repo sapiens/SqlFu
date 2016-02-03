@@ -52,9 +52,13 @@ namespace SqlFu.Providers
 
         public abstract string ParamPrefix { get; }
 
-        public string FormatSql(string sql, string[] paramNames)
+        public string FormatParameters(string sql, string[] paramNames)
         {
-            paramNames.ForEach(p => { sql = sql.Replace("@" + p, ParamPrefix + p); });
+            for (int i = 0; i < paramNames.Length; i++)
+            {
+                var p = paramNames[i];
+                sql = sql.Replace("@" + p, ParamPrefix + p);
+            }
             return sql;
         }
 
@@ -74,42 +78,25 @@ namespace SqlFu.Providers
         public abstract string GetColumnType(Type type);
 
       
-        //public virtual bool DbTypeHasPrecision(Type type)
-        //{
-        //    return type == typeof (Single) || type == typeof (Double);
-        //}
-
-        //public virtual bool DbTypeHasSize(Type type)
-        //{
-        //    return type == typeof (string) || type == typeof (byte[]);
-        //}
-
-        //public abstract string GetTypeMaxSize(Type type);
-
         private IDatabaseTools _tools;
-        public IDatabaseTools DatabaseTools => _tools ?? (_tools = GetTools());
+        public IDatabaseTools DatabaseTools => _tools ?? (_tools = InitTools());
 
-        public virtual string FormatIndexOptions(string idxDef, string options = "")
-        {
-            return idxDef;
-        }
+        public virtual string FormatIndexOptions(string idxDef, string options = "") => idxDef;
 
         public abstract string GetIdentityKeyword();
         public abstract bool IsDbBusy(DbException ex);
         public abstract bool IsUniqueViolation(DbException ex, string keyName = "");
+        public abstract bool ObjectExists(DbException ex, string name = null);
 
-        public abstract string GetSqlForDropTableIfExists(string name, string schema = null);
 
         public abstract string AddReturnInsertValue(string values, string identityColumn);
 
-
-        public abstract IDbProviderExpressions GetExpressionsHelper();
         public abstract string FormatQueryPagination(string sql, Pagination page, ParametersManager pm);
 
-        protected abstract IDatabaseTools GetTools();
-        
+        protected abstract IDatabaseTools InitTools();
+        public abstract IDbProviderExpressions GetExpressionsHelper();
 
-        internal static string Escape(string s,string startId,string endId)
+        public static string Escape(string s,string startId,string endId)
         {
             s.MustNotBeEmpty();
 

@@ -1,7 +1,7 @@
 ﻿namespace SqlFu.Providers
 {
     /// <summary>
-    /// Singleton
+    /// Singleton, acts as an interface
     /// </summary>
     public class DbFunctions
     {

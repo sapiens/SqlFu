@@ -31,10 +31,7 @@ namespace SqlFu.Mapping.Internals
         Dictionary<Type,object> _converters=new Dictionary<Type, object>();
         Dictionary<Type,Func<object,object>> _voMap=new Dictionary<Type, Func<object, object>>();
 
-        public bool HasConverter(Type type)
-        {
-            return _converters.ContainsKey(type);
-        }
+        public bool HasConverter(Type type) => _converters.ContainsKey(type);
 
         public object ConvertValueObject(object value)
         {
@@ -49,25 +46,26 @@ namespace SqlFu.Mapping.Internals
             var c = _converters.GetValueOrDefault(typeof (T));
             if (c == null)
             {
-              //  this.LogDebug("There is no converter from object to <{0}> registered. Returning a default converter.",typeof(T));
-               
-                return o =>
-                {
-                    if (o == DBNull.Value)
-                    {
-                        return default(T);
-                    }
-                    if (o is T) return (T) o;
-                   
-                    return o.ConvertTo<T>();
-                };
+                return DefaultConverter<T>();
 
             }
             return (Func<object, T>)c;
         }
 
+        private static Func<object,T> DefaultConverter<T>() => o =>
+        {
+            if (o == DBNull.Value)
+            {
+                if (typeof(T).IsNullable()) return default(T);
+                throw new InvalidCastException($"{typeof(T)} is not nullable");
+            }
+            if (o is T) return (T) o;
+                   
+            return o.ConvertTo<T>();
+        };
+
         /// <summary>
-        /// Add converters for string, Guid(?), int(?) and byte[]
+        /// Adds converters for string, Guid(?), int(?) and byte[]
         /// </summary>
         public void AddCommonConverters()
         {
@@ -77,37 +75,13 @@ namespace SqlFu.Mapping.Internals
                 return o.ToString();
             });
             RegisterConverter(o=> new InsertedId(o));
-            RegisterConverter(o=> Guid.Parse(o.ToString()));            
-            RegisterConverter(o=> (o==null || o==DBNull.Value)?(Guid?)null:Guid.Parse(o.ToString()));            
+            RegisterConverter(o=> Guid.Parse(o.ToString()));
+            //todo test deafult converters            
+            //RegisterConverter(o=> (o==null || o==DBNull.Value)?(Guid?)null:Guid.Parse(o.ToString()));            
             RegisterConverter(o=> (o==null || o==DBNull.Value)?(int?)null:(int)o);   
             RegisterConverter(o=>(byte[])o);         
         }
 
-        public T Convert<T>(object o)
-        {
-          return GetConverter<T>()(o);
-        }
-
-        //public object Convert(object o, Type type)
-        //{
-        //    var c = _converters.GetValueOrDefault(type);
-        //    if (c == null)
-        //    {
-        //        this.LogDebug("There is no converter from object to <{0}> registered. Using a default converter.", typeof(T));
-
-        //        return o =>
-        //        {
-        //            if (o is T) return (T)o;
-        //            if (o == DBNull.Value)
-        //            {
-        //                return default(T);
-        //            }
-
-        //            return o.ConvertTo<T>();
-        //        };
-
-        //    }
-        //    return (Func<object, T>)c;
-        //}
+        public T Convert<T>(object o) => GetConverter<T>()(o);
     }
 }

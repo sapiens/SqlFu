@@ -89,7 +89,12 @@ namespace SqlFu.Providers.SqlServer
             return !keyName.IsNotEmpty() || ex.Message.Contains(keyName);
         }
 
-      public override string GetSqlForDropTableIfExists(string name, string schema = null)
+        public override bool ObjectExists(DbException ex, string name = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetSqlForDropTableIfExists(string name, string schema = null)
         {
             var table = this.EscapeTableName(name, schema);
           return $"IF OBJECT_ID('{table}', 'U') IS NOT NULL DROP TABLE {table}";
@@ -157,7 +162,7 @@ namespace SqlFu.Providers.SqlServer
             return string.Format("{2} OFFSET @{0} ROWS FETCH NEXT @{1} ROWS ONLY",pm.CurrentIndex-2,pm.CurrentIndex-1 ,sql);
         }
 
-        protected override IDatabaseTools GetTools()
+        protected override IDatabaseTools InitTools()
         {
             return new SqlServerDbTools();
         }

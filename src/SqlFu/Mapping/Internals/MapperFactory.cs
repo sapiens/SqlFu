@@ -11,7 +11,6 @@ namespace SqlFu.Mapping.Internals
         private readonly IMapPocoManually _customMapper;
         private readonly ITableInfoFactory _infoFactory;
         private readonly IManageConverters _converters;
-       // private TypeBuilder _typeBuilder;
 
         public MapperFactory(IMapPocoManually customMapper,ITableInfoFactory infoFactory,IManageConverters converters)
         {

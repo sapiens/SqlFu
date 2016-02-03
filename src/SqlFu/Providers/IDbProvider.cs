@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Data.Common;
-using CavemanTools.Model;
-using SqlFu.Builders;
 
 namespace SqlFu.Providers
 {
-    public interface IDbProvider : IEscapeIdentifier
+    public interface IDbProvider : IEscapeIdentifier, IDbProviderExceptions, IDbProviderHelpers
     {
         DbFunctions Functions { get; }
 
@@ -16,7 +14,7 @@ namespace SqlFu.Providers
         /// <param name="sql"></param>
         /// <param name="paramNames"></param>
         /// <returns></returns>
-        string FormatSql(string sql, string[] paramNames);
+        string FormatParameters(string sql, string[] paramNames);
 
         /// <summary>
         /// Provider gets to make final changes to command before it executes
@@ -38,28 +36,12 @@ namespace SqlFu.Providers
         string FormatIndexOptions(string idxDef,string options="");
         
         /// <summary>
-        /// For genrate create table statements
+        /// For create table statements
         /// </summary>
         /// <returns></returns>
         string GetIdentityKeyword();
-        
 
-        bool IsDbBusy(DbException ex);
 
-        bool IsUniqueViolation(DbException ex, string keyName = "");
-
-        string GetSqlForDropTableIfExists(string name, string schema = null);
-
-        /// <summary>
-        /// Adds sql to return newly inserted id
-        /// </summary>
-        /// <param name="values">String containing the values to insert e.g: values (@0,@1)</param>
-        /// <param name="identityColumn"></param>
-        /// <returns></returns>
-        string AddReturnInsertValue(string values, string identityColumn);
-        
         IDbProviderExpressions GetExpressionsHelper();
-        string FormatQueryPagination(string sql, Pagination page, ParametersManager pm);
-     
     }
 }
