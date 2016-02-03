@@ -13,9 +13,9 @@ namespace SqlFu.Providers
  
     public abstract class DbProvider : IDbProvider
     {
-        private DbProviderFactory _factory;
+        private Func<DbConnection> _factory;
 
-        protected DbProvider(DbProviderFactory factory,string providerId)
+        protected DbProvider(Func<DbConnection> factory,string providerId)
         {
             _factory = factory;
             ProviderId = providerId;
@@ -75,7 +75,7 @@ namespace SqlFu.Providers
 
         public DbConnection CreateConnection()
         {
-            return _factory.CreateConnection();
+            return _factory();
         }
 
         public abstract string EscapeIdentifier(string name);
