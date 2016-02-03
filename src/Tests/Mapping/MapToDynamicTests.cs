@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using CavemanTools.Logging;
+using CavemanTools.Testing;
 using FluentAssertions;
 using SqlFu.Mapping;
 using SqlFu.Mapping.Internals;
@@ -15,6 +17,7 @@ namespace Tests.Mapping
         public MapToDynamicTests(ITestOutputHelper x)
         {
             x.Logger();
+            LogManager.OutputToTrace();
         }
 
         [Fact]
@@ -22,7 +25,7 @@ namespace Tests.Mapping
         {
             var reader = Setup.FakeReader();
             var sut = new DynamicMapper();
-            var m=new ManualMapper<dynamic>(r =>
+            var manual=new ManualMapper<dynamic>(r =>
             {
                 dynamic d = new ExpandoObject();
                 d.Id = (Guid) r["Id"];
@@ -31,11 +34,11 @@ namespace Tests.Mapping
                 return d;
             });
 
-            //var b = new BenchmarkAction(i => sut.Map(reader, ""));
-            //Setup.DoBenchmark(500, b,new BenchmarkAction(i=>
-            //{
-            //    m.Map(reader);
-            //}));
+            var b = new BenchmarkAction(i => sut.Map(reader, ""));
+            Setup.DoBenchmark(1000, b, new BenchmarkAction(i =>
+             {
+                 manual.Map(reader);
+             }));
             dynamic poco = sut.Map(reader, "");
             AssertionExtensions.Should((object) poco.Id).Be(Guid.Empty);
             AssertionExtensions.Should((object) poco.Name).Be("bla");

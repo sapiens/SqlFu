@@ -76,8 +76,8 @@ namespace SqlFu.Mapping.Internals
             });
             RegisterConverter(o=> new InsertedId(o));
             RegisterConverter(o=> Guid.Parse(o.ToString()));
-            //todo test deafult converters            
-            //RegisterConverter(o=> (o==null || o==DBNull.Value)?(Guid?)null:Guid.Parse(o.ToString()));            
+            
+            RegisterConverter(o=> (o==null || o==DBNull.Value)?(Guid?)null:Guid.Parse(o.ToString()));            
             RegisterConverter(o=> (o==null || o==DBNull.Value)?(int?)null:(int)o);   
             RegisterConverter(o=>(byte[])o);         
         }

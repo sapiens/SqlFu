@@ -1,4 +1,6 @@
 ﻿using System;
+using CavemanTools.Logging;
+using CavemanTools.Testing;
 using FluentAssertions;
 using SqlFu.Builders;
 using SqlFu.Mapping;
@@ -12,8 +14,8 @@ namespace Tests.Mapping
     {
         public MapToAnonTests(ITestOutputHelper x)
         {
-            x.Logger();
-        
+            
+       
         }
 
         [Fact]
@@ -26,7 +28,7 @@ namespace Tests.Mapping
             {
                 r.Clear();
                 r.Add("Id",25);
-                r.Add("Tile","bla");
+                r.Add("Title","bla");
                 r.Add("MyEnum",OrderBy.Desc);
             });
 
