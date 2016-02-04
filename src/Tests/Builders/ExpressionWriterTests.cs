@@ -157,51 +157,15 @@ namespace Tests.Builders
             }
             _sb.Append("(");
             Visit(node.Left);
-            //if (ContinueAfterParameterBoolProperty(node.NodeType, node.Left))
-            //{
-
-            //}
-            _sb.Append(" " + op + " ");
+          
+            _sb.Append($" {op} ");
             Visit(node.Right);
-            //if (ContinueAfterParameterBoolProperty(node.NodeType, node.Right))
-            //{
-              
-            //}
+            
             _sb.Append(")");
             return node;
         }
 
-        //private bool ContinueAfterParameterBoolProperty(ExpressionType type, Expression node)
-        //{
-        //    if ((type == ExpressionType.AndAlso || type == ExpressionType.OrElse) && node.BelongsToParameter())
-        //    {
-        //        if (node is MemberExpression)
-        //        {
-        //            var prop = node as MemberExpression;
-        //            if (prop.Type == typeof(bool))
-        //            {
-        //                var nex = Expression.Equal(prop, Expression.Constant(true));
-        //                Visit(nex);
-        //                return false;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            if (node is UnaryExpression)
-        //            {
-        //                var un = node as UnaryExpression;
-        //                if (un.Operand.Type == typeof(bool))
-        //                {
-        //                    var nex = EqualityFromUnary(un);
-        //                    Visit(nex);
-        //                    return false;
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return true;
-        //}
-
+       
         protected override Expression VisitConstant(ConstantExpression node)
         {
             if (node.Value == null)
@@ -354,19 +318,7 @@ namespace Tests.Builders
             }
         }
 
-        //private void HandleParameter(UnaryExpression node)
-        //{
-        //    if (node.NodeType == ExpressionType.MemberAccess)
-        //    {
-        //        HandleParameter(node.Operand as MemberExpression, true);
-        //    }
-        //    else
-        //    {
-        //        Visit(node);
-        //    }
-        //}
-
-        
+      
         private void HandleParameter(MemberExpression node)
         {
             if (!_columnMode && node.Type == typeof(bool))
@@ -739,7 +691,7 @@ namespace Tests.Builders
         }
 
         [Fact]
-        public void null_enum_handling()
+        public void nullable_enum_when_null_handling()
         {
             Get(d => d.Order == null).Should().Be("(Order is null)");
             _sut.Parameters.CurrentIndex.Should().Be(0);
@@ -770,20 +722,41 @@ namespace Tests.Builders
         }
 
         [Fact]
-        public void handle_nullable_boolean_true()
+        public void handle_nullable_boolean_property_true()
         {
             Get(d => d.IsBla).Should().Be("IsBla=@0");
+            FirstParameter.Should().Be(true);
+
+            _sut.Parameters.Clear();
+            bool? b=true;
+            Get(d => d.IsBla==b.Value).Should().Be("IsBla=@0");
+            FirstParameter.Should().Be(true);
+
+            _sut.Parameters.Clear();
+            Get(d => d.IsBla==b).Should().Be("IsBla=@0");
             FirstParameter.Should().Be(true);
             
         }
          [Fact]
-        public void handle_nullable_boolean_false()
+        public void handle_nullable_boolean_property_false()
         {
             Get(d => !d.IsBla).Should().Be("IsBla=@0");
             FirstParameter.Should().Be(false);
             
         }
 
+        [Fact]
+        public void handle_nullable_boolean_property_null()
+        {
+            Get(d => d.IsBla==null).Should().Be("(IsBla is null)");
+        }
+
+        [Fact]
+        public void nullable_property_equality()
+        {
+            Get(p => p.Order == SomeEnum.Last).Should().Be("(Order = @0)");
+            FirstParameter.Should().Be(SomeEnum.Last);
+        }
 
         object FirstParameter => _sut.Parameters.ToArray().First();
         object Parameter(int i) => _sut.Parameters.ToArray().Skip(i).First();
