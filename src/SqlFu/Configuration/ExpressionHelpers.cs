@@ -46,7 +46,7 @@ namespace SqlFu.Configuration
 
         }
 
-        internal static bool IsNullUnaryOrConstant(this Expression ex)
+        public static bool IsNullUnaryOrConstant(this Expression ex)
         {
             ex.MustNotBeNull();
             //if (ex == null) return false;

@@ -1,80 +1,85 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
-using SqlFu.Configuration;
+using FluentAssertions;
+using Tests.Data;
+using Xunit;
+using SqlFu.Builders;
 using SqlFu.Providers;
+using System.Linq;
+using SqlFu.Configuration;
+using System.Collections.Generic;
+using FakeItEasy;
+using SqlFu;
+using Tests._Fakes;
 
-namespace SqlFu.Builders.Expressions
+namespace Tests.Builders
 {
-    public class ExpressionWriter : ExpressionVisitor, IExpressionWriter
+    public class MyWriter : ExpressionVisitor
     {
-        private StringBuilder _sb;
+        StringBuilder _sb;
+
         private readonly IDbProviderExpressions _provider;
-        private readonly ExpressionWriterHelper _helper;
+        private readonly ITableInfoFactory _factory;
+        private readonly IEscapeIdentifier _escape;
 
 
-        public ExpressionWriter()
+        public MyWriter(IDbProviderExpressions provider,ITableInfoFactory factory,IEscapeIdentifier escape)
         {
-            
-        }
-        public ExpressionWriter(IDbProviderExpressions provider,ExpressionWriterHelper helper,StringBuilder sb=null)
-        {
-            _sb = sb??new StringBuilder();
-          
+            _sb =  new StringBuilder();
+
             _provider = provider;
-            _helper = helper;
+            _factory = factory;
+            _escape = escape;
         }
 
-        public StringBuilder SqlBuffer => _sb;
         public ParametersManager Parameters { get; } = new ParametersManager();
 
-        public IExpressionWriterHelper Helper => _helper;
-
-
-        protected override Expression VisitUnary(UnaryExpression node)
+        public string GetColumnName(LambdaExpression member)
         {
-            switch (node.NodeType)
-            {
-                case ExpressionType.Convert:
-                    Visit(node.Operand);
-                    break;
-                case ExpressionType.Not:
-                    if (node.Operand.BelongsToParameter())
-                    {
-                        if (node.Operand.NodeType == ExpressionType.MemberAccess)
-                        {
-                            var oper = node.Operand as MemberExpression;
-                            if (oper.Type == typeof (bool))
-                            {
-                                var nex = EqualityFromUnary(node);
-                                Visit(nex);
-                                break;
-                            }
-                        }
-                    }
-
-                  
-                    _sb.Append("not ");
-
-                    Visit(node.Operand);
-                    break;
-            }
-
-            return node;
+            var mbody = member.Body as MemberExpression;
+            if (mbody != null) return GetColumnName(mbody);
+            var ubody = member.Body as UnaryExpression;
+            if (ubody == null) throw new NotSupportedException("Only members and unary expressions are supported");
+            return GetColumnName(ubody);
         }
 
-        private Expression EqualityFromUnary(UnaryExpression node) 
-            => Expression.Equal(node.Operand,Expression.Constant(node.NodeType != ExpressionType.Not));
+        public string GetColumnName(UnaryExpression member)
+        {
+            var mbody = member.Operand as MemberExpression;
+            if (mbody != null) return GetColumnName(mbody);
+            var ubody = member.Operand as UnaryExpression;
+            if (ubody != null) return GetColumnName(ubody);
+            throw new NotSupportedException("Only members and unary expressions are supported");
+        }
 
-        private Expression EqualityFromBoolProperty(Expression left, bool value) 
+
+        public string GetColumnName(MemberInfo column)
+        {
+            return _factory.GetInfo(column.DeclaringType).GetColumnName(column.Name, _escape);
+        }
+
+
+        public string GetColumnName(MemberExpression member)
+        {
+            var tableType = member.Expression.Type;
+            var info = _factory.GetInfo(tableType);
+            return info.GetColumnName(member, _escape);
+        }
+
+
+      
+
+        private Expression EqualityFromUnary(UnaryExpression node)
+            => Expression.Equal(node.Operand, Expression.Constant(node.NodeType != ExpressionType.Not));
+
+        private Expression EqualityFromBoolProperty(Expression left, bool value)
             => Expression.Equal(left, Expression.Constant(value));
 
         public override string ToString() => _sb.ToString();
-        
+
 
         protected override Expression VisitBinary(BinaryExpression node)
         {
@@ -155,7 +160,7 @@ namespace SqlFu.Builders.Expressions
                 if (node is MemberExpression)
                 {
                     var prop = node as MemberExpression;
-                    if (prop.Type == typeof (bool))
+                    if (prop.Type == typeof(bool))
                     {
                         var nex = Expression.Equal(prop, Expression.Constant(true));
                         Visit(nex);
@@ -167,7 +172,7 @@ namespace SqlFu.Builders.Expressions
                     if (node is UnaryExpression)
                     {
                         var un = node as UnaryExpression;
-                        if (un.Operand.Type == typeof (bool))
+                        if (un.Operand.Type == typeof(bool))
                         {
                             var nex = EqualityFromUnary(un);
                             Visit(nex);
@@ -187,11 +192,18 @@ namespace SqlFu.Builders.Expressions
                 return node;
             }
 
+
+
             WriteParameter(node);
-          
+
             return node;
         }
 
+        /// <summary>
+        /// This is called only in criterias. It shouldn't be called when in generating columns
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         protected override Expression VisitMember(MemberExpression node)
         {
             if (node.InvolvesParameter())
@@ -220,11 +232,7 @@ namespace SqlFu.Builders.Expressions
             return node;
         }
 
-        protected override Expression VisitNew(NewExpression node)
-        {
-            WriteParameter(node);
-            return node;
-        }
+      
 
         private void WriteParameter(Expression node)
         {
@@ -241,12 +249,13 @@ namespace SqlFu.Builders.Expressions
                     HandleContains(node);
                     return;
                 }
-                _provider.WriteMethodCall(node,_sb,_helper);                
+
+            //_provider.WriteMethodCall(node, _sb, _helper);
             }
 
             if (node.BelongsToParameter())
             {
-                if (node.Object.Type == typeof (string))
+                if (node.Object.Type == typeof(string))
                 {
                     HandleParamStringFunctions(node);
                 }
@@ -255,12 +264,12 @@ namespace SqlFu.Builders.Expressions
 
         private void HandleParamStringFunctions(MethodCallExpression node)
         {
-            var name = GetColumnName(node.Object.As<MemberExpression>());
-            
+            var name = GetColumnName(node.Object as MemberExpression);
+
             object firstArg = null;
             if (node.Arguments.HasItems())
             {
-                firstArg=node.Arguments[0].GetValue();
+                firstArg = node.Arguments[0].GetValue();
             }
             firstArg.MustNotBeNull();
             string value = "";
@@ -276,7 +285,7 @@ namespace SqlFu.Builders.Expressions
                     break;
                 case "Contains":
                     value = $"{name} like @{Parameters.CurrentIndex}";
-                    Parameters.AddValues("%"+firstArg+"%");
+                    Parameters.AddValues("%" + firstArg + "%");
                     break;
                 case "ToUpper":
                 case "ToUpperInvariant":
@@ -287,7 +296,7 @@ namespace SqlFu.Builders.Expressions
                     value = _provider.ToLower(name);
                     break;
                 case "Substring":
-                    value = _provider.Substring(name, (int) firstArg, (int) node.Arguments[1].GetValue());
+                    value = _provider.Substring(name, (int)firstArg, (int)node.Arguments[1].GetValue());
                     break;
             }
 
@@ -305,19 +314,19 @@ namespace SqlFu.Builders.Expressions
             }
             else
             {
-                list = meth.Arguments[0].GetValue().As<IList>();
+                list = meth.Arguments[0].GetValue() as IList;
             }
 
             if (list == null)
             {
                 throw new NotSupportedException("Contains must be invoked on a IList (array or List)");
             }
-          
+
             if (list.Count > 0)
             {
-                var param = meth.Arguments[pIdx].As<MemberExpression>();
+                var param = meth.Arguments[pIdx] as MemberExpression;
                 _sb.Append(GetColumnName(param));
-               
+
                 _sb.AppendFormat(" in (@{0})", Parameters.CurrentIndex);
                 Parameters.AddValues(list);
             }
@@ -327,28 +336,27 @@ namespace SqlFu.Builders.Expressions
             }
         }
 
-        private void HandleParameter(UnaryExpression node)
-        {
-            if (node.NodeType == ExpressionType.MemberAccess)
-            {
-                HandleParameter(node.Operand.As<MemberExpression>(), true);
-            }
-            else
-            {
-                Visit(node);
-            }
-        }
+        //private void HandleParameter(UnaryExpression node)
+        //{
+        //    if (node.NodeType == ExpressionType.MemberAccess)
+        //    {
+        //        HandleParameter(node.Operand as MemberExpression, true);
+        //    }
+        //    else
+        //    {
+        //        Visit(node);
+        //    }
+        //}
 
-        private string GetColumnName(MemberExpression node) => _helper.GetColumnName(node);
-
+        
         private void HandleParameter(MemberExpression node, bool isSingle = false)
         {
-            if (!node.BelongsToParameter()) return;
+           // if (!node.BelongsToParameter()) return;
             if (!isSingle)
             {
                 if (node.Expression.NodeType == ExpressionType.Parameter)
                 {
-                    _sb.Append(GetColumnName(node));                        
+                    _sb.Append(GetColumnName(node));
                 }
                 else
                 {
@@ -356,14 +364,14 @@ namespace SqlFu.Builders.Expressions
                 }
                 return;
             }
-            if (node.Type == typeof (bool))
+            if (node.Type == typeof(bool))
             {
                 var eq = EqualityFromBoolProperty(node, true);
-                Visit(eq);                
+                Visit(eq);
             }
         }
 
-        
+
         /// <summary>
         /// For properties of a parameter property.
         /// Used to for properties that can be translated into db functions
@@ -371,13 +379,13 @@ namespace SqlFu.Builders.Expressions
         /// <param name="node"></param>
         private void HandleParameterSubProperty(MemberExpression node)
         {
-            if (node.Expression.Type == typeof (string))
+            if (node.Expression.Type == typeof(string))
             {
                 HandleStringProperties(node);
                 return;
             }
 
-            if (node.Expression.Type == typeof (DateTime) || node.Expression.Type == typeof (DateTimeOffset))
+            if (node.Expression.Type == typeof(DateTime) || node.Expression.Type == typeof(DateTimeOffset))
             {
                 HandleDateTimeProperties(node);
                 return;
@@ -387,7 +395,7 @@ namespace SqlFu.Builders.Expressions
 
         private void HandleStringProperties(MemberExpression node)
         {
-            var name = node.Expression.As<MemberExpression>().Member.Name;
+            var name = (node.Expression as MemberExpression).Member.Name;
             switch (node.Member.Name)
             {
                 case "Length":
@@ -410,85 +418,27 @@ namespace SqlFu.Builders.Expressions
             }
         }
 
-       
 
-        public void WriteColumn(LambdaExpression property)
+        private void VisitColumn(MemberExpression node)
         {
-            var convert = property.Body as UnaryExpression;
-            if (convert != null)
-            {
-                var ct = convert.Operand as ConstantExpression;
-                if (ct != null)
-                {
-                    _sb.Append(ct.Value);
-                    return;
-                }
-
-                WriteColumn(convert.Operand as MemberExpression);
-                return;
-                
-            }
-
-           
-
-            WriteColumn(property.Body as MemberExpression);
+            HandleParameter(node,true);
         }
-
-        private void WriteColumn(MemberExpression property)
-        {
-            property.MustNotBeNull();
-            if (!property.BelongsToParameter()) throw new InvalidOperationException("Property doesn't belong to a parameter");
-            HandleParameter(property);           
-        }
-
-        
-
-        public string GetColumnsSql(params LambdaExpression[] columns)
-        {
-            var sb = _sb;
-            _sb = new StringBuilder();
-            columns.ForEach(col =>
-            {
-                switch (col.Body.NodeType)
-                  {
-                      case ExpressionType.MemberAccess:
-                          Visit(col.Body as MemberExpression);
-                          break;
-                      case ExpressionType.New:
-                        VisitProjection(col.Body as NewExpression);
-                        break;
-                    case ExpressionType.MemberInit:
-                          VisitProjection(col.Body as MemberInitExpression);
-                          break;
-                   
-                    default:
-                          Visit(col.Body);
-                          break;
-                  }
-                _sb.Append(",");
-
-            });
-            _sb.RemoveLast();
-            var result = _sb.ToString();
-            _sb = sb;
-            return result;
-        }
-
+    
         private void VisitProjection(MemberInitExpression columns)
         {
             var node = columns;
-            
+
             foreach (var arg in node.Bindings.Cast<MemberAssignment>())
             {
                 _sb.AppendLine();
                 Visit(arg.Expression);
                 _sb.AppendFormat(" as {0},", arg.Member.Name);
-              
+
             }
             _sb.RemoveLast();
         }
 
-       
+
 
         private void VisitProjection(NewExpression node)
         {
@@ -503,11 +453,13 @@ namespace SqlFu.Builders.Expressions
 
         void HandleObject(NewExpression node)
         {
-         
-            node.Type.GetProperties(BindingFlags.Public|BindingFlags.Instance)
+
+            node.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .ForEach(n =>
                 {
-                    _sb.AppendLine().Append(_helper.GetColumnName(n)).Append(",");
+                  _sb
+                    //.AppendLine()
+                    .Append(GetColumnName(n)).Append(",");
 
                 });
             _sb.RemoveLast();
@@ -518,7 +470,7 @@ namespace SqlFu.Builders.Expressions
             var i = 0;
             foreach (var arg in node.Arguments)
             {
-                _sb.AppendLine();
+                //_sb.AppendLine();
                 Visit(arg);
                 _sb.AppendFormat(" as {0},", node.Members[i].Name);
                 i++;
@@ -526,130 +478,179 @@ namespace SqlFu.Builders.Expressions
             _sb.RemoveLast();
         }
 
-        public string GetSql<T>(Expression<Func<T, object>> criteria)
+        protected override Expression VisitNew(NewExpression node)
         {
-            var sb = _sb;
-            _sb=new StringBuilder();
-            WriteCriteria(criteria);
-            var result = _sb.ToString();
-            _sb = sb;
-            return result;
-        }
-        
-        public string GetSql<T>(Expression<Func<T, bool>> criteria)
-        {
-            var sb = _sb;
-            _sb=new StringBuilder();
-            WriteCriteria(criteria);
-            var result = _sb.ToString();
-            _sb = sb;
-            return result;
+            VisitProjection(node);
+            //WriteParameter(node);
+            return node;
         }
 
-        public string GetCriteriaSql(LambdaExpression criteria)
+        void HandleSingleBooleanConstant(ConstantExpression node)
         {
-            var sb = _sb;
-            _sb = new StringBuilder();
-            WriteCriteria(criteria);
-            var result = _sb.ToString();
-            _sb = sb;
-            return result;
-        }
-        
-        public string GetExpressionSql(LambdaExpression expression)
-        {
-            var sb = _sb;
-            _sb = new StringBuilder();
-        
-            WriteExpression(expression);
-        
-            var result = _sb.ToString();
-            _sb = sb;
-            return result;
+            var val = (bool)node.GetValue();
+            _sb.Append(val ? "1=1" : "1<1");           
         }
 
-        public void WriteCriteria(LambdaExpression criteria)
+        protected override Expression VisitUnary(UnaryExpression node)
         {
-            criteria.MustNotBeNull();
-
-            if (criteria.Body.BelongsToParameter())
+            switch (node.NodeType)
             {
-                switch (criteria.Body.NodeType)
-                {
-                    case ExpressionType.MemberAccess:
-                        HandleParameter(criteria.Body.As<MemberExpression>(), true);
-                        return;
-                    case ExpressionType.Not:
-                        HandleParameter(criteria.Body.As<UnaryExpression>());
-                        return;
-                }
-            }
-            var constExpr = criteria.Body as ConstantExpression;
-            if (constExpr != null)
-            {
-                if (constExpr.Type == typeof (bool))
-                {
-                    var val = (bool) constExpr.GetValue();
-                    _sb.Append(val ? "1=1" : "1<1");
-                    return;
-                }
+                case ExpressionType.Convert:
+                    var op = node.Operand as ConstantExpression;
+                    if (op != null && op.Type == (typeof (bool)))
+                    {
+                       HandleSingleBooleanConstant(op);
+                        return node;
+                    }
+                    Visit(node.Operand);
+                    break;
+                case ExpressionType.New:
+
+                    Visit(node.Operand);
+                    break;
                 
+
+                case ExpressionType.Not:
+                    if (node.Operand.BelongsToParameter())
+                    {
+                        if (node.Operand.NodeType == ExpressionType.MemberAccess)
+                        {
+                            var oper = node.Operand as MemberExpression;
+                            if (oper.Type == typeof(bool))
+                            {
+                                var nex = EqualityFromUnary(node);
+                                Visit(nex);
+                                break;
+                            }
+                        }
+                    }
+
+
+                    _sb.Append("not ");
+
+                    Visit(node.Operand);
+                    break;
             }
-            Visit(criteria);
+
+            return node;
         }
 
-        public void WriteExpression(LambdaExpression expression)
+        public string GetSql(LambdaExpression expression)
         {
-            expression.MustNotBeNull();
-            if (expression.Body.BelongsToParameter())
+            _sb.Clear();
+            Visit(expression);
+            return _sb.ToString();
+        }
+
+        public string GetColumnsSql(params LambdaExpression[] columns)
+        {
+            _sb.Clear();
+            columns.ForEach(col =>
             {
-                switch (expression.Body.NodeType)
+                switch (col.Body.NodeType)
                 {
                     case ExpressionType.MemberAccess:
-                        HandleParameter(expression.Body.As<MemberExpression>());
-                        return;
-                    case ExpressionType.Not:
-                        HandleParameter(expression.Body.As<UnaryExpression>());
-                        return;
+                        VisitColumn(col.Body as MemberExpression);
+                        break;
+                    case ExpressionType.New:
+                        VisitProjection(col.Body as NewExpression);
+                        break;
+                    case ExpressionType.MemberInit:
+                        VisitProjection(col.Body as MemberInitExpression);
+                        break;
+
+                    default:
+                        Visit(col.Body);
+                        break;
                 }
-            }
-            Visit(expression);
-        }
+                _sb.Append(",");
 
-        
-        public void WriteExpression(Expression expression)
-        {
-            expression.MustNotBeNull();
-            if (expression.BelongsToParameter())
-            {
-                switch (expression.NodeType)
-                {
-                    case ExpressionType.MemberAccess:
-                        HandleParameter(expression.As<MemberExpression>());
-                        return;
-                        case ExpressionType.Call:
-                        HandleParameter(expression.As<MethodCallExpression>());
-                        return;
-                    case ExpressionType.Not:
-                        HandleParameter(expression.As<UnaryExpression>());
-                        return;
-                }
-            }
-            Visit(expression);
+            });
+            _sb.RemoveLast();
+           return _sb.ToString();
+           
         }
-
-      public void Append(string sql,bool newLine=false)
-        {
-            
-            if (newLine) _sb.AppendLine(sql);
-          
-            else _sb.Append(sql);
-        }
-
-        public void AppendLine() => _sb.AppendLine();
 
     }
 
-    
-        
+    public class ExpressionWriterTests
+    {
+        private MyWriter _sut;
+        Expression<Func<MapperPost, object>> _l;
+
+        public ExpressionWriterTests()
+        {
+            _sut = new MyWriter(A.Fake<IDbProviderExpressions>(), Setup.InfoFactory(), FakeEscapeIdentifier.Instance);
+        }
+
+        [Fact]
+        public void single_constant_true()
+        {
+           _l = d => true;
+            var sql = _sut.GetSql(_l);
+            sql.Should().Be("1=1");
+        }
+
+        [Fact]
+        public void single_constant_false()
+        {
+           _l = d => false;
+            var sql = _sut.GetSql(_l);
+            sql.Should().Be("1<1");
+        }
+
+        string Get(Expression<Func<MapperPost, object>> d) => _sut.GetSql(d);
+
+        [Fact]
+        public void single_constant_value()
+        {
+            var sql = Get(d => 2);
+            sql.Should().Be("@0");
+            _sut.Parameters.ToArray().Should().BeEquivalentTo(new[] {2});
+        }
+
+        [Fact]
+        public void property_is_column_name()
+        {
+            var sql = Get(d => d.IsActive);
+            sql.Should().Be("IsActive=@0");
+            _sut.Parameters.ToArray().First().Should().Be(true);
+        }
+
+        class IdName
+        {
+            public int Id { get; set; }
+            public string Name { get; set; } 
+        }
+
+        [Fact]
+        public void get_projection_from_new_object()
+        {
+            var sql = Get(d => new IdName());
+            sql.Should().Be("Id,Name");
+        }
+
+        [Fact]
+        public void get_projection_from_anonymous()
+        {
+            var sql = Get(d => new {d.Id,Name=d.Title});
+            sql.Should().Be("Id as Id,Title as Name");
+        }
+
+        [Fact]
+        public void single_boolean_property_is_negated()
+        {
+            var sql = Get(d => !d.IsActive);
+            sql.Should().Be("(IsActive = @0)");
+            _sut.Parameters.ToArray().First().Should().Be(false);
+        }
+        [Fact]
+        public void property_as_column_name()
+        {
+            _l = d => d.IsActive;
+            var sql = _sut.GetColumnsSql(_l);
+            sql.Should().Be("IsActive");
+            
+        }
+    }
 }

@@ -7,7 +7,8 @@
         public dynamic Dyno { get; set; }
 
         public byte[] Version { get; set; }
-        public SomeEnum? Order { get; set; }        
+        public SomeEnum? Order { get; set; }
+        public bool IsActive { get; set; }    
 
     }
 

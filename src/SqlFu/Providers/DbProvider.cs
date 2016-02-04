@@ -6,9 +6,8 @@ using SqlFu.Mapping;
 
 namespace SqlFu.Providers
 {
-    using SqlFu.Builders;
-    using SqlFu.Configuration;
-    using SqlFu.Mapping.Internals;
+    using Builders;
+    using Configuration;
 
     public abstract class DbProvider : IDbProvider
     {

@@ -9,10 +9,9 @@ namespace SqlFu.Builders.Expressions
         StringBuilder SqlBuffer { get; }
         ParametersManager Parameters { get; }
         IExpressionWriterHelper Helper { get; }
-        void Write<T>(Expression<Func<T, bool>> criteria);
+      
         void WriteColumn(LambdaExpression property);
-        void WriteColumn(MemberExpression property);
-        string GetSelectColumnsSql(params LambdaExpression[] columns);
+        string GetColumnsSql(params LambdaExpression[] columns);
         string GetSql<T>(Expression<Func<T, object>> criteria);
         string GetSql<T>(Expression<Func<T, bool>> criteria);
         string GetCriteriaSql(LambdaExpression criteria);
@@ -20,7 +19,6 @@ namespace SqlFu.Builders.Expressions
         void WriteCriteria(LambdaExpression criteria);
         void WriteExpression(LambdaExpression expression);
         void WriteExpression(Expression expression);
-        void Write<T>(Expression<Func<T, object>> expression);
 
         void Append(string sql,bool withNewLine=false);
         void AppendLine();

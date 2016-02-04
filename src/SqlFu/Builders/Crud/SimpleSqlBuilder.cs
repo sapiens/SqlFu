@@ -56,7 +56,7 @@ namespace SqlFu.Builders.Crud
         }
 
         public IGenerateSql<TProj> Select<TProj>(Expression<Func<T, TProj>> selector, bool distinct = false) 
-            => Select<TProj>(_writer.GetSelectColumnsSql(selector), distinct);
+            => Select<TProj>(_writer.GetColumnsSql(selector), distinct);
 
         public ISelect<T> Limit(int take, long offset = 0)
         {
