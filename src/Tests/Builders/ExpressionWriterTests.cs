@@ -46,7 +46,7 @@ namespace Tests.Builders
             return GetColumnName(ubody);
         }
 
-        public string GetColumnName(UnaryExpression member)
+        private string GetColumnName(UnaryExpression member)
         {
             var mbody = member.Operand as MemberExpression;
             if (mbody != null) return GetColumnName(mbody);
@@ -56,13 +56,13 @@ namespace Tests.Builders
         }
 
 
-        public string GetColumnName(MemberInfo column)
+        private string GetColumnName(MemberInfo column)
         {
             return _factory.GetInfo(column.DeclaringType).GetColumnName(column.Name, _escape);
         }
 
 
-        public string GetColumnName(MemberExpression member)
+        private string GetColumnName(MemberExpression member)
         {
             var tableType = member.Expression.Type;
             var info = _factory.GetInfo(tableType);
@@ -349,10 +349,9 @@ namespace Tests.Builders
         //}
 
         
-        private void HandleParameter(MemberExpression node, bool isSingle = false)
+        private void HandleParameter(MemberExpression node)
         {
-           // if (!node.BelongsToParameter()) return;
-            if (!isSingle)
+            if (_columnMode)
             {
                 if (node.Expression.NodeType == ExpressionType.Parameter)
                 {
@@ -366,9 +365,17 @@ namespace Tests.Builders
             }
             if (node.Type == typeof(bool))
             {
-                var eq = EqualityFromBoolProperty(node, true);
-                Visit(eq);
+                HandleSingleBooleanProperty(node,true);
+
+                //var eq = EqualityFromBoolProperty(node, true);
+                //Visit(eq);
             }
+        }
+
+        private void HandleSingleBooleanProperty(MemberExpression node, bool b)
+        {
+            _sb.Append(GetColumnName(node)).Append("=");
+            VisitConstant(Expression.Constant(b));
         }
 
 
@@ -419,11 +426,7 @@ namespace Tests.Builders
         }
 
 
-        private void VisitColumn(MemberExpression node)
-        {
-            HandleParameter(node,true);
-        }
-    
+       
         private void VisitProjection(MemberInitExpression columns)
         {
             var node = columns;
@@ -518,8 +521,7 @@ namespace Tests.Builders
                             var oper = node.Operand as MemberExpression;
                             if (oper.Type == typeof(bool))
                             {
-                                var nex = EqualityFromUnary(node);
-                                Visit(nex);
+                               HandleSingleBooleanProperty(oper,false);
                                 break;
                             }
                         }
@@ -538,35 +540,41 @@ namespace Tests.Builders
         public string GetSql(LambdaExpression expression)
         {
             _sb.Clear();
+            _columnMode = false;
             Visit(expression);
             return _sb.ToString();
         }
 
+        private bool _columnMode = false;
+
         public string GetColumnsSql(params LambdaExpression[] columns)
         {
             _sb.Clear();
+            _columnMode = true;
             columns.ForEach(col =>
             {
-                switch (col.Body.NodeType)
-                {
-                    case ExpressionType.MemberAccess:
-                        VisitColumn(col.Body as MemberExpression);
-                        break;
-                    case ExpressionType.New:
-                        VisitProjection(col.Body as NewExpression);
-                        break;
-                    case ExpressionType.MemberInit:
-                        VisitProjection(col.Body as MemberInitExpression);
-                        break;
+                Visit(col.Body);
+                //switch (col.Body.NodeType)
+                //{
+                //    case ExpressionType.MemberAccess:
+                //        VisitColumn(col.Body as MemberExpression);
+                //        break;
+                //    case ExpressionType.New:
+                //        VisitProjection(col.Body as NewExpression);
+                //        break;
+                //    case ExpressionType.MemberInit:
+                //        VisitProjection(col.Body as MemberInitExpression);
+                //        break;
 
-                    default:
-                        Visit(col.Body);
-                        break;
-                }
+                //    default:
+                //        Visit(col.Body);
+                //        break;
+                //}
                 _sb.Append(",");
 
             });
             _sb.RemoveLast();
+         
            return _sb.ToString();
            
         }
@@ -610,7 +618,7 @@ namespace Tests.Builders
         }
 
         [Fact]
-        public void property_is_column_name()
+        public void criteria_is_boolean_column()
         {
             var sql = Get(d => d.IsActive);
             sql.Should().Be("IsActive=@0");
@@ -633,7 +641,8 @@ namespace Tests.Builders
         [Fact]
         public void get_projection_from_anonymous()
         {
-            var sql = Get(d => new {d.Id,Name=d.Title});
+            _l = d => new {d.Id, Name = d.Title};
+            var sql = _sut.GetColumnsSql(_l);
             sql.Should().Be("Id as Id,Title as Name");
         }
 
@@ -641,7 +650,7 @@ namespace Tests.Builders
         public void single_boolean_property_is_negated()
         {
             var sql = Get(d => !d.IsActive);
-            sql.Should().Be("(IsActive = @0)");
+            sql.Should().Be("IsActive=@0");
             _sut.Parameters.ToArray().First().Should().Be(false);
         }
         [Fact]
