@@ -49,8 +49,7 @@ namespace SqlFu.Configuration
         public static bool IsNullUnaryOrConstant(this Expression ex)
         {
             ex.MustNotBeNull();
-            //if (ex == null) return false;
-
+           
             if (ex is ConstantExpression)
             {
                 return ex.GetValue() == null;

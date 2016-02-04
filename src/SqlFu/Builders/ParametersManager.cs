@@ -18,6 +18,7 @@ namespace SqlFu.Builders
 
         public object[] ToArray() => _params.ToArray();
 
+        public void Clear() => _params.Clear();
 
         /// <summary>
         /// param position

@@ -81,6 +81,13 @@ namespace Tests.Builders
         public override string ToString() => _sb.ToString();
 
 
+        bool IsSingleBooleanProperty(Expression node)
+            =>!_columnMode && (node.Type.Is<bool>() || node.Type.Is<bool?>()) && node.NodeType == ExpressionType.MemberAccess;
+
+        bool IsSingleBooleanConstant(ConstantExpression node)
+            => node != null && node.Type.Is<bool>();
+        
+
         protected override Expression VisitBinary(BinaryExpression node)
         {
             string op = "";
@@ -98,6 +105,12 @@ namespace Tests.Builders
                         op = "is";
                         break;
                     }
+                    if (IsSingleBooleanProperty(node.Left))
+                    {
+                        HandleSingleBooleanProperty(node.Left as MemberExpression,(bool)node.Right.GetValue());
+                        return node;
+                    }
+
                     op = "=";
                     break;
                 case ExpressionType.GreaterThan:
@@ -119,7 +132,11 @@ namespace Tests.Builders
                         op = "is not";
                         break;
                     }
-
+                    if (IsSingleBooleanProperty(node.Left))
+                    {
+                        HandleSingleBooleanProperty(node.Left as MemberExpression, false);
+                        return node;
+                    }
                     op = "<>";
                     break;
                 case ExpressionType.Add:
@@ -139,50 +156,51 @@ namespace Tests.Builders
                     throw new NotSupportedException();
             }
             _sb.Append("(");
-            if (ContinueAfterParameterBoolProperty(node.NodeType, node.Left))
-            {
-                Visit(node.Left);
-            }
-            _sb.Append(" " + op + " ");
+            Visit(node.Left);
+            //if (ContinueAfterParameterBoolProperty(node.NodeType, node.Left))
+            //{
 
-            if (ContinueAfterParameterBoolProperty(node.NodeType, node.Right))
-            {
-                Visit(node.Right);
-            }
+            //}
+            _sb.Append(" " + op + " ");
+            Visit(node.Right);
+            //if (ContinueAfterParameterBoolProperty(node.NodeType, node.Right))
+            //{
+              
+            //}
             _sb.Append(")");
             return node;
         }
 
-        private bool ContinueAfterParameterBoolProperty(ExpressionType type, Expression node)
-        {
-            if ((type == ExpressionType.AndAlso || type == ExpressionType.OrElse) && node.BelongsToParameter())
-            {
-                if (node is MemberExpression)
-                {
-                    var prop = node as MemberExpression;
-                    if (prop.Type == typeof(bool))
-                    {
-                        var nex = Expression.Equal(prop, Expression.Constant(true));
-                        Visit(nex);
-                        return false;
-                    }
-                }
-                else
-                {
-                    if (node is UnaryExpression)
-                    {
-                        var un = node as UnaryExpression;
-                        if (un.Operand.Type == typeof(bool))
-                        {
-                            var nex = EqualityFromUnary(un);
-                            Visit(nex);
-                            return false;
-                        }
-                    }
-                }
-            }
-            return true;
-        }
+        //private bool ContinueAfterParameterBoolProperty(ExpressionType type, Expression node)
+        //{
+        //    if ((type == ExpressionType.AndAlso || type == ExpressionType.OrElse) && node.BelongsToParameter())
+        //    {
+        //        if (node is MemberExpression)
+        //        {
+        //            var prop = node as MemberExpression;
+        //            if (prop.Type == typeof(bool))
+        //            {
+        //                var nex = Expression.Equal(prop, Expression.Constant(true));
+        //                Visit(nex);
+        //                return false;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (node is UnaryExpression)
+        //            {
+        //                var un = node as UnaryExpression;
+        //                if (un.Operand.Type == typeof(bool))
+        //                {
+        //                    var nex = EqualityFromUnary(un);
+        //                    Visit(nex);
+        //                    return false;
+        //                }
+        //            }
+        //        }
+        //    }
+        //    return true;
+        //}
 
         protected override Expression VisitConstant(ConstantExpression node)
         {
@@ -249,7 +267,7 @@ namespace Tests.Builders
                     HandleContains(node);
                     return;
                 }
-
+                //todo 
             //_provider.WriteMethodCall(node, _sb, _helper);
             }
 
@@ -351,8 +369,12 @@ namespace Tests.Builders
         
         private void HandleParameter(MemberExpression node)
         {
-            if (_columnMode)
+            if (!_columnMode && node.Type == typeof(bool))
             {
+                HandleSingleBooleanProperty(node, true);
+                return;              
+            }
+            
                 if (node.Expression.NodeType == ExpressionType.Parameter)
                 {
                     _sb.Append(GetColumnName(node));
@@ -361,15 +383,9 @@ namespace Tests.Builders
                 {
                     HandleParameterSubProperty(node);
                 }
-                return;
-            }
-            if (node.Type == typeof(bool))
-            {
-                HandleSingleBooleanProperty(node,true);
-
-                //var eq = EqualityFromBoolProperty(node, true);
-                //Visit(eq);
-            }
+               
+            
+          
         }
 
         private void HandleSingleBooleanProperty(MemberExpression node, bool b)
@@ -499,10 +515,15 @@ namespace Tests.Builders
             switch (node.NodeType)
             {
                 case ExpressionType.Convert:
-                    var op = node.Operand as ConstantExpression;
-                    if (op != null && op.Type == (typeof (bool)))
+                    if (IsSingleBooleanProperty(node.Operand))
                     {
-                       HandleSingleBooleanConstant(op);
+                        HandleSingleBooleanProperty(node.Operand as MemberExpression, true);
+                        break;
+                    }
+                    var op = node.Operand as ConstantExpression;
+                    if (IsSingleBooleanConstant(op))
+                    {
+                        HandleSingleBooleanConstant(op);
                         return node;
                     }
                     Visit(node.Operand);
@@ -516,18 +537,19 @@ namespace Tests.Builders
                 case ExpressionType.Not:
                     if (node.Operand.BelongsToParameter())
                     {
-                        if (node.Operand.NodeType == ExpressionType.MemberAccess)
+                        if (IsSingleBooleanProperty(node.Operand))
                         {
-                            var oper = node.Operand as MemberExpression;
-                            if (oper.Type == typeof(bool))
-                            {
-                               HandleSingleBooleanProperty(oper,false);
-                                break;
-                            }
+                            HandleSingleBooleanProperty(node.Operand as MemberExpression, false);
+                            break;
                         }
                     }
 
-
+                    var opf = node.Operand as ConstantExpression;
+                    if (IsSingleBooleanConstant(opf))
+                    {
+                        HandleSingleBooleanConstant(opf);
+                        return node;
+                    }
                     _sb.Append("not ");
 
                     Visit(node.Operand);
@@ -618,7 +640,7 @@ namespace Tests.Builders
         }
 
         [Fact]
-        public void criteria_is_boolean_column()
+        public void criteria_is_single_boolean_property()
         {
             var sql = Get(d => d.IsActive);
             sql.Should().Be("IsActive=@0");
@@ -634,7 +656,8 @@ namespace Tests.Builders
         [Fact]
         public void get_projection_from_new_object()
         {
-            var sql = Get(d => new IdName());
+            _l = d => new IdName();
+            var sql = _sut.GetColumnsSql(_l);
             sql.Should().Be("Id,Name");
         }
 
@@ -647,7 +670,7 @@ namespace Tests.Builders
         }
 
         [Fact]
-        public void single_boolean_property_is_negated()
+        public void criteria_single_boolean_property_is_negated()
         {
             var sql = Get(d => !d.IsActive);
             sql.Should().Be("IsActive=@0");
@@ -658,8 +681,111 @@ namespace Tests.Builders
         {
             _l = d => d.IsActive;
             var sql = _sut.GetColumnsSql(_l);
-            sql.Should().Be("IsActive");
+            sql.Should().Be("IsActive");            
+        }
+
+        [Fact]
+        public void simple_equality_criteria()
+        {
+            Get(d => d.SomeId == 24).Should().Be("(SomeId = @0)");
+            FirstParameter.Should().Be(24);
+            _sut.Parameters.Clear();
+            var i = 24;
+            Get(d => d.SomeId == i).Should().Be("(SomeId = @0)");
+            FirstParameter.Should().Be(24);
+        }
+        [Fact]
+         public void simple_inequality_criteria()
+        {
+            Get(d => d.SomeId != 24).Should().Be("(SomeId <> @0)");
+            FirstParameter.Should().Be(24);
+            _sut.Parameters.Clear();
+            var i = 24;
+            Get(d => d.SomeId != i).Should().Be("(SomeId <> @0)");
+            FirstParameter.Should().Be(24);
+        }
+
+        [Fact]
+        public void id_greater_than_12_and_less_than_24()
+        {
+            Get(p => p.SomeId > 12 && p.SomeId < 24).Should().Be("((SomeId > @0) and (SomeId < @1))");
+            FirstParameter.Should().Be(12);
+            Parameter(1).Should().Be(24);
+        }
+
+        [Fact]
+        public void id_equals_field_or_title_is_null()
+        {
+            var d=Guid.Empty;
+            Get(p => p.Id == d || p.Title == null).Should().Be("((Id = @0) or (Title is null))");
+            FirstParameter.Should().Be(d);
+        }
+
+
+        [Fact]
+        public void title_is_not_null()
+        {
+            Get(d => d.Title != null).Should().Be("(Title is not null)");
+            _sut.Parameters.CurrentIndex.Should().Be(0);
+        }
+
+        [Fact]
+        public void enum_handling()
+        {
+            Get(d => d.Order == SomeEnum.First).Should().Be("(Order = @0)");
+            FirstParameter.Should().Be(SomeEnum.First);
+            FirstParameter.Should().NotBe((int)SomeEnum.First);
+            FirstParameter.Should().BeOfType<SomeEnum>();
+        }
+
+        [Fact]
+        public void null_enum_handling()
+        {
+            Get(d => d.Order == null).Should().Be("(Order is null)");
+            _sut.Parameters.CurrentIndex.Should().Be(0);
+        }
+
+        [Fact]
+        public void id_and_isActive_not_true()
+        {
+            Get(d => d.SomeId == 23 && !d.IsActive).Should().Be("((SomeId = @0) and IsActive=@1)");
+            FirstParameter.Should().Be(23);
+            Parameter(1).Should().Be(false);
+        }
+
+        [Fact]
+        public void id_and_isActive_is_true()
+        {
+            Get(d => d.SomeId == 23 && d.IsActive).Should().Be("((SomeId = @0) and IsActive=@1)");
+            FirstParameter.Should().Be(23);
+            Parameter(1).Should().Be(true);
+        }
+
+        [Fact]
+        public void id_and_isActive_is_explicitely_true()
+        {
+            Get(d => d.SomeId == 23 && d.IsActive==true).Should().Be("((SomeId = @0) and IsActive=@1)");
+            FirstParameter.Should().Be(23);
+            Parameter(1).Should().Be(true);
+        }
+
+        [Fact]
+        public void handle_nullable_boolean_true()
+        {
+            Get(d => d.IsBla).Should().Be("IsBla=@0");
+            FirstParameter.Should().Be(true);
             
         }
+         [Fact]
+        public void handle_nullable_boolean_false()
+        {
+            Get(d => !d.IsBla).Should().Be("IsBla=@0");
+            FirstParameter.Should().Be(false);
+            
+        }
+
+
+        object FirstParameter => _sut.Parameters.ToArray().First();
+        object Parameter(int i) => _sut.Parameters.ToArray().Skip(i).First();
     }
 }
