@@ -1,88 +1,44 @@
-﻿//using System;
-//using System.Linq.Expressions;
-//using System.Text;
-//using SqlFu.Builders;
-//using SqlFu.Builders.Expressions;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using SqlFu.Builders;
+using SqlFu.Builders.Expressions;
 
-//namespace Tests._Fakes
-//{
-//    public class FakeWriter:IExpressionWriter
-//    {
-//        public FakeWriter()
-//        {
-            
-//        }
-//        public StringBuilder SqlBuffer { get; }=new StringBuilder();
-//        public ParametersManager Parameters { get; }= new ParametersManager();
-//        public IExpressionWriterHelper Helper { get; }
-//        public void Write<T>(Expression<Func<T, bool>> criteria)
-//        {
-//            throw new NotImplementedException();
-//        }
+namespace Tests._Fakes
+{
+    public class FakeWriter : IGenerateSqlFromExpressions
+    {
+        Dictionary<string,Queue<string>> _results=new Dictionary<string, Queue<string>>();
 
-//        public void WriteColumn(LambdaExpression property)
-//        {
-//            throw new NotImplementedException();
-//        }
+        public FakeWriter()
+        {
+            _results["col"]=new Queue<string>();
+            _results["sql"]=new Queue<string>();
+        }
 
-//        public void WriteColumn(MemberExpression property)
-//        {
-//            throw new NotImplementedException();
-//        }
+        public void SetColumnsResults(params string[] vals )
+        {
+            vals.ForEach(v=> _results["col"].Enqueue(v));            
+        }
+        public void SetSqlResults(params string[] vals )
+        {
+            vals.ForEach(v=> _results["sql"].Enqueue(v));            
+        }
 
-//        public string GetSelectColumnsSql(params LambdaExpression[] columns)
-//        {
-//            throw new NotImplementedException();
-//        }
+        public ParametersManager Parameters { get; }= new ParametersManager();
+        public string GetColumnsSql(params Expression[] columns)
+        {
+            var sb=new StringBuilder();
+            columns.ForEach(d=>sb.Append($"{_results["col"].Dequeue()},"));
+            return sb.RemoveLast().ToString();
+        }
 
-//        public string GetSql<T>(Expression<Func<T, object>> criteria)
-//        {
-//            throw new NotImplementedException();
-//        }
-
-//        public string GetSql<T>(Expression<Func<T, bool>> criteria)
-//        {
-//            throw new NotImplementedException();
-//        }
-
-//        public string GetCriteriaSql(LambdaExpression criteria)
-//        {
-//            throw new NotImplementedException();
-//        }
-
-//        public string GetExpressionSql(LambdaExpression expression)
-//        {
-//            throw new NotImplementedException();
-//        }
-
-//        public void WriteCriteria(LambdaExpression criteria)
-//        {
-//            throw new NotImplementedException();
-//        }
-
-//        public void WriteExpression(LambdaExpression expression)
-//        {
-//            throw new NotImplementedException();
-//        }
-
-//        public void WriteExpression(Expression expression)
-//        {
-//            throw new NotImplementedException();
-//        }
-
-//        public void Write<T>(Expression<Func<T, object>> expression)
-//        {
-//            throw new NotImplementedException();
-//        }
-
-//        public void Append(string sql, bool withNewLine = false)
-//        {
-//            throw new NotImplementedException();
-//        }
-
-//        public void AppendLine()
-//        {
-//            throw new NotImplementedException();
-//        }
-//    }
-//}
+        public string GetSql(Expression expression)
+        {
+            return _results["sql"].Dequeue();
+        }
+    }
+}

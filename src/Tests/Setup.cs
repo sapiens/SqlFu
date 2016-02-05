@@ -8,7 +8,7 @@ using SqlFu.Builders.Expressions;
 using SqlFu.Configuration.Internals;
 using SqlFu.Mapping.Internals;
 using SqlFu.Providers;
-using Tests.Data;
+using Tests.Mocks;
 using Tests._Fakes;
 
 namespace Tests
@@ -34,7 +34,7 @@ namespace Tests
 
         }
 
-        public static IGenerateSqlFromExpressions FakeWriter() =>  A.Fake<IGenerateSqlFromExpressions>();
+        public static FakeWriter FakeWriter() => new FakeWriter();
       
 
 

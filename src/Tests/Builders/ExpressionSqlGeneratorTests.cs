@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
 using FluentAssertions;
-using Tests.Data;
 using Xunit;
 using SqlFu.Providers;
 using System.Linq;
@@ -11,6 +10,7 @@ using FakeItEasy.ExtensionSyntax.Full;
 using SqlFu;
 using SqlFu.Builders;
 using SqlFu.Builders.Expressions;
+using Tests.Mocks;
 using Tests._Fakes;
 
 namespace Tests.Builders

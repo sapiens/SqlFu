@@ -1,4 +1,4 @@
-namespace Tests.Data
+namespace Tests.Mocks
 {
     public class Address
     {
