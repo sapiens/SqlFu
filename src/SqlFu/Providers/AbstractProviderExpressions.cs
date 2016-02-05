@@ -17,17 +17,21 @@ namespace SqlFu.Providers
             LinkMethods(()=>1.Count(),CountAll);
             LinkMethods(()=>1.Count(23),Count);
             LinkMethods(()=>1.Sum(3),Sum);
-            LinkMethods(()=>1.Max(),Max);
-            
-         //Functions.Add(typeof(DbFunctions).GetMethod("Min").Name,Min);            
-            //Functions.Add(typeof(DbFunctions).GetMethod("Max").Name,Max);            
-            //Functions.Add(typeof(DbFunctions).GetMethod("Avg").Name,Avg);            
-            //Functions.Add(typeof(DbFunctions).GetMethod("Concat").Name,Concat);            
-            //Functions.Add(typeof(DbFunctions).GetMethod("Round").Name,Round);            
-            //Functions.Add(typeof(DbFunctions).GetMethod("Floor").Name,Floor);            
-            //Functions.Add(typeof(DbFunctions).GetMethod("Ceiling").Name,Ceiling);            
+            LinkMethods(()=>1.Max(2),Max);
+            LinkMethods(()=>1.Min(2),Min);
+            LinkMethods(()=>1.Avg(2),Avg);
+            LinkMethods(()=>1.Floor(2),Floor);
+            LinkMethods(()=>1.Ceiling(2),Ceiling);
+            LinkMethods(()=>1.Concat(),Concat);
+            LinkMethods(()=>1.Round(2,2),Round);                     
         }
 
+        /// <summary>
+        /// Maps the extension method to the actual sql generating function
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="function"></param>
+        /// <param name="func"></param>
         public void LinkMethods<T>(Expression<Func<T>> function, Action<MethodCallExpression, StringBuilder, IGenerateSqlFromExpressions> func)
         {
             var metho = function.Body as MethodCallExpression;
@@ -99,35 +103,35 @@ namespace SqlFu.Providers
        => sb.Append($"sum({w.GetColumnsSql(method.Arguments[1])})");
 
         private void Min(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager)
-         => sb.Append($"min({manager.GetColumnsSql(method.Arguments[0])})");
+         => sb.Append($"min({manager.GetColumnsSql(method.Arguments[1])})");
 
         private void Max(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager) 
-            => sb.Append($"max({manager.GetColumnsSql(method.Arguments[0])})");
+            => sb.Append($"max({manager.GetColumnsSql(method.Arguments[1])})");
 
         private void Avg(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager)
-         => sb.Append($"avg({manager.GetColumnsSql(method.Arguments[0])})");
+         => sb.Append($"avg({manager.GetColumnsSql(method.Arguments[1])})");
 
         private void Round(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions writer)
         {
             sb.Append("round(");
-            sb.Append(writer.GetColumnsSql(method.Arguments[0]));
+            sb.Append(writer.GetColumnsSql(method.Arguments[1]));
             sb.Append(",");
-            sb.Append(writer.GetSql(method.Arguments[1]));
+            sb.Append(writer.GetSql(method.Arguments[2]));
             sb.Append(")"); 
         }
     
         private void Floor(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager) 
-            => sb.Append($"floor({manager.GetColumnsSql(method.Arguments[0])})");
+            => sb.Append($"floor({manager.GetColumnsSql(method.Arguments[1])})");
 
         private void Ceiling(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager)
-        => sb.Append($"ceiling({manager.GetColumnsSql(method.Arguments[0])})");
+        => sb.Append($"ceiling({manager.GetColumnsSql(method.Arguments[1])})");
 
 
 
         private void Concat(MethodCallExpression method,StringBuilder sb,IGenerateSqlFromExpressions writer)
         {
            sb.Append("concat(");
-            foreach (var arg in method.Arguments[0].As<NewArrayExpression>().Expressions)
+            foreach (var arg in method.Arguments[1].As<NewArrayExpression>().Expressions)
             {
                 sb.Append(writer.GetColumnsSql(arg));
                 sb.Append(",");

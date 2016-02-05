@@ -61,28 +61,86 @@ namespace SqlFu.Builders
         {
             return default(T);
         }
+
         /// <summary>
         /// Sql max
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="column"></param>
+        /// <param name="table"></param>
+        /// <param name="expression"></param>
         /// <returns></returns>
-        public static T Max<T>(this T column)
+        public static T Max<T,R>(this T table, R expression)
+        {
+            return default(T);
+        }
+         /// <summary>
+        /// Sql min
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="table"></param>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static T Min<T,R>(this T table, R expression)
         {
             return default(T);
         }
         
         /// <summary>
-        /// Sql max
+        /// Sql floor
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="column"></param>
+        /// <param name="table"></param>
+        /// <param name="expression"></param>
         /// <returns></returns>
-        public static T Min<T>(this T column)
+        public static T Floor<T,R>(this T table, R expression)
         {
             return default(T);
         }
 
+
+        /// <summary>
+        /// Sql Ceiling
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="table"></param>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static T Ceiling<T,R>(this T table, R expression)
+        {
+            return default(T);
+        }
+
+       /// <summary>
+        /// Sql avg
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="table"></param>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static T Avg<T,R>(this T table, R expression)
+        {
+            return default(T);
+        }
+
+
+        /// <summary>
+        /// Sql round
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="table"></param>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static T Round<T, R>(this T table, R expression,int length)
+        {
+            return default(T);
+        }
+
+
+        public static string Concat<T>(this T table, params object[] expressions)
+        {
+            throw new NotImplementedException();
+            
+        }
         //public static void InjectSql(string sql)
     }
 }

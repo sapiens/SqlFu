@@ -385,8 +385,23 @@ namespace Tests.Builders
         [Fact]
         public void max_of_column()
         {
-            var sql = Get(d => d.IsActive.Max());
+            var sql = Get(d => d.Max(d.IsActive));
             sql.Should().Be("max(IsActive)");           
+        }
+
+        [Fact]
+        public void avg_of_column()
+        {
+            var sql = Get(d => d.Avg(d.SomeId));
+            sql.Should().Be("avg(SomeId)");           
+        }
+
+        [Fact]
+        public void min_of_expression()
+        {
+            var sql = Get(d => d.Min(d.SomeId*5));
+            sql.Should().Be("min((SomeId * @0))");
+            FirstParameter.Should().Be(5);
         }
 
         [Fact]
@@ -400,7 +415,38 @@ namespace Tests.Builders
             Get(d => new {total = d.Count()}).Should().Be("count(*) as total");
         }
 
+        [Fact]
+        public void concat_columns()
+        {
+            var sql = Get(d => d.Concat(d.SomeId,"g",d.Title));
+            sql.Should().Be("concat(SomeId,@0,Title)");
+            FirstParameter.Should().Be("g");
+        }
 
+        [Fact]
+        public void round_columns()
+        {
+            var sql = Get(d => d.Round(d.SomeId,3));
+            sql.Should().Be("round(SomeId,@0)");
+            FirstParameter.Should().Be(3);
+        }
+
+
+        [Fact]
+        public void floor_columns()
+        {
+            var sql = Get(d => d.Floor(d.SomeId));
+            sql.Should().Be("floor(SomeId)");
+            
+        }
+
+        [Fact]
+        public void func_ceiling_columns()
+        {
+            var sql = Get(d => d.Ceiling(d.SomeId));
+            sql.Should().Be("ceiling(SomeId)");
+            
+        }
         #endregion
 
         object FirstParameter => _sut.Parameters.ToArray().First();
