@@ -70,15 +70,6 @@ namespace Tests.Builders
             return info.GetColumnName(member, _escape);
         }
 
-
-      
-
-        //private Expression EqualityFromUnary(UnaryExpression node)
-        //    => Expression.Equal(node.Operand, Expression.Constant(node.NodeType != ExpressionType.Not));
-
-        //private Expression EqualityFromBoolProperty(Expression left, bool value)
-        //    => Expression.Equal(left, Expression.Constant(value));
-
         public override string ToString() => _sb.ToString();
 
 
@@ -526,7 +517,12 @@ namespace Tests.Builders
             return node;
         }
 
-        public string GetSql(LambdaExpression expression)
+        /// <summary>
+        /// For everything except "select columns"
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public string GetSql(Expression expression)
         {
             _sb.Clear();
             _columnMode = false;
@@ -536,13 +532,18 @@ namespace Tests.Builders
 
         private bool _columnMode = false;
 
-        public string GetColumnsSql(params LambdaExpression[] columns)
+        /// <summary>
+        /// Only to generate "select columns" 
+        /// </summary>
+        /// <param name="columns"></param>
+        /// <returns></returns>
+        public string GetSelectColumnsSql(params Expression[] columns)
         {
             _sb.Clear();
             _columnMode = true;
             columns.ForEach(col =>
             {
-                Visit(col.Body);               
+                Visit(col);               
                 _sb.Append(",");
 
             });
@@ -611,7 +612,7 @@ namespace Tests.Builders
         public void get_projection_from_new_object()
         {
             _l = d => new IdName();
-            var sql = _sut.GetColumnsSql(_l);
+            var sql = _sut.GetSelectColumnsSql(_l);
             sql.Should().Be("Id,Name");
         }
 
@@ -619,7 +620,7 @@ namespace Tests.Builders
         public void get_projection_from_new_object_with_property_init()
         {
             _l = d => new IdName() {Name=d.Title};
-            var sql = _sut.GetColumnsSql(_l);
+            var sql = _sut.GetSelectColumnsSql(_l);
             sql.Should().Be("Id,Title as Name");
 
              Get(_l).Should().BeEmpty();
@@ -631,7 +632,7 @@ namespace Tests.Builders
         public void get_projection_from_anonymous()
         {
             _l = d => new { d.Id, Name = d.Title };
-            var sql = _sut.GetColumnsSql(_l);
+            var sql = _sut.GetSelectColumnsSql(_l);
             sql.Should().Be("Id as Id,Title as Name");
         }
 
@@ -639,7 +640,7 @@ namespace Tests.Builders
         public void projection_with_column_calculation()
         {
             _l = d => new { d.Id, Name = d.SomeId+1 };
-            var sql = _sut.GetColumnsSql(_l);
+            var sql = _sut.GetSelectColumnsSql(_l);
             sql.Should().Be("Id as Id,(SomeId + @0) as Name");
             FirstParameter.Should().Be(1);
         }
@@ -658,7 +659,7 @@ namespace Tests.Builders
         public void property_as_column_name()
         {
             _l = d => d.IsActive;
-            var sql = _sut.GetColumnsSql(_l);
+            var sql = _sut.GetSelectColumnsSql(_l);
             sql.Should().Be("IsActive");            
         }
 
@@ -793,9 +794,9 @@ namespace Tests.Builders
             A.CallTo(() => _provider.Substring("Title", 0, 1)).Returns("sub(Title)");
             _l = d => d.Title.Substring(0, 1);
             Get(_l).Should().Be("sub(Title)");
-            _sut.GetColumnsSql(_l).Should().Be("sub(Title)");
+            _sut.GetSelectColumnsSql(_l).Should().Be("sub(Title)");
             _l = d => new {Name = d.Title.Substring(0, 1)};
-            _sut.GetColumnsSql(_l).Should().Be("sub(Title) as Name");
+            _sut.GetSelectColumnsSql(_l).Should().Be("sub(Title) as Name");
 
         }
 

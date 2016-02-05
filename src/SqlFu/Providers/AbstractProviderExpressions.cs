@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Text;
 using SqlFu.Builders.Expressions;
+#if COREFX
+using System.Reflection;
+#endif
 
 namespace SqlFu.Providers
 {
@@ -22,17 +24,7 @@ namespace SqlFu.Providers
             Functions.Add(typeof(DbFunctions).GetMethod("Ceiling").Name,Ceiling);            
         }
         
-        //public string FormatConstant(string data)
-        //{
-        //    return "'" + data + "'";
-        //}
-
-        //public virtual string FormatConstant(bool data)
-        //{
-        //    return data ? "1" : "0";
-        //}
-
-        public virtual string Substring(string column, int pos, int length)
+       public virtual string Substring(string column, int pos, int length)
         {
             column.MustNotBeNull();
             var idx = pos + 1;
@@ -64,7 +56,7 @@ namespace SqlFu.Providers
             return "day({0})".ToFormat(column);
         }
 
-        #region Db Functions
+#region Db Functions
         protected Dictionary<string, Action<MethodCallExpression, StringBuilder,ExpressionWriterHelper>> Functions =new Dictionary<string, Action<MethodCallExpression, StringBuilder, ExpressionWriterHelper>>();
 
         private void Count(MethodCallExpression method, StringBuilder sb,ExpressionWriterHelper manager)
@@ -151,6 +143,6 @@ namespace SqlFu.Providers
             if (func == null) throw new NotSupportedException("Unrecognized function {0}".ToFormat(method.Method.Name));
             func(method, sb,manager);
         } 
-        #endregion
+#endregion
     }
 }

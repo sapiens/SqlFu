@@ -6,8 +6,6 @@ namespace SqlFu.Providers
 {
     public interface IDbProviderExpressions
     {
-      //  string FormatConstant(string data);
-       // string FormatConstant(bool data);
         string Substring(string column, int pos, int length);
         string ToUpper(string column);
         string ToLower(string column);
