@@ -13,7 +13,7 @@ namespace SqlFu
         /// <param name="keyName"></param>
         /// <returns></returns>
         public static bool IsUniqueViolation(this DbConnection db, DbException ex, string keyName = null)
-            => db.GetProvider().IsUniqueViolation(ex, keyName);
+            => db.Provider().IsUniqueViolation(ex, keyName);
 
         //public static bool TableIsDeleted(this DbException ex, string name)
         //{

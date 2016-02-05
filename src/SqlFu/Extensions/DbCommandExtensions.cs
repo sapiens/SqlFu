@@ -18,7 +18,7 @@ namespace SqlFu
         /// <returns></returns>
         public static DbCommand CreateAndSetupCommand(this DbConnection cnx, CommandConfiguration cfg)
         {
-            var provider = cnx.GetProvider();
+            var provider = cnx.Provider();
             var cmd = cnx.CreateCommand();
             cmd.CommandText = cfg.SqlText;
             if (cfg.IsStoredProcedure) cmd.CommandType=CommandType.StoredProcedure;

@@ -14,32 +14,32 @@ namespace SqlFu.Builders.Crud
         private readonly HelperOptions _options;
         
         private readonly IExecuteCustomSql _executor;
-        private readonly IExpressionWriter _writer;
+        private readonly IGenerateSqlFromExpressions _writer;
         private readonly IEscapeIdentifier _utils;
-     //   private readonly IManageConverters _converters;
-        
+     
+        StringBuilder _sb=new StringBuilder();
 
-        public UpdateTableBuilder(IExecuteCustomSql executor,IExpressionWriter writer,IEscapeIdentifier utils,/*IManageConverters converters,*/HelperOptions options)
+        public UpdateTableBuilder(IExecuteCustomSql executor,IGenerateSqlFromExpressions writer,IEscapeIdentifier utils,HelperOptions options)
         {
             _executor = executor;
             _writer = writer;
             _utils = utils;
-          //  _converters = converters;
+        
             _options = options;
             
-            _writer.Append($"update {utils.EscapeTableName(options.Table)} set ");
+            _sb.Append($"update {utils.EscapeTableName(options.Table)} set ");
         }
 
         public IExecuteSql Where(Expression<Func<T, bool>> criteria)
         {
-            _writer.SqlBuffer.RemoveLastIfEquals(',');
-            _writer.Append(" where ");
-            _writer.WriteCriteria(criteria);
+            _sb.RemoveLastIfEquals(',');
+            _sb.Append($" where {_writer.GetSql(criteria)}");
+            
             return this;
         }
 
         CommandConfiguration GetCommandConfig() 
-            => new CommandConfiguration(_writer.SqlBuffer.RemoveLastIfEquals(',').ToString(),_writer.Parameters.ToArray()) {ApplyOptions = _options.CmdOptions};
+            => new CommandConfiguration(_sb.RemoveLastIfEquals(',').ToString(),_writer.Parameters.ToArray()) {ApplyOptions = _options.CmdOptions};
 
         public int Execute() => _executor.Execute(GetCommandConfig());
 
@@ -48,23 +48,20 @@ namespace SqlFu.Builders.Crud
 
         public IBuildUpdateTable<T> Set(Expression<Func<T, object>> column, Expression<Func<T, object>> statement)
         {
-            _writer.WriteColumn(column);
-            _writer.Append("=");
-            _writer.WriteExpression(statement);
-            _writer.Append(",");
+            _sb.Append($"{_writer.GetColumnsSql(column)}={_writer.GetColumnsSql(statement)},");
+            
             return this;
         }
 
         public IBuildUpdateTable<T> Set(Expression<Func<T, object>> column, object value)
         {
-            var name = _writer.Helper.GetColumnName(column);
+            var name = _writer.GetColumnsSql(column);
             return Set(name, value);
         }
 
         public IBuildUpdateTable<T> Set(string propertyName, object value)
         {
-            _writer.Append($"{_utils.EscapeIdentifier(propertyName)}=@{_writer.Parameters.CurrentIndex},");
-            //_writer.Parameters.AddValues(_converters.ConvertValueObject(value));
+            _sb.Append($"{_utils.EscapeIdentifier(propertyName)}=@{_writer.Parameters.CurrentIndex},");
             _writer.Parameters.AddValues(value);
             return this;
         }

@@ -4,6 +4,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using SqlFu.Builders.Crud;
+using SqlFu.Builders.Expressions;
 using SqlFu.Configuration;
 
 namespace SqlFu.Builders

@@ -16,22 +16,22 @@ namespace SqlFu
         }
 
         public static void DropTable(this DbConnection cnx, string name, string schema = "") 
-            => cnx.GetProvider().DatabaseTools.DropTableIfExists(cnx,new TableName(name,schema));
+            => cnx.Provider().DatabaseTools.DropTableIfExists(cnx,new TableName(name,schema));
 
         public static void Truncate<T>(this DbConnection db)
         {
             var info = db.GetPocoInfo<T>();
-            var name = info.EscapeName(db.GetProvider());
+            var name = info.EscapeName(db.Provider());
             db.Execute($"truncate {name}");
         }
 
         public static bool TableExists(this DbConnection cnx, string name, string schema = null) 
-            => cnx.GetProvider().DatabaseTools.TableExists(cnx,new TableName(name,schema));
+            => cnx.Provider().DatabaseTools.TableExists(cnx,new TableName(name,schema));
 
         public static bool TableExists<T>(this DbConnection cnx)
         {
             var info = cnx.GetPocoInfo<T>();
-            return cnx.GetProvider().DatabaseTools.TableExists(cnx,info.Table);
+            return cnx.Provider().DatabaseTools.TableExists(cnx,info.Table);
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace SqlFu
         /// <param name="cfg"></param>
         public static void CreateTableFrom<T>(this DbConnection db, Action<IConfigureTable<T>> cfg)
         {
-            var provider = db.GetProvider();
+            var provider = db.Provider();
             var tcfg = new TableConfigurator<T>(provider);
             cfg(tcfg);
 

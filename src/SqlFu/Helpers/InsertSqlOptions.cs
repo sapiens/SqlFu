@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using SqlFu.Builders.Expressions;
 using SqlFu.Configuration;
 
 namespace SqlFu

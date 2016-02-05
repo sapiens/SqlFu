@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using SqlFu.Configuration.Internals;
 
-namespace SqlFu.Configuration
+namespace SqlFu.Builders.Expressions
 {
     public static class ExpressionHelpers
     {
@@ -36,7 +36,7 @@ namespace SqlFu.Configuration
 
         public static IEnumerable<string> GetNames<T>(this Expression<Func<T, object>>[] columns)
         {
-            return columns.Select(c => c.GetPropertyName());
+            return columns.Select(c => GetPropertyName((LambdaExpression) c));
         }
 
         public static ColumnInfo[] ToColumnsInfo<T>(this TableInfo info, Expression<Func<T, object>>[] columns)
@@ -46,11 +46,10 @@ namespace SqlFu.Configuration
 
         }
 
-        internal static bool IsNullUnaryOrConstant(this Expression ex)
+        public static bool IsNullUnaryOrConstant(this Expression ex)
         {
             ex.MustNotBeNull();
-            //if (ex == null) return false;
-
+           
             if (ex is ConstantExpression)
             {
                 return ex.GetValue() == null;

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using SqlFu.Builders.Expressions;
 using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 using SqlFu.Providers;

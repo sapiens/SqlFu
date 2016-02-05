@@ -34,7 +34,7 @@ namespace Tests
 
         }
 
-        public static IExpressionWriter FakeWriter() =>  A.Fake<IExpressionWriter>();
+        public static IGenerateSqlFromExpressions FakeWriter() =>  A.Fake<IGenerateSqlFromExpressions>();
       
 
 

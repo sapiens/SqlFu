@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Text;
 using SqlFu.Builders.Expressions;
+#if COREFX
+using System.Reflection;
+#endif
 
 namespace SqlFu.Providers
 {
@@ -22,17 +24,7 @@ namespace SqlFu.Providers
             Functions.Add(typeof(DbFunctions).GetMethod("Ceiling").Name,Ceiling);            
         }
         
-        public string FormatConstant(string data)
-        {
-            return "'" + data + "'";
-        }
-
-        //public virtual string FormatConstant(bool data)
-        //{
-        //    return data ? "1" : "0";
-        //}
-
-        public virtual string Substring(string column, int pos, int length)
+       public virtual string Substring(string column, int pos, int length)
         {
             column.MustNotBeNull();
             var idx = pos + 1;
@@ -64,10 +56,10 @@ namespace SqlFu.Providers
             return "day({0})".ToFormat(column);
         }
 
-        #region Db Functions
-        protected Dictionary<string, Action<MethodCallExpression, StringBuilder,ExpressionWriterHelper>> Functions =new Dictionary<string, Action<MethodCallExpression, StringBuilder, ExpressionWriterHelper>>();
+#region Db Functions
+        protected Dictionary<string, Action<MethodCallExpression, StringBuilder,IGenerateSqlFromExpressions>> Functions =new Dictionary<string, Action<MethodCallExpression, StringBuilder, IGenerateSqlFromExpressions>>();
 
-        private void Count(MethodCallExpression method, StringBuilder sb,ExpressionWriterHelper manager)
+        private void Count(MethodCallExpression method, StringBuilder sb,IGenerateSqlFromExpressions manager)
         {
             if (method.Arguments[0].NodeType==ExpressionType.Parameter)
             {
@@ -76,81 +68,81 @@ namespace SqlFu.Providers
             }
 
             var column = method.Arguments[0] as MemberExpression;
-            var info = manager.GetColumnName(column);
+            var info = manager.GetColumnsSql(column);
             sb.Append(" count({0})".ToFormat(info));
         }
 
-        private void Sum(MethodCallExpression method, StringBuilder sb, ExpressionWriterHelper manager)
+        private void Sum(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager)
         {
             sb.Append("sum(");
-            manager.CreateExpressionWriter(sb).WriteExpression(method.Arguments[0]);
+            manager.GetColumnsSql(method.Arguments[0]);
             sb.Append(")");
         }
-        private void Min(MethodCallExpression method, StringBuilder sb, ExpressionWriterHelper manager)
+        private void Min(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager)
         {
             sb.Append("min(");
-            manager.CreateExpressionWriter(sb).WriteExpression(method.Arguments[0]);
+            manager.GetColumnsSql(method.Arguments[0]);
             sb.Append(")");
         }
-        private void Max(MethodCallExpression method, StringBuilder sb, ExpressionWriterHelper manager)
+        private void Max(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager)
         {
             sb.Append("max(");
-            manager.CreateExpressionWriter(sb).WriteExpression(method.Arguments[0]);
+            manager.GetColumnsSql(method.Arguments[0]);
             sb.Append(")"); 
         }
         
-        private void Avg(MethodCallExpression method, StringBuilder sb, ExpressionWriterHelper manager)
+        private void Avg(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager)
         {
             sb.Append("avg(");
-            manager.CreateExpressionWriter(sb).WriteExpression(method.Arguments[0]);
+            manager.GetColumnsSql(method.Arguments[0]);
             sb.Append(")"); 
         }
         
-        private void Round(MethodCallExpression method, StringBuilder sb, ExpressionWriterHelper manager)
+        private void Round(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions writer)
         {
             sb.Append("round(");
-            var writer = manager.CreateExpressionWriter(sb);
-            writer.WriteExpression(method.Arguments[0]);
+            writer.GetColumnsSql(method.Arguments[0]);
             sb.Append(",");
-            writer.WriteExpression(method.Arguments[1]);
+            writer.GetSql(method.Arguments[1]);
             sb.Append(")"); 
         }
     
-        private void Floor(MethodCallExpression method, StringBuilder sb, ExpressionWriterHelper manager)
+        private void Floor(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager)
         {
             sb.Append("floor(");
-            manager.CreateExpressionWriter(sb).WriteExpression(method.Arguments[0]);
+            manager.GetColumnsSql(method.Arguments[0]);
             sb.Append(")"); 
         }
     
-        private void Ceiling(MethodCallExpression method, StringBuilder sb, ExpressionWriterHelper manager)
+        private void Ceiling(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager)
         {
             sb.Append("ceiling(");
-            manager.CreateExpressionWriter(sb).WriteExpression(method.Arguments[0]);
+            sb.Append(manager.GetColumnsSql(method.Arguments[0]));
             sb.Append(")"); 
         }
     
 
 
-        private void Concat(MethodCallExpression method, StringBuilder sb, ExpressionWriterHelper manager)
+        private void Concat(MethodCallExpression method,StringBuilder sb,IGenerateSqlFromExpressions writer)
         {
-            sb.Append("concat(");
-            var writer = manager.CreateExpressionWriter(sb);
+           sb.Append("concat(");
             foreach (var arg in method.Arguments[0].As<NewArrayExpression>().Expressions)
             {
-                writer.WriteExpression(arg);
+                sb.Append(writer.GetColumnsSql(arg));
                 sb.Append(",");
             }
             sb.RemoveLastIfEquals(',');
-            sb.Append(")"); 
+            sb.Append(")");           
         }
 
-        public void WriteMethodCall(MethodCallExpression method, StringBuilder sb, ExpressionWriterHelper manager)
+        public string GetSql(MethodCallExpression method, IGenerateSqlFromExpressions manager)
         {
             var func = Functions.GetValueOrDefault(method.Method.Name);
             if (func == null) throw new NotSupportedException("Unrecognized function {0}".ToFormat(method.Method.Name));
-            func(method, sb,manager);
+            var sb=new StringBuilder();
+            func(method,sb, manager);
+            return sb.ToString();
         } 
-        #endregion
+#endregion
     }
 }

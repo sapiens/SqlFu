@@ -15,15 +15,15 @@ namespace SqlFu
 {
     public static class Utils
     {
+       
+
         /// <summary>
-        /// Used in helpers to generate sql
+        /// Used to generate sql bits from expressions
         /// </summary>
         /// <param name="db"></param>
         /// <returns></returns>
-        public static IExpressionWriterHelper CreateWriterHelper(this DbConnection db) => new ExpressionWriterHelper(db.SqlFuConfig().TableInfoFactory,db.GetProvider());
-
-        public static IExpressionWriter CreateExpressionWriter(this DbConnection db)
-            => db.CreateWriterHelper().CreateExpressionWriter();
+        public static IGenerateSqlFromExpressions GetExpressionSqlGenerator(this DbConnection db)
+            => new ExpressionSqlGenerator(db.Provider().ExpressionsHelper,SqlFuManager.Config.TableInfoFactory,db.Provider());
 
         /// <summary>
         /// Every type named '[something][suffix]' will use the table name 'something'
@@ -33,7 +33,7 @@ namespace SqlFu
         /// <param name="schema"></param>
         /// <param name="suffix"></param>
         public static void 
-            AddSuffixTableConvention(this SqlFuConfig cfg,Func<Type,bool> match=null,string schema=null,string suffix="Row")
+            AddSuffixTableConvention(this SqlFuConfig cfg,Func<Type, bool> match=null,string schema=null,string suffix="Row")
         {
             suffix.MustNotBeNull();
             match = match ?? (t => t.Name.EndsWith(suffix));
@@ -41,8 +41,8 @@ namespace SqlFu
             new TableName(t.Name.SubstringUntil(suffix),schema));
         }
 
-        public static DbFunctions GetDbFunctions(this DbConnection db) => db.GetProvider().Functions;
-        public static T GetDbFunctions<T>(this DbConnection db) where T:DbFunctions => db.GetProvider().Functions as T;
+        public static DbFunctions GetDbFunctions(this DbConnection db) => db.Provider().Functions;
+        public static T GetDbFunctions<T>(this DbConnection db) where T:DbFunctions => db.Provider().Functions as T;
 
         public static SqlFuConfig SqlFuConfig(this DbConnection db) => SqlFuManager.Config;
 
@@ -112,7 +112,31 @@ namespace SqlFu
         public static bool IsCustomObject<T>(this T t)
         {
             var type = typeof(T);
-            return !type.IsValueType()&& (type.GetTypeCode() == TypeCode.Object);
+            return !type.IsValueType() && (type.GetTypeCode() == TypeCode.Object);
         }
+
+       
+    }
+
+    public static class SqlBuilderExtensions
+    {
+        /// <summary>
+        /// Empty method to represent a "column in (list)" scenario in sql builder.
+        /// Use it _only_ in an expression.
+        /// </summary>
+        /// <example>
+        /// var values=new[]{val1,val2};
+        ///  [..]Where(post=>post.Title.HasValueIn(values))
+        /// </example>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="column">Column</param>
+        /// <param name="values">The collection of values</param>
+        /// <returns></returns>
+        public static bool HasValueIn<T>(this T column, IEnumerable<T> values)
+        {
+            throw new NotImplementedException("This shouldn't be called directly");
+        }
+
+        //public static void InjectSql(string sql)
     }
 }
