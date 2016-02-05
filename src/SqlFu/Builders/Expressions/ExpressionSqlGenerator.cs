@@ -222,7 +222,7 @@ namespace SqlFu.Builders.Expressions
                 }
 
                 _sb.Append(_provider.GetSql(node, new ExpressionSqlGenerator(_provider, _factory, _escape, Parameters)));
-              
+                return;
             }
 
             if (node.BelongsToParameter() && node.Object.Type.Is<string>())

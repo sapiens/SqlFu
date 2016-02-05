@@ -5,11 +5,7 @@
     /// </summary>
     public class DbFunctions
     {
-        public long Count<T>(T column)
-        {
-            return 0;
-        }
-
+        
         public T Sum<T>(T column)
         {
             return default(T);

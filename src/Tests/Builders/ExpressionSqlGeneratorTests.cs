@@ -1,31 +1,35 @@
 ﻿using System;
-using System.Collections;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
 using FluentAssertions;
 using Tests.Data;
 using Xunit;
-using SqlFu.Builders;
 using SqlFu.Providers;
 using System.Linq;
 using System.Collections.Generic;
 using FakeItEasy;
+using FakeItEasy.ExtensionSyntax.Full;
 using SqlFu;
+using SqlFu.Builders;
 using SqlFu.Builders.Expressions;
 using Tests._Fakes;
 
 namespace Tests.Builders
 {
+
    
-    public class ExpressionWriterTests
+    public class ExpressionSqlGeneratorTests
     {
         private ExpressionSqlGenerator _sut;
         Expression<Func<MapperPost, object>> _l;
         private IDbProviderExpressions _provider = A.Fake<IDbProviderExpressions>();
 
-        public ExpressionWriterTests()
+   
+        public ExpressionSqlGeneratorTests()
         {
+            _provider.CallsTo(d => d.GetSql(A<MethodCallExpression>._, A<IGenerateSqlFromExpressions>._))
+                .ReturnsLazily(x=> TestDbProviderExpression
+                        .Instance.GetSql(x.GetArgument<MethodCallExpression>(0),
+                            x.GetArgument<IGenerateSqlFromExpressions>(1)));
             _sut = new ExpressionSqlGenerator(_provider, Setup.InfoFactory(), FakeEscapeIdentifier.Instance);
         }
 
@@ -361,6 +365,41 @@ namespace Tests.Builders
             Get(d => d.Title.HasValueIn(val)).Should().Be("Title in (@0)"); ;
             Cast<IEnumerable<string>>(FirstParameter).ShouldAllBeEquivalentTo(val);
         }
+
+        #endregion
+
+        #region Common db functions
+
+    
+
+        [Fact]
+        public void sum_of_column()
+        {
+            var sql = Get(d => d.Sum(d.IsActive));
+            sql.Should().Be("sum(IsActive)");
+
+            Get(d => d.Sum(d.SomeId + 6)).Should().Be("sum((SomeId + @0))");
+            FirstParameter.Should().Be(6);
+        }
+
+        [Fact]
+        public void max_of_column()
+        {
+            var sql = Get(d => d.IsActive.Max());
+            sql.Should().Be("max(IsActive)");           
+        }
+
+        [Fact]
+        public void func_count()
+        {
+            var sql = Get(d =>d.Count(d.IsActive));
+            sql.Should().Be("count(IsActive)");
+
+            Get(d => d.Count()).Should().Be("count(*)");
+
+            Get(d => new {total = d.Count()}).Should().Be("count(*) as total");
+        }
+
 
         #endregion
 

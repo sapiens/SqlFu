@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CavemanTools;
+using SqlFu.Builders;
 
 namespace SqlFu.Migrations
 {
@@ -91,7 +92,7 @@ namespace SqlFu.Migrations
         public void InstallSchema()
         {
             var tasks = _tasks.Where(t => t.CurrentVersion.ToString() == _latest);
-            if (tasks.Count() > 1)
+            if (SqlBuilderExtensions.Count(tasks) > 1)
                 throw new InvalidOperationException(
                     string.Format(
                         "Found more than one migration task used to setup the database schema '{0}'. Each schema must have only one such task",

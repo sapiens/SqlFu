@@ -117,26 +117,4 @@ namespace SqlFu
 
        
     }
-
-    public static class SqlBuilderExtensions
-    {
-        /// <summary>
-        /// Empty method to represent a "column in (list)" scenario in sql builder.
-        /// Use it _only_ in an expression.
-        /// </summary>
-        /// <example>
-        /// var values=new[]{val1,val2};
-        ///  [..]Where(post=>post.Title.HasValueIn(values))
-        /// </example>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="column">Column</param>
-        /// <param name="values">The collection of values</param>
-        /// <returns></returns>
-        public static bool HasValueIn<T>(this T column, IEnumerable<T> values)
-        {
-            throw new NotImplementedException("This shouldn't be called directly");
-        }
-
-        //public static void InjectSql(string sql)
-    }
 }
