@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using SqlFu.Configuration;
 using SqlFu.Providers;
@@ -221,6 +222,13 @@ namespace SqlFu.Builders.Expressions
                     return;
                 }
 
+
+                if (node.Method.Name == "InjectSql")
+                {
+                    HandleInject(node);
+                    return;
+                }
+
                 _sb.Append(_provider.GetSql(node, new ExpressionSqlGenerator(_provider, _factory, _escape, Parameters)));
                 return;
             }
@@ -229,6 +237,21 @@ namespace SqlFu.Builders.Expressions
             {
                 HandleParamStringFunctions(node);
             }
+        }
+
+        private void HandleInject(MethodCallExpression node)
+        {
+            var sql = node.Arguments[1].GetValue() as string;
+            var args = node.Arguments[2] as NewExpression;
+
+            var i = 0;
+            foreach (var arg in args.Members)
+            {
+                sql = sql.Replace($"@{arg.Name}", $"@{Parameters.CurrentIndex}");
+                Parameters.AddValues(args.Arguments[i].GetValue());                
+                i++;
+            }
+            _sb.Append(sql);
         }
 
         private void HandleParamStringFunctions(MethodCallExpression node)

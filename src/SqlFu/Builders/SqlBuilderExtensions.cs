@@ -23,6 +23,12 @@ namespace SqlFu.Builders
             throw new NotImplementedException("This shouldn't be called directly");
         }
 
+
+        public static R InjectSql<T, R>(this T table, string sql, R args)
+        {
+            return args;
+        }
+
         /// <summary>
         /// Sql count(*)
         /// </summary>

@@ -449,6 +449,15 @@ namespace Tests.Builders
         }
         #endregion
 
+        [Fact]
+        public void inject_sql()
+        {
+            Get(d => d.Decimal == 23);
+            Get(d => d.InjectSql("bubu @id - @test", new {id = 3,test="bla"})).Should().Be("bubu @1 - @2");
+            Parameter(1).Should().Be(3);
+            Parameter(2).Should().Be("bla");
+        }
+
         object FirstParameter => _sut.Parameters.ToArray().First();
         object Parameter(int i) => _sut.Parameters.ToArray().Skip(i).First();
     }
