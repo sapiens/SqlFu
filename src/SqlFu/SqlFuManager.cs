@@ -3,7 +3,6 @@ using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 using CavemanTools.Logging;
-using SqlFu.Builders.Expressions;
 using SqlFu.Configuration.Internals;
 using SqlFu.Executors;
 using SqlFu.Providers;
@@ -47,19 +46,17 @@ namespace SqlFu
         /// <param name="conex"></param>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static DbConnection GetConnection(DbConnection conex, IDbProvider provider = null) => new SqlFuConnection(conex, provider ?? DefaultProvider);
+        public static DbConnection GetConnection(DbConnection conex, IDbProvider provider = null) => new SqlFuConnection(conex, provider ?? Config.GetProfile().Provider);
 
         public static void Configure(Action<SqlFuConfig> cfg)
         {
             cfg.MustNotBeNull();
             UseLogManager();
             cfg(Config);
+            if (config.HasNoProfiles) throw new InvalidOperationException("You need to define a profile in order to continue");
         }
 
-        //todo set a null provider
-        public static IDbProvider DefaultProvider { get; set; }
-
-       public static DbConnection OpenConnection(IDbProvider provider,string connectionString)
+        public static DbConnection OpenConnection(IDbProvider provider,string connectionString)
         {
             provider.MustNotBeNull();
             if (connectionString == null)

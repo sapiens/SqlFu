@@ -3,6 +3,9 @@ using System.Data.Common;
 
 namespace SqlFu.Providers
 {
+    /// <summary>
+    /// Implementation should be thread safe. It will be used as a singleton
+    /// </summary>
     public interface IDbProvider : IEscapeIdentifier, IDbProviderExceptions, IDbProviderHelpers
     {
         void SetupParameter(DbParameter dbDataParameter, string key, object value);

@@ -127,7 +127,9 @@ namespace SqlFu
 
         }
 
-        public DbAccessProfile GetProfile(string name) => _profiles[name];
+        public DbAccessProfile GetProfile(string name="default") => _profiles[name];
+
+        public bool HasNoProfiles => !_profiles.HasItems();
 
     }
 }
