@@ -56,9 +56,7 @@ namespace Tests
             => sqlValues;
 
         public override string FormatQueryPagination(string sql, Pagination page, ParametersManager pm)
-        {
-            throw new NotImplementedException();
-        }
+            => sql + " limit";
 
         protected override IDatabaseTools InitTools()
         {

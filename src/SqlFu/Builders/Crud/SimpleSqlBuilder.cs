@@ -48,8 +48,8 @@ namespace SqlFu.Builders.Crud
 
         BuiltSql<TResult> Select<TResult>(string columns,bool distinct)
         {
-            var text = "select ";
-            if (distinct) text += "distinct ";
+            var text = "select";
+            if (distinct) text += " distinct";
             text += columns;
             _sb.Insert(0, text);
             return new BuiltSql<TResult>(_sb.ToString(), _writer.Parameters.ToArray(),_options);
@@ -100,8 +100,8 @@ namespace SqlFu.Builders.Crud
             if (columns.Length == 0) return this;
             _sb.Append("group by ");
             _sb.Append(_writer.GetColumnsSql(columns));
-            //columns.Select(c=>_writer.GetExpressionSql(c)).ForEach(t=>_writer.Append($"{t},"));
-            _sb.RemoveLast().AppendLine();
+          
+            _sb.AppendLine();
             return this;
         }
 
