@@ -7,8 +7,8 @@ namespace SqlFu.Builders
     public static class SqlBuilderExtensions
     {
         /// <summary>
-        /// Empty method to represent a "column in (list)" scenario in sql builder.
-        /// Use it _only_ in an expression.
+        /// Placeholder method to represent a "column in (list)" scenario in sql builder.
+        /// Use it _only_ inside an expression.
         /// </summary>
         /// <example>
         /// var values=new[]{val1,val2};
@@ -24,9 +24,22 @@ namespace SqlFu.Builders
         }
 
 
+        /// <summary>
+        /// Placeholder method to injects raw sql into a strongly typed query
+        /// It should be used _only_ inside an expression
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="R"></typeparam>
+        /// <param name="table"></param>
+        /// <param name="sql">Raw sql string with placeholders for named parameters 'where my id=@id'</param>
+        /// <param name="args">Anonymous object with the values of the parameters</param>
+        /// <example>
+        /// [..]Where(d=>d.InjectSql("my id=@id",new{id=2}))
+        /// </example>
+        /// <returns></returns>
         public static R InjectSql<T, R>(this T table, string sql, R args)
         {
-            return args;
+            throw new NotImplementedException("This shouldn't be called directly");
         }
 
         /// <summary>
