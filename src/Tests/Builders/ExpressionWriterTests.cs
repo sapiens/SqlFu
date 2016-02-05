@@ -38,14 +38,14 @@ namespace Tests.Builders
 
         public ParametersManager Parameters { get; } = new ParametersManager();
 
-        public string GetColumnName(LambdaExpression member)
-        {
-            var mbody = member.Body as MemberExpression;
-            if (mbody != null) return GetColumnName(mbody);
-            var ubody = member.Body as UnaryExpression;
-            if (ubody == null) throw new NotSupportedException("Only members and unary expressions are supported");
-            return GetColumnName(ubody);
-        }
+        //string GetColumnName(LambdaExpression member)
+        //{
+        //    var mbody = member.Body as MemberExpression;
+        //    if (mbody != null) return GetColumnName(mbody);
+        //    var ubody = member.Body as UnaryExpression;
+        //    if (ubody == null) throw new NotSupportedException("Only members and unary expressions are supported");
+        //    return GetColumnName(ubody);
+        //}
 
         private string GetColumnName(UnaryExpression member)
         {
@@ -73,11 +73,11 @@ namespace Tests.Builders
 
       
 
-        private Expression EqualityFromUnary(UnaryExpression node)
-            => Expression.Equal(node.Operand, Expression.Constant(node.NodeType != ExpressionType.Not));
+        //private Expression EqualityFromUnary(UnaryExpression node)
+        //    => Expression.Equal(node.Operand, Expression.Constant(node.NodeType != ExpressionType.Not));
 
-        private Expression EqualityFromBoolProperty(Expression left, bool value)
-            => Expression.Equal(left, Expression.Constant(value));
+        //private Expression EqualityFromBoolProperty(Expression left, bool value)
+        //    => Expression.Equal(left, Expression.Constant(value));
 
         public override string ToString() => _sb.ToString();
 
@@ -195,8 +195,7 @@ namespace Tests.Builders
             }
             else
             {
-                _sb.Append("@" + Parameters.CurrentIndex);
-                Parameters.AddValues(node.GetValue());
+                WriteParameter(node);               
             }
             return node;
         }
@@ -239,8 +238,8 @@ namespace Tests.Builders
                     return;
                 }               
 
-                //todo 
-            //_provider.WriteMethodCall(node, _sb, _helper);
+               
+           // _provider.WriteMethodCall(node, _sb, _helper);
             }
 
             if (node.BelongsToParameter() && node.Object.Type.Is<string>())
@@ -410,22 +409,22 @@ namespace Tests.Builders
         }
 
 
-       
-        private void VisitProjection(MemberInitExpression columns)
+        protected override Expression VisitMemberInit(MemberInitExpression node)
         {
-            var node = columns;
+            if (!_columnMode) return node;
 
+            HandleObject(node.NewExpression,node.Bindings.Select(d=>d.Member.Name).ToArray());
+            _sb.Append(',');
             foreach (var arg in node.Bindings.Cast<MemberAssignment>())
             {
-                _sb.AppendLine();
+                
                 Visit(arg.Expression);
                 _sb.AppendFormat(" as {0},", arg.Member.Name);
 
             }
             _sb.RemoveLast();
+            return node;
         }
-
-
 
         private void VisitProjection(NewExpression node)
         {
@@ -438,10 +437,11 @@ namespace Tests.Builders
             HandleObject(node);
         }
 
-        void HandleObject(NewExpression node)
+        void HandleObject(NewExpression node,params string[] skip)
         {
 
             node.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(d=>!skip.Any(s=>d.Name==s))
                 .ForEach(n =>
                 {
                   _sb
@@ -467,8 +467,7 @@ namespace Tests.Builders
 
         protected override Expression VisitNew(NewExpression node)
         {
-            VisitProjection(node);
-            //WriteParameter(node);
+            VisitProjection(node);        
             return node;
         }
 
@@ -615,6 +614,18 @@ namespace Tests.Builders
             var sql = _sut.GetColumnsSql(_l);
             sql.Should().Be("Id,Name");
         }
+
+         [Fact]
+        public void get_projection_from_new_object_with_property_init()
+        {
+            _l = d => new IdName() {Name=d.Title};
+            var sql = _sut.GetColumnsSql(_l);
+            sql.Should().Be("Id,Title as Name");
+
+             Get(_l).Should().BeEmpty();
+        }
+
+
 
         [Fact]
         public void get_projection_from_anonymous()
