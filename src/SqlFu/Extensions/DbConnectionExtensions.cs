@@ -537,7 +537,7 @@ namespace SqlFu
         /// </summary>
         /// <param name="db"></param>
         /// <param name="addObjectStatement"></param>
-        public static void AddDbObrjectOrIgnore(this DbConnection db, string addObjectStatement)
+        public static void AddDbObjectOrIgnore(this DbConnection db, string addObjectStatement)
         {
             try
             {

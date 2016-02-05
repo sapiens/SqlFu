@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		SqlFu\global.json = SqlFu\global.json
 	EndProjectSection
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Tests.SqlServer", "Tests.SqlServer\Tests.SqlServer.xproj", "{1F27D35F-B298-493C-9C36-0522D00C8830}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{8308096C-7B49-4604-8F9C-44BA52C1A229}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8308096C-7B49-4604-8F9C-44BA52C1A229}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8308096C-7B49-4604-8F9C-44BA52C1A229}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F27D35F-B298-493C-9C36-0522D00C8830}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F27D35F-B298-493C-9C36-0522D00C8830}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F27D35F-B298-493C-9C36-0522D00C8830}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F27D35F-B298-493C-9C36-0522D00C8830}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
