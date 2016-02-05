@@ -20,7 +20,8 @@ namespace SqlFu.Builders.Crud
             _info = info;
             _data = data;
             _provider = provider;
-            _options = options;            
+            _options = options;      
+            options.EnsureTableName(info);      
         }
 
 
@@ -28,7 +29,7 @@ namespace SqlFu.Builders.Crud
         {
             if (_info.SqlCache.InsertSql.IsNullOrEmpty())
             {
-                _info.SqlCache.InsertSql = Build();
+                _info.SqlCache.InsertSql = Build();             
             }
 
             return new CommandConfiguration(_info.SqlCache.InsertSql,GetValues()) {ApplyOptions = _options.CmdOptions};
@@ -39,7 +40,7 @@ namespace SqlFu.Builders.Crud
         {
             var columns = GetInsertColumns();
             var values = _provider.AddReturnInsertValue(GetValuesPlaceholders(),_options.IdentityColumn);
-            return $"{columns} \n {values}";
+            return $"{columns}\n {values}";
         }
 
         private object[] GetValues() => GetInsertableColumns().Select(c => _data.GetPropertyValue(c)).ToArray();
@@ -50,8 +51,7 @@ namespace SqlFu.Builders.Crud
             if (_options.IdentityColumn.IsNullOrEmpty()) _options.IdentityColumn = _info.IdentityColumn;
             builder.Append($"insert into {_info.EscapeName(_provider, _options.Table)} (");
 
-            GetInsertableColumns()
-                 .ForEach(n =>
+            GetInsertableColumns().ForEach(n =>
                  {
                      builder.Append($"{ _provider.EscapeIdentifier(n)},");
                  });
@@ -61,7 +61,10 @@ namespace SqlFu.Builders.Crud
         }
 
         private IEnumerable<string> GetInsertableColumns() 
-            => _info.Columns.Select(d => d.Name).Where(c => c != _options.IdentityColumn && !_options.IgnoreColumns.Contains(c));
+            => _info.Columns
+            .Where(d=>d.CanBeFlattened)
+            .Select(d => d.Name).Where(
+                c => c != _options.IdentityColumn && !_options.IgnoreColumns.Contains(c));
 
         private string GetValuesPlaceholders()
         {

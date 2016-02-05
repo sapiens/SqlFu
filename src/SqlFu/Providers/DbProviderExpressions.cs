@@ -10,9 +10,9 @@ using System.Reflection;
 
 namespace SqlFu.Providers
 {
-    public abstract class AbstractProviderExpressions : IDbProviderExpressions
+    public class DbProviderExpressions : IDbProviderExpressions
     {
-        protected AbstractProviderExpressions()
+        protected DbProviderExpressions()
         {
             LinkMethods(()=>1.Count(),CountAll);
             LinkMethods(()=>1.Count(23),Count);
@@ -85,20 +85,6 @@ namespace SqlFu.Providers
             => sb.Append("count(*)");
        
   
-
-        //private void SumMany(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions w)
-        //{
-        //    if (method.Arguments[0].NodeType != ExpressionType.Parameter)
-        //    {
-        //        Sum(method,sb,w);
-        //        return;                
-        //    }
-        //    sb.Append("sum(");
-        //    method.Arguments.Skip(1).ForEach(ex=>sb.Append($"{w.GetColumnsSql(ex)},"));
-        //    sb.RemoveLast().Append(")");            
-        //}
-
-
         private void Sum(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions w)
        => sb.Append($"sum({w.GetColumnsSql(method.Arguments[1])})");
 

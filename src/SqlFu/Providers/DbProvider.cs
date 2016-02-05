@@ -82,7 +82,7 @@ namespace SqlFu.Providers
         public abstract bool ObjectExists(DbException ex, string name = null);
 
 
-        public abstract string AddReturnInsertValue(string values, string identityColumn);
+        public abstract string AddReturnInsertValue(string sqlValues, string identityColumn);
 
         public abstract string FormatQueryPagination(string sql, Pagination page, ParametersManager pm);
 

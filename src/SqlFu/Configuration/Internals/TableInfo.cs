@@ -17,9 +17,15 @@ namespace SqlFu.Configuration.Internals
             
             Columns =
                 t.GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                    .Where(m => m.IsProperty())
+                    .Where(m =>m.IsProperty())
                     .Cast<PropertyInfo>()
-                    .Select((m,idx) => new ColumnInfo(this, m) {PocoIdx = idx,HasConverter = converter.HasConverter(m.PropertyType)}).ToArray();
+                    .Select((m,idx) => new ColumnInfo(this, m)
+                    {
+                        PocoIdx = idx
+                        ,HasConverter = converter.HasConverter(m.PropertyType)
+                        ,CanBeFlattened = !m.PropertyType.IsCustomObjectType() || converter.CanFlattenValueObject(m.PropertyType)
+                    }).ToArray();
+            HandleAttributeOverride();
         }
 
         public void HandleAttributeOverride()

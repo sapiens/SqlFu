@@ -1,5 +1,5 @@
 using System;
-using Tests.Mocks;
+using Tests.TestData;
 using Tests._Fakes;
 
 namespace Tests.Providers

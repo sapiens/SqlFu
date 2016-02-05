@@ -8,7 +8,7 @@ using SqlFu.Builders.Expressions;
 using SqlFu.Configuration.Internals;
 using SqlFu.Mapping.Internals;
 using SqlFu.Providers;
-using Tests.Mocks;
+using Tests.TestData;
 using Tests._Fakes;
 
 namespace Tests
@@ -42,7 +42,8 @@ namespace Tests
         public static ConvertersManager Converters()
         {
             var r= new ConvertersManager();
-            r.RegisterConverter(o=> o.As<string>().IsNullOrEmpty()?null:new Email(o.ToString()));
+
+            r.MapValueObject(e=>e.Value,o=> o.As<string>().IsNullOrEmpty()?null:new Email(o.ToString()));
             return r;
         }
 

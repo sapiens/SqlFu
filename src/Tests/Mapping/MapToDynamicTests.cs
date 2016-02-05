@@ -25,20 +25,20 @@ namespace Tests.Mapping
         {
             var reader = Setup.FakeReader();
             var sut = new DynamicMapper();
-            var manual=new ManualMapper<dynamic>(r =>
-            {
-                dynamic d = new ExpandoObject();
-                d.Id = (Guid) r["Id"];
-                d.Name = r["Name"];
-                d.Address = r["Address"];
-                return d;
-            });
+            //var manual=new ManualMapper<dynamic>(r =>
+            //{
+            //    dynamic d = new ExpandoObject();
+            //    d.Id = (Guid) r["Id"];
+            //    d.Name = r["Name"];
+            //    d.Address = r["Address"];
+            //    return d;
+            //});
 
-            var b = new BenchmarkAction(i => sut.Map(reader, ""));
-            Setup.DoBenchmark(1000, b, new BenchmarkAction(i =>
-             {
-                 manual.Map(reader);
-             }));
+            //var b = new BenchmarkAction(i => sut.Map(reader, ""));
+            //Setup.DoBenchmark(1000, b, new BenchmarkAction(i =>
+            // {
+            //     manual.Map(reader);
+            // }));
             dynamic poco = sut.Map(reader, "");
             AssertionExtensions.Should((object) poco.Id).Be(Guid.Empty);
             AssertionExtensions.Should((object) poco.Name).Be("bla");

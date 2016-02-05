@@ -3,7 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using FluentAssertions;
 using SqlFu.Builders.Crud;
-using Tests.Mocks;
+using Tests.TestData;
 using Tests._Fakes;
 using Xunit;
 

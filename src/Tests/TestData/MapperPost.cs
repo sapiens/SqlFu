@@ -1,4 +1,4 @@
-﻿namespace Tests.Mocks
+﻿namespace Tests.TestData
 {
     public class MapperPost:Post
     {

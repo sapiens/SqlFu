@@ -1,6 +1,6 @@
 ﻿namespace SqlFu.Providers.SqlServer
 {
-    public class SqlServer2012Expressions : AbstractProviderExpressions
+    public class SqlServer2012Expressions : DbProviderExpressions
     {
         public SqlServer2012Expressions()
         {

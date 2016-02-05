@@ -83,10 +83,10 @@ namespace SqlFu.Providers.SqlServer
         }
 
        
-        public override string AddReturnInsertValue(string values, string identityColumn)
+        public override string AddReturnInsertValue(string sqlValues, string identityColumn)
         {
-            if (identityColumn.IsNullOrEmpty()) return values;
-            return $"\nOUTPUT INSERTED.{identityColumn} AS ID " + values;
+            if (identityColumn.IsNullOrEmpty()) return sqlValues;
+            return $"\nOUTPUT INSERTED.{identityColumn} AS ID " + sqlValues;
         }
 
   

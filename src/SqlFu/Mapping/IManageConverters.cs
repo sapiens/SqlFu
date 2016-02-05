@@ -6,6 +6,7 @@ namespace SqlFu.Mapping
     {
         T Convert<T>(object o);
         bool HasConverter(Type type);
+        bool CanFlattenValueObject(Type type);
         object ConvertValueObject(object value);
     }
 }

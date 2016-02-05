@@ -32,6 +32,8 @@ namespace SqlFu.Mapping.Internals
         Dictionary<Type,Func<object,object>> _voMap=new Dictionary<Type, Func<object, object>>();
 
         public bool HasConverter(Type type) => _converters.ContainsKey(type);
+        public bool CanFlattenValueObject(Type type) => _voMap.ContainsKey(type);
+       
 
         public object ConvertValueObject(object value)
         {

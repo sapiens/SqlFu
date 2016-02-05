@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Tests.Mocks
+namespace Tests.TestData
 {
     public class SomeData
     {

@@ -5,7 +5,7 @@ using FluentAssertions;
 using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 using SqlFu.Mapping;
-using Tests.Mocks;
+using Tests.TestData;
 using Xunit;
 
 namespace Tests.Configuration

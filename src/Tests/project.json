@@ -16,7 +16,7 @@
         "test": "xunit.runner.dnx"
     },
     "compileExclude": ["Providers/MsSql"],
-
+    
     "frameworks": {
        
         "dnx46": {

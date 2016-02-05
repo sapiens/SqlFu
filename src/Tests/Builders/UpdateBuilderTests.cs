@@ -10,8 +10,8 @@ using Xunit.Abstractions;
 using SqlFu;
 using SqlFu.Builders.Expressions;
 using SqlFu.Configuration.Internals;
-using Tests.Mocks;
 using System.Linq;
+using Tests.TestData;
 
 namespace Tests.Builders
 {
@@ -32,7 +32,7 @@ namespace Tests.Builders
             _executor = new FakeSqlExecutor();
             _options = new HelperOptions();
             _options.EnsureTableName(Setup.GetTableInfo<Post>());
-            _sut = new UpdateTableBuilder<Post>(_executor, _writer, FakeEscapeIdentifier.Instance, _options);
+            _sut = new UpdateTableBuilder<Post>(_executor, _writer, new FakeEscapeIdentifier(), _options);
         }
 
 
@@ -42,7 +42,7 @@ namespace Tests.Builders
            _writer.SetColumnsResults("SomeId");
             _writer.SetSqlResults("Id=@1");
             _sut.Set(d => d.SomeId, 34).Where(d => d.Id == Guid.Empty).Execute();
-            _executor.Result.SqlText.Should().Be("update Post set SomeId=@0 where Id=@1");
+            _executor.Result.SqlText.Should().Be("update SomePost set SomeId=@0 where Id=@1");
             Parameter(0).Should().Be(34);           
         }
 
@@ -52,7 +52,7 @@ namespace Tests.Builders
         {
             _writer.SetSqlResults("Id=@1");
             _sut.Set("SomeId", 34).Where(d => d.Id == Guid.Empty).Execute();
-            _executor.Result.SqlText.Should().Be("update Post set SomeId=@0 where Id=@1");
+            _executor.Result.SqlText.Should().Be("update SomePost set SomeId=@0 where Id=@1");
             Parameter(0).Should().Be(34);
         }
         object Parameter(int i) => _writer.Parameters.ToArray().Skip(i).First();

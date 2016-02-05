@@ -22,7 +22,8 @@ namespace SqlFu.Configuration.Internals
 
         public Type Type => PropertyInfo.PropertyType;
         public string Name { get; set; }
-      
+
+        public bool CanBeFlattened { get; set; }
         public bool HasConverter { get; set; }
         public int PocoIdx { get; set; }
 
