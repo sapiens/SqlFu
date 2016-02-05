@@ -13,6 +13,7 @@ using SqlFu.Configuration;
 using System.Collections.Generic;
 using FakeItEasy;
 using SqlFu;
+using SqlFu.Builders.Expressions;
 using Tests._Fakes;
 
 namespace Tests.Builders
@@ -222,25 +223,29 @@ namespace Tests.Builders
             Parameters.AddValues(node.GetValue());
         }
 
+        /// <summary>
+        /// Names of the methods used to check if a column is contained by a collection
+        /// </summary>
+        static readonly string[] containsNames = new[] {"Contains", "HasValueIn"};
+
         private void HandleParameter(MethodCallExpression node)
         {
+            
             if (node.HasParameterArgument())
             {
-                if (node.Method.Name == "Contains")
+                if (containsNames.Contains(node.Method.Name))
                 {
                     HandleContains(node);
                     return;
-                }
+                }               
+
                 //todo 
             //_provider.WriteMethodCall(node, _sb, _helper);
             }
 
-            if (node.BelongsToParameter())
+            if (node.BelongsToParameter() && node.Object.Type.Is<string>())
             {
-                if (node.Object.Type == typeof(string))
-                {
-                    HandleParamStringFunctions(node);
-                }
+              HandleParamStringFunctions(node);            
             }
         }
 
@@ -252,8 +257,7 @@ namespace Tests.Builders
             if (node.Arguments.HasItems())
             {
                 firstArg = node.Arguments[0].GetValue();
-            }
-            firstArg.MustNotBeNull();
+            }          
             string value = "";
             switch (node.Method.Name)
             {
@@ -288,25 +292,37 @@ namespace Tests.Builders
         private void HandleContains(MethodCallExpression meth)
         {
             IList list = null;
-            int pIdx = 1;
+            var colIdx = 1;
+            
             if (meth.Arguments.Count == 1)
             {
                 list = meth.Object.GetValue() as IList;
-                pIdx = 0;
+                colIdx = 0;
             }
             else
             {
-                list = meth.Arguments[0].GetValue() as IList;
+                var valIdx = meth.Arguments[0].BelongsToParameter()?1:0;
+                colIdx = valIdx == 0 ? 1 : 0;
+                list = meth.Arguments[valIdx].GetValue() as IList;
+                if (list == null)
+                {
+                    var en = meth.Arguments[valIdx].GetValue() as IEnumerable;
+                    var lst = new ArrayList();
+                    foreach (var d in en) lst.Add(d);
+                    list = lst;
+                }
+               
+                
             }
 
-            if (list == null)
-            {
-                throw new NotSupportedException("Contains must be invoked on a IList (array or List)");
-            }
+            //if (list == null)
+            //{
+            //    throw new NotSupportedException("Contains must be invoked on a IList (array or List)");
+            //}
 
             if (list.Count > 0)
             {
-                var param = meth.Arguments[pIdx] as MemberExpression;
+                var param = meth.Arguments[colIdx] as MemberExpression;
                 _sb.Append(GetColumnName(param));
 
                 _sb.AppendFormat(" in (@{0})", Parameters.CurrentIndex);
@@ -527,23 +543,7 @@ namespace Tests.Builders
             _columnMode = true;
             columns.ForEach(col =>
             {
-                Visit(col.Body);
-                //switch (col.Body.NodeType)
-                //{
-                //    case ExpressionType.MemberAccess:
-                //        VisitColumn(col.Body as MemberExpression);
-                //        break;
-                //    case ExpressionType.New:
-                //        VisitProjection(col.Body as NewExpression);
-                //        break;
-                //    case ExpressionType.MemberInit:
-                //        VisitProjection(col.Body as MemberInitExpression);
-                //        break;
-
-                //    default:
-                //        Visit(col.Body);
-                //        break;
-                //}
+                Visit(col.Body);               
                 _sb.Append(",");
 
             });
@@ -559,10 +559,11 @@ namespace Tests.Builders
     {
         private MyWriter _sut;
         Expression<Func<MapperPost, object>> _l;
+        private IDbProviderExpressions _provider = A.Fake<IDbProviderExpressions>();
 
         public ExpressionWriterTests()
         {
-            _sut = new MyWriter(A.Fake<IDbProviderExpressions>(), Setup.InfoFactory(), FakeEscapeIdentifier.Instance);
+            _sut = new MyWriter(_provider, Setup.InfoFactory(), FakeEscapeIdentifier.Instance);
         }
 
         [Fact]
@@ -598,13 +599,15 @@ namespace Tests.Builders
             sql.Should().Be("IsActive=@0");
             _sut.Parameters.ToArray().First().Should().Be(true);
         }
-
+       
+        #region ProjectColumns
         class IdName
         {
             public int Id { get; set; }
             public string Name { get; set; } 
         }
 
+ 
         [Fact]
         public void get_projection_from_new_object()
         {
@@ -616,11 +619,23 @@ namespace Tests.Builders
         [Fact]
         public void get_projection_from_anonymous()
         {
-            _l = d => new {d.Id, Name = d.Title};
+            _l = d => new { d.Id, Name = d.Title };
             var sql = _sut.GetColumnsSql(_l);
             sql.Should().Be("Id as Id,Title as Name");
         }
 
+        [Fact]
+        public void projection_with_column_calculation()
+        {
+            _l = d => new { d.Id, Name = d.SomeId+1 };
+            var sql = _sut.GetColumnsSql(_l);
+            sql.Should().Be("Id as Id,(SomeId + @0) as Name");
+            FirstParameter.Should().Be(1);
+        }
+
+        #endregion
+
+        #region Common criteria
         [Fact]
         public void criteria_single_boolean_property_is_negated()
         {
@@ -757,8 +772,127 @@ namespace Tests.Builders
             Get(p => p.Order == SomeEnum.Last).Should().Be("(Order = @0)");
             FirstParameter.Should().Be(SomeEnum.Last);
         }
+        #endregion
+
+        #region String functions
+
+        [Fact]
+        public void substring_of_column()
+        {
+            A.CallTo(() => _provider.Substring("Title", 0, 1)).Returns("sub(Title)");
+            _l = d => d.Title.Substring(0, 1);
+            Get(_l).Should().Be("sub(Title)");
+            _sut.GetColumnsSql(_l).Should().Be("sub(Title)");
+            _l = d => new {Name = d.Title.Substring(0, 1)};
+            _sut.GetColumnsSql(_l).Should().Be("sub(Title) as Name");
+
+        }
+
+        [Fact]
+        public void string_starts_with()
+        {
+            Get(d => d.Title.StartsWith("t")).Should().Be("Title like @0");
+            FirstParameter.Should().Be("t%");
+        }
+
+        [Fact]
+        public void string_ends_with()
+        {
+            Get(d => d.Title.EndsWith("t")).Should().Be("Title like @0");
+            FirstParameter.Should().Be("%t");
+        }
+
+        [Fact]
+        public void string_contains()
+        {
+            Get(d => d.Title.Contains("''t")).Should().Be("Title like @0");
+            FirstParameter.Should().Be("%''t%");
+        }
+
+        [Fact]
+        public void string_length()
+        {
+            A.CallTo(() => _provider.Length("Title")).Returns("len(Title)");
+            Get(d => d.Title.Length == 2).Should().Be("(len(Title) = @0)");
+            
+            FirstParameter.Should().Be(2);
+        }
+
+        [Fact]
+        public void to_upper()
+        {
+            Get(d => d.Title.ToUpper());
+            A.CallTo(()=>_provider.ToUpper("Title")).MustHaveHappened();
+        }
+
+        [Fact]
+        public void to_lower()
+        {
+            Get(d => d.Title.ToLower());
+            A.CallTo(()=>_provider.ToLower("Title")).MustHaveHappened();
+        }
+
+        [Fact]
+        public void call_year_function_for_date()
+        {
+            Get(d => d.CreatedOn.Year);
+            A.CallTo(()=>_provider.Year("CreatedOn")).MustHaveHappened();
+        }
+
+        [Fact]
+        public void call_day_function_for_date()
+        {
+            Get(d => d.CreatedOn.Day);
+            A.CallTo(()=>_provider.Day("CreatedOn")).MustHaveHappened();
+        }
+
+        T Cast<T>(object o) => (T)o;
+
+        [Fact]
+        public void column_is_contained_in_ienumerable()
+        {
+            IEnumerable<string> val = new[] { "bula","strula" };
+            Get(d => val.Contains(d.Title)).Should().Be("Title in (@0)");
+
+            Cast<IEnumerable<string>>(FirstParameter).ShouldAllBeEquivalentTo(val);
+
+            _sut.Parameters.Clear();
+            Get(d => d.Title.HasValueIn(val)).Should().Be("Title in (@0)"); ;
+            Cast<IEnumerable<string>>(FirstParameter).ShouldAllBeEquivalentTo(val);
+        }
+
+        [Fact]
+        public void column_is_contained_in_array()
+        {
+            string[] val = new[] { "bula","strula" };
+            Get(d => val.Contains(d.Title)).Should().Be("Title in (@0)");
+
+            Cast<IEnumerable<string>>(FirstParameter).ShouldAllBeEquivalentTo(val);
+
+            _sut.Parameters.Clear();
+            Get(d => d.Title.HasValueIn(val)).Should().Be("Title in (@0)"); ;
+            Cast<IEnumerable<string>>(FirstParameter).ShouldAllBeEquivalentTo(val);
+        }
+
+        [Fact]
+        public void column_is_contained_in_list()
+        {
+            List<string> val = new List<string>(){ "bula","strula" };
+            Get(d => val.Contains(d.Title)).Should().Be("Title in (@0)");
+
+            Cast<IEnumerable<string>>(FirstParameter).ShouldAllBeEquivalentTo(val);
+
+            _sut.Parameters.Clear();
+            Get(d => d.Title.HasValueIn(val)).Should().Be("Title in (@0)"); ;
+            Cast<IEnumerable<string>>(FirstParameter).ShouldAllBeEquivalentTo(val);
+        }
+
+        #endregion
 
         object FirstParameter => _sut.Parameters.ToArray().First();
         object Parameter(int i) => _sut.Parameters.ToArray().Skip(i).First();
     }
+
+ 
+       
 }

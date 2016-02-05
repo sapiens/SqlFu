@@ -22,10 +22,10 @@ namespace SqlFu.Providers
             Functions.Add(typeof(DbFunctions).GetMethod("Ceiling").Name,Ceiling);            
         }
         
-        public string FormatConstant(string data)
-        {
-            return "'" + data + "'";
-        }
+        //public string FormatConstant(string data)
+        //{
+        //    return "'" + data + "'";
+        //}
 
         //public virtual string FormatConstant(bool data)
         //{
