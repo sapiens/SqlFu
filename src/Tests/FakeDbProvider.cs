@@ -16,11 +16,11 @@ namespace Tests
         public FakeDbProvider():base(Empty.Func<DbConnection>(),"")
         {
             _e=new FakeEscapeIdentifier();
-            //EscapeChars=new EscapeIdentifierChars("","");
+            Converters = Setup.Converters();
         }
         public FakeDbProvider(Func<DbConnection> factory, string providerId) : base(factory, providerId)
         {
-
+            
         }
 
         protected override EscapeIdentifierChars GetEscapeIdentifierChars()

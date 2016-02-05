@@ -39,6 +39,10 @@ namespace SqlFu.Providers
             name.MustNotBeEmpty();
             param.ParameterName = ParamPrefix+name;
             value = Converters.ConvertValueObject(value);
+
+                var vt = (Type) ((dynamic) value).GetType();
+                if (vt.IsCustomObjectType()) throw new InvalidOperationException($"Can't flatten object '{value.GetType()}'");
+
             param.Value = value ?? DBNull.Value;
         }
 

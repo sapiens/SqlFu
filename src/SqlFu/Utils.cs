@@ -104,13 +104,14 @@ namespace SqlFu
             return sb.ToString();
         }
 
-        public static bool IsCustomObjectType(this Type t) => t.IsClass() && (t.GetTypeCode() == TypeCode.Object);
+        public static bool IsCustomObjectType(this Type t) => t.IsUserDefinedClass();
 
         public static bool IsCustomObject<T>(this T t)
-        {
-            var type = typeof(T);
-            return !type.IsValueType() && (type.GetTypeCode() == TypeCode.Object);
-        }
+            => typeof (T).IsCustomObjectType();
+        //{
+        //    var type = typeof(T);
+        //    return !type.IsValueType() && (type.GetTypeCode() == TypeCode.Object);
+        //}
 
        
     }
