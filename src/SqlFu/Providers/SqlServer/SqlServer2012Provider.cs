@@ -89,7 +89,7 @@ namespace SqlFu.Providers.SqlServer
             return $"\nOUTPUT INSERTED.{identityColumn} AS ID " + values;
         }
 
-        protected override DbFunctions GetFunctions() => new SqlServerFunctions();
+  
         
 
 

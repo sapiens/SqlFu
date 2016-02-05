@@ -17,18 +17,10 @@ namespace SqlFu.Providers
         {
             _factory = factory;
             ProviderId = providerId;
-            _func=new Lazy<DbFunctions>(GetFunctions);
+        
         }
 
-        private Lazy<DbFunctions> _func;
-
-        public DbFunctions Functions => _func.Value;        
-        
-        /// <summary>
-        /// Db specific functions, an inheritor of DbFunctions
-        /// </summary>
-        /// <returns></returns>
-        protected abstract DbFunctions GetFunctions();
+    
 
         protected IManageConverters Converters= SqlFuManager.Config.Converters;
 

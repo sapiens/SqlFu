@@ -5,8 +5,6 @@ namespace SqlFu.Providers
 {
     public interface IDbProvider : IEscapeIdentifier, IDbProviderExceptions, IDbProviderHelpers
     {
-        DbFunctions Functions { get; }
-
         void SetupParameter(DbParameter dbDataParameter, string key, object value);
         /// <summary>
         /// Replaces @ with provider parameter prefix

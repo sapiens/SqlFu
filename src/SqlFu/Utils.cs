@@ -41,9 +41,6 @@ namespace SqlFu
             new TableName(t.Name.SubstringUntil(suffix),schema));
         }
 
-        public static DbFunctions GetDbFunctions(this DbConnection db) => db.Provider().Functions;
-        public static T GetDbFunctions<T>(this DbConnection db) where T:DbFunctions => db.Provider().Functions as T;
-
         public static SqlFuConfig SqlFuConfig(this DbConnection db) => SqlFuManager.Config;
 
         public static TableInfo GetTableInfo(this Type type) => SqlFuManager.Config.TableInfoFactory.GetInfo(type);
