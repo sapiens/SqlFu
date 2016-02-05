@@ -14,17 +14,17 @@ namespace SqlFu.Builders.Crud
         private readonly HelperOptions _options;
         private readonly IDbProvider _provider;
         private readonly TableInfo _info;
-        private readonly IExpressionWriter _writer;
-        private StringBuilder _sb;
+        private readonly IGenerateSqlFromExpressions _writer;
+        private StringBuilder _sb=new StringBuilder();
 
-        public SimpleSqlBuilder(HelperOptions options,IDbProvider provider,TableInfo info,IExpressionWriter writer)
+        public SimpleSqlBuilder(HelperOptions options,IDbProvider provider,TableInfo info,IGenerateSqlFromExpressions writer)
         {
             _options = options;
             _provider = provider;
             _info = info;
 
             _writer = writer;
-            _sb = _writer.SqlBuffer;
+            
             
             WriteFrom(provider, _info);
             
@@ -32,7 +32,7 @@ namespace SqlFu.Builders.Crud
         }
 
         private void WriteFrom(IDbProvider provider, TableInfo info) 
-            => _writer.Append($" from {provider.EscapeTableName(info.Table)}",true);
+            => _sb.AppendLine($" from {provider.EscapeTableName(info.Table)}");
 
 
         public IGenerateSql<T> SelectAll(bool distinct=false)
@@ -74,15 +74,16 @@ namespace SqlFu.Builders.Crud
         {
             if (!ordered)
             {
-                _writer.Append("order by ");
+                _sb.Append("order by ");
                 ordered = true;
             }
             else
             {
-                _writer.Append(",");
+                _sb.Append(",");
             }
-            _writer.WriteColumn(column);
-            if (!asc) _writer.Append(" desc");
+            _sb.Append(_writer.GetColumnsSql(column));
+            
+            if (!asc) _sb.Append(" desc");
             _sb.AppendLine();
         }
 
@@ -97,57 +98,49 @@ namespace SqlFu.Builders.Crud
         public IHaving<T> GroupBy(params Expression<Func<T, object>>[] columns)
         {
             if (columns.Length == 0) return this;
-            _writer.Append("group by ");
-            columns.Select(c=>_writer.GetExpressionSql(c)).ForEach(t=>_writer.Append($"{t},"));
+            _sb.Append("group by ");
+            _sb.Append(_writer.GetColumnsSql(columns));
+            //columns.Select(c=>_writer.GetExpressionSql(c)).ForEach(t=>_writer.Append($"{t},"));
             _sb.RemoveLast().AppendLine();
             return this;
         }
 
         IConnectWhere<T> IWhere<T>.Where(Expression<Func<T, bool>> criteria)
         {
-            _writer.Append("where ");
-            _writer.WriteCriteria(criteria);
-            _writer.AppendLine();
+            _sb.Append("where ");
+            _sb.AppendLine(_writer.GetSql(criteria));
             return this;
         }
 
         IConnectHaving<T> IHaving<T>.Having(Expression<Func<T, bool>> criteria)
         {
-            _writer.Append("having ");
-            _writer.WriteCriteria(criteria);
-            _writer.AppendLine();
+            _sb.AppendLine($"having {_writer.GetSql(criteria)}");
+            
             return this;
         }
 
         IConnectWhere<T> IConnectWhere<T>.And(Expression<Func<T, bool>> criteria)
         {
-            _writer.Append("and ");
-            _writer.WriteCriteria(criteria);
-            _writer.AppendLine();
+            _sb.AppendLine($"and {_writer.GetSql(criteria)}");
+            
             return this;
         }
 
         public IConnectHaving<T> Or(Expression<Func<T, bool>> criteria)
         {
-            _writer.Append("or ");
-            _writer.WriteCriteria(criteria);
-            _writer.AppendLine();
+            _sb.AppendLine($"or {_writer.GetSql(criteria)}");
             return this;
         }
 
         public IConnectHaving<T> And(Expression<Func<T, bool>> criteria)
         {
-            _writer.Append("and ");
-            _writer.WriteCriteria(criteria);
-            _writer.AppendLine();
+            _sb.AppendLine($"and {_writer.GetSql(criteria)}");
             return this;
         }
 
         IConnectWhere<T> IConnectWhere<T>.Or(Expression<Func<T, bool>> criteria)
         {
-            _writer.Append("or ");
-            _writer.WriteCriteria(criteria);
-            _writer.AppendLine();
+            _sb.AppendLine($"or {_writer.GetSql(criteria)}");
             return this;
         }
     }

@@ -80,7 +80,7 @@ namespace SqlFu
             input(data);
 
             var output = new List<DbParameter>();
-            var provider = db.GetProvider();
+            var provider = db.Provider();
 
             DbParameter par = null;
             DbParameter returnValue = null;
@@ -129,7 +129,7 @@ namespace SqlFu
             input(data);
 
             var output = new List<DbParameter>();
-            var provider = db.GetProvider();
+            var provider = db.Provider();
 
             DbParameter par = null;
             DbParameter returnValue = null;

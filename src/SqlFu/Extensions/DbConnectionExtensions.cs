@@ -437,7 +437,7 @@ namespace SqlFu
             typeof(T).Must(t=>t!=typeof(object),"Dynamic types are not supported");
             var cmd=new CommandConfiguration();
             cfg(cmd);
-            var builder = new PagedQueryBuilder(db.GetPocoInfo<T>(), db.GetProvider());
+            var builder = new PagedQueryBuilder(db.GetPocoInfo<T>(), db.Provider());
             var data = builder.Build(cmd.SqlText, cmd.Args, page);
 
             var result=new PagedResult<T>();
@@ -482,7 +482,7 @@ namespace SqlFu
             typeof(T).Must(t => t != typeof(object), "Dynamic types are not supported");
             var cmd=new CommandConfiguration();
             cfg(cmd);
-            var builder = new PagedQueryBuilder(db.GetPocoInfo<T>(), db.GetProvider());
+            var builder = new PagedQueryBuilder(db.GetPocoInfo<T>(), db.Provider());
             var data = builder.Build(cmd.SqlText, cmd.Args, page);
 
             var result=new PagedResult<T>();
@@ -500,7 +500,7 @@ namespace SqlFu
         /// </summary>
         /// <param name="db"></param>
         /// <returns></returns>
-        public static IBuildQueryFrom GetSqlBuilder(this DbConnection db) => new SqlFrom(db.GetProvider(), db.SqlFuConfig().TableInfoFactory);
+        public static IBuildQueryFrom GetSqlBuilder(this DbConnection db) => new SqlFrom(db.Provider(), db.SqlFuConfig().TableInfoFactory);
 
         /// <summary>
         /// Returns the ready to be used inside a query table name for that poco
@@ -508,7 +508,7 @@ namespace SqlFu
         /// <typeparam name="T"></typeparam>
         /// <param name="cnx"></param>
         /// <returns></returns>
-        public static string GetTableName<T>(this DbConnection cnx) => SqlFuManager.Config.TableInfoFactory.GetInfo(typeof(T)).EscapeName(cnx.GetProvider());
+        public static string GetTableName<T>(this DbConnection cnx) => SqlFuManager.Config.TableInfoFactory.GetInfo(typeof(T)).EscapeName(cnx.Provider());
 
 
         /// <summary>
@@ -532,7 +532,7 @@ namespace SqlFu
             {
                 db.Execute(addObjectStatement);
             }
-            catch (DbException x) when (db.GetProvider().ObjectExists(x))
+            catch (DbException x) when (db.Provider().ObjectExists(x))
             {
                 //already exists, move on
             }

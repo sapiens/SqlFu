@@ -3,6 +3,7 @@ using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 using CavemanTools.Logging;
+using SqlFu.Builders.Expressions;
 using SqlFu.Configuration.Internals;
 using SqlFu.Executors;
 using SqlFu.Providers;
@@ -39,25 +40,6 @@ namespace SqlFu
             fact.Assign(config.GetProfile(name));
             return fact;
         }
-            
-
-
-        ///// <summary>
-        ///// Creates a connection using a registered provider. Use it when working with multiple databases.
-        ///// A provider must be registered with SqlFuFactory.Config.Providers.Add().
-        ///// Don't use it if you only have a single connection and a default provider.
-        ///// </summary>     
-        ///// <returns></returns>
-        //public static DbConnection OpenConnection(string providerName)
-        //{
-        //  providerName.MustNotBeEmpty();
-        //    var t = Config.Providers.Items.GetValueOrDefault(providerName);
-        //    if (t == null)
-        //    {
-        //        throw new InvalidOperationException("There's no provider '{0}' registered".ToFormat(providerName));
-        //    }
-        //    return OpenConnection(t.Item1, t.Item2);
-        //}
 
         /// <summary>
         /// Wraps an existing connection into a SqlFu connection. If provider is not specified, the default one is used
@@ -132,7 +114,7 @@ namespace SqlFu
         }
             
 
-        public static IDbProvider GetProvider(this DbConnection cnx)
+        public static IDbProvider Provider(this DbConnection cnx)
         {
             var sqlfu = cnx as SqlFuConnection;
             if (sqlfu != null)

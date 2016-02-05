@@ -12,6 +12,6 @@ namespace SqlFu.Providers
         string Length(string column);
         string Year(string column);
         string Day(string column);
-        void WriteMethodCall(MethodCallExpression method,StringBuilder sb,ExpressionWriterHelper manager);
+        string GetSql(MethodCallExpression method, IGenerateSqlFromExpressions writer);
     }
 }

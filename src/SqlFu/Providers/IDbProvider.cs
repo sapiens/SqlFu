@@ -42,6 +42,6 @@ namespace SqlFu.Providers
         string GetIdentityKeyword();
 
 
-        IDbProviderExpressions GetExpressionsHelper();
+        IDbProviderExpressions ExpressionsHelper { get; }
     }
 }

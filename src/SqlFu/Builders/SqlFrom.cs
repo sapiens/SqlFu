@@ -26,7 +26,7 @@ namespace SqlFu.Builders
 
         IWhere<T> SqlBuilder<T>(HelperOptions options)=> new SimpleSqlBuilder<T>(
                 options, _provider, _infos.GetInfo(typeof(T))
-                , new ExpressionWriterHelper(_infos, _provider).CreateExpressionWriter());
+                , new ExpressionSqlGenerator(_provider.ExpressionsHelper,_infos,_provider));
 
         public IWhere<T> FromAnonymous<T>(T anon, Action<IHelperOptions> options) where T : class
         {

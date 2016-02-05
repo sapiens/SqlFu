@@ -15,15 +15,15 @@ namespace SqlFu
 {
     public static class Utils
     {
+       
+
         /// <summary>
-        /// Used in helpers to generate sql
+        /// Used to generate sql bits from expressions
         /// </summary>
         /// <param name="db"></param>
         /// <returns></returns>
-        public static IExpressionWriterHelper CreateWriterHelper(this DbConnection db) => new ExpressionWriterHelper(db.SqlFuConfig().TableInfoFactory,db.GetProvider());
-
-        public static IExpressionWriter CreateExpressionWriter(this DbConnection db)
-            => db.CreateWriterHelper().CreateExpressionWriter();
+        public static IGenerateSqlFromExpressions GetExpressionSqlGenerator(this DbConnection db)
+            => new ExpressionSqlGenerator(db.Provider().ExpressionsHelper,SqlFuManager.Config.TableInfoFactory,db.Provider());
 
         /// <summary>
         /// Every type named '[something][suffix]' will use the table name 'something'
@@ -41,8 +41,8 @@ namespace SqlFu
             new TableName(t.Name.SubstringUntil(suffix),schema));
         }
 
-        public static DbFunctions GetDbFunctions(this DbConnection db) => db.GetProvider().Functions;
-        public static T GetDbFunctions<T>(this DbConnection db) where T:DbFunctions => db.GetProvider().Functions as T;
+        public static DbFunctions GetDbFunctions(this DbConnection db) => db.Provider().Functions;
+        public static T GetDbFunctions<T>(this DbConnection db) where T:DbFunctions => db.Provider().Functions as T;
 
         public static SqlFuConfig SqlFuConfig(this DbConnection db) => SqlFuManager.Config;
 
@@ -115,6 +115,11 @@ namespace SqlFu
             return !type.IsValueType() && (type.GetTypeCode() == TypeCode.Object);
         }
 
+       
+    }
+
+    public static class SqlBuilderExtensions
+    {
         /// <summary>
         /// Empty method to represent a "column in (list)" scenario in sql builder.
         /// Use it _only_ in an expression.
@@ -129,7 +134,9 @@ namespace SqlFu
         /// <returns></returns>
         public static bool HasValueIn<T>(this T column, IEnumerable<T> values)
         {
-            throw new NotImplementedException("This shouldn't be called directly");            
+            throw new NotImplementedException("This shouldn't be called directly");
         }
+
+        //public static void InjectSql(string sql)
     }
 }

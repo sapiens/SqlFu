@@ -19,7 +19,7 @@ namespace SqlFu
             var options = info.CreateInsertOptions<T>();
             cfg?.Invoke(options);
 
-            var provider = db.GetProvider();
+            var provider = db.Provider();
             var builder=new InsertSqlBuilder(info,data,provider,options);
 
             return db.GetValue<InsertedId>(builder.GetCommandConfiguration());
@@ -31,7 +31,7 @@ namespace SqlFu
             var options = info.CreateInsertOptions<T>();
             cfg?.Invoke(options);
 
-            var provider = db.GetProvider();
+            var provider = db.Provider();
             var builder=new InsertSqlBuilder(info,data,provider,options);
 
             return db.GetValueAsync<InsertedId>(builder.GetCommandConfiguration(), cancel);
@@ -50,7 +50,7 @@ namespace SqlFu
             cfg?.Invoke(opt);
             var executor = new CustomSqlExecutor(db);
             opt.EnsureTableName(db.GetPocoInfo<T>());
-            return new UpdateTableBuilder<T>(executor, db.CreateExpressionWriter(), db.GetProvider(),/* SqlFuManager.Config.Converters,*/ opt);
+            return new UpdateTableBuilder<T>(executor, db.GetExpressionSqlGenerator(), db.Provider(), opt);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace SqlFu
             options.EnsureTableName(db.GetPocoInfo<T>());
             var builder = columns(u) as UpdateColumns.CreateBuilder<T>;
             var executor=new CustomSqlExecutor(db);
-            var updater=new UpdateTableBuilder<T>(executor,db.CreateExpressionWriter(),db.GetProvider(),/*SqlFuManager.Config.Converters,*/options);
+            var updater=new UpdateTableBuilder<T>(executor,db.GetExpressionSqlGenerator(),db.Provider(),options);
             builder.PopulateBuilder(updater);
             return updater;
         }
@@ -77,14 +77,14 @@ namespace SqlFu
 
         public static int DeleteFrom<T>(this DbConnection db,Expression<Func<T, bool>> criteria=null)
         {
-            var builder=new DeleteTableBuilder(db.GetTableName<T>(),db.CreateWriterHelper().CreateExpressionWriter());
+            var builder=new DeleteTableBuilder(db.GetTableName<T>(),db.GetExpressionSqlGenerator());
             if (criteria!=null) builder.WriteCriteria(criteria);
             return db.Execute(builder.GetCommandConfiguration());
         }
 
         public static Task<int> DeleteFromAsync<T>(this DbConnection db,CancellationToken token,Expression<Func<T, bool>> criteria=null)
         {
-            var builder=new DeleteTableBuilder(db.GetTableName<T>(), db.CreateWriterHelper().CreateExpressionWriter());
+            var builder=new DeleteTableBuilder(db.GetTableName<T>(), db.GetExpressionSqlGenerator());
             if (criteria!=null) builder.WriteCriteria(criteria);
             return db.ExecuteAsync(builder.GetCommandConfiguration(),token);
         }

@@ -98,8 +98,7 @@ namespace SqlFu.Providers
 
         private IDbProviderExpressions _expr;
 
-        public IDbProviderExpressions GetExpressionsHelper()
-            => _expr ?? (_expr = InitExpressionHelper());
+        public IDbProviderExpressions ExpressionsHelper => _expr ?? (_expr = InitExpressionHelper());
         protected abstract IDbProviderExpressions InitExpressionHelper();
 
         public static string Escape(string s,string startId,string endId)
