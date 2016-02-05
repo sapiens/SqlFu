@@ -503,6 +503,17 @@ namespace SqlFu
         public static IBuildQueryFrom GetSqlBuilder(this DbConnection db) => new SqlFrom(db.Provider(), db.SqlFuConfig().TableInfoFactory);
 
         /// <summary>
+        /// Generates sql from strongly typed query
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="sqlBuilder"></param>
+        /// <returns>Configuration object containing generated sql and arguments</returns>
+        public static CommandConfiguration BuildSql<T>(this DbConnection db,
+            Func<IBuildQueryFrom, IGenerateSql<T>> sqlBuilder)
+            => sqlBuilder(db.GetSqlBuilder()).GetCommandConfiguration();
+
+        /// <summary>
         /// Returns the ready to be used inside a query table name for that poco
         /// </summary>
         /// <typeparam name="T"></typeparam>
