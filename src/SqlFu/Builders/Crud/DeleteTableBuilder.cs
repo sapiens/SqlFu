@@ -12,12 +12,12 @@ namespace SqlFu.Builders.Crud
         public DeleteTableBuilder(string tableName,IGenerateSqlFromExpressions writer)
         {
             _writer = writer;
-            _sb.Append($"delete from {tableName} ");
+            _sb.Append($"delete from {tableName}");
         }
 
         public void WriteCriteria(LambdaExpression expr)
         {
-            _sb.Append("where ");
+            _sb.Append(" where ");
             _sb.Append(_writer.GetSql(expr));
         }
 

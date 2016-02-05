@@ -6,7 +6,6 @@ using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 using SqlFu.Mapping;
 using Tests.Mocks;
-using Tests._Fakes;
 using Xunit;
 
 namespace Tests.Configuration
@@ -26,7 +25,7 @@ namespace Tests.Configuration
         [Fact]
         public void all_properties_are_considered_columns()
         {
-            _sut.Columns.Count().Should().Be(11);
+            _sut.Columns.Count().Should().Be(13);
 
         }
 
