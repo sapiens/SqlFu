@@ -12,7 +12,7 @@ namespace SqlFu.Providers
 {
     public class DbProviderExpressions : IDbProviderExpressions
     {
-        protected DbProviderExpressions()
+        public DbProviderExpressions()
         {
             LinkMethods(()=>1.Count(),CountAll);
             LinkMethods(()=>1.Count(23),Count);

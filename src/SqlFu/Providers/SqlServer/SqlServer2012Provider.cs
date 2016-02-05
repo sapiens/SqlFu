@@ -17,14 +17,16 @@ namespace SqlFu.Providers.SqlServer
        
         public const string Id = "SqlServer2012";
       
-        public readonly SqlServerDbType DbTypes=new SqlServerDbType();
+        public readonly SqlServerType DbTypes=new SqlServerType();
       
-//        public readonly MsSqlFunctions Functions=new MsSqlFunctions();
 
         public SqlServer2012Provider(Func<DbConnection> factory):base(factory,Id)
         {
-            
+           
         }
+
+        protected override EscapeIdentifierChars GetEscapeIdentifierChars()
+      => new EscapeIdentifierChars('[', ']');
 
         public override string ParamPrefix => "@";
 
@@ -42,10 +44,6 @@ namespace SqlFu.Providers.SqlServer
         }
 
 
-        public override string EscapeIdentifier(string name)
-        {
-            return Escape(name,"[","]");
-        }
 
         public override string GetColumnType(Type type)
         {
@@ -78,11 +76,10 @@ namespace SqlFu.Providers.SqlServer
         }
 
         public override bool ObjectExists(DbException ex, string name = null)
-        {
-            throw new NotImplementedException();
-        }
+            => ex.Message.Contains("already an object named") && (ex.Message.Contains(name ?? " "));
 
-       
+
+
         public override string AddReturnInsertValue(string sqlValues, string identityColumn)
         {
             if (identityColumn.IsNullOrEmpty()) return sqlValues;
@@ -90,10 +87,6 @@ namespace SqlFu.Providers.SqlServer
         }
 
   
-        
-
-
-
         public override void SetupParameter(DbParameter param, string name, object value)
         {
             base.SetupParameter(param, name, value);
@@ -147,6 +140,6 @@ namespace SqlFu.Providers.SqlServer
 
         protected override IDatabaseTools InitTools() => new SqlServerDbTools(this);
         protected override IDbProviderExpressions InitExpressionHelper()
-        =>new SqlServer2012Expressions();
+        =>new DbProviderExpressions();
     }
 }

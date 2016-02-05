@@ -2,7 +2,7 @@
 
 namespace SqlFu.Providers.SqlServer
 {
-    public class SqlServerDbType:DbTypes
+    public class SqlServerType:DbTypes
     {
         public readonly string Int = "int";
         public readonly string Float = "float";
@@ -24,7 +24,7 @@ namespace SqlFu.Providers.SqlServer
         public readonly string Uuid = "uniqueidentifier";
 
         
-        public SqlServerDbType()
+        public SqlServerType()
         {
             this[typeof (byte)] = TinyInt;
             this[typeof (bool)] = Bit;

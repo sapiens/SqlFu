@@ -9,6 +9,18 @@ namespace SqlFu.Providers
     using Builders;
     using Configuration;
 
+     public struct EscapeIdentifierChars
+    {
+        public char Start;
+        public char End;
+
+         public EscapeIdentifierChars(char start,char end)
+         {
+             Start = start;
+             End = end;
+         }   
+    }
+
     public abstract class DbProvider : IDbProvider
     {
         private Func<DbConnection> _factory;
@@ -17,10 +29,8 @@ namespace SqlFu.Providers
         {
             _factory = factory;
             ProviderId = providerId;
-        
+            EscapeChars = GetEscapeIdentifierChars();
         }
-
-    
 
         protected IManageConverters Converters= SqlFuManager.Config.Converters;
 
@@ -32,15 +42,19 @@ namespace SqlFu.Providers
             param.Value = value ?? DBNull.Value;
         }
 
+        private EscapeIdentifierChars EscapeChars;
+
+        protected abstract EscapeIdentifierChars GetEscapeIdentifierChars();
+
         public string EscapeTableName(TableName table)
         {
             var schema = "";
             if (!table.Schema.IsNullOrEmpty())
             {
-                schema = EscapeIdentifier(schema)+".";
+                schema = Escape(schema,EscapeChars.Start,EscapeChars.End)+".";
             }
 
-            return schema + EscapeIdentifier(table.Name);
+            return schema + Escape(table.Name,EscapeChars.Start, EscapeChars.End);
         }
 
         public abstract string ParamPrefix { get; }
@@ -67,7 +81,9 @@ namespace SqlFu.Providers
             return _factory();
         }
 
-        public abstract string EscapeIdentifier(string name);
+        public string EscapeIdentifier(string name)
+            => Escape(name, EscapeChars.Start, EscapeChars.End);
+
         public abstract string GetColumnType(Type type);
 
       
@@ -90,20 +106,27 @@ namespace SqlFu.Providers
 
         private IDbProviderExpressions _expr;
 
+        public void ReplaceExpressionsProvider(IDbProviderExpressions prov)
+        {
+            prov.MustNotBeNull();
+            _expr = prov;
+        }
+
         public IDbProviderExpressions ExpressionsHelper => _expr ?? (_expr = InitExpressionHelper());
         protected abstract IDbProviderExpressions InitExpressionHelper();
 
-        public static string Escape(string s,string startId,string endId)
+        public static string Escape(string s,char startId,char endId)
         {
             s.MustNotBeEmpty();
 
             //If the identifier already includes the escape characters, we return
             //the identifier as is.
-            if (s[0]==startId[0] && s[s.Length-1]==endId[0])
+            if (s[0]==startId && s[s.Length-1]==endId)
                 return s;
             if (s.Contains("\""))
                 return s;
 
+            if (startId == default(char)) return s;
             //Single part identifier can be returned as is.
             return startId + s + endId;           
         }

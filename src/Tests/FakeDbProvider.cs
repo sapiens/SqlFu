@@ -16,16 +16,19 @@ namespace Tests
         public FakeDbProvider():base(Empty.Func<DbConnection>(),"")
         {
             _e=new FakeEscapeIdentifier();
+            //EscapeChars=new EscapeIdentifierChars("","");
         }
         public FakeDbProvider(Func<DbConnection> factory, string providerId) : base(factory, providerId)
         {
 
         }
 
+        protected override EscapeIdentifierChars GetEscapeIdentifierChars()
+        => new EscapeIdentifierChars();
+
         public override string ParamPrefix { get; } = "@";
 
-        public override string EscapeIdentifier(string name)
-            => _e.EscapeIdentifier(name);
+        
 
         public override string GetColumnType(Type type)
         {
