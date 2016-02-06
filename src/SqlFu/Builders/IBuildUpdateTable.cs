@@ -28,7 +28,7 @@ namespace SqlFu.Builders
         /// <param name="data">Anonymous object</param>
        
         /// <returns></returns>
-        IIgnoreColumns<T> FromData<T>(T data) where T : class;
+        IIgnoreColumns<T> Data<T>(T data) where T : class;
 
     }
 

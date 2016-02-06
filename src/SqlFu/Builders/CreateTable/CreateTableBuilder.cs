@@ -114,7 +114,7 @@ namespace SqlFu.Builders.CreateTable
 
                var collation = col.Collation ?? "";
 
-               var def = col.DefaultValue??"";
+               var def = col.DefaultValue==null?"":$"default ({col.DefaultValue})";
 
                var isnull = col.IsNull ? "null" : "not null";
 

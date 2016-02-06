@@ -35,7 +35,7 @@ namespace SqlFu.Builders
            }
        }
 
-        public IIgnoreColumns<T> FromData<T>(T data) where T : class
+        public IIgnoreColumns<T> Data<T>(T data) where T : class
         {
             return new CreateBuilder<T>(data);
         }

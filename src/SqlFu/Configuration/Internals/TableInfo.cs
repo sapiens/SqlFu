@@ -23,7 +23,7 @@ namespace SqlFu.Configuration.Internals
                     {
                         PocoIdx = idx
                         ,HasConverter = converter.HasConverter(m.PropertyType)
-                        ,CanBeFlattened = !m.PropertyType.IsCustomObjectType() || converter.CanFlattenValueObject(m.PropertyType)
+                      //  ,CanBeFlattened = !m.PropertyType.IsCustomObjectType() || converter.CanFlattenValueObject(m.PropertyType)
                     }).ToArray();
             HandleAttributeOverride();
         }
@@ -63,7 +63,7 @@ namespace SqlFu.Configuration.Internals
 
       
 
-        public IfTableExists CreationOptions { get; set; }
+        public Actions CreationOptions { get; set; }
      
 
         public override string ToString()

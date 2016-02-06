@@ -22,7 +22,7 @@ namespace SqlFu
             {
                 db.CreateTableFrom<T>(table =>
                 {
-                    table.IfTableExists(IfTableExists.Ignore);
+                    table.IfTableExists(Actions.Ignore);
                     Configure(table);
                 });
             });

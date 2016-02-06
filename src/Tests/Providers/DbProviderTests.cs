@@ -17,22 +17,22 @@ namespace Tests.Providers
             _sut=new FakeDbProvider();
         }
 
-        [Fact]
-        public void value_objects_are_flattened_on_setup_param()
-        {
-            var p = A.Fake<DbParameter>();
-            _sut.SetupParameter(p,"t",new Email("t@example.com"));
-            p.Value.Should().Be("t@example.com");
-        }
+        //[Fact]
+        //public void value_objects_are_flattened_on_setup_param()
+        //{
+        //    var p = A.Fake<DbParameter>();
+        //    _sut.SetupParameter(p,"t",new Email("t@example.com"));
+        //    p.Value.Should().Be("t@example.com");
+        //}
 
-        [Fact]
-        public void unregistered_value_objects_throws_on_setup()
-        {
-            var p = A.Fake<DbParameter>();
-            _sut.Invoking(d=>d.SetupParameter(p, "t", new Post()))
-                .ShouldThrow<InvalidOperationException>()
-                .Where(e=>e.Message.Contains(typeof(Post).ToString()));
+        //[Fact]
+        //public void unregistered_value_objects_throws_on_setup()
+        //{
+        //    var p = A.Fake<DbParameter>();
+        //    _sut.Invoking(d=>d.SetupParameter(p, "t", new Post()))
+        //        .ShouldThrow<InvalidOperationException>()
+        //        .Where(e=>e.Message.Contains(typeof(Post).ToString()));
             
-        }
+        //}
     }
 }

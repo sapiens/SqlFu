@@ -37,7 +37,7 @@ namespace SqlFu.Builders
         /// [..]Where(d=>d.InjectSql("my id=@id",new{id=2}))
         /// </example>
         /// <returns></returns>
-        public static R InjectSql<T, R>(this T table, string sql, R args)
+        public static bool InjectSql<T, R>(this T table, string sql, R args)
         {
             throw new NotImplementedException("This shouldn't be called directly");
         }
@@ -76,9 +76,9 @@ namespace SqlFu.Builders
         /// Where(table=>table.sum(table.id))
         /// </example>
         /// <returns></returns>
-        public static T Sum<T,R>(this T table,R expression)
+        public static R Sum<T,R>(this T table,R expression)
         {
-            return default(T);
+            return default(R);
         }
 
         /// <summary>
@@ -88,9 +88,9 @@ namespace SqlFu.Builders
         /// <param name="table"></param>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public static T Max<T,R>(this T table, R expression)
+        public static R Max<T,R>(this T table, R expression)
         {
-            return default(T);
+            return default(R);
         }
          /// <summary>
         /// Sql min
@@ -99,9 +99,9 @@ namespace SqlFu.Builders
         /// <param name="table"></param>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public static T Min<T,R>(this T table, R expression)
+        public static R Min<T,R>(this T table, R expression)
         {
-            return default(T);
+            return default(R);
         }
         
         /// <summary>
@@ -111,9 +111,9 @@ namespace SqlFu.Builders
         /// <param name="table"></param>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public static T Floor<T,R>(this T table, R expression)
+        public static R Floor<T,R>(this T table, R expression)
         {
-            return default(T);
+            return default(R);
         }
 
 
@@ -124,9 +124,9 @@ namespace SqlFu.Builders
         /// <param name="table"></param>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public static T Ceiling<T,R>(this T table, R expression)
+        public static R Ceiling<T,R>(this T table, R expression)
         {
-            return default(T);
+            return default(R);
         }
 
        /// <summary>
@@ -136,9 +136,9 @@ namespace SqlFu.Builders
         /// <param name="table"></param>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public static T Avg<T,R>(this T table, R expression)
+        public static R Avg<T,R>(this T table, R expression)
         {
-            return default(T);
+            return default(R);
         }
 
 
@@ -149,9 +149,9 @@ namespace SqlFu.Builders
         /// <param name="table"></param>
         /// <param name="expression"></param>
         /// <returns></returns>
-        public static T Round<T, R>(this T table, R expression,int length)
+        public static R Round<T, R>(this T table, R expression,int length)
         {
-            return default(T);
+            return default(R);
         }
 
 

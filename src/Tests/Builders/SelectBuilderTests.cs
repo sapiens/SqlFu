@@ -41,7 +41,7 @@ namespace Tests.Builders
                 .SelectAll()
                 .GetCommandConfiguration();
             sql.SqlText.Should()
-                .Be(@"select SomeId, Id, Title, Author, Email, CreatedOn from SomePost
+                .Be(@"select  SomeId, Id, Title, Author, Email, CreatedOn from SomePost
 where c1
 and c2
 or c3

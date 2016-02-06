@@ -532,6 +532,18 @@ namespace SqlFu.Builders.Expressions
             return node;
         }
 
+        bool IsLambdaBooleanConstantHandled(LambdaExpression expression)
+        {
+            if (expression == null) return false;
+            var body = expression.Body as ConstantExpression;
+            if (IsSingleBooleanConstant(body))
+            {
+                HandleSingleBooleanConstant(body);
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// For everything except "select columns"
         /// </summary>
@@ -541,7 +553,12 @@ namespace SqlFu.Builders.Expressions
         {
             _sb.Clear();
             _columnMode = false;
-            Visit(expression);
+            
+           if (!IsLambdaBooleanConstantHandled(expression as LambdaExpression))
+           {
+                Visit(expression);
+            }
+            
             return _sb.ToString();
         }
 

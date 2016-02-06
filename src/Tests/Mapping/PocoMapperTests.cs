@@ -124,13 +124,13 @@ namespace Tests.Mapping
 
         }
 
-        [Fact]
-        public void map_value_using_user_converter()
-        {
-            var post = MapWithReader(data => data.Add("Email","bla@example.com"));
+        //[Fact]
+        //public void map_value_using_user_converter()
+        //{
+        //    var post = MapWithReader(data => data.Add("Email","bla@example.com"));
 
-            post.Email.Value.Should().Be("bla@example.com");
-        }
+        //    post.Email.Value.Should().Be("bla@example.com");
+        //}
 
 
         [Fact]

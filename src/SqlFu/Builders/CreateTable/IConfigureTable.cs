@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq.Expressions;
-using SqlFu.Configuration.Internals;
 
 namespace SqlFu.Builders.CreateTable
 {
@@ -12,7 +11,7 @@ namespace SqlFu.Builders.CreateTable
         IConfigureTable<T> Index(Action<IConfigureIndex<T>> cfg);
         IConfigureTable<T> PrimaryKey(Action<IConfigurePrimaryKey<T>> cfg);
         IConfigureTable<T> ForeignKeyFrom<TParent>(Action<IConfigureForeignKeys<T,TParent>> cfg,string name=null);
-        IConfigureTable<T> IfTableExists(IfTableExists action);
+        IConfigureTable<T> IfTableExists(Actions action);
 
 
     }

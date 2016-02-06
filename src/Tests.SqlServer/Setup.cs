@@ -1,8 +1,11 @@
-﻿using System.Data.Common;
+﻿using System;
+using System.Data.Common;
 using SqlFu;
 using SqlFu.Providers.SqlServer;
 using System.Data.SqlClient;
+using CavemanTools;
 using CavemanTools.Logging;
+using CavemanTools.Model.ValueObjects;
 
 namespace Tests.SqlServer
 {
@@ -15,7 +18,7 @@ namespace Tests.SqlServer
             LogManager.OutputTo(s=>System.Diagnostics.Debug.WriteLine(s));
             SqlFuManager.Configure(c =>
             {
-                c.AddProfile(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection),Connex);
+                c.AddProfile(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection),Connex);              
             });
         }
 

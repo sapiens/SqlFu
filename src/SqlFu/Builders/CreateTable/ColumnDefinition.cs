@@ -17,7 +17,7 @@ namespace SqlFu.Builders.CreateTable
      
 
         public Type Type { get; set; }
-        public IConfigureColumn DbTypeIs(string type)
+        public IConfigureColumn HasDbType(string type)
         {
             DbType = type;
             return this;
@@ -46,7 +46,7 @@ namespace SqlFu.Builders.CreateTable
             return this;
         }
 
-        public IConfigureColumn SetCollation(string value)
+        public IConfigureColumn HasCollation(string value)
         {
             Collation = value;
             return this;
@@ -70,7 +70,7 @@ namespace SqlFu.Builders.CreateTable
            return this;
        }
 
-        public IConfigureColumn SetDefaultValue(string value, bool valueIsFunction = false)
+        public IConfigureColumn HasDefaultValue(string value, bool valueIsFunction = false)
         {
             if (!valueIsFunction) value = "'" + value + "'";
             DefaultValue = value;
@@ -80,7 +80,7 @@ namespace SqlFu.Builders.CreateTable
 
     public interface IConfigureColumn
     {
-        IConfigureColumn DbTypeIs(string type);
+        IConfigureColumn HasDbType(string type);
         /// <summary>
         /// Write the whole column definition yourself
         /// </summary>
@@ -88,12 +88,12 @@ namespace SqlFu.Builders.CreateTable
         void Define(string def);
         IConfigureColumn HasSize(int size, short? precision=null);
         IConfigureColumn HasSize(string size);
-        IConfigureColumn SetCollation(string value);
+        IConfigureColumn HasCollation(string value);
         IConfigureColumn Null();
         IConfigureColumn NotNull();
         IConfigureColumn AutoIncrement();
         
-        IConfigureColumn SetDefaultValue(string value,bool valueIsFunction=false);
+        IConfigureColumn HasDefaultValue(string value,bool valueIsFunction=false);
         
         
     }

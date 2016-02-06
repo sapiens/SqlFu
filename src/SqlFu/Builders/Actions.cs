@@ -1,6 +1,6 @@
 ﻿namespace SqlFu.Builders
 {
-    public enum IfTableExists
+    public enum Actions
     {
         Throw,
         DropIt,

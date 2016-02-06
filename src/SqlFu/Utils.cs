@@ -26,6 +26,21 @@ namespace SqlFu
             => new ExpressionSqlGenerator(db.Provider().ExpressionsHelper,SqlFuManager.Config.TableInfoFactory,db.Provider());
 
         /// <summary>
+        /// Sets table name/schema in one statement
+        /// </summary>
+        /// <param name="opt"></param>
+        /// <param name="name"></param>
+        /// <param name="schema"></param>
+        /// <returns></returns>
+        public static IHelperOptions SetTableName(this IHelperOptions opt, string name, string schema = null)
+        {
+            name.MustNotBeEmpty();
+            opt.TableName = name;
+            opt.DbSchema = schema;
+            return opt;
+        }
+
+        /// <summary>
         /// Every type named '[something][suffix]' will use the table name 'something'
         /// </summary>
         /// <param name="cfg"></param>
@@ -96,7 +111,7 @@ namespace SqlFu
                 foreach (var kv in args)
                 {
                     sb.Append($"\t -> {kv.Key} [{kv.Value?.GetType().Name ?? "null"}] = \"");
-                    sb.Append(kv.Value).AppendLine();
+                    sb.Append($"{kv.Value}\"").AppendLine();
                 }
 
                 sb.Remove(sb.Length - 1, 1);
@@ -107,7 +122,7 @@ namespace SqlFu
         public static bool IsCustomObjectType(this Type t) => t.IsUserDefinedClass();
 
         public static bool IsCustomObject<T>(this T t)
-            => typeof (T).IsCustomObjectType();
+            => t.GetType().IsCustomObjectType();
         //{
         //    var type = typeof(T);
         //    return !type.IsValueType() && (type.GetTypeCode() == TypeCode.Object);

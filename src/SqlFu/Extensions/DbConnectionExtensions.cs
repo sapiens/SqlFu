@@ -316,7 +316,7 @@ namespace SqlFu
         /// <param name="db"></param>
         /// <param name="builder"></param>
         /// <returns></returns>
-        public static List<TProj> Query<TProj>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<TProj>> builder)
+        public static List<TProj> QueryAs<TProj>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<TProj>> builder)
         {
             builder.MustNotBeNull();
             var built = builder(db.GetSqlBuilder());
@@ -514,7 +514,7 @@ namespace SqlFu
             => sqlBuilder(db.GetSqlBuilder()).GetCommandConfiguration();
 
         /// <summary>
-        /// Returns the ready to be used inside a query table name for that poco
+        /// Returns the ready to be used (escaped) inside a query table name for that poco
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="cnx"></param>

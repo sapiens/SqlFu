@@ -62,7 +62,7 @@ namespace SqlFu.Builders.Crud
 
         private IEnumerable<string> GetInsertableColumns() 
             => _info.Columns
-            .Where(d=>d.CanBeFlattened)
+           .Where(d=>!d.IsComplex)
             .Select(d => d.Name).Where(
                 c => c != _options.IdentityColumn && !_options.IgnoreColumns.Contains(c));
 

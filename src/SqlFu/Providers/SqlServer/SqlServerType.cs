@@ -4,24 +4,25 @@ namespace SqlFu.Providers.SqlServer
 {
     public class SqlServerType:DbTypes
     {
-        public readonly string Int = "int";
-        public readonly string Float = "float";
-        public readonly string TinyInt = "tinyint";
-        public readonly string SmallInt = "smallint";
-        public readonly string BigInt = "bigint";
-        public readonly string Bit = "bit";
-        public readonly string Numeric = "numeric";
-        public readonly string Decimal = "decimal";
-        public readonly string Money = "money";
-        public readonly string SmallMoney = "smallmoney";
-        public readonly string DateTimeOffset = "datetimeoffset";
-        public readonly string DateTime = "datetime";
-        public readonly string DateTime2 = "datetime2";
-        public readonly string Date = "date";
-        public readonly string Time = "time";
-        public readonly string NVarchar = "nvarchar";
-        public readonly string VarBinary = "varbinary";
-        public readonly string Uuid = "uniqueidentifier";
+        public const string Int = "int";
+        public const string Float = "float";
+        public const string TinyInt = "tinyint";
+        public const string SmallInt = "smallint";
+        public const string BigInt = "bigint";
+        public const string Bit = "bit";
+        public const string Numeric = "numeric";
+        public const string Decimal = "decimal";
+        public const string Money = "money";
+        public const string SmallMoney = "smallmoney";
+        public const string DateTimeOffset = "datetimeoffset";
+        public const string DateTime = "datetime";
+        public const string DateTime2 = "datetime2";
+        public const string Date = "date";
+        public const string Time = "time";
+        public const string NVarchar = "nvarchar";
+        public const string Varchar = "varchar";
+        public const string VarBinary = "varbinary";
+        public const string Uuid = "uniqueidentifier";
 
         
         public SqlServerType()

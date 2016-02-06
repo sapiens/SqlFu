@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using SqlFu.Builders;
 using SqlFu.Builders.Crud;
+using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 
 namespace SqlFu
@@ -58,10 +59,10 @@ namespace SqlFu
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="db"></param>
-        /// <param name="cfg">Configure name and other</param>
         /// <param name="columns">Select which columns to update from an anonymous object</param>
+        /// <param name="cfg">Configure name and other</param>
         /// <returns></returns>
-        public static IBuildUpdateTableFrom<T> UpdateFrom<T>(this DbConnection db, Action<IHelperOptions> cfg, Func<IUpdateColumns, IColumnsToUpdate<T>> columns) where  T:class 
+        public static IBuildUpdateTableFrom<T> UpdateFrom<T>(this DbConnection db, Func<IUpdateColumns, IColumnsToUpdate<T>> columns, Action<IHelperOptions> cfg) where  T:class 
         {
             var options=new HelperOptions(); 
             var u = new UpdateColumns();
@@ -74,6 +75,27 @@ namespace SqlFu
             return updater;
         }
 
+        public static int CountRows<T>(this DbConnection db,Expression<Func<T,bool>> condition=null)
+            => db.QueryValue(d =>
+            {
+                var q=d.From<T>().Where(c=>true);
+                if (condition != null)
+                {
+                    q = q.And(condition);
+                }
+                return q.Select(c => c.Count());
+            });
+        
+
+        public static int DeleteFromAnonymous<T>(this DbConnection db,T data,Action<IHelperOptions> opt,Expression<Func<T, bool>> criteria = null)
+        {
+            var options=new HelperOptions();
+            opt(options);
+            var name = db.Provider().EscapeTableName(new TableName(options.TableName, options.DbSchema));
+            var builder = new DeleteTableBuilder(name, db.GetExpressionSqlGenerator());
+            if (criteria != null) builder.WriteCriteria(criteria);
+            return db.Execute(builder.GetCommandConfiguration());
+        }
 
         public static int DeleteFrom<T>(this DbConnection db,Expression<Func<T, bool>> criteria=null)
         {

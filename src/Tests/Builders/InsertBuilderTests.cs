@@ -27,7 +27,7 @@ namespace Tests.Builders
             _data=new Post()
             {
                 Id = Guid.NewGuid(),
-                Email = Email.CreateRandomTestValue(),
+                Email = Email.CreateRandomTestValue().Value,
                 SomeId = 23,                
             };
           

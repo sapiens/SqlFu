@@ -12,7 +12,7 @@ namespace Tests.TestData
         public Guid Id { get; set; }
         public string Title { get; protected set; }
         public IdName Author { get; set; }
-        public Email Email { get; set; }
+        public string Email { get; set; }
         public DateTime CreatedOn { get; set; }
 
     }
