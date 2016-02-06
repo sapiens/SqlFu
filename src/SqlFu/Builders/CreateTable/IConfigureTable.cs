@@ -11,7 +11,7 @@ namespace SqlFu.Builders.CreateTable
         IConfigureTable<T> Index(Action<IConfigureIndex<T>> cfg);
         IConfigureTable<T> PrimaryKey(Action<IConfigurePrimaryKey<T>> cfg);
         IConfigureTable<T> ForeignKeyFrom<TParent>(Action<IConfigureForeignKeys<T,TParent>> cfg,string name=null);
-        IConfigureTable<T> IfTableExists(Actions action);
+        IConfigureTable<T> IfTableExists(Just action);
 
 
     }

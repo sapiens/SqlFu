@@ -63,7 +63,7 @@ namespace SqlFu.Configuration.Internals
 
       
 
-        public Actions CreationOptions { get; set; }
+        public Just CreationOptions { get; set; }
      
 
         public override string ToString()

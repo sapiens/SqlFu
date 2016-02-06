@@ -19,6 +19,7 @@ namespace SqlFu.Providers.SqlServer
         public const string DateTime2 = "datetime2";
         public const string Date = "date";
         public const string Time = "time";
+        public const string Char = "char";
         public const string NVarchar = "nvarchar";
         public const string Varchar = "varchar";
         public const string VarBinary = "varbinary";

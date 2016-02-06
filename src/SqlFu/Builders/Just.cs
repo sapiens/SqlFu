@@ -1,6 +1,6 @@
 ﻿namespace SqlFu.Builders
 {
-    public enum Actions
+    public enum Just
     {
         Throw,
         DropIt,

@@ -96,7 +96,7 @@ namespace SqlFu.Builders.CreateTable
             return this;
         }
 
-        public IConfigureTable<T> IfTableExists(Actions action)
+        public IConfigureTable<T> IfTableExists(Just action)
         {
             _data.CreationOptions = action;
             return this;
