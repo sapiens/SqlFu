@@ -2,6 +2,8 @@
 using SqlFu;
 using SqlFu.Providers.SqlServer;
 using System.Data.SqlClient;
+using CavemanTools.Logging;
+
 namespace Tests.SqlServer
 {
     public class Setup
@@ -10,6 +12,7 @@ namespace Tests.SqlServer
 
         static Setup()
         {
+            LogManager.OutputTo(s=>System.Diagnostics.Debug.WriteLine(s));
             SqlFuManager.Configure(c =>
             {
                 c.AddProfile(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection),Connex);
