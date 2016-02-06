@@ -20,13 +20,13 @@ namespace SqlFu.Builders
         /// <returns></returns>
         public static bool HasValueIn<T>(this T column, IEnumerable<T> values)
         {
-            throw new NotImplementedException("This shouldn't be called directly");
+            throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
         }
 
 
         /// <summary>
-        /// Placeholder method to injects raw sql into a strongly typed query
-        /// It should be used _only_ inside an expression
+        /// Placeholder method to injects raw sql into a strongly typed query.
+        /// It should be used _only_ inside an expression when building a query
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="R"></typeparam>
@@ -39,22 +39,24 @@ namespace SqlFu.Builders
         /// <returns></returns>
         public static bool InjectSql<T, R>(this T table, string sql, R args)
         {
-            throw new NotImplementedException("This shouldn't be called directly");
+            throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
         }
 
         /// <summary>
         /// Sql count(*)
+        ///  It should be used _only_ inside an expression when building a query
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="table"></param>
         /// <returns></returns>
         public static int Count<T>(this T table)
         {
-            throw new NotImplementedException("This shouldn't be called directly");
+            throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
         }
 
         /// <summary>
         /// Sql count(column)
+        ///  It should be used _only_ inside an expression when building a query
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="table"></param>
@@ -62,12 +64,13 @@ namespace SqlFu.Builders
         /// <returns></returns>
         public static int Count<T,R>(this T table,R expression)
         {
-            throw new NotImplementedException("This shouldn't be called directly");
+            throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
         }
 
 
         /// <summary>
         /// Sql sum.
+        ///  It should be used _only_ inside an expression when building a query
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="table"></param>
@@ -78,11 +81,12 @@ namespace SqlFu.Builders
         /// <returns></returns>
         public static R Sum<T,R>(this T table,R expression)
         {
-            return default(R);
+            throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
         }
 
         /// <summary>
         /// Sql max
+        ///  It should be used _only_ inside an expression when building a query
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="table"></param>
@@ -90,10 +94,11 @@ namespace SqlFu.Builders
         /// <returns></returns>
         public static R Max<T,R>(this T table, R expression)
         {
-            return default(R);
+            throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
         }
-         /// <summary>
+        /// <summary>
         /// Sql min
+        ///  It should be used _only_ inside an expression when building a query
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="table"></param>
@@ -101,11 +106,12 @@ namespace SqlFu.Builders
         /// <returns></returns>
         public static R Min<T,R>(this T table, R expression)
         {
-            return default(R);
+            throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
         }
-        
+
         /// <summary>
         /// Sql floor
+        ///  It should be used _only_ inside an expression when building a query
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="table"></param>
@@ -113,12 +119,13 @@ namespace SqlFu.Builders
         /// <returns></returns>
         public static R Floor<T,R>(this T table, R expression)
         {
-            return default(R);
+            throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
         }
 
 
         /// <summary>
         /// Sql Ceiling
+        ///  It should be used _only_ inside an expression when building a query
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="table"></param>
@@ -126,11 +133,12 @@ namespace SqlFu.Builders
         /// <returns></returns>
         public static R Ceiling<T,R>(this T table, R expression)
         {
-            return default(R);
+            throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
         }
 
-       /// <summary>
+        /// <summary>
         /// Sql avg
+        ///  It should be used _only_ inside an expression when building a query
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="table"></param>
@@ -138,12 +146,13 @@ namespace SqlFu.Builders
         /// <returns></returns>
         public static R Avg<T,R>(this T table, R expression)
         {
-            return default(R);
+            throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
         }
 
 
         /// <summary>
         /// Sql round
+        ///  It should be used _only_ inside an expression when building a query
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="table"></param>
@@ -151,15 +160,21 @@ namespace SqlFu.Builders
         /// <returns></returns>
         public static R Round<T, R>(this T table, R expression,int length)
         {
-            return default(R);
+            throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
         }
 
-
+        /// <summary>
+        ///  It should be used _only_ inside an expression when building a query
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="table"></param>
+        /// <param name="expressions"></param>
+        /// <returns></returns>
         public static string Concat<T>(this T table, params object[] expressions)
         {
-            throw new NotImplementedException();
-            
+            throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
+
         }
-        //public static void InjectSql(string sql)
+        
     }
 }

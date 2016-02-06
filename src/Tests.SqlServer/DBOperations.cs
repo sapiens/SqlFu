@@ -78,6 +78,19 @@ namespace Tests.SqlServer
         }
 
 
+        [Fact]
+        public void insert_and_return_id()
+        {
+
+            _db.Insert(new User()
+            {
+                FirstName = "Jane2",
+                LastName = "Doe",
+                Category = Type.Page.ToString(),
+                Posts = 0
+            }).GetInsertedId<int>().Should().Be(4);
+        }
+
 
         [Fact]
         public void get_user_with_fullname()
