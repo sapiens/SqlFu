@@ -3593,7 +3593,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "CavemanTools >= 4.0.0-pre-6"
+      "CavemanTools >= 4.0.0-pre-*"
     ],
     ".NETFramework,Version=v4.6": [
       "fx/System.Data >= 4.0.0"

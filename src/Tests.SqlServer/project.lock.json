@@ -180,7 +180,7 @@
         "type": "project",
         "framework": ".NETFramework,Version=v4.6",
         "dependencies": {
-          "CavemanTools": "4.0.0-pre-6"
+          "CavemanTools": "4.0.0-pre"
         },
         "frameworkAssemblies": [
           "System.Data"
@@ -474,7 +474,7 @@
         "type": "project",
         "framework": ".NETFramework,Version=v4.6",
         "dependencies": {
-          "CavemanTools": "4.0.0-pre-6"
+          "CavemanTools": "4.0.0-pre"
         },
         "frameworkAssemblies": [
           "System.Data"
@@ -768,7 +768,7 @@
         "type": "project",
         "framework": ".NETFramework,Version=v4.6",
         "dependencies": {
-          "CavemanTools": "4.0.0-pre-6"
+          "CavemanTools": "4.0.0-pre"
         },
         "frameworkAssemblies": [
           "System.Data"

@@ -9,7 +9,6 @@ namespace SqlFu.Mapping.Internals
 {
     class PopulatePocoGenerator<T>
     {
-        private ParameterExpression _valuesExpr;
         private ParameterExpression _readerExpr;
         private MethodInfo _readValue;
         private ParameterExpression _customMapExpr;

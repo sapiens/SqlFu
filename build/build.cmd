@@ -1,3 +1,5 @@
 @echo off
-"..\src\packages\MakeSharp.1.3.0\tools\makesharp.exe" build.cs %*
+cls
+rem "tools\nuget.exe" "install" "FAKE" "-OutputDirectory" "tools" "-ExcludeVersion"
+"tools\FAKE\tools\Fake.exe" build.fsx %*
 pause

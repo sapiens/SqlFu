@@ -176,11 +176,11 @@
           "lib/net45/Newtonsoft.Json.dll": {}
         }
       },
-      "SqlFu/3.0.0-beta": {
+      "SqlFu/3.0.0-beta.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.6",
         "dependencies": {
-          "CavemanTools": "4.0.0-pre-6"
+          "CavemanTools": "4.0.0-pre"
         },
         "frameworkAssemblies": [
           "System.Data"
@@ -470,11 +470,11 @@
           "lib/net45/Newtonsoft.Json.dll": {}
         }
       },
-      "SqlFu/3.0.0-beta": {
+      "SqlFu/3.0.0-beta.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.6",
         "dependencies": {
-          "CavemanTools": "4.0.0-pre-6"
+          "CavemanTools": "4.0.0-pre"
         },
         "frameworkAssemblies": [
           "System.Data"
@@ -764,11 +764,11 @@
           "lib/net45/Newtonsoft.Json.dll": {}
         }
       },
-      "SqlFu/3.0.0-beta": {
+      "SqlFu/3.0.0-beta.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.6",
         "dependencies": {
-          "CavemanTools": "4.0.0-pre-6"
+          "CavemanTools": "4.0.0-pre"
         },
         "frameworkAssemblies": [
           "System.Data"
@@ -886,7 +886,7 @@
     }
   },
   "libraries": {
-    "SqlFu/3.0.0-beta": {
+    "SqlFu/3.0.0-beta.0": {
       "type": "project",
       "path": "../SqlFu/project.json"
     },
@@ -1314,7 +1314,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "SqlFu >= 3.0.0-beta-*",
+      "SqlFu ",
       "xunit >= 2.2.0-beta1-build3239",
       "FluentAssertions >= 4.2.1"
     ],
