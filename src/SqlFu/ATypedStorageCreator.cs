@@ -1,7 +1,6 @@
 using CavemanTools.Model.Persistence;
 using SqlFu.Builders;
 using SqlFu.Builders.CreateTable;
-using SqlFu.Configuration.Internals;
 
 namespace SqlFu
 {
@@ -14,6 +13,8 @@ namespace SqlFu
             _db = db;
         }
 
+        protected Just IfExists = Just.Ignore;
+
         protected abstract void Configure(IConfigureTable<T> cfg);
 
         public void Create()
@@ -22,7 +23,7 @@ namespace SqlFu
             {
                 db.CreateTableFrom<T>(table =>
                 {
-                    table.IfTableExists(Just.Ignore);
+                    table.IfTableExists(IfExists);
                     Configure(table);
                 });
             });

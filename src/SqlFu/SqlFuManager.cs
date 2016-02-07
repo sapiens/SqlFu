@@ -105,11 +105,8 @@ namespace SqlFu
         /// <typeparam name="T"></typeparam>
         /// <param name="db"></param>
         /// <returns></returns>
-        public static TableInfo GetPocoInfo<T>(this DbConnection db)
-        {
-            return Config.TableInfoFactory.GetInfo(typeof (T));
-        }
-            
+        public static TableInfo GetPocoInfo<T>(this DbConnection db) => Config.TableInfoFactory.GetInfo(typeof (T));
+
 
         public static IDbProvider Provider(this DbConnection cnx)
         {

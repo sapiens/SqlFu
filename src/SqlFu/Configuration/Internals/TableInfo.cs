@@ -68,7 +68,7 @@ namespace SqlFu.Configuration.Internals
 
         public override string ToString()
         {
-            return "[Tableinfo]"+Type.Name;
+            return $"[Tableinfo]{Type} as {Table}";
         }
       
     }

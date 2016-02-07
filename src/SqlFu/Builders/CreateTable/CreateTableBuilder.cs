@@ -25,9 +25,7 @@ namespace SqlFu.Builders.CreateTable
         {
             _data = data;
             _tableName = _provider.EscapeTableName(data.TableName);
-           _provider.SqlFuConfiguration
-                .TableInfoFactory.GetInfo(data.Type)
-                .Table=data.TableName;
+          
             _sb.AppendLine("create table " + _tableName + "(");
             AddColumns(data.Columns);
             AddConstraints(data.PrimaryKey);
