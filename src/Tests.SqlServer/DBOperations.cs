@@ -41,7 +41,7 @@ namespace Tests.SqlServer
         {
             _db.CreateTableFrom<User>(cf =>
             {
-                cf.IfTableExists(Just.DropIt)
+                cf.IfExists(TableExistsAction.Drop)
                     .TableName("users")
                     .Column(t => t.Id, c => c.AutoIncrement())
                     .ColumnSize(c=>c.FirstName,150)

@@ -45,6 +45,6 @@ namespace SqlFu.Builders.CreateTable
 
         public List<ForeignKeyDefinition> ForeignKeys { get; }=new List<ForeignKeyDefinition>();
 
-        public Just CreationOptions { get; set; }
+        public TableExistsAction CreationOptions { get; set; }
     }
 }

@@ -1,9 +1,9 @@
 ﻿namespace SqlFu.Builders
 {
-    public enum Just
+    public enum TableExistsAction
     {
         Throw,
-        DropIt,
+        Drop,
         Ignore
     }
 }

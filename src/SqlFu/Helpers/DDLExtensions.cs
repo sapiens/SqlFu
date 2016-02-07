@@ -57,12 +57,12 @@ namespace SqlFu
             {
                 switch (tcfg.Data.CreationOptions)
                 {
-                    case Just.Throw:
+                    case TableExistsAction.Throw:
                         throw new TableExistsException(tcfg.Data.TableName);
-                    case Just.DropIt:
+                    case TableExistsAction.Drop:
                         db.DropTable<T>();
                         break;
-                      case Just.Ignore:
+                      case TableExistsAction.Ignore:
                         return;
                 }          
             }

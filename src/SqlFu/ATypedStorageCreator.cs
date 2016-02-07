@@ -13,7 +13,7 @@ namespace SqlFu
             _db = db;
         }
 
-        protected Just IfExists = Just.Ignore;
+        protected TableExistsAction ActionIfTableExists = TableExistsAction.Ignore;
 
         protected abstract void Configure(IConfigureTable<T> cfg);
 
@@ -23,7 +23,7 @@ namespace SqlFu
             {
                 db.CreateTableFrom<T>(table =>
                 {
-                    table.IfTableExists(IfExists);
+                    table.IfExists(ActionIfTableExists);
                     Configure(table);
                 });
             });
