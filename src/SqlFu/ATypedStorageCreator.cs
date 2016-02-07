@@ -13,7 +13,13 @@ namespace SqlFu
             _db = db;
         }
 
-        protected TableExistsAction ActionIfTableExists = TableExistsAction.Ignore;
+        public ATypedStorageCreator<T> IfExists(TableExistsAction action)
+        {
+            HandleExistingTable = action;
+            return this;
+        }
+
+        protected TableExistsAction HandleExistingTable = TableExistsAction.Ignore;
 
         protected abstract void Configure(IConfigureTable<T> cfg);
 
@@ -23,7 +29,7 @@ namespace SqlFu
             {
                 db.CreateTableFrom<T>(table =>
                 {
-                    table.IfExists(ActionIfTableExists);
+                    table.HandleExisting(HandleExistingTable);
                     Configure(table);
                 });
             });

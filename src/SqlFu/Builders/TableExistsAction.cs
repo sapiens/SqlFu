@@ -3,7 +3,7 @@
     public enum TableExistsAction
     {
         Throw,
-        Drop,
+        DropIt,
         Ignore
     }
 }
