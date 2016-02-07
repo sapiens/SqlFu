@@ -8,7 +8,7 @@ using SqlFu.Providers;
 
 namespace SqlFu.Builders.CreateTable
 {
-    internal class CreateTableBuilder
+    public class CreateTableBuilder
     {
         private readonly IDbProvider _provider;
         StringBuilder _sb=new StringBuilder();

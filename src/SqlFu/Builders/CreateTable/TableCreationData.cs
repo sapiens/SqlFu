@@ -6,7 +6,7 @@ using SqlFu.Configuration.Internals;
 
 namespace SqlFu.Builders.CreateTable
 {
-    internal class TableCreationData
+    public class TableCreationData
     {
         public Type Type { get; set; }
 
@@ -15,7 +15,7 @@ namespace SqlFu.Builders.CreateTable
             Type = type;
         }
 
-        public TableName TableName { get; internal set; }
+        public TableName TableName { get; set; }
         
         public void Update(TableInfo info)
         {
