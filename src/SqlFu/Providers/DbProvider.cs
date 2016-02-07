@@ -25,9 +25,10 @@ namespace SqlFu.Providers
     {
         private Func<DbConnection> _factory;
 
-        protected DbProvider(Func<DbConnection> factory,string providerId)
+        protected DbProvider(Func<DbConnection> factory,string providerId,SqlFuConfig config=null)
         {
             _factory = factory;
+            SqlFuConfiguration = config ?? SqlFuManager.Config;
             ProviderId = providerId;
             EscapeChars = GetEscapeIdentifierChars();
         }
@@ -117,6 +118,9 @@ namespace SqlFu.Providers
         }
 
         public IDbProviderExpressions ExpressionsHelper => _expr ?? (_expr = InitExpressionHelper());
+
+        public SqlFuConfig SqlFuConfiguration { get; }
+
         protected abstract IDbProviderExpressions InitExpressionHelper();
 
         public static string Escape(string s,char startId,char endId)

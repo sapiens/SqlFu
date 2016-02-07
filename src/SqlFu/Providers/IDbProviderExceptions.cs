@@ -26,5 +26,7 @@ namespace SqlFu.Providers
         /// <param name="name"></param>
         /// <returns></returns>
         bool ObjectExists(DbException ex, string name = null);
+
+        SqlFuConfig SqlFuConfiguration { get; }
     }
 }
