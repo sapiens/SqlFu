@@ -45,7 +45,7 @@ namespace SqlFu.Builders.CreateTable
                 sb.Append("create ");
                 if (idx.IsUnique) sb.Append("unique ");
                 sb.Append("index ");
-                sb.Append(idx.Name ?? "ix_" + _data.TableName.DDLUsableString + "_" + DateTime.Now.Ticks);
+                sb.Append(idx.Name ?? "ix_" + _data.TableName.DDLUsableString + "_" + StringUtils.CreateRandomString(7));
                 sb.Append($" on {_tableName}(");
                 idx.Columns.ForEach(n =>
                 {
