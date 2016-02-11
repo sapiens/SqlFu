@@ -22,14 +22,15 @@ namespace SqlFu.Builders
         public PagedBuilderResult Build(string sql,object[] args,Pagination page)
         {
             var result=new PagedBuilderResult();
-            var cache = _info.SqlCache.GetPaged(sql);
+            var provCache = _info.GetSqlCache(_provider.ProviderId);
+            var cache = provCache.GetPaged(sql);
             var pm = new ParametersManager(args);
             if (cache == null)
             {
                 cache = new PagedSqlCache();
                 cache.CountSql = GetCountSql(sql);
                 cache.PagedSql = _provider.FormatQueryPagination(sql, page, pm);
-                _info.SqlCache.AddPaged(sql, cache);
+                provCache.AddPaged(sql, cache);
             }
             else
             {

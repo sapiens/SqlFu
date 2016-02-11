@@ -27,12 +27,13 @@ namespace SqlFu.Builders.Crud
 
         public CommandConfiguration GetCommandConfiguration()
         {
-            if (_info.SqlCache.InsertSql.IsNullOrEmpty())
+            var cache = _info.GetSqlCache(_provider.ProviderId);
+            if (cache.InsertSql.IsNullOrEmpty())
             {
-                _info.SqlCache.InsertSql = Build();             
+                cache.InsertSql = Build();             
             }
 
-            return new CommandConfiguration(_info.SqlCache.InsertSql,GetValues()) {ApplyOptions = _options.CmdOptions};
+            return new CommandConfiguration(cache.InsertSql,GetValues()) {ApplyOptions = _options.CmdOptions};
         }
 
         

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using SqlFu.Builders;
@@ -42,7 +43,10 @@ namespace SqlFu.Configuration.Internals
 
         public string IdentityColumn { get; set; }
         
-        public TableSqlCache SqlCache { get; private set; }=new TableSqlCache();
+        Dictionary<string,TableSqlCache> _cache=new Dictionary<string, TableSqlCache>();
+
+        public TableSqlCache GetSqlCache(string providerId)
+            => _cache.GetValueOrCreate(providerId, () => new TableSqlCache());
 
         public PagedBuilderResult PagedSql { get; set; }
         public string EscapeName(IEscapeIdentifier provider,TableName name=null)
