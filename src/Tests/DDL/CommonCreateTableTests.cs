@@ -53,7 +53,7 @@ namespace Tests.DDL
         [Fact]
         public void create_table_doesnt_throw()
         {
-           Assert.DoesNotThrow(()=>Table.ExecuteDDL());
+            Table.ExecuteDDL();
         }
 
         [Fact]
@@ -138,7 +138,7 @@ namespace Tests.DDL
             Assert.True(Db.DatabaseTools.TableExists(TableName));
             var ddl = Db.DatabaseTools.GetCreateTableBuilder(TableName, IfTableExists.DropIt);
             ddl.Columns.Add("sid", DbType.Int32);
-            Assert.DoesNotThrow(() => ddl.ExecuteDDL());
+            ddl.ExecuteDDL();
             Assert.True(Db.DatabaseTools.TableHasColumn(TableName,"sid"));
         }
 
@@ -149,7 +149,7 @@ namespace Tests.DDL
             Db.Insert(TableName, new { Name = "aha", Uid = Guid.NewGuid() });
             var ddl = Db.DatabaseTools.GetCreateTableBuilder(TableName, IfTableExists.Ignore);
             ddl.Columns.Add("sid", DbType.Int32);
-            Assert.DoesNotThrow(() => ddl.ExecuteDDL());
+            ddl.ExecuteDDL();
             var cnt = Db.QuerySingle<dynamic>("select * from " + Db.Provider.EscapeName(TableName));
             Assert.Equal("aha", cnt.Name);
         }

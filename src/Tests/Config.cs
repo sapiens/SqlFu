@@ -106,14 +106,14 @@ namespace Tests
         {
             using (var db = Setup.GetDb())
             {
-                db.ExecuteCommand("truncate table Posts;DBCC CHECKIDENT ('dbo.Posts', reseed, 1)");
+                if (db.TableExists<Post>()) db.ExecuteCommand("truncate table Posts;DBCC CHECKIDENT ('dbo.Posts', reseed, 1)");
             }
         }
 
         public static void EnsureDb()
         {
            var db = Setup.GetDb();
-           db.CreateTable<Post>();
+            if (!db.TableExists<Post>()) db.CreateTable<Post>();
            db.Dispose();
         }
 
@@ -121,13 +121,14 @@ namespace Tests
         {
             var db = Setup.GetDb();
             
-            EnsureDb();
-                EmptyTable();
+           
                 //Console.WriteLine("ensuring 10 posts");
 
                 using (var t = db.BeginTransaction())
                 {
-                    for (int i = 0; i < 20; i++)
+                EnsureDb();
+                EmptyTable();
+                for (int i = 0; i < 20; i++)
                     {
                         db.Insert(new Post {Title = "test" + i, AuthorId = 1, CreatedOn = DateTime.Now});
                     }

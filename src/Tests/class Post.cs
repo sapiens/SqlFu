@@ -11,7 +11,7 @@ namespace Tests
         Post,
         Page
     }
-    [Table("Posts",CreationOptions = IfTableExists.Ignore)]
+    [Table("Posts",CreationOptions = IfTableExists.DropIt)]
     class Post
     {
         public Post()

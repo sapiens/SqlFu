@@ -45,7 +45,7 @@ create index ix_test on test(name)
         public void drop_table()
         {
             DontDispose = true;
-            Tools.DropTable("test");
+            if (Tools.TableExists("test")) Tools.DropTable("test");
             Assert.False(Tools.TableExists("test"));
         }
 

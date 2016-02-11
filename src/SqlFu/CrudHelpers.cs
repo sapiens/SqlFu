@@ -45,7 +45,8 @@ namespace SqlFu
             List<object> args = null;
 
             var arguments = data.ToDictionary();
-            if (tableInfo.InsertSql == null)
+            var cache = tableInfo.GetCache(db.GetProvider().ProviderType);
+            if (cache.InsertSql == null)
             {
                 var sb = new StringBuilder("Insert into");
                 sb.AppendFormat(" {0} (", provider.EscapeName(tableInfo.Name));
@@ -67,7 +68,7 @@ namespace SqlFu
                 }
                 sb.Remove(sb.Length - 1, 1);
                 sb.Append(")");
-                tableInfo.InsertSql = sb.ToString();
+                cache.InsertSql = sb.ToString();
             }
             if (args == null)
             {
@@ -75,7 +76,7 @@ namespace SqlFu
             }
 
             LastInsertId rez;
-            using (var st = new ControlledQueryStatement(db, tableInfo.InsertSql, args.ToArray()))
+            using (var st = new ControlledQueryStatement(db, cache.InsertSql, args.ToArray()))
             {
                 st.Reusable = true;
                 rez = db.GetProvider().ExecuteInsert(st.Command, tableInfo.PrimaryKey);                
