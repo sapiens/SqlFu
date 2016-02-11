@@ -30,7 +30,10 @@ namespace SqlFu
                 throw new InvalidOperationException("Can't work with System.Object or dynamic types");
             var provider = db.GetProvider();
             var ti = TableInfo.ForType(tp);
-            if (ti.SelectSingleSql == null)
+
+            var cache = ti.GetCache(provider.ProviderType);
+
+            if (cache.SelectSingleSql == null)
             {
                 var sb = new StringBuilder("select ");
                 var p = tp.GetProperties().Where(pr => !pr.PropertyType.IsCustomObjectType()).Select(pr => pr.Name);
@@ -46,12 +49,12 @@ namespace SqlFu
                 {
                     sb.AppendFormat(" and {0}", additionalPredicate);
                 }
-                ti.SelectSingleSql = sb.ToString();
+                cache.SelectSingleSql = sb.ToString();
             }
             var fargs = new List<object>(args.Length + 1);
             fargs.Add(id);
             fargs.AddRange(args);
-            return db.QuerySingle<T>(ti.SelectSingleSql, fargs.ToArray());
+            return db.QuerySingle<T>(cache.SelectSingleSql, fargs.ToArray());
         }
 
         public static IEnumerable<T> QueryTop<T>(this DbConnection db, int take, string sql, params object[] args)

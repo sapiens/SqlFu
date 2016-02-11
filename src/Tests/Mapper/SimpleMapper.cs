@@ -20,7 +20,7 @@ namespace Tests.Mapper
         {
             using (var db = Setup.GetDb())
             {
-                Assert.DoesNotThrow(()=> db.QuerySingle<OtherPost>("select 1"));
+                db.QuerySingle<OtherPost>("select 1");
             }
         }
 

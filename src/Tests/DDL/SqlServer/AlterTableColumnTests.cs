@@ -62,7 +62,7 @@ namespace Tests.DDL.SqlServer
            _table.Columns.Add("TestColumn", DbType.Int32).Add("second",DbType.Guid).IfDatabaseIs(DbEngine.SqlServer).SetColumnOptions(SqlServerOptions.ColumnIs.Sparse());
             _table.Columns.Change("Name").SetNullable(false);
             _table.Columns.Change("Email").SetNullable(false);
-            Assert.DoesNotThrow(()=>_table.ExecuteDDL());
+            _table.ExecuteDDL();
             
         }
 
@@ -71,7 +71,7 @@ namespace Tests.DDL.SqlServer
         {
             _table.Columns.Change("Gender").SetType(DbType.String, "1").SetDefault("M");
             _table.ExecuteDDL();
-            Assert.DoesNotThrow(()=>_db.Insert("users",new {Gender="F"}));
+            _db.Insert("users",new {Gender="F"});
         }
 
         [Fact]

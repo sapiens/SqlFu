@@ -70,7 +70,7 @@ namespace Tests.Expressions
         [Fact]
         public void select_query_is_properly_generated()
         {
-        Assert.DoesNotThrow(()=>GenerateSql());    
+       GenerateSql();    
             
         }
 

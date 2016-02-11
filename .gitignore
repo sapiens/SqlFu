@@ -34,6 +34,10 @@ nugets
 bin
 obj
 
+build
+
+
+
 # mstest test results
 TestResults
 
