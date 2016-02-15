@@ -17,7 +17,7 @@ namespace SqlFu
         /// <param name="action"></param>
         /// <param name="tryCount"></param>
         /// <param name="wait">How much to wait in miliseconds before retrying</param>
-        /// <exception cref="PersistenceException"></exception>
+        /// <exception cref="DbException"></exception>
         /// <returns></returns>
         public static T HandleTransientErrors<T>(this IDbFactory dbFactory,Func<DbConnection,T> action,int tryCount=10,int wait=100)
         {
@@ -30,8 +30,8 @@ namespace SqlFu
                 }
             }, x =>
             {
-                if (dbFactory.Provider.IsDbBusy(x)) return true;
-                throw new PersistenceException(x);
+                if (dbFactory.Provider.IsDbBusy(x)) return OnExceptionAction.IgnoreAndContinue;
+                return OnExceptionAction.Throw;
 
             },tryCount,wait);
             return result;
@@ -44,7 +44,7 @@ namespace SqlFu
         /// <param name="dbFactory"></param>
         /// <param name="tryCount"></param>
         /// <param name="wait">How much to wait in miliseconds before retrying</param>
-        /// <exception cref="PersistenceException"></exception>
+        /// <exception cref="DbException"></exception>
         /// <param name="action"></param>
         public static void HandleTransientErrors(this IDbFactory dbFactory, Action<DbConnection> action, int tryCount = 10, int wait = 100)
         {
@@ -56,9 +56,8 @@ namespace SqlFu
                 }
             }, x =>
             {
-                if (dbFactory.Provider.IsDbBusy(x)) return true;
-                         
-                throw new PersistenceException(x);
+                if (dbFactory.Provider.IsDbBusy(x)) return OnExceptionAction.IgnoreAndContinue;
+                return OnExceptionAction.Throw;
 
             });
         }
@@ -73,7 +72,7 @@ namespace SqlFu
         /// <param name="action"></param>
         /// <param name="tryCount"></param>
         /// <param name="wait">How much to wait in miliseconds before retrying</param>
-        /// <exception cref="PersistenceException"></exception>
+        /// <exception cref="DbException"></exception>
         /// <returns></returns>
         public static async Task<T> HandleTransientErrorsAsync<T>(this IDbFactory dbFactory, CancellationToken token,Func<DbConnection,CancellationToken,Task<T>> action, int tryCount = 10, int wait = 100)
         {
@@ -87,8 +86,8 @@ namespace SqlFu
                 }
             }, x =>
             {
-               if (dbFactory.Provider.IsDbBusy(x)) return true;
-               throw new PersistenceException(x);
+                if (dbFactory.Provider.IsDbBusy(x)) return OnExceptionAction.IgnoreAndContinue;
+                return OnExceptionAction.Throw;
 
             }).ConfigureAwait(false);
             return result;
@@ -104,7 +103,7 @@ namespace SqlFu
         /// <param name="action"></param>
         /// <param name="tryCount"></param>
         /// <param name="wait">How much to wait in miliseconds before retrying</param>
-        /// <exception cref="PersistenceException"></exception>
+        /// <exception cref="DbException"></exception>
         /// <returns></returns>
         public static async Task HandleTransientErrorsAsync(this IDbFactory dbFactory, CancellationToken token,Func<DbConnection,CancellationToken,Task> action, int tryCount = 10, int wait = 100)
         {
@@ -116,8 +115,8 @@ namespace SqlFu
                 }
             }, x =>
             {
-               if (dbFactory.Provider.IsDbBusy(x)) return true;
-               throw new PersistenceException(x);
+                if (dbFactory.Provider.IsDbBusy(x)) return OnExceptionAction.IgnoreAndContinue;
+                return OnExceptionAction.Throw;
 
             }).ConfigureAwait(false);
         

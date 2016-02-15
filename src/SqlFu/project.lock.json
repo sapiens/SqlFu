@@ -3,7 +3,7 @@
   "version": 2,
   "targets": {
     ".NETFramework,Version=v4.6": {
-      "CavemanTools/4.0.0-pre-8": {
+      "CavemanTools/4.0.0-pre0-9": {
         "type": "package",
         "dependencies": {
           "FluentAssertions": "4.2.1"
@@ -39,7 +39,7 @@
       }
     },
     ".NETPlatform,Version=v5.4": {
-      "CavemanTools/4.0.0-pre-8": {
+      "CavemanTools/4.0.0-pre0-9": {
         "type": "package",
         "dependencies": {
           "FluentAssertions": "4.2.1",
@@ -558,7 +558,7 @@
       }
     },
     ".NETFramework,Version=v4.6/win7-x86": {
-      "CavemanTools/4.0.0-pre-8": {
+      "CavemanTools/4.0.0-pre0-9": {
         "type": "package",
         "dependencies": {
           "FluentAssertions": "4.2.1"
@@ -594,7 +594,7 @@
       }
     },
     ".NETFramework,Version=v4.6/win7-x64": {
-      "CavemanTools/4.0.0-pre-8": {
+      "CavemanTools/4.0.0-pre0-9": {
         "type": "package",
         "dependencies": {
           "FluentAssertions": "4.2.1"
@@ -630,7 +630,7 @@
       }
     },
     ".NETPlatform,Version=v5.4/win7-x86": {
-      "CavemanTools/4.0.0-pre-8": {
+      "CavemanTools/4.0.0-pre0-9": {
         "type": "package",
         "dependencies": {
           "FluentAssertions": "4.2.1",
@@ -1246,7 +1246,7 @@
       }
     },
     ".NETPlatform,Version=v5.4/win7-x64": {
-      "CavemanTools/4.0.0-pre-8": {
+      "CavemanTools/4.0.0-pre0-9": {
         "type": "package",
         "dependencies": {
           "FluentAssertions": "4.2.1",
@@ -1863,12 +1863,12 @@
     }
   },
   "libraries": {
-    "CavemanTools/4.0.0-pre-8": {
+    "CavemanTools/4.0.0-pre0-9": {
       "type": "package",
-      "sha512": "IBoJeff9q8U2gB3noVb6oPBE93AwG96CfL2WDWH9RX+6OLRa5M5wjjHVkqA3cWwFxOJ/ZWJegYmLa5joQBsneA==",
+      "sha512": "7CWcXhwnmW2Qgoc5pR0JfpFzRH0DrXPoJBwm9VSZp83vyI5GhdgJ0DT0Ebg5tMPAmTxWby8Jk5Hg79NjlijRZg==",
       "files": [
-        "CavemanTools.4.0.0-pre-8.nupkg",
-        "CavemanTools.4.0.0-pre-8.nupkg.sha512",
+        "CavemanTools.4.0.0-pre0-9.nupkg",
+        "CavemanTools.4.0.0-pre0-9.nupkg.sha512",
         "CavemanTools.nuspec",
         "lib/dotnet5.4/CavemanTools.dll",
         "lib/dotnet5.4/CavemanTools.xml",
@@ -3593,7 +3593,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "CavemanTools >= 4.0.0-pre-8"
+      "CavemanTools >= 4.0.0-pre0-9"
     ],
     ".NETFramework,Version=v4.6": [
       "fx/System.Data >= 4.0.0"
