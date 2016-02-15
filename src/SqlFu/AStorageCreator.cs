@@ -20,7 +20,7 @@ namespace SqlFu
         public void Create()
         {
             var sql = "create table " + TableName + "( " + ColumnsSql + ");" + (OtherSql ?? "");
-            _db.Do(d => d.Execute(c=>c.Sql(sql,TableName)));
+            _db.HandleTransientErrors(d => d.Execute(c=>c.Sql(sql,TableName)));
         }
     }
 }

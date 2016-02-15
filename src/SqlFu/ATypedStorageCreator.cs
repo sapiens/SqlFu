@@ -38,7 +38,7 @@ namespace SqlFu
 
         public void Create()
         {
-            _db.Do(db =>
+            _db.HandleTransientErrors(db =>
             {
                 db.CreateTableFrom<T>(table =>
                 {

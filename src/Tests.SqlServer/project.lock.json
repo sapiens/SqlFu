@@ -3,7 +3,7 @@
   "version": 2,
   "targets": {
     "DNX,Version=v4.6": {
-      "CavemanTools/4.0.0-pre-6": {
+      "CavemanTools/4.0.0-pre-8": {
         "type": "package",
         "dependencies": {
           "FluentAssertions": "4.2.1"
@@ -176,11 +176,11 @@
           "lib/net45/Newtonsoft.Json.dll": {}
         }
       },
-      "SqlFu/3.0.0-beta": {
+      "SqlFu/3.0.0-beta0-8": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.6",
         "dependencies": {
-          "CavemanTools": "4.0.0-pre"
+          "CavemanTools": "4.0.0-pre-8"
         },
         "frameworkAssemblies": [
           "System.Data"
@@ -297,7 +297,7 @@
       }
     },
     "DNX,Version=v4.6/win7-x86": {
-      "CavemanTools/4.0.0-pre-6": {
+      "CavemanTools/4.0.0-pre-8": {
         "type": "package",
         "dependencies": {
           "FluentAssertions": "4.2.1"
@@ -470,11 +470,11 @@
           "lib/net45/Newtonsoft.Json.dll": {}
         }
       },
-      "SqlFu/3.0.0-beta": {
+      "SqlFu/3.0.0-beta0-8": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.6",
         "dependencies": {
-          "CavemanTools": "4.0.0-pre"
+          "CavemanTools": "4.0.0-pre-8"
         },
         "frameworkAssemblies": [
           "System.Data"
@@ -591,7 +591,7 @@
       }
     },
     "DNX,Version=v4.6/win7-x64": {
-      "CavemanTools/4.0.0-pre-6": {
+      "CavemanTools/4.0.0-pre-8": {
         "type": "package",
         "dependencies": {
           "FluentAssertions": "4.2.1"
@@ -764,11 +764,11 @@
           "lib/net45/Newtonsoft.Json.dll": {}
         }
       },
-      "SqlFu/3.0.0-beta": {
+      "SqlFu/3.0.0-beta0-8": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.6",
         "dependencies": {
-          "CavemanTools": "4.0.0-pre"
+          "CavemanTools": "4.0.0-pre-8"
         },
         "frameworkAssemblies": [
           "System.Data"
@@ -886,16 +886,16 @@
     }
   },
   "libraries": {
-    "SqlFu/3.0.0-beta": {
+    "SqlFu/3.0.0-beta0-8": {
       "type": "project",
       "path": "../SqlFu/project.json"
     },
-    "CavemanTools/4.0.0-pre-6": {
+    "CavemanTools/4.0.0-pre-8": {
       "type": "package",
-      "sha512": "ogn9H5iinS8XCjauHd/KdeB9+vcshoCTNO6QHUayoFEmdayQg1H1pmc9yo5DCO/X4M4oQHK4W3KE9A4FiWFGYw==",
+      "sha512": "IBoJeff9q8U2gB3noVb6oPBE93AwG96CfL2WDWH9RX+6OLRa5M5wjjHVkqA3cWwFxOJ/ZWJegYmLa5joQBsneA==",
       "files": [
-        "CavemanTools.4.0.0-pre-6.nupkg",
-        "CavemanTools.4.0.0-pre-6.nupkg.sha512",
+        "CavemanTools.4.0.0-pre-8.nupkg",
+        "CavemanTools.4.0.0-pre-8.nupkg.sha512",
         "CavemanTools.nuspec",
         "lib/dotnet5.4/CavemanTools.dll",
         "lib/dotnet5.4/CavemanTools.xml",
