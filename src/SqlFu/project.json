@@ -1,5 +1,5 @@
 ﻿{
-    "version": "3.0.0-beta0-10",
+    "version": "3.0.0-beta0-11",
     "description": "Fast, versatile data mapper with helpers to improve productivity when working with a RDBMS. Designed for flexibility and ease of use. Full async support for operations and helpers, featuring a strongly typed sql builder",
     "authors": [ "t" ],
     "tags": [ "datamapper","micro-orm","ado","database","tools"],

@@ -63,7 +63,7 @@ namespace SqlFu.Configuration.Internals
         /// <summary>
         /// Gets table name and schema
         /// </summary>
-        public TableName Table { get; internal set; }
+        public TableName Table { get; set; }
 
       
 
@@ -80,7 +80,7 @@ namespace SqlFu.Configuration.Internals
 
     public interface ITableInfo
     {
-        TableName Table { get; }
+        TableName Table { get; set; }
         string IdentityColumn { get; set; }
     }
 } 
