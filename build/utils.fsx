@@ -54,7 +54,6 @@ let pack proj =ExecProcess(fun c ->
                                         c.FileName<-dnu
                                         c.Arguments<-("pack "+proj+" --quiet --configuration release  --out "+outDir))(TimeSpan.FromMinutes 5.0)
 let push files = ExecProcess(fun c ->
-                            c.FileName<- (nugetExeDir @@ "nuget")
-                            c.Arguments <- (sprintf "push %s" files)
-                       )
+                            c.FileName<- (currentDirectory @@ nugetExeDir @@ "nuget.exe")
+                            c.Arguments <- ("push "+ files))(TimeSpan.FromMinutes 5.0)
                                                         
