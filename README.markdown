@@ -1,14 +1,25 @@
 #Welcome to SqlFu
 
-SqlFu is a **_versatile_** micro-orm (like dapper.net, peta poco , massive etc) for .Net 4.  SqlFu is Apache licensed.
-If you're wondering if there's a reason for yet another micro-orm [read this](http://www.sapiensworks.com/blog/post/2012/05/19/SqlFu-My-Versatile-Micro-Orm.aspx)
+SqlFu is a **_versatile_** data mapper (aka micro-ORM)  for .Net 4.6+ (.Net Core included).  SqlFu uses Apache 2.0 license.
 
-Latest version: [2.3.10](https://github.com/sapiens/SqlFu/wiki/ChangeLog) (SqlFu 3 is in private alpha for now)
+Latest version: [3.0.0-beta-1](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
 
-**Version 2 is not compatbile with version 1**. [Read how to upgrade to SqlFu 2](https://github.com/sapiens/SqlFu/wiki/How-To-Upgrade-to-SqlFu2)
+## Features
+* Versatility 
+* Performance
+* Fully async extension methods and helpers
+* Multi database support
+* Transient errors resilience
+* Support for: SqlServer 2012+ (Azure included). TBA: Sqlite, Postgres, MySql
 
-SqlFu uses Apache 2.0 license.
+## Understanding how SqlFu should be used
 
+It's important to understand that SqlFu is **NOT** a light ORM. While an ORM abstracts sql and gives us the illusion of working with a 'object database', SqlFu maps data from a query result to a POCO and provides helpers which use POCOs as a data source. Simply put, an object in SqlFu is a data _source_ or _destination_. There are no relational table to object and back mappings that magically generate sql. 
+
+The strongly typed helpers or sql builders are just that: a specialised string builder which uses expressions, there is no Linq involved. In SqlFu we think Sql but we write it mostly in C#. A POCO usually repre
+
+
+**Version 3 is not compatible with previous versions**
 
 ### Note for contributors
 
