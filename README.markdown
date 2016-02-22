@@ -8,7 +8,7 @@ Latest version: [3.0.0-beta-1](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
 * Versatility 
 * Performance
 * Fully async extension methods and helpers
-* Multi database support
+* Suport for working with multiple databases/providers in the same app
 * Transient errors resilience
 * Support for: SqlServer 2012+ (Azure included). TBA: Sqlite, Postgres, MySql
 
