@@ -12,18 +12,22 @@ Latest version: [3.0.0-beta-1](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
 * Transient errors resilience
 * Support for: SqlServer 2012+ (Azure included). TBA: Sqlite, Postgres, MySql
 
+**Version 3 is not compatible with previous versions**
+
 ## How SqlFu should be used
 
-It's important to understand that SqlFu is **NOT** a light ORM. While an ORM abstracts sql and gives us the illusion of working with a 'object database', SqlFu maps data from a query result to a POCO and provides helpers which use POCOs as a data source. Simply put, an object in SqlFu is a data _source_ or _destination_. There are no relational table to object and back mappings that magically generate sql. 
+It's important to understand that SqlFu is **NOT** a (light) ORM. While an ORM abstracts sql and gives us the illusion of working with a 'object database', SqlFu maps data from a query result to a POCO and provides helpers which use POCOs as a data source. Simply put, an object in SqlFu is a data _source_ or _destination_. There are no relational table to object and back mappings that magically generate sql. 
 
-The strongly typed helpers or sql builders are just that: a specialised string builder which uses expressions, there is no Linq involved. In SqlFu we think Sql but we write it mostly in C#. A POCO usually repre
+The strongly typed helpers or sql builders are just that: a specialised string builder which uses expressions, there is no Linq involved. In SqlFu we think Sql but we write it mostly in C#. Think of SqlFu as a powerful facade for Ado.Net.
 
+Usually we use a POCO (a defined or anonymous type) to represent a table or a view. SqlFu helpers are flexible enough for most one table queries, but if you need to join tables, you should either write the sql as string (not really recommended) or create a db view (recommended) or a stored procedure.
 
-**Version 3 is not compatible with previous versions**
+SqlFu is designed to be used in a cloud environment and it works great inside DDD/CQRS apps or simple CRUD apps.
 
 ### Note for contributors
 
 Please create your pull requests to target the "devel" branch. "Master" is only for released code. Thank you.
+
 
 ## Why should you use it
 The main USP (unique selling proposition - advantage) of SqlFu  is  **Versatility**. This is the reason I've developed it. I need it more flexibility and the micro-orm I was using (peta poco) didn't have it and if other micro-orms had it, they were too slow. 
