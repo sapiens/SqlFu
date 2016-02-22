@@ -12,7 +12,7 @@ Latest version: [3.0.0-beta-1](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
 * Transient errors resilience
 * Support for: SqlServer 2012+ (Azure included). TBA: Sqlite, Postgres, MySql
 
-## Understanding how SqlFu should be used
+## How SqlFu should be used
 
 It's important to understand that SqlFu is **NOT** a light ORM. While an ORM abstracts sql and gives us the illusion of working with a 'object database', SqlFu maps data from a query result to a POCO and provides helpers which use POCOs as a data source. Simply put, an object in SqlFu is a data _source_ or _destination_. There are no relational table to object and back mappings that magically generate sql. 
 
