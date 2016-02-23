@@ -38,10 +38,10 @@ LogManager.OutputToTrace();
  SqlFuManager.Configure(c =>
             {
                //add default profile (name is 'default')
-               c.AddProfile(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection),Connex);              
+               c.AddProfile(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection),cnx_string);              
                
                //add named profile
-               c.AddProfile(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection),Connex,"other");              
+               c.AddProfile(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection),cnx_string,"other");              
                
                //register a type converter for query purposes, obj -> Email
                c.RegisterConverter(val=>new Email(val.ToString()));
@@ -69,25 +69,92 @@ LogManager.OutputToTrace();
 * Each profile is a combination of provider/connection string and it allows to use multiple databases
 * To support CoreClr, each provider needs a DBConnection factory injected. This means that when running on coreclr you need to also install the "System.Data.SqlClient" package. SqlFu is decoupled from a specific db provider.
 
-
-
 ### Get Connection
 
+Most of the time you'll need to inject a db connection factory into your Repository/DAO/Query object . It's **always** better to do that instead of injecting a DbConnection. `IDbFactory` is the predefined factory abstraction in SqlFu.
+
 ```csharp
-//if no config is set as above, it will try to use the first connection found in app(web).config
-using (var db=SqlFuDao.GetConnection()) 
+
+public class MyRepository
 {
-  //db stuff
+    public MyRepository(IDbFactory getDb){}
+    
+    public void DoStuff()
+    {
+        using(var db=_getDb.Create())
+        {
+            //use db connection
+        }
+    }
 }
 
-//or
+//gets factory for the default profile
+var factory=SqlFuManager.GetDbFactory();
 
-using(DbConnection db=new SqlFuConnection(connection,DbType.SqlServer))
+//get a specific profile
+var factory=SqlFuManager.GetDbFactory("other");
+
+var repo=new MyRepository(factory);
+
+```
+
+Let's assume I need 2 connections in my app: one for db "Main", other for db "History". First we add the profiles for each db, then we declare specific interfaces that will be used by the objects which need db access, then the factory classes.
+
+```csharp
+//register the db profiles
+ SqlFuManager.Configure(c =>
+ {
+     //default profile
+     c.AddProfile(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection),MainConnex);              
+     //history profile
+     c.AddProfile(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection),HistoryConnex,"history");              
+ });
+
+ public interface IMainDb:IDbFactory
 {
- //db stuff
+    
 }
 
-````
+public interface IHistoryDb:IDbFactory
+{
+    
+}
+
+ public class MainDb : DbFactory, IMainDb
+{
+    
+}
+
+public class HistoryDb : DbFactory, IHistoryDb
+{
+    
+}
+
+//get main db factory
+var main=  SqlFuManager.GetDbFactory<IMainDb>();
+
+//get history db
+var history=SqlFuManager.GetDbFactory<IHistoryDb>("history");
+
+//register into DI Container to be injected in a service
+//autofac
+var cb=new ContainerBuilder();
+cb.Register(c=>main).As<IMainDb>().SingleInstance();
+cb.Register(c=>history).As<IHistoryDb>().SingleInstance();
+
+//uses both main db and history db
+public class MyService
+{
+    public MyService(IMainDb db,IHistoryDb) {}
+}
+
+```
+**Notes**
+* A custom db factory **must** have a public parameterless constructor.
+* Db factories should be registered/treated as singletons
+* For each database you use, you declare an interface inheriting `IDbFactory` and a type that implements the interface _and_ extends `DbFactory`.
+
+
 ### Common Usage
 
 Starting with version 2.0.0 (.Net 4.5 only) SqlFu adds async queries support. The async methods follow the "Async" sufix convention (e.g Query => QueryAsync)
