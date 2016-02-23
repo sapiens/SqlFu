@@ -1,6 +1,6 @@
 #Welcome to SqlFu
 
-SqlFu is a **_versatile_** data mapper (aka micro-ORM)  for .Net 4.6+ (.Net Core included).  SqlFu uses Apache 2.0 license.
+SqlFu is a **_versatile_** object mapper (aka micro-ORM)  for .Net 4.6+ (.Net Core included).  SqlFu uses Apache 2.0 license.
 
 Latest version: [3.0.0-beta-1](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
 
@@ -29,25 +29,6 @@ SqlFu is designed to be used in a cloud environment and it works great inside DD
 Please create your pull requests to target the "devel" branch. "Master" is only for released code. Thank you.
 
 
-## Why should you use it
-The main USP (unique selling proposition - advantage) of SqlFu  is  **Versatility**. This is the reason I've developed it. I need it more flexibility and the micro-orm I was using (peta poco) didn't have it and if other micro-orms had it, they were too slow. 
-
-I've designed SqlFu based on three equally important principles:
- 
- **User Friendliness** - **Versatility** -  **Performance**
- 
-SqlFu supports
-* SqlServer 2005+
-* MySql
-* Postgresql
-* SqlServerCE 4 (new in SqlFu 1.1)
-* Sqlite (new in SqlFu 1.1)
-
-Read about the **[Advanced Features](https://github.com/sapiens/SqlFu/wiki)**
-
-## User Friendly
- 
- Intuitive usage and automatic multi poco mapping by convention, similar to EF. Multi poco mapping automatically works with pagination without any special setup. Please be aware that SqlFu is a data mapper i.e it maps query results to POCOs, it doesn't do mapping like an ORM does (which allows you to build queries using Linq).
 
 ##Usage
 
@@ -82,13 +63,6 @@ using(DbConnection db=new SqlFuConnection(connection,DbType.SqlServer))
 }
 
 ````
-
-
-#### v1 (legacy)
-```csharp
-var db= new DbAccess(connection,DbType.SqlServer);
-````
-
 ### Common Usage
 
 Starting with version 2.0.0 (.Net 4.5 only) SqlFu adds async queries support. The async methods follow the "Async" sufix convention (e.g Query => QueryAsync)
