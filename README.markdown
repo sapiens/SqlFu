@@ -34,14 +34,33 @@ Please create your pull requests to target the "devel" branch. "Master" is only 
 
 ### Config
 ```csharp
-
-//convenience 
-SqlFuDao.ConnectionStringIs("connection string",DbEngine.SqlServer);
-SqlFuDao.ConnectionNameIs("connection string name") //as configured in app(web).config
-
-//setup logging
-SqlFuDao.OnCommand = cmd => Console.WriteLine(cmd.FormatCommand());
-SqlFuDao.OnException = (cmd,ex)=>Console.WriteLine("\nSql:{1}\nException:\n\t\t{0}", ex,cmd.FormatCommand());
+LogManager.OutputToTrace();
+ SqlFuManager.Configure(c =>
+            {
+               //add default profile (name is 'default')
+               c.AddProfile(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection),Connex);              
+               
+               //add named profile
+               c.AddProfile(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection),Connex,"other");              
+               
+               //register a type converter for query purposes, obj -> Email
+               c.RegisterConverter(val=>new Email(val.ToString()));
+               
+               //register a custom (manual) mapper
+               c.CustomMappers.Register(reader=> new MyPoco(){ /* init from DbDataReader */});
+               
+               //set the table name to be used when dealing with this POCO. 
+               //You can also set the name when using the helper to create a table, or in the helper options when using a helper
+               c.ConfigureTableForPoco<MyPoco>(info=>info.Table=new TableName("my_pocos"));
+               
+              //register a naming convention
+              c.AddNamingConvention(predicate,type=> new TableName(type.Fullname));
+              
+              //used a predefined convention. PostsItem is considered to 'represent' the table/view "Posts"
+              c.AddSuffixTableConvention(suffix:"Item");
+              
+               
+            });
 
 ````
 
