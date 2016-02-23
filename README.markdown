@@ -171,7 +171,49 @@ return getDb.HandleTransientErrors(db=> /* some query */);
 ```
 
 ### CRUD Helpers
+
 ```csharp
+DbConnection db;
+
+//insert
+_db.Insert(new User()
+            {
+                FirstName = "John",
+                LastName = "Doe"
+            });
+
+//insert with options
+_db.Insert(new 
+            {
+                FirstName = "John",
+                LastName = "Doe",
+                Bla=0
+            }, cf =>
+            {
+                cf.SetTableName("mytable");
+                cf.Ignore(d=>d.Bla);
+            });
+
+//update
+_db.Update<User>()
+.Set(c=>c.FirstName,"John").Set(c=>c.Posts,c.Posts+1)
+.Where(c=>c.Id==userId)
+.Execute();
+
+//update from anonymous
+ _db.UpdateFrom(
+                q => q.Data(new { Firstname = "John3", Id = 3 }).Ignore(d => d.Id)
+                ,o => o.SetTableName("users")
+                )
+                .Where(d => d.Firstname == "John")
+                .Execute();
+
+//delete
+_db.DeleteFrom<User>(d=>d.Id==id);
+_db.DeleteFromAnonymous(
+    new {Category = ""}
+    , opt => opt.SetTableName("users")
+    , d => d.Category == Type.Page.ToString());
 
 ```
 
