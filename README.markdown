@@ -32,12 +32,12 @@ Please create your pull requests to target the "devel" branch. "Master" is only 
 
 ##Usage
 
-### Config
+### Config options
 ```csharp
 LogManager.OutputToTrace();
  SqlFuManager.Configure(c =>
             {
-               //add default profile (name is 'default')
+               //add the default profile (name is 'default')
                c.AddProfile(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection),cnx_string);              
                
                //add named profile
@@ -155,9 +155,25 @@ public class MyService
 * For each database you use, you declare an interface inheriting `IDbFactory` and a type that implements the interface _and_ extends `DbFactory`.
 
 
-### Common Usage
+### Transient Errors Resilience
 
-Starting with version 2.0.0 (.Net 4.5 only) SqlFu adds async queries support. The async methods follow the "Async" sufix convention (e.g Query => QueryAsync)
+It's a common scenario, especially using a cloud based db like Azure Sql, to reach connections limit or the opening of a connection to timeout. Those are transient errors and SqlFu has some support in handling them. Basically, when one of the above situations is detected, the db operation is retried for a number of times. This means you get an exception only if, after all retries, the error still persists. 
+
+```csharp
+
+IDbFactory getDb;
+
+getDb.HandleTransientErrors(db=>{
+ /* do stuff */
+ });
+ 
+return getDb.HandleTransientErrors(db=> /* some query */);
+```
+
+### CRUD Helpers
+```csharp
+
+```
 
 ```csharp
 
