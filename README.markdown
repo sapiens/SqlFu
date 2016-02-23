@@ -59,10 +59,16 @@ LogManager.OutputToTrace();
               //used a predefined convention. PostsItem is considered to 'represent' the table/view "Posts"
               c.AddSuffixTableConvention(suffix:"Item");
               
-               
+              //custom logging
+              c.OnException = (cmd,ex)=> Logger.Error(cmd.FormatCommand(),ex);
             });
 
 ````
+**Notes**
+* You need at least one profile configured
+* Each profile is a combination of provider/connection string and it allows to use multiple databases
+* To support CoreClr, each provider needs a DBConnection factory injected. This means that when running on coreclr you need to also install the "System.Data.SqlClient" package. SqlFu is decoupled from a specific db provider.
+
 
 
 ### Get Connection
