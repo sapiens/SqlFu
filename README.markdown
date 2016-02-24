@@ -242,14 +242,27 @@ return r.Result;
 
 ### Queries
 
-SqlFu features a quite powerful and flexible query builder that you can use to query one table/view
+SqlFu features a quite powerful and flexible query builder that you can use to query one table/view (use views or sprocs when you need joins).
 ```csharp
-
+//a big unrealistical query to showcase the builder capabilities
+var names=new[]{"john","mary"};
+_db.QueryAs(q => q.From<User>()
+            .Where(d=>d.Id==id && !d.IsActive)
+            .And(d=>d.InjectSql("Posts=@no",new {no=100}))
+            .Or(d=>d.FirstName.HasValueIn(names))
+            .Or(d=>names.Contains(d.FirstName))
+            .GroupBy(d => d.Category)
+            .Limit(10)
+            .Select(d => new {
+                             d.Category
+                             , total= d.Sum(d.Posts * d.Count(d.Id))})
+                );
 
 ```
 
 **Notes**
 * The convention is that every extension method starting with `Query` uses the strongly typed sql builder
+* Sql functions apply only on the expression parameter. Supported functions are: Sum, Count, Avg, Floor, Ceiling
 
 ### Db Tools
 
