@@ -337,7 +337,7 @@ namespace SqlFu
         /// <param name="builder"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static async Task<List<TProj>> QueryAsync<TProj>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<TProj>> builder, CancellationToken token)
+        public static async Task<List<TProj>> QueryAsAsync<TProj>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<TProj>> builder, CancellationToken token)
         {
             builder.MustNotBeNull();
             var built = builder(db.GetSqlBuilder());
