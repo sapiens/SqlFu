@@ -257,12 +257,45 @@ _db.QueryAs(q => q.From<User>()
                              d.Category
                              , total= d.Sum(d.Posts * d.Count(d.Id))})
                 );
+ //you can use pocos to create the sql but map the result to a different poco
+ _db.QueryAs(q => q.From<User>().SelectAll().MapTo<OtherPoco>());
+ 
+//returns one row only
+ _db.QueryRow(q=>q.From<User>().SelectAll());
 
+//returns one value
+ _db.QueryValue(q=>q.From<User>().Select(d=>d.Id));
+ 
+ //returns a List<int>
+ _db.QueryAs(q=>q.From<User>().Select(d=>d.Id));
+ 
+ //process a result set row by row. Useful when dealing with a big result set
+ _db.QueryAndProcess(q=>q.From<User>().SelectAll(),user=>{ 
+   user.Name=user.Name.ToUpper();
+   return true;//continue processing
+   return false;//query ends here, no other results are read/mapped
+ });
+ 
+ //do a paged query, useful for pagination. Here we request page 2 with 30 results per page
+ var result=_db.QueryPaged<User>(q=>q.From<User>.SelectAll(),new Pagination(page:2,pageSize:30));
+ //total existing users
+ result.Count
+ 
+ //result set with 30 users
+ result.Items
+ 
+ //execute some sql
+ _db.Execute($"delete from {_db.GetTableName<User>()} where Id=@0",userId);
 ```
 
 **Notes**
-* The convention is that every extension method starting with `Query` uses the strongly typed sql builder
-* Sql functions apply only on the expression parameter. Supported functions are: Sum, Count, Avg, Floor, Ceiling
+* The convention is that every extension method starting with `Query` uses the strongly typed sql builder.
+* `InjectSql` is used only on the epxression parameter; as the name implies, it allows you to inject raw sql in the builder.
+* `HasValueIn` is for `column in (values)` sql.
+* Any IEnumerable variable can use `Contains(column)` to generate `column in (values)` sql;
+* `Select` is about specifying the sql column and an implicit mapping to the projection, however `MapTo` applies after the sql has been built.
+* Sql functions should be used only on the expression parameter. Supported functions are: Sum, Count, Avg, Floor, Ceiling, Min, Max,Concat, Round.
+* String methods/properties support: Contains, Length, StartsWith, EndsWith, ToUpper, ToLower.
 
 ### Db Tools
 
