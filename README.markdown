@@ -326,6 +326,34 @@ _db.CreateTableFrom<User>(cf=>{
 });
 
 ```
-#### The typed table creator
+#### The strongly typed table creator
 
-I often
+In order to create the needed tables in an organised manner (ex: part of a component which needs those tables) you can use the `ATypedStorageCreator<>` base class (one for each table). This is actual code from another library
+```csharp
+ public class UniqueStorageCreator : ATypedStorageCreator<UniqueStoreRow>
+    {
+        public const string DefaultTableName = "uniques";
+        public const string DefaultSchema = "";
+
+        public UniqueStorageCreator(IDbFactory db) : base(db)
+        {
+        }
+
+       
+        protected override void Configure(IConfigureTable<UniqueStoreRow> cfg)
+        {
+            cfg.Column(d => d.Scope, c => c.HasDbType("char").HasSize(32).NotNull())
+                .Column(d => d.Aspect, c => c.HasDbType("char").HasSize(32).NotNull())
+                .Column(d => d.Value, c => c.HasDbType("char").HasSize(32).NotNull())
+                .Column(d => d.Bucket, c => c.HasDbType("char").HasSize(32).NotNull())
+                .Index(i => i.OnColumns(c=>c.Bucket,c => c.Scope,c=>c.Aspect,c=>c.Value).Unique())
+                .Index(d=>d.OnColumns(c=>c.EntityId))
+                .HandleExisting(HandleExistingTable);
+        }
+    }
+    
+    //usage
+    new UniqueStorageCreator(factory).WithTableName(name,schema).IfExists(TableExistsAction.DropIt).Create();
+  ```
+**Notes**
+This has nothing to do with migrations support, SqlFu doesn't support schema migrations anymore, it's just a convenient way to create tables. Another way is to register all these creators in a DI Container then resolve `IEnumerable<ICreateStorage>` and then `storages.ForEach(s=>s.Create())`. This allows you to add new table creator classes at any time. Great for development where the db schema is not stable.
