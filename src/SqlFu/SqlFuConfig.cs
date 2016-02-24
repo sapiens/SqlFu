@@ -35,17 +35,17 @@ namespace SqlFu
             cfg(table);
         }
 
-        /// <summary>
-        /// Registers mappings for a value object, in order to flatten it (insert/update helpers only) or to restore it.
-        /// For simple conversion of a result to a value object use <see cref="SqlFuConfig.RegisterConverter"/>
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="from">Flattens the value object</param>
-        /// <param name="to">Restores the value object</param>
-        public void MapValueObject<T>(Func<T, object> from, Func<object, T> to = null)
-        {
-            Converters.MapValueObject(from, to);
-        }
+        ///// <summary>
+        ///// Registers mappings for a value object, in order to flatten it (insert/update helpers only) or to restore it.
+        ///// For simple conversion of a result to a value object use <see cref="SqlFuConfig.RegisterConverter"/>
+        ///// </summary>
+        ///// <typeparam name="T"></typeparam>
+        ///// <param name="from">Flattens the value object</param>
+        ///// <param name="to">Restores the value object</param>
+        //public void MapValueObject<T>(Func<T, object> from, Func<object, T> to = null)
+        //{
+        //    Converters.MapValueObject(from, to);
+        //}
 
         public void RegisterConverter<T>(Func<object, T> converter)
         {
