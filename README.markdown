@@ -7,6 +7,7 @@ Latest version: [3.0.0-beta-1](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
 ## Features
 * Versatility 
 * Performance
+* CoreClr support
 * Fully async extension methods and helpers
 * DDL tools
 * Suport for working with multiple databases/providers in the same app
