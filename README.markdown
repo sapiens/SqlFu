@@ -8,6 +8,7 @@ Latest version: [3.0.0-beta-1](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
 * Versatility 
 * Performance
 * Fully async extension methods and helpers
+* DDL tools
 * Suport for working with multiple databases/providers in the same app
 * Transient errors resilience
 * Support for: SqlServer 2012+ (Azure included). TBA: Sqlite, Postgres, MySql
@@ -244,7 +245,7 @@ return r.Result;
 
 SqlFu features a quite powerful and flexible query builder that you can use to query one table/view (use views or sprocs when you need joins).
 ```csharp
-//a big unrealistical query to showcase the builder capabilities
+//a big unrealistic query to showcase the builder capabilities
 var names=new[]{"john","mary"};
 _db.QueryAs(q => q.From<User>()
             .Where(d=>d.Id==id && !d.IsActive)
@@ -293,9 +294,38 @@ _db.QueryAs(q => q.From<User>()
 * `InjectSql` is used only on the epxression parameter; as the name implies, it allows you to inject raw sql in the builder.
 * `HasValueIn` is for `column in (values)` sql.
 * Any IEnumerable variable can use `Contains(column)` to generate `column in (values)` sql;
-* `Select` is about specifying the sql column and an implicit mapping to the projection, however `MapTo` applies after the sql has been built.
+* `Select` is about specifying the sql column and an implicit mapping to the projection, however `MapTo` applies after the sql has been built and the query executed.
 * Sql functions should be used only on the expression parameter. Supported functions are: Sum, Count, Avg, Floor, Ceiling, Min, Max,Concat, Round.
 * String methods/properties support: Contains, Length, StartsWith, EndsWith, ToUpper, ToLower.
 
 ### Db Tools
 
+```csharp
+_db.DropTable<User>();
+_db.DropTable("users");
+
+_db.Truncate<User>();
+
+if (_db.TableExists<User>()){}
+
+//creates table starting from POCO. This is not poco to table mapping, just a fluent builder to generate 'create table' command
+_db.CreateTableFrom<User>(cf=>{
+              cf.DropIfExists()
+                .TableName("users")
+                .Column(t => t.Id, c => c.AutoIncrement())
+                .ColumnSize(c=>c.FirstName,150)
+                .ColumnSize(c=>c.LastName,150)
+                .Column(d=>d.Category,c=>c
+                                        .HasDbType(SqlServerType.Varchar)
+                                        .HasSize(10)
+                                        .HasDefaultValue(Type.Page.ToString()))
+             
+                .PrimaryKey(pk=>pk.OnColumns(d=>d.Id))
+                .Index(ix=>ix.OnColumns(d=>d.FirstName).Unique().WithOptions("nonclustered"));
+                ;
+});
+
+```
+#### The typed table creator
+
+I often
