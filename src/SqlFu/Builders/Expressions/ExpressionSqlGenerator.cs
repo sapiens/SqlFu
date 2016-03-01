@@ -418,8 +418,8 @@ namespace SqlFu.Builders.Expressions
         {
             if (!_columnMode) return node;
 
-            HandleObject(node.NewExpression, node.Bindings.Select(d => d.Member.Name).ToArray());
-            
+            var written=HandleObject(node.NewExpression, node.Bindings.Select(d => d.Member.Name).ToArray());
+            if (written > 0) _sb.Append(",");
             foreach (var arg in node.Bindings.Cast<MemberAssignment>())
             {
 
@@ -442,9 +442,15 @@ namespace SqlFu.Builders.Expressions
             HandleObject(node);
         }
 
-        void HandleObject(NewExpression node, params string[] skip)
+        /// <summary>
+        /// Returns how many columns were written
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="skip"></param>
+        /// <returns></returns>
+        int HandleObject(NewExpression node, params string[] skip)
         {
-
+            var w = 0;
             node.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Where(d => !skip.Any(s => d.Name == s))
                 .ForEach(n =>
@@ -452,9 +458,11 @@ namespace SqlFu.Builders.Expressions
                     _sb
                       //.AppendLine()
                       .Append(GetColumnName(n)).Append(",");
+                    w++;
 
                 });
             _sb.RemoveLastIfEquals(",");
+            return w;
         }
 
         private void HandleAnonymous(NewExpression node)
