@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text;
 using SqlFu.Configuration;
 using SqlFu.Providers;
@@ -420,7 +419,7 @@ namespace SqlFu.Builders.Expressions
             if (!_columnMode) return node;
 
             HandleObject(node.NewExpression, node.Bindings.Select(d => d.Member.Name).ToArray());
-            _sb.Append(',');
+            
             foreach (var arg in node.Bindings.Cast<MemberAssignment>())
             {
 
@@ -428,7 +427,7 @@ namespace SqlFu.Builders.Expressions
                 _sb.AppendFormat(" as {0},", arg.Member.Name);
 
             }
-            _sb.RemoveLast();
+            _sb.RemoveLastIfEquals(",");
             return node;
         }
 
