@@ -455,7 +455,7 @@ namespace SqlFu.Builders.Expressions
                       .Append(GetColumnName(n)).Append(",");
 
                 });
-            _sb.RemoveLast();
+            _sb.RemoveLastIfEquals(",");
         }
 
         private void HandleAnonymous(NewExpression node)
