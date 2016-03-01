@@ -327,6 +327,12 @@ _db.CreateTableFrom<User>(cf=>{
 });
 
 ```
+
+**Notes**
+* SqlServer type `rowversion` should be a byte[8] property of the POCO.
+* By default enums are considered ints, in order to store strings, the POCO property must be string. This limitation is because of how the c# compiler treats enums in an Expression (it always converts it to int).
+* But when mapping a result to POCO, `int` and `string` are automatically maped to enum without any configuration.
+
 #### The strongly typed table creator
 
 In order to create the needed tables in an organised manner (ex: part of a component which needs those tables) you can use the `ATypedStorageCreator<>` base class (one for each table). This is actual code from another library
