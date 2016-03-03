@@ -66,6 +66,7 @@ namespace SqlFu.Executors
         public override void Close()
         {
             _conex.Close();
+            SqlFuManager.Config.OnCloseConnection(this);
         }
 
         /// <summary>
@@ -83,6 +84,7 @@ namespace SqlFu.Executors
         public override void Open()
         {
             if (_conex.State != ConnectionState.Open) _conex.Open();
+            SqlFuManager.Config.OnOpenConnection(this);
         }
 
         /// <summary>
@@ -259,8 +261,9 @@ namespace SqlFu.Executors
             if (_trans != null)
             {
                 Rollback();
-            }    
-            Connection.Dispose();
+            }
+            Close();
+            Connection.Dispose();           
             _conex = null;
         }
     }

@@ -65,7 +65,7 @@ namespace SqlFu
                     "I need a connection! Either set SqlFuFactory.Config.Providers.ConnectionString method or define a connection in config file. If there are more than one connection defined, set SqlFuFactory.Config.Providers.ConnectionString");
             }
             var sql= new SqlFuConnection(provider,connectionString);
-            sql.Connection.Open();
+            sql.Open();
             return sql;
         }
          public static async Task<DbConnection> OpenConnectionAsync(IDbProvider provider,string connectionString,CancellationToken cancel)
@@ -77,7 +77,7 @@ namespace SqlFu
                     "I need a connection! Either set SqlFuFactory.Config.Providers.ConnectionString method or define a connection in config file. If there are more than one connection defined, set SqlFuFactory.Config.Providers.ConnectionString");
             }
             var sql= new SqlFuConnection(provider,connectionString);
-            await sql.Connection.OpenAsync(cancel).ConfigureAwait(false);
+            await sql.OpenAsync(cancel).ConfigureAwait(false);
              return sql;
         }
         
