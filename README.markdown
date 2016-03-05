@@ -133,10 +133,10 @@ public class HistoryDb : DbFactory, IHistoryDb
 }
 
 //get main db factory
-var main=  SqlFuManager.GetDbFactory<IMainDb>();
+var main=  SqlFuManager.GetDbFactory<MainDb>();
 
 //get history db
-var history=SqlFuManager.GetDbFactory<IHistoryDb>("history");
+var history=SqlFuManager.GetDbFactory<HistoryDb>("history");
 
 //register into DI Container to be injected in a service
 //autofac
