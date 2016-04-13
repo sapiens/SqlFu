@@ -61,7 +61,7 @@ public static void Local()
 [Depends("Build")]
 public static void Pack()
 {
-   Pack("SqlFu",new[]{"CavemanTools"});
+   Pack("SqlFu");
 
 }
 
