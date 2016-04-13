@@ -5,7 +5,7 @@ If you're wondering if there's a reason for yet another micro-orm [read this](ht
 
 Ver. 3 (complete rewrite) Beta1 released. [Docs are available](https://github.com/sapiens/SqlFu/blob/v3-devel/README.markdown)!
 
-Latest stable version: [2.3.12](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
+Latest stable version: [2.3.13](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
 
 **Version 2 is not compatbile with version 1**. [Read how to upgrade to SqlFu 2](https://github.com/sapiens/SqlFu/wiki/How-To-Upgrade-to-SqlFu2)
 
