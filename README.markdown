@@ -2,7 +2,7 @@
 
 SqlFu is a **_versatile_** object mapper (aka micro-ORM)  for .Net 4.6+ and .Net Core.  SqlFu uses Apache 2.0 license.
 
-Latest version: 3.0.0-beta-1 [](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
+Latest version: 3.0.0-beta-6 [](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
 
 ## Features
 * Versatility 
@@ -363,4 +363,5 @@ In order to create the needed tables in an organised manner (ex: part of a compo
     new UniqueStorageCreator(factory).WithTableName(name,schema).IfExists(TableExistsAction.DropIt).Create();
   ```
 **Notes**
+
 This has nothing to do with migrations support, SqlFu doesn't support schema migrations anymore, it's just a convenient way to create tables. Another way is to register all these creators in a DI Container then resolve `IEnumerable<ICreateStorage>` and then `storages.ForEach(s=>s.Create())`. This allows you to add new table creator classes at any time. Great for development where the db schema is not stable.
