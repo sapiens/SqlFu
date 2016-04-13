@@ -14,6 +14,11 @@
 
 	<!-- <releaseNotes>Added multiple results support</releaseNotes> -->
     
+	<dependencies>
+  <dependency id="CavemanTools" version="[3.46.0,4.0.0)" />
+  
+</dependencies>
+	
     <frameworkAssemblies>
   
   <frameworkAssembly assemblyName="System.ComponentModel.DataAnnotations"  />
