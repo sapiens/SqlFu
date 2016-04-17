@@ -77,7 +77,14 @@ namespace SqlFu.Mapping.Internals
                 return o.ToString();
             });
             RegisterConverter(o=> new InsertedId(o));
-            RegisterConverter(o=> Guid.Parse(o.ToString()));
+            RegisterConverter(o =>
+            {
+                if (o is Guid) return (Guid) o;
+                if (o is string) return Guid.Parse(o.ToString());
+                if (o is byte[]) return new Guid((byte[])o);
+                throw new InvalidCastException($"Can't convert null or {o?.GetType()} to Guid");
+            }
+            );
             
             RegisterConverter(o=> (o==null || o==DBNull.Value)?(Guid?)null:Guid.Parse(o.ToString()));            
             RegisterConverter(o=> (o==null || o==DBNull.Value)?(int?)null:(int)o);   

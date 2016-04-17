@@ -2,7 +2,6 @@
 using CavemanTools;
 using CavemanTools.Model;
 using FakeItEasy;
-using FakeItEasy.ExtensionSyntax.Full;
 using FluentAssertions;
 using SqlFu.Builders;
 using SqlFu.Providers.SqlServer;

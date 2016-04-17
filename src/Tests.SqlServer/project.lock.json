@@ -19,6 +19,20 @@
           "lib/net46/CavemanTools.dll": {}
         }
       },
+      "EntityFramework/6.0.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.ComponentModel.DataAnnotations"
+        ],
+        "compile": {
+          "lib/net45/EntityFramework.dll": {},
+          "lib/net45/EntityFramework.SqlServer.dll": {}
+        },
+        "runtime": {
+          "lib/net45/EntityFramework.dll": {},
+          "lib/net45/EntityFramework.SqlServer.dll": {}
+        }
+      },
       "FakeItEasy/1.25.3": {
         "type": "package",
         "compile": {
@@ -173,7 +187,7 @@
           "lib/net45/Newtonsoft.Json.dll": {}
         }
       },
-      "SqlFu/3.0.0-beta-4": {
+      "SqlFu/3.0.0-beta-10": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.6",
         "dependencies": {
@@ -182,6 +196,44 @@
         "frameworkAssemblies": [
           "System.Data"
         ]
+      },
+      "System.Data.SQLite/1.0.100": {
+        "type": "package",
+        "dependencies": {
+          "System.Data.SQLite.Core": "1.0.100",
+          "System.Data.SQLite.EF6": "1.0.100",
+          "System.Data.SQLite.Linq": "1.0.100"
+        }
+      },
+      "System.Data.SQLite.Core/1.0.100": {
+        "type": "package",
+        "compile": {
+          "lib/net46/System.Data.SQLite.dll": {}
+        },
+        "runtime": {
+          "lib/net46/System.Data.SQLite.dll": {}
+        }
+      },
+      "System.Data.SQLite.EF6/1.0.100": {
+        "type": "package",
+        "dependencies": {
+          "EntityFramework": "6.0.0"
+        },
+        "compile": {
+          "lib/net46/System.Data.SQLite.EF6.dll": {}
+        },
+        "runtime": {
+          "lib/net46/System.Data.SQLite.EF6.dll": {}
+        }
+      },
+      "System.Data.SQLite.Linq/1.0.100": {
+        "type": "package",
+        "compile": {
+          "lib/net46/System.Data.SQLite.Linq.dll": {}
+        },
+        "runtime": {
+          "lib/net46/System.Data.SQLite.Linq.dll": {}
+        }
       },
       "xunit/2.2.0-beta1-build3239": {
         "type": "package",
@@ -310,6 +362,20 @@
           "lib/net46/CavemanTools.dll": {}
         }
       },
+      "EntityFramework/6.0.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.ComponentModel.DataAnnotations"
+        ],
+        "compile": {
+          "lib/net45/EntityFramework.dll": {},
+          "lib/net45/EntityFramework.SqlServer.dll": {}
+        },
+        "runtime": {
+          "lib/net45/EntityFramework.dll": {},
+          "lib/net45/EntityFramework.SqlServer.dll": {}
+        }
+      },
       "FakeItEasy/1.25.3": {
         "type": "package",
         "compile": {
@@ -464,7 +530,7 @@
           "lib/net45/Newtonsoft.Json.dll": {}
         }
       },
-      "SqlFu/3.0.0-beta-4": {
+      "SqlFu/3.0.0-beta-10": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.6",
         "dependencies": {
@@ -473,6 +539,44 @@
         "frameworkAssemblies": [
           "System.Data"
         ]
+      },
+      "System.Data.SQLite/1.0.100": {
+        "type": "package",
+        "dependencies": {
+          "System.Data.SQLite.Core": "1.0.100",
+          "System.Data.SQLite.EF6": "1.0.100",
+          "System.Data.SQLite.Linq": "1.0.100"
+        }
+      },
+      "System.Data.SQLite.Core/1.0.100": {
+        "type": "package",
+        "compile": {
+          "lib/net46/System.Data.SQLite.dll": {}
+        },
+        "runtime": {
+          "lib/net46/System.Data.SQLite.dll": {}
+        }
+      },
+      "System.Data.SQLite.EF6/1.0.100": {
+        "type": "package",
+        "dependencies": {
+          "EntityFramework": "6.0.0"
+        },
+        "compile": {
+          "lib/net46/System.Data.SQLite.EF6.dll": {}
+        },
+        "runtime": {
+          "lib/net46/System.Data.SQLite.EF6.dll": {}
+        }
+      },
+      "System.Data.SQLite.Linq/1.0.100": {
+        "type": "package",
+        "compile": {
+          "lib/net46/System.Data.SQLite.Linq.dll": {}
+        },
+        "runtime": {
+          "lib/net46/System.Data.SQLite.Linq.dll": {}
+        }
       },
       "xunit/2.2.0-beta1-build3239": {
         "type": "package",
@@ -601,6 +705,20 @@
           "lib/net46/CavemanTools.dll": {}
         }
       },
+      "EntityFramework/6.0.0": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "System.ComponentModel.DataAnnotations"
+        ],
+        "compile": {
+          "lib/net45/EntityFramework.dll": {},
+          "lib/net45/EntityFramework.SqlServer.dll": {}
+        },
+        "runtime": {
+          "lib/net45/EntityFramework.dll": {},
+          "lib/net45/EntityFramework.SqlServer.dll": {}
+        }
+      },
       "FakeItEasy/1.25.3": {
         "type": "package",
         "compile": {
@@ -755,7 +873,7 @@
           "lib/net45/Newtonsoft.Json.dll": {}
         }
       },
-      "SqlFu/3.0.0-beta-4": {
+      "SqlFu/3.0.0-beta-10": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.6",
         "dependencies": {
@@ -764,6 +882,44 @@
         "frameworkAssemblies": [
           "System.Data"
         ]
+      },
+      "System.Data.SQLite/1.0.100": {
+        "type": "package",
+        "dependencies": {
+          "System.Data.SQLite.Core": "1.0.100",
+          "System.Data.SQLite.EF6": "1.0.100",
+          "System.Data.SQLite.Linq": "1.0.100"
+        }
+      },
+      "System.Data.SQLite.Core/1.0.100": {
+        "type": "package",
+        "compile": {
+          "lib/net46/System.Data.SQLite.dll": {}
+        },
+        "runtime": {
+          "lib/net46/System.Data.SQLite.dll": {}
+        }
+      },
+      "System.Data.SQLite.EF6/1.0.100": {
+        "type": "package",
+        "dependencies": {
+          "EntityFramework": "6.0.0"
+        },
+        "compile": {
+          "lib/net46/System.Data.SQLite.EF6.dll": {}
+        },
+        "runtime": {
+          "lib/net46/System.Data.SQLite.EF6.dll": {}
+        }
+      },
+      "System.Data.SQLite.Linq/1.0.100": {
+        "type": "package",
+        "compile": {
+          "lib/net46/System.Data.SQLite.Linq.dll": {}
+        },
+        "runtime": {
+          "lib/net46/System.Data.SQLite.Linq.dll": {}
+        }
       },
       "xunit/2.2.0-beta1-build3239": {
         "type": "package",
@@ -877,7 +1033,7 @@
     }
   },
   "libraries": {
-    "SqlFu/3.0.0-beta-4": {
+    "SqlFu/3.0.0-beta-10": {
       "type": "project",
       "path": "../SqlFu/project.json"
     },
@@ -892,6 +1048,34 @@
         "lib/dotnet5.4/CavemanTools.xml",
         "lib/net46/CavemanTools.dll",
         "lib/net46/CavemanTools.xml"
+      ]
+    },
+    "EntityFramework/6.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "y6lX/VMghGBV6TvgQS4Q2WK6kAcOoyD+TQxObN9utd0JsMMdMxyqARxKbvgi7KEIbQ8osZ4ZvImaly7l3NDFDw==",
+      "files": [
+        "Content/App.config.transform",
+        "Content/Web.config.transform",
+        "EntityFramework.6.0.0.nupkg",
+        "EntityFramework.6.0.0.nupkg.sha512",
+        "EntityFramework.nuspec",
+        "lib/net40/EntityFramework.dll",
+        "lib/net40/EntityFramework.SqlServer.dll",
+        "lib/net40/EntityFramework.SqlServer.xml",
+        "lib/net40/EntityFramework.xml",
+        "lib/net45/EntityFramework.dll",
+        "lib/net45/EntityFramework.SqlServer.dll",
+        "lib/net45/EntityFramework.SqlServer.xml",
+        "lib/net45/EntityFramework.xml",
+        "tools/about_EntityFramework.help.txt",
+        "tools/EntityFramework.PowerShell.dll",
+        "tools/EntityFramework.PowerShell.Utility.dll",
+        "tools/EntityFramework.psd1",
+        "tools/EntityFramework.psm1",
+        "tools/init.ps1",
+        "tools/install.ps1",
+        "tools/migrate.exe"
       ]
     },
     "FakeItEasy/1.25.3": {
@@ -1139,6 +1323,106 @@
         "tools/install.ps1"
       ]
     },
+    "System.Data.SQLite/1.0.100": {
+      "type": "package",
+      "sha512": "xuWTy1K/jzlKwfeHanYJTeQ7sNh4NCvitbos+rGyf+LK9HwHN8TBWIUVjILdc02+6hVBFbKwx6wB1i8uxU+Xyw==",
+      "files": [
+        "System.Data.SQLite.1.0.100.nupkg",
+        "System.Data.SQLite.1.0.100.nupkg.sha512",
+        "System.Data.SQLite.nuspec"
+      ]
+    },
+    "System.Data.SQLite.Core/1.0.100": {
+      "type": "package",
+      "sha512": "N3oGQXMOBcY9rlLc69xzted2ckC7V+nXhl+BBwNu25q2gqMevprlvTEow0hJIEUOFZqsus/prUbAH8eFVgXADA==",
+      "files": [
+        "build/net20/System.Data.SQLite.Core.targets",
+        "build/net20/x64/SQLite.Interop.dll",
+        "build/net20/x86/SQLite.Interop.dll",
+        "build/net40/System.Data.SQLite.Core.targets",
+        "build/net40/x64/SQLite.Interop.dll",
+        "build/net40/x86/SQLite.Interop.dll",
+        "build/net45/System.Data.SQLite.Core.targets",
+        "build/net45/x64/SQLite.Interop.dll",
+        "build/net45/x86/SQLite.Interop.dll",
+        "build/net451/System.Data.SQLite.Core.targets",
+        "build/net451/x64/SQLite.Interop.dll",
+        "build/net451/x86/SQLite.Interop.dll",
+        "build/net46/System.Data.SQLite.Core.targets",
+        "build/net46/x64/SQLite.Interop.dll",
+        "build/net46/x86/SQLite.Interop.dll",
+        "lib/net20/System.Data.SQLite.dll",
+        "lib/net20/System.Data.SQLite.xml",
+        "lib/net40/System.Data.SQLite.dll",
+        "lib/net40/System.Data.SQLite.xml",
+        "lib/net45/System.Data.SQLite.dll",
+        "lib/net45/System.Data.SQLite.xml",
+        "lib/net451/System.Data.SQLite.dll",
+        "lib/net451/System.Data.SQLite.xml",
+        "lib/net46/System.Data.SQLite.dll",
+        "lib/net46/System.Data.SQLite.xml",
+        "System.Data.SQLite.Core.1.0.100.nupkg",
+        "System.Data.SQLite.Core.1.0.100.nupkg.sha512",
+        "System.Data.SQLite.Core.nuspec"
+      ]
+    },
+    "System.Data.SQLite.EF6/1.0.100": {
+      "type": "package",
+      "sha512": "Zv3/yJJPFfd7smwx1PQ7rj2LoS/Zf1JcXy0NkK0LMiQFejmoe0yL517aOglccTNHUWqe2prYIbRcB9eu9kgYcw==",
+      "files": [
+        "content/net40/app.config.install.xdt",
+        "content/net40/app.config.transform",
+        "content/net40/web.config.install.xdt",
+        "content/net40/web.config.transform",
+        "content/net45/app.config.install.xdt",
+        "content/net45/app.config.transform",
+        "content/net45/web.config.install.xdt",
+        "content/net45/web.config.transform",
+        "content/net451/app.config.install.xdt",
+        "content/net451/app.config.transform",
+        "content/net451/web.config.install.xdt",
+        "content/net451/web.config.transform",
+        "content/net46/app.config.install.xdt",
+        "content/net46/app.config.transform",
+        "content/net46/web.config.install.xdt",
+        "content/net46/web.config.transform",
+        "lib/net40/System.Data.SQLite.EF6.dll",
+        "lib/net45/System.Data.SQLite.EF6.dll",
+        "lib/net451/System.Data.SQLite.EF6.dll",
+        "lib/net46/System.Data.SQLite.EF6.dll",
+        "System.Data.SQLite.EF6.1.0.100.nupkg",
+        "System.Data.SQLite.EF6.1.0.100.nupkg.sha512",
+        "System.Data.SQLite.EF6.nuspec",
+        "tools/net40/install.ps1",
+        "tools/net45/install.ps1",
+        "tools/net451/install.ps1",
+        "tools/net46/install.ps1"
+      ]
+    },
+    "System.Data.SQLite.Linq/1.0.100": {
+      "type": "package",
+      "sha512": "ChpF7c6E0IJcBHQAvFs6K/HAjvhfwSf+hzxcHP7kAtGlvHLRmzGIPirR5SXFeqZy8ylqZzCVGub24iNVdyOr1g==",
+      "files": [
+        "content/net20/app.config.transform",
+        "content/net20/web.config.transform",
+        "content/net40/app.config.transform",
+        "content/net40/web.config.transform",
+        "content/net45/app.config.transform",
+        "content/net45/web.config.transform",
+        "content/net451/app.config.transform",
+        "content/net451/web.config.transform",
+        "content/net46/app.config.transform",
+        "content/net46/web.config.transform",
+        "lib/net20/System.Data.SQLite.Linq.dll",
+        "lib/net40/System.Data.SQLite.Linq.dll",
+        "lib/net45/System.Data.SQLite.Linq.dll",
+        "lib/net451/System.Data.SQLite.Linq.dll",
+        "lib/net46/System.Data.SQLite.Linq.dll",
+        "System.Data.SQLite.Linq.1.0.100.nupkg",
+        "System.Data.SQLite.Linq.1.0.100.nupkg.sha512",
+        "System.Data.SQLite.Linq.nuspec"
+      ]
+    },
     "xunit/2.2.0-beta1-build3239": {
       "type": "package",
       "sha512": "j/MqJK2vBsTqdcGQCrMw0pQKbwQF1o9BeFRZ1BNlHe2W1/5ixqJFon/dr55MAnFgQrb4Euabonmn5JNluK4qeQ==",
@@ -1311,6 +1595,7 @@
     ],
     "DNX,Version=v4.6": [
       "FakeItEasy >= 1.25.3",
+      "System.Data.SQLite >= 1.0.100",
       "xunit.runner.dnx >= 2.1.0-rc1-build204",
       "fx/System.Data >= 4.0.0"
     ]

@@ -9,18 +9,6 @@ namespace SqlFu.Providers
     using Builders;
     using Configuration;
 
-     public struct EscapeIdentifierChars
-    {
-        public char Start;
-        public char End;
-
-         public EscapeIdentifierChars(char start,char end)
-         {
-             Start = start;
-             End = end;
-         }   
-    }
-
     public abstract class DbProvider : IDbProvider
     {
         private Func<DbConnection> _factory;
@@ -39,11 +27,7 @@ namespace SqlFu.Providers
         {
             name.MustNotBeEmpty();
             param.ParameterName = ParamPrefix+name;
-            //value = Converters.ConvertValueObject(value);
-
-            //    var vt = (Type) ((dynamic) value).GetType();
-            //    if (vt.IsCustomObjectType()) throw new InvalidOperationException($"Can't flatten object '{value.GetType()}'");
-
+            
             param.Value = value ?? DBNull.Value;
         }
 

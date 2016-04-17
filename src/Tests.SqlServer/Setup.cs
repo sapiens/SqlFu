@@ -3,9 +3,11 @@ using System.Data.Common;
 using SqlFu;
 using SqlFu.Providers.SqlServer;
 using System.Data.SqlClient;
+using System.Data.SQLite;
 using CavemanTools;
 using CavemanTools.Logging;
 using CavemanTools.Model.ValueObjects;
+using SqlFu.Providers.Sqlite;
 
 namespace Tests.SqlServer
 {
@@ -19,10 +21,16 @@ namespace Tests.SqlServer
             SqlFuManager.Configure(c =>
             {
                 c.AddProfile(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection),Connex);              
+              //  c.AddProfile(new SqliteProvider(SQLiteFactory.Instance.CreateConnection),"Data Source = mydb.db; Version = 3;","sqlite");              
             });
         }
 
-        public static DbConnection GetConnection() => SqlFuManager.GetDbFactory().Create();
+        public static DbConnection GetConnection() => SqlFuManager.GetDbFactory(
+//#if SqlServer
+//#elif Sqlite
+//            "sqlite"
+//#endif
+            ).Create();
 
 
     }

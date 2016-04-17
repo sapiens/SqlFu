@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data.Common;
 using System.Linq;
-using CavemanTools.Model.ValueObjects;
 using FluentAssertions;
 using SqlFu;
 using SqlFu.Builders;
@@ -37,6 +36,8 @@ namespace Tests.SqlServer
     public class DBOperations:IDisposable
     {
         private DbConnection _db = Setup.GetConnection();
+
+
         public DBOperations()
         {
             _db.CreateTableFrom<User>(cf =>

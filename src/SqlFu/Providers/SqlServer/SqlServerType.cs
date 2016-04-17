@@ -1,4 +1,5 @@
 ﻿using System;
+using SqlFu.Providers.Sqlite;
 
 namespace SqlFu.Providers.SqlServer
 {
