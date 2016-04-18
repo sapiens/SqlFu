@@ -8,7 +8,7 @@ namespace SqlFu.Migrations
          public static IConfigureMigrationsRunner SearchCurrentAssembly(this IConfigureMigrationsRunner config)
          {
              config.MustNotBeNull();
-             return config.SearchAssembly(Assembly.GetCallingAssembly());
+             return config.SearchMigrations(Assembly.GetCallingAssembly());
          }
     }
 }

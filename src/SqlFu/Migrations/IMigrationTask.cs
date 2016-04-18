@@ -23,6 +23,14 @@ namespace SqlFu.Migrations
         /// <param name="db"></param>
         void Execute(DbConnection db);
 
+        void Rollback(DbConnection db);
+
         int Priority { get; }
+    }
+
+    public interface IUninstallSchema
+    {
+        void Uninstall(DbConnection db);
+        string SchemaName { get; }
     }
 }

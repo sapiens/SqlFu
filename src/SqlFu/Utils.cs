@@ -1,31 +1,103 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Data;
+using System.Data.Common;
 using System.Linq;
-using System.Text;
+using System.Linq.Expressions;
 using System.Reflection;
-
+using System.Text;
+using SqlFu.Builders.Expressions;
+using SqlFu.Configuration;
+using SqlFu.Configuration.Internals;
+using SqlFu.Providers;
 
 namespace SqlFu
 {
     public static class Utils
     {
-        public static string FormatCommand(this IDbCommand cmd)
+       
+
+        /// <summary>
+        /// Used to generate sql bits from expressions
+        /// </summary>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public static IGenerateSqlFromExpressions GetExpressionSqlGenerator(this DbConnection db)
+            => new ExpressionSqlGenerator(db.Provider().ExpressionsHelper,SqlFuManager.Config.TableInfoFactory,db.Provider());
+
+        /// <summary>
+        /// Sets table name/schema in one statement
+        /// </summary>
+        /// <param name="opt"></param>
+        /// <param name="name"></param>
+        /// <param name="schema"></param>
+        /// <returns></returns>
+        public static IHelperOptions SetTableName(this IHelperOptions opt, string name, string schema = null)
         {
-            return FormatCommand(cmd.CommandText,
-                                 (cmd.Parameters.Cast<IDbDataParameter>()
-                                     .ToDictionary(p => p.ParameterName, p => p.Value)));
+            name.MustNotBeEmpty();
+            opt.TableName = name;
+            opt.DbSchema = schema;
+            return opt;
         }
 
-        public static bool IsListParam(this object data)
+        /// <summary>
+        /// Every type named '[something][suffix]' will use the table name 'something'
+        /// </summary>
+        /// <param name="cfg"></param>
+        /// <param name="match"></param>
+        /// <param name="schema"></param>
+        /// <param name="suffix"></param>
+        public static void 
+            AddSuffixTableConvention(this SqlFuConfig cfg,Func<Type, bool> match=null,string schema=null,string suffix="Row")
         {
-            if (data == null) return false;
-            //var type = data.GetType();
-            return data is IEnumerable && !(data is string) && !(data is byte[]);
-           // return type.Implements<IEnumerable>() && typeof (string) != type && typeof (byte[]) != type;
+            suffix.MustNotBeNull();
+            match = match ?? (t => t.Name.EndsWith(suffix));
+            cfg.AddNamingConvention(match, t => 
+            new TableName(t.Name.SubstringUntil(suffix),schema));
         }
+
+        public static SqlFuConfig SqlFuConfig(this DbConnection db) => SqlFuManager.Config;
+
+        public static TableInfo GetTableInfo(this Type type) => SqlFuManager.Config.TableInfoFactory.GetInfo(type);
+
+        public static string GetColumnName(this TableInfo info, MemberExpression member, IEscapeIdentifier provider)
+        {
+            var col = info.Columns.First(d => d.PropertyInfo.Name == member.Member.Name);
+            return provider.EscapeIdentifier(col.Name);
+        }
+        public static string GetColumnName(this TableInfo info, string property, IEscapeIdentifier provider)
+        {
+            var col = info.Columns.First(d => d.PropertyInfo.Name == property);
+            return provider.EscapeIdentifier(col.Name);
+        }
+
+        /// <summary>
+        /// Returns the underlying type, usually int. Works with nullables too
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static Type GetUnderlyingTypeForEnum(this Type type)
+        {
+            if (!type.IsNullable()) return Enum.GetUnderlyingType(type);
+            return Enum.GetUnderlyingType(type.GetGenericArgument());
+        }
+
+        /// <summary>
+        /// Is Enum or nullable of Enum
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool IsEnumType(this Type type) => type.IsEnum() || (type.IsNullable() && type.GetGenericArgument().IsEnum());
+
+       
+        public static string GetCachingId(this string data) => Convert.ToBase64String(data.MurmurHash());
+
+        public static string FormatCommand(this DbCommand cmd) => 
+            FormatCommand(cmd.CommandText,
+            (cmd.Parameters.Cast<DbParameter>().ToDictionary(p => p.ParameterName, p => p.Value)));
+
+        public static bool IsListParam(this object data) => 
+            data is IEnumerable && !(data is string) && !(data is byte[]);
 
         public static string FormatCommand(string sql, IDictionary<string, object> args)
         {
@@ -35,10 +107,11 @@ namespace SqlFu
             sb.Append(sql);
             if (args != null && args.Count > 0)
             {
-                sb.Append("\n");
+                sb.AppendLine();
                 foreach (var kv in args)
                 {
-                    sb.AppendFormat("\t -> {0} [{1}] = \"{2}\"\n", kv.Key, kv.Value.GetType().Name, kv.Value);
+                    sb.Append($"\t -> {kv.Key} [{kv.Value?.GetType().Name ?? "null"}] = \"");
+                    sb.Append($"{kv.Value}\"").AppendLine();
                 }
 
                 sb.Remove(sb.Length - 1, 1);
@@ -46,104 +119,15 @@ namespace SqlFu
             return sb.ToString();
         }
 
-        public static bool IsCustomObjectType(this Type t)
-        {
-            return t.IsClass && (Type.GetTypeCode(t) == TypeCode.Object);
-        }
-        
-        public static bool IsCustomObject<T>(this T t)
-        {
-            return !(t is ValueType) && (Type.GetTypeCode(t.GetType()) == TypeCode.Object);
-        }
+        public static bool IsCustomObjectType(this Type t) => t.IsUserDefinedClass();
 
-        public static T[] GetModelAttributes<T>(this ICustomAttributeProvider self) where T : Attribute
-        {
-            // Try to get the attribute from self first.
-            var result = self.GetCustomAttributes<T>();
-            
-            if (result.Length==0)
-            {
-                // Attribute not found on self, so look for it in the metadata buddy class.
-                if (self is PropertyInfo)
-                {
-                    // Looking up a property attribute.
-                    var propInfo = (PropertyInfo)self;
-                    var propIndexParams = propInfo.GetIndexParameters();
-                    List<Type> propIndexTypes = new List<Type>();
-                    if (propIndexParams != null)
-                    {
-                        foreach (var p in propIndexParams)
-                        {
-                            propIndexTypes.Add(p.ParameterType);
-                        }
-                    }
-                  //  var metaTypeAttr = propInfo.DeclaringType.GetSingleAttribute<MetadataTypeAttribute>();
-                    var metaTypeAttr = propInfo.ReflectedType.GetSingleAttribute<MetadataTypeAttribute>();
-                    if (metaTypeAttr != null)
-                    {
-                        var metaProp = metaTypeAttr.MetadataClassType.GetProperty(propInfo.Name, propInfo.PropertyType, propIndexTypes.ToArray());
-                        if (metaProp != null)
-                            result = metaProp.GetCustomAttributes<T>().ToArray();
-                    }
-                }
-                else
-                {
-                    // Looking up a class attribute.
-                    var metaTypeAttr = self.GetSingleAttribute<MetadataTypeAttribute>();
-                    if (metaTypeAttr != null)
-                        result = metaTypeAttr.MetadataClassType.GetCustomAttributes<T>().ToArray();
-                }
-            }
-            return result;
-        }
+        public static bool IsCustomObject<T>(this T t)
+            => t.GetType().IsCustomObjectType();
+        //{
+        //    var type = typeof(T);
+        //    return !type.IsValueType() && (type.GetTypeCode() == TypeCode.Object);
+        //}
 
        
-        /// <summary>
-        /// Enhances the <see cref="GetSingleAttribute<T>"/> extension introduced in CavemanTools assembly by 
-        /// adding the alsoCheckMetadataType parameter that controls if a metadata buddy class will be searched
-        /// for the attribute of type T in case it's not defined in the original POCO class. The idea here is
-        /// to keep POCO's SqlFu agnostic by moving SqlFu attributes to a buddy class.
-        /// </summary>
-        public static T GetSingleAttribute<T>(this ICustomAttributeProvider self, bool alsoCheckMetadataType) where T : Attribute
-        {
-            if (alsoCheckMetadataType) return GetModelAttributes<T>(self).FirstOrDefault();
-            return self.GetSingleAttribute<T>();
-            //// Try to get the attribute from self first.
-            //var result = self.GetSingleAttribute<T>();
-
-            //if (result == null && alsoCheckMetadataType)
-            //{
-            //    // Attribute not found on self, so look for it in the metadata buddy class.
-            //    if (self is PropertyInfo)
-            //    {
-            //        // Looking up a property attribute.
-            //        var propInfo = (PropertyInfo)self;
-            //        var propIndexParams = propInfo.GetIndexParameters();
-            //        List<Type> propIndexTypes = new List<Type>();
-            //        if (propIndexParams != null)
-            //        {
-            //            foreach (var p in propIndexParams)
-            //            {
-            //                propIndexTypes.Add(p.ParameterType);
-            //            }
-            //        }
-            //        var metaTypeAttr = propInfo.DeclaringType.GetSingleAttribute<MetadataTypeAttribute>();
-            //        if (metaTypeAttr != null)
-            //        {
-            //            var metaProp = metaTypeAttr.MetadataClassType.GetProperty(propInfo.Name, propInfo.PropertyType, propIndexTypes.ToArray());
-            //            if (metaProp != null)
-            //                result = metaProp.GetSingleAttribute<T>();
-            //        }
-            //    }
-            //    else
-            //    {
-            //        // Looking up a class attribute.
-            //        var metaTypeAttr = self.GetSingleAttribute<MetadataTypeAttribute>();
-            //        if (metaTypeAttr != null)
-            //            result = metaTypeAttr.MetadataClassType.GetSingleAttribute<T>();
-            //    }
-            //}
-            //return result;
-        }
     }
 }

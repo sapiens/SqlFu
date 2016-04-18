@@ -7,15 +7,17 @@ namespace SqlFu.Migrations.Automatic
         /// If no schema is specified it tries to process all schemas found
         /// </summary>
         /// <param name="schemas"></param>
-        void Execute(params string[] schemas);
+        void Install(params string[] schemas);
 
         /// <summary>
         /// Removes the specified schemas names form the tracking table.
-        /// It doesn't remove actual tables. 
+        /// Runs the unistall function if exists on a latest version migration task
         /// Next time the automatic migrations are run, these schemas will be installed again.
         /// Don't use it unless you have a good reason
         /// </summary>
         /// <param name="schemas"></param>
-        void Untrack(params string[] schemas);
+        void Uninstall(params string[] schemas);
+
+        void SelfDestroy();
     }
 }

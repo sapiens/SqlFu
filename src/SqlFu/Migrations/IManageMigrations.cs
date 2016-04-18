@@ -8,5 +8,6 @@ namespace SqlFu.Migrations
         void InstallAllSchemas();
         void Add(IMigrateSchema schema);
         IEnumerable<IMigrateSchema> Schemas { get; }
+        
     }
 }

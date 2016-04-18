@@ -40,6 +40,11 @@ namespace SqlFu.Migrations
             return _runner.StartUnitOfWork();
         }
 
+        public void Uninstall(params IUninstallSchema[] tasks)
+        {
+            _runner.Uninstall(tasks);
+        }
+
         public void InstallAllSchemas()
         {
             foreach (var schema in _schemas) schema.InstallSchema();
