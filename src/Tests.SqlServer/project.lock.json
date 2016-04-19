@@ -187,7 +187,7 @@
           "lib/net45/Newtonsoft.Json.dll": {}
         }
       },
-      "SqlFu/3.0.0-beta-10": {
+      "SqlFu/3.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.6",
         "dependencies": {
@@ -530,7 +530,7 @@
           "lib/net45/Newtonsoft.Json.dll": {}
         }
       },
-      "SqlFu/3.0.0-beta-10": {
+      "SqlFu/3.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.6",
         "dependencies": {
@@ -873,7 +873,7 @@
           "lib/net45/Newtonsoft.Json.dll": {}
         }
       },
-      "SqlFu/3.0.0-beta-10": {
+      "SqlFu/3.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.6",
         "dependencies": {
@@ -1033,7 +1033,7 @@
     }
   },
   "libraries": {
-    "SqlFu/3.0.0-beta-10": {
+    "SqlFu/3.0.0": {
       "type": "project",
       "path": "../SqlFu/project.json"
     },
