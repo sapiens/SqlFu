@@ -4,7 +4,7 @@ SqlFu is a **_versatile_** object mapper (aka micro-ORM)  for .Net 4.6+ and .Net
 
 Latest version: [3.0.0](https://github.com/sapiens/SqlFu/wiki/ChangeLog) 
 
-Docs for version [2.3.13](https://github.com/sapiens/SqlFu/tree/v2)
+ [Docs](https://github.com/sapiens/SqlFu/tree/v2) for version v2.
 
 ## Features
 * Versatility 
