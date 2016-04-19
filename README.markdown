@@ -2,7 +2,9 @@
 
 SqlFu is a **_versatile_** object mapper (aka micro-ORM)  for .Net 4.6+ and .Net Core.  SqlFu uses Apache 2.0 license.
 
-Latest version: 3.0.0-beta-6 [](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
+Latest version: [3.0.0](https://github.com/sapiens/SqlFu/wiki/ChangeLog) 
+
+ [Docs](https://github.com/sapiens/SqlFu/tree/v2) for version v2.
 
 ## Features
 * Versatility 
@@ -12,7 +14,7 @@ Latest version: 3.0.0-beta-6 [](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
 * DDL tools
 * Suport for working with multiple databases/providers in the same app
 * Transient errors resilience
-* Support for: SqlServer 2012+ (Azure included). TBA: Sqlite, Postgres, MySql
+* Support for: SqlServer 2012+ (Azure included), Sqlite. TBA: Postgres, MySql
 
 **Version 3 is not compatible with previous versions**
 
