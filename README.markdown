@@ -14,6 +14,7 @@ Latest version: [3.0.0](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
 * DDL tools
 * Suport for working with multiple databases/providers in the same app
 * Transient errors resilience
+* Great for maintaining and querying the read model of CQRS apps
 * Support for: SqlServer 2012+ (Azure included), Sqlite. TBA: Postgres, MySql
 
 **Version 3 is not compatible with previous versions**
