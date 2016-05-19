@@ -117,7 +117,7 @@ namespace SqlFu.Providers
         private void Concat(MethodCallExpression method,StringBuilder sb,IGenerateSqlFromExpressions writer)
         {
            sb.Append("concat(");
-            foreach (var arg in method.Arguments[1].As<NewArrayExpression>().Expressions)
+            foreach (var arg in method.Arguments[1].CastAs<NewArrayExpression>().Expressions)
             {
                 sb.Append(writer.GetColumnsSql(arg));
                 sb.Append(",");

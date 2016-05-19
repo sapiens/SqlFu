@@ -58,7 +58,7 @@ namespace SqlFu.Builders.Expressions
             var unary = ex as UnaryExpression;
             if (unary == null) return false;
 
-            var c = unary.Operand.As<ConstantExpression>();
+            var c = unary.Operand.CastAs<ConstantExpression>();
             if (c != null)
             {
                 return c.Value == null;
