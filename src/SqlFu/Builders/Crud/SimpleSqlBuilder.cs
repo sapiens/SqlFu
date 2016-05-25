@@ -35,15 +35,22 @@ namespace SqlFu.Builders.Crud
             => _sb.AppendLine($" from {provider.EscapeTableName(info.Table)}");
 
 
-        public IGenerateSql<T> SelectAll(bool distinct=false)
+        public IGenerateSql<T> SelectAll(bool distinct=false,bool useAsterisk=false)
         {
-            var sb=new StringBuilder();
-            _info.Columns.Select(c=>c.Name)
-                .ForEach(n =>
-                {
-                    sb.Append($" {_provider.EscapeIdentifier(n)},");
-                });
-            return Select<T>(sb.RemoveLast().ToString(), distinct);
+            var columns = "*";
+            if (!useAsterisk)
+            {
+                var sb = new StringBuilder();
+
+                _info.Columns.Select(c => c.Name)
+                    .ForEach(n =>
+                    {
+                        sb.Append($" {_provider.EscapeIdentifier(n)},");
+                    });
+                columns = sb.RemoveLast().ToString();
+            }
+           
+            return Select<T>(columns, distinct);
         }
 
         BuiltSql<TResult> Select<TResult>(string columns,bool distinct)
