@@ -1,6 +1,6 @@
 #Welcome to SqlFu
 
-SqlFu is a **_versatile_** object mapper (aka micro-ORM)  for .Net 4.6+ and .Net Core.  SqlFu uses Apache 2.0 license.
+SqlFu is a **_versatile_** data mapper (aka micro-ORM)  for .Net 4.6+ and .Net Core.  SqlFu uses Apache 2.0 license.
 
 Latest version: [3.0.1](https://github.com/sapiens/SqlFu/wiki/ChangeLog) 
 
