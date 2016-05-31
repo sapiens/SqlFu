@@ -532,7 +532,7 @@ namespace SqlFu
                 {
                     var cnt = cmd.ExecuteScalar();
                     cnt.MustNotBeNull();
-                    if (cnt.GetType() == typeof (Int32))
+                    if (cnt.GetType() == typeof (int))
                     {
                         rez.Count = (int) cnt;
                     }
