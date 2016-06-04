@@ -132,18 +132,59 @@ namespace SqlFu.Providers.SqlServer
             var columns = sql.Substring(sidx + 7, fromidx - sidx - 7);
             selecSql =
                 string.Format(
-                    @"SELECT {1} FROM 
-(SELECT ROW_NUMBER() OVER ({0}) sqlfu_rn, {1} {2}) 
-sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, body,
+                    @"SELECT {5} FROM 
+                     (SELECT ROW_NUMBER() OVER ({0}) sqlfu_rn, {1} {2}) 
+                     sqlfu_paged WHERE sqlfu_rn>@{3} AND sqlfu_rn<=(@{3}+@{4})", orderBy, columns, body,
                     PreparePagedStatement.SkipParameterName,
-                    PreparePagedStatement.TakeParameterName);
+                    PreparePagedStatement.TakeParameterName, RemoveTableIdentifiersFromColumns(columns));
             //cache it
             info = new PagingInfo();
             info.CountSql = countSql;
             info.SelectSql = selecSql;
             PagingCache.TryAdd(key, info);
         }
+        private string RemoveTableIdentifiersFromColumns(string select)
+        {
+            var columns = select.Split(',');
 
+            const string asStatement = " AS ";
+
+            string selectWithout = string.Empty;
+
+            foreach (string column in columns)
+            {
+                string columnWithout;
+
+                int asIndex = column.IndexOf(asStatement);
+                if (asIndex != -1)
+                {
+                    columnWithout = column.Substring(asIndex + asStatement.Length);
+                }
+                else
+                {
+                    int delimiterIndex = column.IndexOf('.');
+                    if (delimiterIndex != -1)
+                    {
+                        columnWithout = column.Substring(delimiterIndex + 1);
+                    }
+                    else
+                    {
+                        columnWithout = column;
+                    }
+                }
+
+                if (string.IsNullOrEmpty(selectWithout))
+                {
+                    selectWithout = columnWithout;
+                }
+                else
+                {
+                    selectWithout += ", " + columnWithout;
+                }
+            }
+
+            return selectWithout;
+        }
 
         static ConcurrentDictionary<Type, Tuple<bool, bool, bool>> _meta = new ConcurrentDictionary<Type, Tuple<bool, bool, bool>>();
 
