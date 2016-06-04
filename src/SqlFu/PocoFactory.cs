@@ -28,7 +28,7 @@ namespace SqlFu
 
         internal static Func<object, T> GetConverter<T>()
         {
-            var key = typeof (T).GetHashCode();
+            var key = GetTypeKey(typeof(T));
             object rez;
             if (_converters.TryGetValue(key, out rez))
             {
@@ -48,6 +48,8 @@ namespace SqlFu
                     return o.ConvertTo<T>();
                 };
         }
+
+        private static int GetTypeKey(Type t) => t.GetHashCode();
 
         public static IMapComplexType ComplexTypeMapper = new DefaultComplexTypeMapper();
 
@@ -218,6 +220,7 @@ namespace SqlFu
             il.Emit(OpCodes.Ret);
         }
 
+        static bool HasConverter(Type t) => _converters.ContainsKey(GetTypeKey(t));
 
         /// <summary>
         /// Read value and puts it on the stack
@@ -256,8 +259,11 @@ namespace SqlFu
             il.Emit(OpCodes.Br, end);
             il.MarkLabel(endIf);
 
+            
+
+
             var getter = typeof (IDataRecord).GetMethod("Get" + tp.Name, new[] {typeof (int)});
-            if (getter != null)
+            if (getter != null && !HasConverter(tp))
             {
                 il.EmitLoadMethodArgument(0);
                 il.Emit(OpCodes.Ldc_I4, i); //i
@@ -268,17 +274,17 @@ namespace SqlFu
             {
                 //get converter delegate
                 il.Emit(OpCodes.Call,
-                        (typeof (PocoFactory).GetMethod("GetConverter", BindingFlags.Static | BindingFlags.NonPublic)).
+                        (typeof(PocoFactory).GetMethod("GetConverter", BindingFlags.Static | BindingFlags.NonPublic)).
                             MakeGenericMethod(tp));
-
                 //get reader value
                 il.Emit(OpCodes.Ldarg_0); //rd
                 il.Emit(OpCodes.Ldc_I4, i); //i
                 il.Emit(OpCodes.Call, _rdGetValueInfo); //poco,rd.GetValue(i)
-
                 //invoke delegate 
-                il.Emit(OpCodes.Call, (Expression.GetFuncType(typeof (object), tp)).GetMethod("Invoke"));
+                il.Emit(OpCodes.Call, (Expression.GetFuncType(typeof(object), tp)).GetMethod("Invoke"));
+
             }
+
             il.MarkLabel(end); //stack contains converted value
         }
 

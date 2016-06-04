@@ -151,6 +151,12 @@ namespace Tests
         [Fact]
         public void global_value_converter()
         {
+            var dt = false;
+            PocoFactory.RegisterConverterFor(o =>
+            {
+                dt = true;
+                return new DateTime(2009, 1, 1);
+            });
             var c = false;
             PocoFactory.RegisterConverterFor(o=>
                                               {
@@ -163,6 +169,15 @@ namespace Tests
             PocoFactory.RegisterConverterFor<Email>(o=> new Email(o.ToString()));
             var em=_db.GetValue<Email>("select 'mike@test.com'");
             Assert.Equal("mike@test.com",em.Value);
+            
+
+         
+           
+
+            Config.EnsurePosts();
+            
+            var p=_db.Get<Post>(d => d.Id!=-1);
+            Assert.Equal(dt,true);
             PocoFactory.UnregisterConverters();
         }
 
