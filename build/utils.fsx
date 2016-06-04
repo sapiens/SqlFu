@@ -1,38 +1,25 @@
 #r "tools/FAKE/tools/FakeLib.dll"
-#r "tools/Newtonsoft.Json/lib/net45/Newtonsoft.Json.dll"
 
 #load "settings.fsx"
 
-open Newtonsoft.Json
 open System 
 open Fake
 open Settings
 
 
-let outDir="artifacts" |> combinePaths currentDirectory 
+let localNugetRepo="E:/Libs/nuget"
 
+//relative to script
+let nugetExeDir="tools"
 
-type gjVersion={version:string}    
-type globalJson={sdk:gjVersion}
+let outDir=combinePaths currentDirectory <|"artifacts" 
 
-let userPath=environVar "UserProfile"
-let dnxVersion= 
-    let file=ReadFileAsString (combinePaths projDir "global.json")
-    let json:globalJson= JsonConvert.DeserializeObject<globalJson>(file)
-    json.sdk.version    
-
-let clr = combinePaths userPath ".dnx/runtimes/dnx-clr-win-x86."+dnxVersion+"/bin"
-let clrCore = combinePaths userPath ".dnx/runtimes/dnx-coreclr-win-x86."+dnxVersion+"/bin"
-
-
-let dnu = combinePaths clr "dnu.cmd"
-let dnx runtime= runtime @@ "dnx.exe"
-
-let runResult value msg = if value <> 0 then failwith msg
+let dotnet="dotnet.exe"
+let nugetServer= "https://www.nuget.org/api/v2/package"
 
 let restore (proj:string)= 
         let result = ExecProcessAndReturnMessages(fun c -> 
-                                        c.FileName<-dnu
+                                        c.FileName<-dotnet
                                         c.Arguments<- String.Format("restore \"{0}\"",proj)
                                         )
                                         (TimeSpan.FromMinutes 5.0)  
@@ -40,20 +27,22 @@ let restore (proj:string)=
         result.ExitCode
 
 let compile proj= ExecProcess(fun c -> 
-                                        c.FileName<-dnu
-                                        c.Arguments<-("build "+proj+" --quiet --configuration release --out "+outDir))(TimeSpan.FromMinutes 5.0)
+                                        c.FileName<-dotnet
+                                        c.Arguments<-("build "+proj+ " -c release"))
+                                        (TimeSpan.FromMinutes 5.0)
 
-let runTests runtime dir= 
+let runTests dir= 
     let result = ExecProcess(fun c -> 
-                                        c.FileName<- (dnx runtime)
-                                        c.Arguments<-("-p \""+dir+"\" test"))(TimeSpan.FromMinutes 5.0)
-    if result <> 0 then failwith "Testing failed"
+                                        c.FileName<- dotnet
+                                        c.Arguments<-("test  \""+dir+"\""))(TimeSpan.FromMinutes 5.0)
+    if result <> 0 then failwith "Tests fail!"
 
 
 let pack proj =ExecProcess(fun c -> 
-                                        c.FileName<-dnu
-                                        c.Arguments<-("pack "+proj+" --quiet --configuration release  --out "+outDir))(TimeSpan.FromMinutes 5.0)
-let push files = ExecProcess(fun c ->
+                                        c.FileName<-dotnet
+                                        c.Arguments<-("pack "+proj+" -c Release --no-build  -o "+outDir))(TimeSpan.FromMinutes 5.0)
+let push file = ExecProcess(fun c ->
                             c.FileName<- (currentDirectory @@ nugetExeDir @@ "nuget.exe")
-                            c.Arguments <- ("push "+ files))(TimeSpan.FromMinutes 5.0)
+                            c.Arguments <- ("push "+ file+" -Source "+nugetServer))(TimeSpan.FromMinutes 5.0)
+                       
                                                         
