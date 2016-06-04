@@ -49,7 +49,10 @@ namespace SqlFu
                 };
         }
 
-        private static int GetTypeKey(Type t) => t.GetHashCode();
+        private static int GetTypeKey(Type t)
+        {
+            return t.GetHashCode();
+        }
 
         public static IMapComplexType ComplexTypeMapper = new DefaultComplexTypeMapper();
 
@@ -220,7 +223,10 @@ namespace SqlFu
             il.Emit(OpCodes.Ret);
         }
 
-        static bool HasConverter(Type t) => _converters.ContainsKey(GetTypeKey(t));
+        static bool HasConverter(Type t)
+        {
+            return _converters.ContainsKey(GetTypeKey(t));
+        }
 
         /// <summary>
         /// Read value and puts it on the stack
