@@ -104,11 +104,11 @@ namespace SqlFu.Providers.SqlServer
 
             if (tp == typeof (DateTime))
             {
-                var dt = (DateTime) value;
-                if (dt.Year < 1753)
-                {
+                //var dt = (DateTime) value;
+                //if (dt.Year < 1753)
+                //{
                     param.DbType=DbType.DateTime2;
-                }
+              //  }
                 return;
             }
 
