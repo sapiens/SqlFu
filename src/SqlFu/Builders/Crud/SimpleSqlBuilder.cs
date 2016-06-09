@@ -71,9 +71,21 @@ namespace SqlFu.Builders.Crud
             return this;
         }
 
+        public ISelect<T> LimitIf(Func<bool> condition, int take, long offset = 0)
+        {
+            if (condition()) return Limit(take, offset);
+            return this;
+        }
+
         public ISort<T> OrderBy(Expression<Func<T, object>> column)
         {
             WriteOrderBy(column,true);
+            return this;
+        }
+
+        public ISort<T> OrderByIf(Func<bool> condition, Expression<Func<T, object>> column)
+        {
+            if (condition()) return OrderBy(column);
             return this;
         }
 
@@ -101,7 +113,13 @@ namespace SqlFu.Builders.Crud
             return this;
         }
 
-       
+        public ISort<T> OrderByDescendingIf(Func<bool> condition, Expression<Func<T, object>> column)
+        {
+            if (condition()) return OrderByDescending(column);
+            return this;
+        }
+
+
         public IHaving<T> GroupBy(params Expression<Func<T, object>>[] columns)
         {
             if (columns.Length == 0) return this;
@@ -112,10 +130,22 @@ namespace SqlFu.Builders.Crud
             return this;
         }
 
+        public IHaving<T> GroupByIf(Func<bool> condition, params Expression<Func<T, object>>[] columns)
+        {
+            if (condition()) return GroupBy(columns);
+            return this;
+        }
+
         IConnectWhere<T> IWhere<T>.Where(Expression<Func<T, bool>> criteria)
         {
             _sb.Append("where ");
             _sb.AppendLine(_writer.GetSql(criteria));
+            return this;
+        }
+
+        public IConnectWhere<T> WhereIf(Func<bool> condition, Expression<Func<T, bool>> criteria)
+        {
+            if (condition()) return (this as IWhere<T>).Where(criteria);
             return this;
         }
 
@@ -126,6 +156,12 @@ namespace SqlFu.Builders.Crud
             return this;
         }
 
+        public IConnectHaving<T> HavingIf(Func<bool> condition, Expression<Func<T, bool>> criteria)
+        {
+            if (condition()) return (this as IHaving<T>).Having(criteria);
+            return this;
+        }
+
         IConnectWhere<T> IConnectWhere<T>.And(Expression<Func<T, bool>> criteria)
         {
             _sb.AppendLine($"and {_writer.GetSql(criteria)}");
@@ -133,9 +169,33 @@ namespace SqlFu.Builders.Crud
             return this;
         }
 
+        IConnectHaving<T> IConnectHaving<T>.AndIf(Func<bool> condition, Expression<Func<T, bool>> criteria)
+        {
+            if (condition()) return (this as IConnectHaving<T>).And(criteria);
+            return this;
+        }
+
+        public IConnectWhere<T> AndIf(Func<bool> condition, Expression<Func<T, bool>> criteria)
+        {
+            if (condition()) return (this as IConnectWhere<T>).And(criteria);
+            return this;
+        }
+
         public IConnectHaving<T> Or(Expression<Func<T, bool>> criteria)
         {
             _sb.AppendLine($"or {_writer.GetSql(criteria)}");
+            return this;
+        }
+
+        IConnectHaving<T> IConnectHaving<T>.OrIf(Func<bool> condition, Expression<Func<T, bool>> criteria)
+        {
+            if (condition()) return (this as IConnectHaving<T>).Or(criteria);
+            return this;
+        }
+
+        public IConnectWhere<T> OrIf(Func<bool> condition, Expression<Func<T, bool>> criteria)
+        {
+            if (condition()) return (this as IConnectWhere<T>).Or(criteria);
             return this;
         }
 
