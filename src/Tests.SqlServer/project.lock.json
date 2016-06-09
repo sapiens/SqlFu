@@ -7,10 +7,10 @@
         "type": "package",
         "frameworkAssemblies": [
           "Microsoft.CSharp",
-          "mscorlib",
           "System",
           "System.Core",
-          "System.Xml"
+          "System.Xml",
+          "mscorlib"
         ],
         "compile": {
           "lib/net46/CavemanTools.dll": {}
@@ -25,12 +25,12 @@
           "System.ComponentModel.DataAnnotations"
         ],
         "compile": {
-          "lib/net45/EntityFramework.dll": {},
-          "lib/net45/EntityFramework.SqlServer.dll": {}
+          "lib/net45/EntityFramework.SqlServer.dll": {},
+          "lib/net45/EntityFramework.dll": {}
         },
         "runtime": {
-          "lib/net45/EntityFramework.dll": {},
-          "lib/net45/EntityFramework.SqlServer.dll": {}
+          "lib/net45/EntityFramework.SqlServer.dll": {},
+          "lib/net45/EntityFramework.dll": {}
         }
       },
       "FakeItEasy/1.25.3": {
@@ -64,9 +64,9 @@
         },
         "frameworkAssemblies": [
           "Microsoft.CSharp",
-          "mscorlib",
           "System",
-          "System.Core"
+          "System.Core",
+          "mscorlib"
         ],
         "compile": {
           "lib/net451/Microsoft.Dnx.Compilation.Abstractions.dll": {}
@@ -85,11 +85,11 @@
         },
         "frameworkAssemblies": [
           "Microsoft.CSharp",
-          "mscorlib",
           "System",
           "System.Core",
           "System.Runtime",
-          "System.Threading.Tasks"
+          "System.Threading.Tasks",
+          "mscorlib"
         ],
         "compile": {
           "lib/dnx451/Microsoft.Dnx.TestHost.dll": {}
@@ -102,9 +102,9 @@
         "type": "package",
         "frameworkAssemblies": [
           "Microsoft.CSharp",
-          "mscorlib",
           "System",
-          "System.Core"
+          "System.Core",
+          "mscorlib"
         ],
         "compile": {
           "lib/net451/Microsoft.Dnx.Testing.Abstractions.dll": {}
@@ -117,9 +117,9 @@
         "type": "package",
         "frameworkAssemblies": [
           "Microsoft.CSharp",
-          "mscorlib",
           "System",
-          "System.Core"
+          "System.Core",
+          "mscorlib"
         ],
         "compile": {
           "lib/net451/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {}
@@ -136,10 +136,10 @@
         },
         "frameworkAssemblies": [
           "Microsoft.CSharp",
-          "mscorlib",
           "System",
           "System.Collections.Concurrent",
-          "System.Core"
+          "System.Core",
+          "mscorlib"
         ],
         "compile": {
           "lib/net451/Microsoft.Extensions.Logging.dll": {}
@@ -152,9 +152,9 @@
         "type": "package",
         "frameworkAssemblies": [
           "Microsoft.CSharp",
-          "mscorlib",
           "System",
-          "System.Core"
+          "System.Core",
+          "mscorlib"
         ],
         "compile": {
           "lib/net451/Microsoft.Extensions.Logging.Abstractions.dll": {}
@@ -167,9 +167,9 @@
         "type": "package",
         "frameworkAssemblies": [
           "Microsoft.CSharp",
-          "mscorlib",
           "System",
-          "System.Core"
+          "System.Core",
+          "mscorlib"
         ],
         "compile": {
           "lib/net451/Microsoft.Extensions.PlatformAbstractions.dll": {}
@@ -186,16 +186,6 @@
         "runtime": {
           "lib/net45/Newtonsoft.Json.dll": {}
         }
-      },
-      "SqlFu/3.0.0-beta-10": {
-        "type": "project",
-        "framework": ".NETFramework,Version=v4.6",
-        "dependencies": {
-          "CavemanTools": "4.0.0"
-        },
-        "frameworkAssemblies": [
-          "System.Data"
-        ]
       },
       "System.Data.SQLite/1.0.100": {
         "type": "package",
@@ -276,9 +266,7 @@
           "lib/dotnet/xunit.core.dll": {}
         },
         "runtime": {
-          "lib/dotnet/xunit.core.dll": {},
-          "lib/dotnet/xunit.runner.tdnet.dll": {},
-          "lib/dotnet/xunit.runner.utility.desktop.dll": {}
+          "lib/dotnet/xunit.core.dll": {}
         }
       },
       "xunit.extensibility.execution/2.2.0-beta1-build3239": {
@@ -303,14 +291,14 @@
         },
         "frameworkAssemblies": [
           "Microsoft.CSharp",
-          "mscorlib",
           "System",
           "System.Collections",
           "System.Core",
           "System.Threading",
           "System.Xml",
           "System.Xml.Linq",
-          "System.Xml.XDocument"
+          "System.Xml.XDocument",
+          "mscorlib"
         ],
         "compile": {
           "lib/dnx451/xunit.runner.dnx.dll": {}
@@ -343,194 +331,8 @@
         "runtime": {
           "lib/dnx451/xunit.runner.utility.dotnet.dll": {}
         }
-      }
-    },
-    "DNX,Version=v4.6/win7-x86": {
-      "CavemanTools/4.0.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Core",
-          "System.Xml"
-        ],
-        "compile": {
-          "lib/net46/CavemanTools.dll": {}
-        },
-        "runtime": {
-          "lib/net46/CavemanTools.dll": {}
-        }
       },
-      "EntityFramework/6.0.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System.ComponentModel.DataAnnotations"
-        ],
-        "compile": {
-          "lib/net45/EntityFramework.dll": {},
-          "lib/net45/EntityFramework.SqlServer.dll": {}
-        },
-        "runtime": {
-          "lib/net45/EntityFramework.dll": {},
-          "lib/net45/EntityFramework.SqlServer.dll": {}
-        }
-      },
-      "FakeItEasy/1.25.3": {
-        "type": "package",
-        "compile": {
-          "lib/net40/FakeItEasy.dll": {}
-        },
-        "runtime": {
-          "lib/net40/FakeItEasy.dll": {}
-        }
-      },
-      "FluentAssertions/4.2.1": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System.Xml",
-          "System.Xml.Linq"
-        ],
-        "compile": {
-          "lib/net45/FluentAssertions.Core.dll": {},
-          "lib/net45/FluentAssertions.dll": {}
-        },
-        "runtime": {
-          "lib/net45/FluentAssertions.Core.dll": {},
-          "lib/net45/FluentAssertions.dll": {}
-        }
-      },
-      "Microsoft.Dnx.Compilation.Abstractions/1.0.0-rc1-final": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final"
-        },
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Core"
-        ],
-        "compile": {
-          "lib/net451/Microsoft.Dnx.Compilation.Abstractions.dll": {}
-        },
-        "runtime": {
-          "lib/net451/Microsoft.Dnx.Compilation.Abstractions.dll": {}
-        }
-      },
-      "Microsoft.Dnx.TestHost/1.0.0-rc1-final": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Dnx.Compilation.Abstractions": "1.0.0-rc1-final",
-          "Microsoft.Dnx.Testing.Abstractions": "1.0.0-rc1-final",
-          "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
-          "Newtonsoft.Json": "6.0.6"
-        },
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Core",
-          "System.Runtime",
-          "System.Threading.Tasks"
-        ],
-        "compile": {
-          "lib/dnx451/Microsoft.Dnx.TestHost.dll": {}
-        },
-        "runtime": {
-          "lib/dnx451/Microsoft.Dnx.TestHost.dll": {}
-        }
-      },
-      "Microsoft.Dnx.Testing.Abstractions/1.0.0-rc1-final": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Core"
-        ],
-        "compile": {
-          "lib/net451/Microsoft.Dnx.Testing.Abstractions.dll": {}
-        },
-        "runtime": {
-          "lib/net451/Microsoft.Dnx.Testing.Abstractions.dll": {}
-        }
-      },
-      "Microsoft.Extensions.DependencyInjection.Abstractions/1.0.0-rc1-final": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Core"
-        ],
-        "compile": {
-          "lib/net451/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {}
-        },
-        "runtime": {
-          "lib/net451/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {}
-        }
-      },
-      "Microsoft.Extensions.Logging/1.0.0-rc1-final": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0-rc1-final",
-          "Microsoft.Extensions.Logging.Abstractions": "1.0.0-rc1-final"
-        },
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Collections.Concurrent",
-          "System.Core"
-        ],
-        "compile": {
-          "lib/net451/Microsoft.Extensions.Logging.dll": {}
-        },
-        "runtime": {
-          "lib/net451/Microsoft.Extensions.Logging.dll": {}
-        }
-      },
-      "Microsoft.Extensions.Logging.Abstractions/1.0.0-rc1-final": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Core"
-        ],
-        "compile": {
-          "lib/net451/Microsoft.Extensions.Logging.Abstractions.dll": {}
-        },
-        "runtime": {
-          "lib/net451/Microsoft.Extensions.Logging.Abstractions.dll": {}
-        }
-      },
-      "Microsoft.Extensions.PlatformAbstractions/1.0.0-rc1-final": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Core"
-        ],
-        "compile": {
-          "lib/net451/Microsoft.Extensions.PlatformAbstractions.dll": {}
-        },
-        "runtime": {
-          "lib/net451/Microsoft.Extensions.PlatformAbstractions.dll": {}
-        }
-      },
-      "Newtonsoft.Json/7.0.1": {
-        "type": "package",
-        "compile": {
-          "lib/net45/Newtonsoft.Json.dll": {}
-        },
-        "runtime": {
-          "lib/net45/Newtonsoft.Json.dll": {}
-        }
-      },
-      "SqlFu/3.0.0-beta-10": {
+      "SqlFu/3.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.6",
         "dependencies": {
@@ -538,508 +340,20 @@
         },
         "frameworkAssemblies": [
           "System.Data"
-        ]
-      },
-      "System.Data.SQLite/1.0.100": {
-        "type": "package",
-        "dependencies": {
-          "System.Data.SQLite.Core": "1.0.100",
-          "System.Data.SQLite.EF6": "1.0.100",
-          "System.Data.SQLite.Linq": "1.0.100"
-        }
-      },
-      "System.Data.SQLite.Core/1.0.100": {
-        "type": "package",
-        "compile": {
-          "lib/net46/System.Data.SQLite.dll": {}
-        },
-        "runtime": {
-          "lib/net46/System.Data.SQLite.dll": {}
-        }
-      },
-      "System.Data.SQLite.EF6/1.0.100": {
-        "type": "package",
-        "dependencies": {
-          "EntityFramework": "6.0.0"
-        },
-        "compile": {
-          "lib/net46/System.Data.SQLite.EF6.dll": {}
-        },
-        "runtime": {
-          "lib/net46/System.Data.SQLite.EF6.dll": {}
-        }
-      },
-      "System.Data.SQLite.Linq/1.0.100": {
-        "type": "package",
-        "compile": {
-          "lib/net46/System.Data.SQLite.Linq.dll": {}
-        },
-        "runtime": {
-          "lib/net46/System.Data.SQLite.Linq.dll": {}
-        }
-      },
-      "xunit/2.2.0-beta1-build3239": {
-        "type": "package",
-        "dependencies": {
-          "xunit.assert": "[2.2.0-beta1-build3239]",
-          "xunit.core": "[2.2.0-beta1-build3239]"
-        }
-      },
-      "xunit.abstractions/2.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/net35/xunit.abstractions.dll": {}
-        },
-        "runtime": {
-          "lib/net35/xunit.abstractions.dll": {}
-        }
-      },
-      "xunit.assert/2.2.0-beta1-build3239": {
-        "type": "package",
-        "compile": {
-          "lib/dotnet/xunit.assert.dll": {}
-        },
-        "runtime": {
-          "lib/dotnet/xunit.assert.dll": {}
-        }
-      },
-      "xunit.core/2.2.0-beta1-build3239": {
-        "type": "package",
-        "dependencies": {
-          "xunit.extensibility.core": "[2.2.0-beta1-build3239]",
-          "xunit.extensibility.execution": "[2.2.0-beta1-build3239]"
-        }
-      },
-      "xunit.extensibility.core/2.2.0-beta1-build3239": {
-        "type": "package",
-        "dependencies": {
-          "xunit.abstractions": "[2.0.0]"
-        },
-        "compile": {
-          "lib/dotnet/xunit.core.dll": {}
-        },
-        "runtime": {
-          "lib/dotnet/xunit.core.dll": {},
-          "lib/dotnet/xunit.runner.tdnet.dll": {},
-          "lib/dotnet/xunit.runner.utility.desktop.dll": {}
-        }
-      },
-      "xunit.extensibility.execution/2.2.0-beta1-build3239": {
-        "type": "package",
-        "dependencies": {
-          "xunit.extensibility.core": "[2.2.0-beta1-build3239]"
-        },
-        "compile": {
-          "lib/dnx451/xunit.execution.dotnet.dll": {}
-        },
-        "runtime": {
-          "lib/dnx451/xunit.execution.dotnet.dll": {}
-        }
-      },
-      "xunit.runner.dnx/2.1.0-rc1-build204": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Dnx.TestHost": "1.0.0-rc1-final",
-          "Microsoft.Dnx.Testing.Abstractions": "1.0.0-rc1-final",
-          "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final",
-          "xunit.runner.reporters": "2.1.0"
-        },
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Collections",
-          "System.Core",
-          "System.Threading",
-          "System.Xml",
-          "System.Xml.Linq",
-          "System.Xml.XDocument"
         ],
         "compile": {
-          "lib/dnx451/xunit.runner.dnx.dll": {}
+          "net46/SqlFu.dll": {}
         },
         "runtime": {
-          "lib/dnx451/xunit.runner.dnx.dll": {}
-        }
-      },
-      "xunit.runner.reporters/2.1.0": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "7.0.1",
-          "xunit.runner.utility": "[2.1.0]"
-        },
-        "compile": {
-          "lib/dnx451/xunit.runner.reporters.dotnet.dll": {}
-        },
-        "runtime": {
-          "lib/dnx451/xunit.runner.reporters.dotnet.dll": {}
-        }
-      },
-      "xunit.runner.utility/2.1.0": {
-        "type": "package",
-        "dependencies": {
-          "xunit.abstractions": "[2.0.0]"
-        },
-        "compile": {
-          "lib/dnx451/xunit.runner.utility.dotnet.dll": {}
-        },
-        "runtime": {
-          "lib/dnx451/xunit.runner.utility.dotnet.dll": {}
-        }
-      }
-    },
-    "DNX,Version=v4.6/win7-x64": {
-      "CavemanTools/4.0.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Core",
-          "System.Xml"
-        ],
-        "compile": {
-          "lib/net46/CavemanTools.dll": {}
-        },
-        "runtime": {
-          "lib/net46/CavemanTools.dll": {}
-        }
-      },
-      "EntityFramework/6.0.0": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System.ComponentModel.DataAnnotations"
-        ],
-        "compile": {
-          "lib/net45/EntityFramework.dll": {},
-          "lib/net45/EntityFramework.SqlServer.dll": {}
-        },
-        "runtime": {
-          "lib/net45/EntityFramework.dll": {},
-          "lib/net45/EntityFramework.SqlServer.dll": {}
-        }
-      },
-      "FakeItEasy/1.25.3": {
-        "type": "package",
-        "compile": {
-          "lib/net40/FakeItEasy.dll": {}
-        },
-        "runtime": {
-          "lib/net40/FakeItEasy.dll": {}
-        }
-      },
-      "FluentAssertions/4.2.1": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "System.Xml",
-          "System.Xml.Linq"
-        ],
-        "compile": {
-          "lib/net45/FluentAssertions.Core.dll": {},
-          "lib/net45/FluentAssertions.dll": {}
-        },
-        "runtime": {
-          "lib/net45/FluentAssertions.Core.dll": {},
-          "lib/net45/FluentAssertions.dll": {}
-        }
-      },
-      "Microsoft.Dnx.Compilation.Abstractions/1.0.0-rc1-final": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final"
-        },
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Core"
-        ],
-        "compile": {
-          "lib/net451/Microsoft.Dnx.Compilation.Abstractions.dll": {}
-        },
-        "runtime": {
-          "lib/net451/Microsoft.Dnx.Compilation.Abstractions.dll": {}
-        }
-      },
-      "Microsoft.Dnx.TestHost/1.0.0-rc1-final": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Dnx.Compilation.Abstractions": "1.0.0-rc1-final",
-          "Microsoft.Dnx.Testing.Abstractions": "1.0.0-rc1-final",
-          "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
-          "Newtonsoft.Json": "6.0.6"
-        },
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Core",
-          "System.Runtime",
-          "System.Threading.Tasks"
-        ],
-        "compile": {
-          "lib/dnx451/Microsoft.Dnx.TestHost.dll": {}
-        },
-        "runtime": {
-          "lib/dnx451/Microsoft.Dnx.TestHost.dll": {}
-        }
-      },
-      "Microsoft.Dnx.Testing.Abstractions/1.0.0-rc1-final": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Core"
-        ],
-        "compile": {
-          "lib/net451/Microsoft.Dnx.Testing.Abstractions.dll": {}
-        },
-        "runtime": {
-          "lib/net451/Microsoft.Dnx.Testing.Abstractions.dll": {}
-        }
-      },
-      "Microsoft.Extensions.DependencyInjection.Abstractions/1.0.0-rc1-final": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Core"
-        ],
-        "compile": {
-          "lib/net451/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {}
-        },
-        "runtime": {
-          "lib/net451/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {}
-        }
-      },
-      "Microsoft.Extensions.Logging/1.0.0-rc1-final": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0-rc1-final",
-          "Microsoft.Extensions.Logging.Abstractions": "1.0.0-rc1-final"
-        },
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Collections.Concurrent",
-          "System.Core"
-        ],
-        "compile": {
-          "lib/net451/Microsoft.Extensions.Logging.dll": {}
-        },
-        "runtime": {
-          "lib/net451/Microsoft.Extensions.Logging.dll": {}
-        }
-      },
-      "Microsoft.Extensions.Logging.Abstractions/1.0.0-rc1-final": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Core"
-        ],
-        "compile": {
-          "lib/net451/Microsoft.Extensions.Logging.Abstractions.dll": {}
-        },
-        "runtime": {
-          "lib/net451/Microsoft.Extensions.Logging.Abstractions.dll": {}
-        }
-      },
-      "Microsoft.Extensions.PlatformAbstractions/1.0.0-rc1-final": {
-        "type": "package",
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Core"
-        ],
-        "compile": {
-          "lib/net451/Microsoft.Extensions.PlatformAbstractions.dll": {}
-        },
-        "runtime": {
-          "lib/net451/Microsoft.Extensions.PlatformAbstractions.dll": {}
-        }
-      },
-      "Newtonsoft.Json/7.0.1": {
-        "type": "package",
-        "compile": {
-          "lib/net45/Newtonsoft.Json.dll": {}
-        },
-        "runtime": {
-          "lib/net45/Newtonsoft.Json.dll": {}
-        }
-      },
-      "SqlFu/3.0.0-beta-10": {
-        "type": "project",
-        "framework": ".NETFramework,Version=v4.6",
-        "dependencies": {
-          "CavemanTools": "4.0.0"
-        },
-        "frameworkAssemblies": [
-          "System.Data"
-        ]
-      },
-      "System.Data.SQLite/1.0.100": {
-        "type": "package",
-        "dependencies": {
-          "System.Data.SQLite.Core": "1.0.100",
-          "System.Data.SQLite.EF6": "1.0.100",
-          "System.Data.SQLite.Linq": "1.0.100"
-        }
-      },
-      "System.Data.SQLite.Core/1.0.100": {
-        "type": "package",
-        "compile": {
-          "lib/net46/System.Data.SQLite.dll": {}
-        },
-        "runtime": {
-          "lib/net46/System.Data.SQLite.dll": {}
-        }
-      },
-      "System.Data.SQLite.EF6/1.0.100": {
-        "type": "package",
-        "dependencies": {
-          "EntityFramework": "6.0.0"
-        },
-        "compile": {
-          "lib/net46/System.Data.SQLite.EF6.dll": {}
-        },
-        "runtime": {
-          "lib/net46/System.Data.SQLite.EF6.dll": {}
-        }
-      },
-      "System.Data.SQLite.Linq/1.0.100": {
-        "type": "package",
-        "compile": {
-          "lib/net46/System.Data.SQLite.Linq.dll": {}
-        },
-        "runtime": {
-          "lib/net46/System.Data.SQLite.Linq.dll": {}
-        }
-      },
-      "xunit/2.2.0-beta1-build3239": {
-        "type": "package",
-        "dependencies": {
-          "xunit.assert": "[2.2.0-beta1-build3239]",
-          "xunit.core": "[2.2.0-beta1-build3239]"
-        }
-      },
-      "xunit.abstractions/2.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/net35/xunit.abstractions.dll": {}
-        },
-        "runtime": {
-          "lib/net35/xunit.abstractions.dll": {}
-        }
-      },
-      "xunit.assert/2.2.0-beta1-build3239": {
-        "type": "package",
-        "compile": {
-          "lib/dotnet/xunit.assert.dll": {}
-        },
-        "runtime": {
-          "lib/dotnet/xunit.assert.dll": {}
-        }
-      },
-      "xunit.core/2.2.0-beta1-build3239": {
-        "type": "package",
-        "dependencies": {
-          "xunit.extensibility.core": "[2.2.0-beta1-build3239]",
-          "xunit.extensibility.execution": "[2.2.0-beta1-build3239]"
-        }
-      },
-      "xunit.extensibility.core/2.2.0-beta1-build3239": {
-        "type": "package",
-        "dependencies": {
-          "xunit.abstractions": "[2.0.0]"
-        },
-        "compile": {
-          "lib/dotnet/xunit.core.dll": {}
-        },
-        "runtime": {
-          "lib/dotnet/xunit.core.dll": {},
-          "lib/dotnet/xunit.runner.tdnet.dll": {},
-          "lib/dotnet/xunit.runner.utility.desktop.dll": {}
-        }
-      },
-      "xunit.extensibility.execution/2.2.0-beta1-build3239": {
-        "type": "package",
-        "dependencies": {
-          "xunit.extensibility.core": "[2.2.0-beta1-build3239]"
-        },
-        "compile": {
-          "lib/dnx451/xunit.execution.dotnet.dll": {}
-        },
-        "runtime": {
-          "lib/dnx451/xunit.execution.dotnet.dll": {}
-        }
-      },
-      "xunit.runner.dnx/2.1.0-rc1-build204": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Dnx.TestHost": "1.0.0-rc1-final",
-          "Microsoft.Dnx.Testing.Abstractions": "1.0.0-rc1-final",
-          "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final",
-          "xunit.runner.reporters": "2.1.0"
-        },
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Collections",
-          "System.Core",
-          "System.Threading",
-          "System.Xml",
-          "System.Xml.Linq",
-          "System.Xml.XDocument"
-        ],
-        "compile": {
-          "lib/dnx451/xunit.runner.dnx.dll": {}
-        },
-        "runtime": {
-          "lib/dnx451/xunit.runner.dnx.dll": {}
-        }
-      },
-      "xunit.runner.reporters/2.1.0": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "7.0.1",
-          "xunit.runner.utility": "[2.1.0]"
-        },
-        "compile": {
-          "lib/dnx451/xunit.runner.reporters.dotnet.dll": {}
-        },
-        "runtime": {
-          "lib/dnx451/xunit.runner.reporters.dotnet.dll": {}
-        }
-      },
-      "xunit.runner.utility/2.1.0": {
-        "type": "package",
-        "dependencies": {
-          "xunit.abstractions": "[2.0.0]"
-        },
-        "compile": {
-          "lib/dnx451/xunit.runner.utility.dotnet.dll": {}
-        },
-        "runtime": {
-          "lib/dnx451/xunit.runner.utility.dotnet.dll": {}
+          "net46/SqlFu.dll": {}
         }
       }
     }
   },
   "libraries": {
-    "SqlFu/3.0.0-beta-10": {
-      "type": "project",
-      "path": "../SqlFu/project.json"
-    },
     "CavemanTools/4.0.0": {
-      "type": "package",
       "sha512": "XtOzihE+h/tLufPiFUVDty2a13OcBCE5KvEuf6RHnZhDRJQQltlwdTWMq0HyH8+4tv/6YRd5anbyMuP2WklNNg==",
+      "type": "package",
       "files": [
         "CavemanTools.4.0.0.nupkg",
         "CavemanTools.4.0.0.nupkg.sha512",
@@ -1051,38 +365,36 @@
       ]
     },
     "EntityFramework/6.0.0": {
-      "type": "package",
-      "serviceable": true,
       "sha512": "y6lX/VMghGBV6TvgQS4Q2WK6kAcOoyD+TQxObN9utd0JsMMdMxyqARxKbvgi7KEIbQ8osZ4ZvImaly7l3NDFDw==",
+      "type": "package",
       "files": [
         "Content/App.config.transform",
         "Content/Web.config.transform",
         "EntityFramework.6.0.0.nupkg",
         "EntityFramework.6.0.0.nupkg.sha512",
         "EntityFramework.nuspec",
-        "lib/net40/EntityFramework.dll",
         "lib/net40/EntityFramework.SqlServer.dll",
         "lib/net40/EntityFramework.SqlServer.xml",
+        "lib/net40/EntityFramework.dll",
         "lib/net40/EntityFramework.xml",
-        "lib/net45/EntityFramework.dll",
         "lib/net45/EntityFramework.SqlServer.dll",
         "lib/net45/EntityFramework.SqlServer.xml",
+        "lib/net45/EntityFramework.dll",
         "lib/net45/EntityFramework.xml",
-        "tools/about_EntityFramework.help.txt",
-        "tools/EntityFramework.PowerShell.dll",
         "tools/EntityFramework.PowerShell.Utility.dll",
+        "tools/EntityFramework.PowerShell.dll",
         "tools/EntityFramework.psd1",
         "tools/EntityFramework.psm1",
+        "tools/about_EntityFramework.help.txt",
         "tools/init.ps1",
         "tools/install.ps1",
         "tools/migrate.exe"
       ]
     },
     "FakeItEasy/1.25.3": {
+      "sha512": "3iGdc9lMBLweM25tlDVE5LfxcEIOUzdkjesSVqU3gjMwOvpT06r+dvwU9HQB1Jv+qed7vtfq0BFXgFKcCjwLRg==",
       "type": "package",
-      "sha512": "7VSWi8ZYy2CcMhrVHJcTTUPU8pRmcNdYiTPb6eC3ob7XhPDcfzgJgC0zD2wApPdPDrzp66ZP143IE1GIi/UH+g==",
       "files": [
-        "FakeItEasy.1.25.3.nupkg",
         "FakeItEasy.1.25.3.nupkg.sha512",
         "FakeItEasy.nuspec",
         "lib/net35/FakeItEasy.dll",
@@ -1096,8 +408,8 @@
       ]
     },
     "FluentAssertions/4.2.1": {
-      "type": "package",
       "sha512": "GNipLr0GU8I7l1CrgaMyDuluOrhSfj2S8vQYNRJXBstGKT3qlQTHFcX5HgrV9/50ykiRaCpxdQBdAS4lvluS5A==",
+      "type": "package",
       "files": [
         "FluentAssertions.4.2.1.nupkg",
         "FluentAssertions.4.2.1.nupkg.sha512",
@@ -1131,9 +443,9 @@
         "lib/portable-net40+sl5+win8+wp8+wpa81/FluentAssertions.Core.dll",
         "lib/portable-net40+sl5+win8+wp8+wpa81/FluentAssertions.Core.pdb",
         "lib/portable-net40+sl5+win8+wp8+wpa81/FluentAssertions.Core.xml",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/FluentAssertions.XML",
         "lib/portable-net40+sl5+win8+wp8+wpa81/FluentAssertions.dll",
         "lib/portable-net40+sl5+win8+wp8+wpa81/FluentAssertions.pdb",
-        "lib/portable-net40+sl5+win8+wp8+wpa81/FluentAssertions.XML",
         "lib/portable-win81+wpa81/FluentAssertions.Core.dll",
         "lib/portable-win81+wpa81/FluentAssertions.Core.pdb",
         "lib/portable-win81+wpa81/FluentAssertions.Core.xml",
@@ -1141,16 +453,22 @@
         "lib/portable-win81+wpa81/FluentAssertions.pdb",
         "lib/portable-win81+wpa81/FluentAssertions.pri",
         "lib/portable-win81+wpa81/FluentAssertions.xml",
-        "lib/sl5/de/Microsoft.CSharp.resources.dll",
-        "lib/sl5/de/System.Xml.Linq.resources.dll",
-        "lib/sl5/es/Microsoft.CSharp.resources.dll",
-        "lib/sl5/es/System.Xml.Linq.resources.dll",
         "lib/sl5/FluentAssertions.Core.dll",
         "lib/sl5/FluentAssertions.Core.pdb",
         "lib/sl5/FluentAssertions.Core.xml",
         "lib/sl5/FluentAssertions.dll",
         "lib/sl5/FluentAssertions.pdb",
         "lib/sl5/FluentAssertions.xml",
+        "lib/sl5/Microsoft.CSharp.dll",
+        "lib/sl5/Microsoft.CSharp.xml",
+        "lib/sl5/Microsoft.VisualStudio.QualityTools.UnitTesting.Silverlight.dll",
+        "lib/sl5/Microsoft.VisualStudio.QualityTools.UnitTesting.Silverlight.xml",
+        "lib/sl5/System.Xml.Linq.dll",
+        "lib/sl5/System.Xml.Linq.xml",
+        "lib/sl5/de/Microsoft.CSharp.resources.dll",
+        "lib/sl5/de/System.Xml.Linq.resources.dll",
+        "lib/sl5/es/Microsoft.CSharp.resources.dll",
+        "lib/sl5/es/System.Xml.Linq.resources.dll",
         "lib/sl5/fr/Microsoft.CSharp.resources.dll",
         "lib/sl5/fr/System.Xml.Linq.resources.dll",
         "lib/sl5/it/Microsoft.CSharp.resources.dll",
@@ -1159,14 +477,8 @@
         "lib/sl5/ja/System.Xml.Linq.resources.dll",
         "lib/sl5/ko/Microsoft.CSharp.resources.dll",
         "lib/sl5/ko/System.Xml.Linq.resources.dll",
-        "lib/sl5/Microsoft.CSharp.dll",
-        "lib/sl5/Microsoft.CSharp.xml",
-        "lib/sl5/Microsoft.VisualStudio.QualityTools.UnitTesting.Silverlight.dll",
-        "lib/sl5/Microsoft.VisualStudio.QualityTools.UnitTesting.Silverlight.xml",
         "lib/sl5/ru/Microsoft.CSharp.resources.dll",
         "lib/sl5/ru/System.Xml.Linq.resources.dll",
-        "lib/sl5/System.Xml.Linq.dll",
-        "lib/sl5/System.Xml.Linq.xml",
         "lib/sl5/zh-Hans/Microsoft.CSharp.resources.dll",
         "lib/sl5/zh-Hans/System.Xml.Linq.resources.dll",
         "lib/sl5/zh-Hant/Microsoft.CSharp.resources.dll",
@@ -1197,114 +509,110 @@
       ]
     },
     "Microsoft.Dnx.Compilation.Abstractions/1.0.0-rc1-final": {
-      "type": "package",
-      "serviceable": true,
       "sha512": "kg3kR7H12Bs46TiuF7YT8A3SNXehhBcwsArIMQIH2ecXGkg5MPWDl2OR6bnQu6k0OMu9QUiv1oiwC9yU7rHWfw==",
+      "type": "package",
       "files": [
+        "Microsoft.Dnx.Compilation.Abstractions.1.0.0-rc1-final.nupkg",
+        "Microsoft.Dnx.Compilation.Abstractions.1.0.0-rc1-final.nupkg.sha512",
+        "Microsoft.Dnx.Compilation.Abstractions.nuspec",
         "lib/dotnet5.4/Microsoft.Dnx.Compilation.Abstractions.dll",
         "lib/dotnet5.4/Microsoft.Dnx.Compilation.Abstractions.xml",
         "lib/net451/Microsoft.Dnx.Compilation.Abstractions.dll",
-        "lib/net451/Microsoft.Dnx.Compilation.Abstractions.xml",
-        "Microsoft.Dnx.Compilation.Abstractions.1.0.0-rc1-final.nupkg",
-        "Microsoft.Dnx.Compilation.Abstractions.1.0.0-rc1-final.nupkg.sha512",
-        "Microsoft.Dnx.Compilation.Abstractions.nuspec"
+        "lib/net451/Microsoft.Dnx.Compilation.Abstractions.xml"
       ]
     },
     "Microsoft.Dnx.TestHost/1.0.0-rc1-final": {
-      "type": "package",
-      "serviceable": true,
       "sha512": "f5lDXCh4tLXXWHcuNpiyQLiOuV8HB+UjWeL70hrHyaBcssA6Oxa7KB3R/arddVwXuaXeBuGm+HVheuyhQCYGig==",
+      "type": "package",
       "files": [
+        "Microsoft.Dnx.TestHost.1.0.0-rc1-final.nupkg",
+        "Microsoft.Dnx.TestHost.1.0.0-rc1-final.nupkg.sha512",
+        "Microsoft.Dnx.TestHost.nuspec",
         "app/project.json",
         "lib/dnx451/Microsoft.Dnx.TestHost.dll",
         "lib/dnx451/Microsoft.Dnx.TestHost.xml",
         "lib/dnxcore50/Microsoft.Dnx.TestHost.dll",
-        "lib/dnxcore50/Microsoft.Dnx.TestHost.xml",
-        "Microsoft.Dnx.TestHost.1.0.0-rc1-final.nupkg",
-        "Microsoft.Dnx.TestHost.1.0.0-rc1-final.nupkg.sha512",
-        "Microsoft.Dnx.TestHost.nuspec"
+        "lib/dnxcore50/Microsoft.Dnx.TestHost.xml"
       ]
     },
     "Microsoft.Dnx.Testing.Abstractions/1.0.0-rc1-final": {
-      "type": "package",
-      "serviceable": true,
       "sha512": "AKeTdr5IdJQaXWw5jMyFOmmWicXt6V6WNQ7l67yBpSLsrJwYjtPg++XMmDGZVTd2CHcjzgMwz3iQfhCtMR76NQ==",
+      "type": "package",
       "files": [
+        "Microsoft.Dnx.Testing.Abstractions.1.0.0-rc1-final.nupkg",
+        "Microsoft.Dnx.Testing.Abstractions.1.0.0-rc1-final.nupkg.sha512",
+        "Microsoft.Dnx.Testing.Abstractions.nuspec",
         "lib/dotnet5.4/Microsoft.Dnx.Testing.Abstractions.dll",
         "lib/dotnet5.4/Microsoft.Dnx.Testing.Abstractions.xml",
         "lib/net451/Microsoft.Dnx.Testing.Abstractions.dll",
-        "lib/net451/Microsoft.Dnx.Testing.Abstractions.xml",
-        "Microsoft.Dnx.Testing.Abstractions.1.0.0-rc1-final.nupkg",
-        "Microsoft.Dnx.Testing.Abstractions.1.0.0-rc1-final.nupkg.sha512",
-        "Microsoft.Dnx.Testing.Abstractions.nuspec"
+        "lib/net451/Microsoft.Dnx.Testing.Abstractions.xml"
       ]
     },
     "Microsoft.Extensions.DependencyInjection.Abstractions/1.0.0-rc1-final": {
-      "type": "package",
-      "serviceable": true,
       "sha512": "MUKexXAsRZ55C7YZ26ShePZgBeW+6FbasxeIVmZ/BZIgiG4uw6yPOdfl9WvTaUL9SFK2sEPcYLatWmLfTpsOAA==",
+      "type": "package",
       "files": [
+        "Microsoft.Extensions.DependencyInjection.Abstractions.1.0.0-rc1-final.nupkg",
+        "Microsoft.Extensions.DependencyInjection.Abstractions.1.0.0-rc1-final.nupkg.sha512",
+        "Microsoft.Extensions.DependencyInjection.Abstractions.nuspec",
         "lib/dotnet5.4/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
         "lib/dotnet5.4/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
         "lib/net451/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
         "lib/net451/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
         "lib/netcore50/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
-        "lib/netcore50/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
-        "Microsoft.Extensions.DependencyInjection.Abstractions.1.0.0-rc1-final.nupkg",
-        "Microsoft.Extensions.DependencyInjection.Abstractions.1.0.0-rc1-final.nupkg.sha512",
-        "Microsoft.Extensions.DependencyInjection.Abstractions.nuspec"
+        "lib/netcore50/Microsoft.Extensions.DependencyInjection.Abstractions.xml"
       ]
     },
     "Microsoft.Extensions.Logging/1.0.0-rc1-final": {
-      "type": "package",
-      "serviceable": true,
       "sha512": "anegHH4XHjaCmC557A0uvnJzprT44MOKr669yfiQLtITA+lQrM3aMijxjjdCREnxE8ftXuSz+6wViCvkgcAOhA==",
+      "type": "package",
       "files": [
+        "Microsoft.Extensions.Logging.1.0.0-rc1-final.nupkg",
+        "Microsoft.Extensions.Logging.1.0.0-rc1-final.nupkg.sha512",
+        "Microsoft.Extensions.Logging.nuspec",
         "lib/dotnet5.4/Microsoft.Extensions.Logging.dll",
         "lib/dotnet5.4/Microsoft.Extensions.Logging.xml",
         "lib/net451/Microsoft.Extensions.Logging.dll",
         "lib/net451/Microsoft.Extensions.Logging.xml",
         "lib/netcore50/Microsoft.Extensions.Logging.dll",
-        "lib/netcore50/Microsoft.Extensions.Logging.xml",
-        "Microsoft.Extensions.Logging.1.0.0-rc1-final.nupkg",
-        "Microsoft.Extensions.Logging.1.0.0-rc1-final.nupkg.sha512",
-        "Microsoft.Extensions.Logging.nuspec"
+        "lib/netcore50/Microsoft.Extensions.Logging.xml"
       ]
     },
     "Microsoft.Extensions.Logging.Abstractions/1.0.0-rc1-final": {
-      "type": "package",
-      "serviceable": true,
       "sha512": "ejGO1JhPXMsCCSyH12xwkOYsb9oBv2gHc3LLaT2jevrD//xuQizWaxpVk0/rHGdORkWdp+kT2Qmuz/sLyNWW/g==",
+      "type": "package",
       "files": [
+        "Microsoft.Extensions.Logging.Abstractions.1.0.0-rc1-final.nupkg",
+        "Microsoft.Extensions.Logging.Abstractions.1.0.0-rc1-final.nupkg.sha512",
+        "Microsoft.Extensions.Logging.Abstractions.nuspec",
         "lib/dotnet5.4/Microsoft.Extensions.Logging.Abstractions.dll",
         "lib/dotnet5.4/Microsoft.Extensions.Logging.Abstractions.xml",
         "lib/net451/Microsoft.Extensions.Logging.Abstractions.dll",
         "lib/net451/Microsoft.Extensions.Logging.Abstractions.xml",
         "lib/netcore50/Microsoft.Extensions.Logging.Abstractions.dll",
-        "lib/netcore50/Microsoft.Extensions.Logging.Abstractions.xml",
-        "Microsoft.Extensions.Logging.Abstractions.1.0.0-rc1-final.nupkg",
-        "Microsoft.Extensions.Logging.Abstractions.1.0.0-rc1-final.nupkg.sha512",
-        "Microsoft.Extensions.Logging.Abstractions.nuspec"
+        "lib/netcore50/Microsoft.Extensions.Logging.Abstractions.xml"
       ]
     },
     "Microsoft.Extensions.PlatformAbstractions/1.0.0-rc1-final": {
-      "type": "package",
-      "serviceable": true,
       "sha512": "26HS4c6MBisN+D7XUr8HObOI/JJvSJQYQR//Bfw/hi9UqhqK3lFpNKjOuYHI+gTxYdXT46HqZiz4D+k7d+ob3A==",
+      "type": "package",
       "files": [
+        "Microsoft.Extensions.PlatformAbstractions.1.0.0-rc1-final.nupkg",
+        "Microsoft.Extensions.PlatformAbstractions.1.0.0-rc1-final.nupkg.sha512",
+        "Microsoft.Extensions.PlatformAbstractions.nuspec",
         "lib/dotnet5.4/Microsoft.Extensions.PlatformAbstractions.dll",
         "lib/dotnet5.4/Microsoft.Extensions.PlatformAbstractions.xml",
         "lib/net451/Microsoft.Extensions.PlatformAbstractions.dll",
-        "lib/net451/Microsoft.Extensions.PlatformAbstractions.xml",
-        "Microsoft.Extensions.PlatformAbstractions.1.0.0-rc1-final.nupkg",
-        "Microsoft.Extensions.PlatformAbstractions.1.0.0-rc1-final.nupkg.sha512",
-        "Microsoft.Extensions.PlatformAbstractions.nuspec"
+        "lib/net451/Microsoft.Extensions.PlatformAbstractions.xml"
       ]
     },
     "Newtonsoft.Json/7.0.1": {
-      "type": "package",
       "sha512": "q3V4KLetMLnt1gpAVWgtXnHjKs0UG/RalBc29u2ZKxd5t5Ze4JBL5WiiYIklJyK/5CRiIiNwigVQUo0FgbsuWA==",
+      "type": "package",
       "files": [
+        "Newtonsoft.Json.7.0.1.nupkg",
+        "Newtonsoft.Json.7.0.1.nupkg.sha512",
+        "Newtonsoft.Json.nuspec",
         "lib/net20/Newtonsoft.Json.dll",
         "lib/net20/Newtonsoft.Json.xml",
         "lib/net35/Newtonsoft.Json.dll",
@@ -1317,25 +625,23 @@
         "lib/portable-net40+sl5+wp80+win8+wpa81/Newtonsoft.Json.xml",
         "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll",
         "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.xml",
-        "Newtonsoft.Json.7.0.1.nupkg",
-        "Newtonsoft.Json.7.0.1.nupkg.sha512",
-        "Newtonsoft.Json.nuspec",
         "tools/install.ps1"
       ]
     },
     "System.Data.SQLite/1.0.100": {
-      "type": "package",
       "sha512": "xuWTy1K/jzlKwfeHanYJTeQ7sNh4NCvitbos+rGyf+LK9HwHN8TBWIUVjILdc02+6hVBFbKwx6wB1i8uxU+Xyw==",
+      "type": "package",
       "files": [
-        "System.Data.SQLite.1.0.100.nupkg",
         "System.Data.SQLite.1.0.100.nupkg.sha512",
         "System.Data.SQLite.nuspec"
       ]
     },
     "System.Data.SQLite.Core/1.0.100": {
-      "type": "package",
       "sha512": "N3oGQXMOBcY9rlLc69xzted2ckC7V+nXhl+BBwNu25q2gqMevprlvTEow0hJIEUOFZqsus/prUbAH8eFVgXADA==",
+      "type": "package",
       "files": [
+        "System.Data.SQLite.Core.1.0.100.nupkg.sha512",
+        "System.Data.SQLite.Core.nuspec",
         "build/net20/System.Data.SQLite.Core.targets",
         "build/net20/x64/SQLite.Interop.dll",
         "build/net20/x86/SQLite.Interop.dll",
@@ -1360,16 +666,15 @@
         "lib/net451/System.Data.SQLite.dll",
         "lib/net451/System.Data.SQLite.xml",
         "lib/net46/System.Data.SQLite.dll",
-        "lib/net46/System.Data.SQLite.xml",
-        "System.Data.SQLite.Core.1.0.100.nupkg",
-        "System.Data.SQLite.Core.1.0.100.nupkg.sha512",
-        "System.Data.SQLite.Core.nuspec"
+        "lib/net46/System.Data.SQLite.xml"
       ]
     },
     "System.Data.SQLite.EF6/1.0.100": {
-      "type": "package",
       "sha512": "Zv3/yJJPFfd7smwx1PQ7rj2LoS/Zf1JcXy0NkK0LMiQFejmoe0yL517aOglccTNHUWqe2prYIbRcB9eu9kgYcw==",
+      "type": "package",
       "files": [
+        "System.Data.SQLite.EF6.1.0.100.nupkg.sha512",
+        "System.Data.SQLite.EF6.nuspec",
         "content/net40/app.config.install.xdt",
         "content/net40/app.config.transform",
         "content/net40/web.config.install.xdt",
@@ -1390,9 +695,6 @@
         "lib/net45/System.Data.SQLite.EF6.dll",
         "lib/net451/System.Data.SQLite.EF6.dll",
         "lib/net46/System.Data.SQLite.EF6.dll",
-        "System.Data.SQLite.EF6.1.0.100.nupkg",
-        "System.Data.SQLite.EF6.1.0.100.nupkg.sha512",
-        "System.Data.SQLite.EF6.nuspec",
         "tools/net40/install.ps1",
         "tools/net45/install.ps1",
         "tools/net451/install.ps1",
@@ -1400,9 +702,11 @@
       ]
     },
     "System.Data.SQLite.Linq/1.0.100": {
-      "type": "package",
       "sha512": "ChpF7c6E0IJcBHQAvFs6K/HAjvhfwSf+hzxcHP7kAtGlvHLRmzGIPirR5SXFeqZy8ylqZzCVGub24iNVdyOr1g==",
+      "type": "package",
       "files": [
+        "System.Data.SQLite.Linq.1.0.100.nupkg.sha512",
+        "System.Data.SQLite.Linq.nuspec",
         "content/net20/app.config.transform",
         "content/net20/web.config.transform",
         "content/net40/app.config.transform",
@@ -1417,15 +721,12 @@
         "lib/net40/System.Data.SQLite.Linq.dll",
         "lib/net45/System.Data.SQLite.Linq.dll",
         "lib/net451/System.Data.SQLite.Linq.dll",
-        "lib/net46/System.Data.SQLite.Linq.dll",
-        "System.Data.SQLite.Linq.1.0.100.nupkg",
-        "System.Data.SQLite.Linq.1.0.100.nupkg.sha512",
-        "System.Data.SQLite.Linq.nuspec"
+        "lib/net46/System.Data.SQLite.Linq.dll"
       ]
     },
     "xunit/2.2.0-beta1-build3239": {
-      "type": "package",
       "sha512": "j/MqJK2vBsTqdcGQCrMw0pQKbwQF1o9BeFRZ1BNlHe2W1/5ixqJFon/dr55MAnFgQrb4Euabonmn5JNluK4qeQ==",
+      "type": "package",
       "files": [
         "xunit.2.2.0-beta1-build3239.nupkg",
         "xunit.2.2.0-beta1-build3239.nupkg.sha512",
@@ -1433,8 +734,8 @@
       ]
     },
     "xunit.abstractions/2.0.0": {
-      "type": "package",
       "sha512": "NAdxKQRzuLnCZ0g++x6i87/8rMBpQoRiRlRNLAqfODm2zJPbteHRoSER3DXfxnqrHXyBJT8rFaZ8uveBeQyaMA==",
+      "type": "package",
       "files": [
         "lib/net35/xunit.abstractions.dll",
         "lib/net35/xunit.abstractions.xml",
@@ -1446,8 +747,8 @@
       ]
     },
     "xunit.assert/2.2.0-beta1-build3239": {
-      "type": "package",
       "sha512": "fczO1r6zCqUCAw8DOBIrylzC038gDAxyb98h1S8BQIJTzM1LWlYIAa60z5YMl/himWzAw9NQGoju3QTyH+OsWQ==",
+      "type": "package",
       "files": [
         "lib/dotnet/xunit.assert.dll",
         "lib/dotnet/xunit.assert.pdb",
@@ -1461,8 +762,8 @@
       ]
     },
     "xunit.core/2.2.0-beta1-build3239": {
-      "type": "package",
       "sha512": "Ejolxzd5yln1UxoL8U6C9d2qyIkdLxJdsTy6igRIyp+5RnSq16BfiCLjyyapBO5hzuqTTUK27buXnKcpR1lqfQ==",
+      "type": "package",
       "files": [
         "build/_desktop/xunit.execution.desktop.dll",
         "build/dnx451/_._",
@@ -1481,8 +782,8 @@
       ]
     },
     "xunit.extensibility.core/2.2.0-beta1-build3239": {
-      "type": "package",
       "sha512": "jdTnfYPo5ArIVnb0Q5Br44ygr3rD9ubfWVC5O+/Fky1i5ORGXueEmrxI/vunR05vhmcorr8N2ZhxtfREVwcSVg==",
+      "type": "package",
       "files": [
         "lib/dotnet/xunit.core.dll",
         "lib/dotnet/xunit.core.dll.tdnet",
@@ -1502,8 +803,8 @@
       ]
     },
     "xunit.extensibility.execution/2.2.0-beta1-build3239": {
-      "type": "package",
       "sha512": "lBMxtY9e3De3H1gG3mVf1esSuQZ8ugQYSekd3FSDzttM9Uml4wcEEjttiy5SJK7rhsFH9X87AoH9yrCOvt0nfg==",
+      "type": "package",
       "files": [
         "lib/dnx451/xunit.execution.dotnet.dll",
         "lib/dnx451/xunit.execution.dotnet.pdb",
@@ -1541,8 +842,8 @@
       ]
     },
     "xunit.runner.dnx/2.1.0-rc1-build204": {
-      "type": "package",
       "sha512": "GUtWIQN3h7QGJdp5RTgvbPVjdWC7tXIRZhzpW8txNDC9nbMph4/TWbVEZKCGUOsLvE5BZg3icRGb6JR3ZwBADA==",
+      "type": "package",
       "files": [
         "lib/dnx451/xunit.runner.dnx.dll",
         "lib/dnx451/xunit.runner.dnx.xml",
@@ -1554,8 +855,8 @@
       ]
     },
     "xunit.runner.reporters/2.1.0": {
-      "type": "package",
       "sha512": "ja0kJrvwSiho2TRFpfHfa+6tGJI5edcyD8fdekTkjn7Us17PbGqglIihRe8sR9YFAmS4ipEC8+7CXOM/b69ENQ==",
+      "type": "package",
       "files": [
         "lib/dnx451/xunit.runner.reporters.dotnet.dll",
         "lib/dotnet/xunit.runner.reporters.dotnet.dll",
@@ -1566,8 +867,8 @@
       ]
     },
     "xunit.runner.utility/2.1.0": {
-      "type": "package",
       "sha512": "jJJHROwskIhdQuYw7exe7KaW20dOCa+lzV/lY7Zdh1ZZzdUPpScMi9ReJIutqiyjhemGF8V/GaMIPrcjyZ4ioQ==",
+      "type": "package",
       "files": [
         "lib/dnx451/xunit.runner.utility.dotnet.dll",
         "lib/dnx451/xunit.runner.utility.dotnet.pdb",
@@ -1585,19 +886,26 @@
         "xunit.runner.utility.2.1.0.nupkg.sha512",
         "xunit.runner.utility.nuspec"
       ]
+    },
+    "SqlFu/3.0.0": {
+      "type": "project",
+      "path": "../SqlFu/project.json",
+      "msbuildProject": "../SqlFu/SqlFu.xproj"
     }
   },
   "projectFileDependencyGroups": {
     "": [
+      "FluentAssertions >= 4.2.1",
       "SqlFu >= 3.0.0-beta-*",
-      "xunit >= 2.2.0-beta1-build3239",
-      "FluentAssertions >= 4.2.1"
+      "xunit >= 2.2.0-beta1-build3239"
     ],
     "DNX,Version=v4.6": [
       "FakeItEasy >= 1.25.3",
+      "System.Data >= 4.0.0",
       "System.Data.SQLite >= 1.0.100",
-      "xunit.runner.dnx >= 2.1.0-rc1-build204",
-      "fx/System.Data >= 4.0.0"
+      "xunit.runner.dnx >= 2.1.0-rc1-build204"
     ]
-  }
+  },
+  "tools": {},
+  "projectFileToolGroups": {}
 }

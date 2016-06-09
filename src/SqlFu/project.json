@@ -1,39 +1,38 @@
 ﻿{
-    "version": "3.0.0-beta-16",
+    "version": "3.2.0",
     "description": "Fast, versatile object mapper with helpers to improve productivity when working with a RDBMS. Designed for flexibility and ease of use. Full async support for operations and helpers, featuring a strongly typed sql builder",
     "authors": [ "Mihai Mogosanu" ],
-    "tags": [ "object-mapper","micro-orm","ado.net","database","tools"],
-    "projectUrl": "https://github.com/sapiens/SqlFu/tree/v3-devel",
-    "licenseUrl": "",
-    "summary": "Fast, versatile object mapper with helpers (fully async) to improve productivity with a database, v3 is not compatible with previous versions",
+    "packOptions": {
+        "tags": [ "object-mapper", "micro-orm", "ado.net", "database", "tools" ],
+        "projectUrl": "https://github.com/sapiens/SqlFu",
+        "licenseUrl": "",
+        "summary": "Fast, versatile object mapper with helpers (fully async) to improve productivity with a database, v3 is not compatible with previous versions"
+    },
     "frameworks": {
-
         "net46": {
-            "frameworkAssemblies": {
+          "frameworkAssemblies": {
                 "System.Data": "4.0.0.0"
             }
         },
-
-        "dotnet5.4": {
-            "compilationOptions": {
+        "netstandard1.5": {
+            "buildOptions": {
                 "define": [ "COREFX" ]
             },
             "dependencies": {
-                "Microsoft.CSharp": "4.0.1-beta-23516",
-                "System.Collections": "4.0.11-beta-23516",
-                "System.Linq": "4.0.1-beta-23516",
-                "System.Linq.Expressions": "4.0.11-beta-23516",
-                "System.Runtime": "4.0.21-beta-23516",
-                "System.Threading": "4.0.11-beta-23516",
-                "System.Data.Common": "4.0.1-beta-23516",
-
-                "System.Reflection": "4.1.0-beta-23516",
-                "System.Reflection.Extensions": "4.0.1-beta-23516"
+                "Microsoft.NETCore.App": {
+                    "version": "1.0.0-rc2-*",
+                    "type": "platform"
+                },
+                "System.Diagnostics.TraceSource": "4.0.0-rc2-24027",
+                "System.Data.Common": "4.0.1-rc2-24027",
+                "System.Collections.NonGeneric": "4.0.1-rc2-24027"
             }
         }
     },
-    "compileExclude": [ "Migrations" ],
     "dependencies": {
-        "CavemanTools": "4.0.0"
+        "CavemanTools": "4.3.0"
+    },
+    "buildOptions": {
+        "xmlDoc": true
     }
 }

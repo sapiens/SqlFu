@@ -5,9 +5,10 @@ let projName="SqlFu"
 let projDir= "..\src" @@ projName
 let testDir="..\src" @@ "Tests"
 
-let additionalPack=[]
+let sqlTestDir= testDir + ".SqlServer"
 
-
+let localNugetRepo="E:/Libs/nuget"
+let nugetExeDir="tools"
 
 
 

@@ -35,8 +35,8 @@ namespace SqlFu.Providers.SqlServer
             this[typeof (byte?)] = TinyInt;
             this[typeof (double)] = Float;
             this[typeof (double?)] = Float;
-            this[typeof (DateTime)] = DateTime;
-            this[typeof (DateTime?)] = DateTime;
+            this[typeof (DateTime)] = DateTime2;
+            this[typeof (DateTime?)] = DateTime2;
             this[typeof (DateTimeOffset)] = DateTimeOffset;
             this[typeof (DateTimeOffset?)] = DateTimeOffset;
             this[typeof (TimeSpan)] = Time;
