@@ -146,6 +146,7 @@ namespace SqlFu.Builders.Crud
         public IConnectWhere<T> WhereIf(Func<bool> condition, Expression<Func<T, bool>> criteria)
         {
             if (condition()) return (this as IWhere<T>).Where(criteria);
+            _sb.Append("where 1=1 ");
             return this;
         }
 
