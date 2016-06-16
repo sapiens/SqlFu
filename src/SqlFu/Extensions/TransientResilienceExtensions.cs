@@ -4,12 +4,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using CavemanTools.Model.Persistence;
 using SqlFu.Builders;
-using SqlFu.Configuration;
 
 namespace SqlFu
 {
     public static class TransientResilienceExtensions
     {
+
         /// <summary>
         /// Wraps db access action and retries it for 10 times with a slight delay between retries
         /// if the db is temporary unavailable (timeout or connection limit reached)
@@ -21,22 +21,10 @@ namespace SqlFu
         /// <param name="wait">How much to wait in miliseconds before retrying</param>
         /// <exception cref="DbException"></exception>
         /// <returns></returns>
+        [Obsolete("Use RetryOnTransientError")]
         public static T HandleTransientErrors<T>(this IDbFactory dbFactory,Func<DbConnection,T> action,int tryCount=10,int wait=100)
         {
-            T result = default(T);
-            ModelTools.RetryOnException<DbException>(() =>
-            {
-                using (var db = dbFactory.Create())
-                {
-                    result=action(db);
-                }
-            }, x =>
-            {
-                if (dbFactory.Provider.IsDbBusy(x)) return OnExceptionAction.IgnoreAndContinue;
-                return OnExceptionAction.Throw;
-
-            },tryCount,wait);
-            return result;
+           return dbFactory.RetryOnTransientError(d => action(d.Connection));
         }
 
         /// <summary>
@@ -48,20 +36,10 @@ namespace SqlFu
         /// <param name="wait">How much to wait in miliseconds before retrying</param>
         /// <exception cref="DbException"></exception>
         /// <param name="action"></param>
+        [Obsolete("Use RetryOnTransientError")]
         public static void HandleTransientErrors(this IDbFactory dbFactory, Action<DbConnection> action, int tryCount = 10, int wait = 100)
         {
-            ModelTools.RetryOnException<DbException>(() =>
-            {
-                using (var db = dbFactory.Create())
-                {
-                    action(db);
-                }
-            }, x =>
-            {
-                if (dbFactory.Provider.IsDbBusy(x)) return OnExceptionAction.IgnoreAndContinue;
-                return OnExceptionAction.Throw;
-
-            });
+            dbFactory.RetryOnTransientError(d => action(d.Connection));
         }
 
         /// <summary>
@@ -76,23 +54,11 @@ namespace SqlFu
         /// <param name="wait">How much to wait in miliseconds before retrying</param>
         /// <exception cref="DbException"></exception>
         /// <returns></returns>
-        public static async Task<T> HandleTransientErrorsAsync<T>(this IDbFactory dbFactory, CancellationToken token,Func<DbConnection,CancellationToken,Task<T>> action, int tryCount = 10, int wait = 100)
+        [Obsolete("Use RetryOnTransientErrorAsync")]
+        public static Task<T> HandleTransientErrorsAsync<T>(this IDbFactory dbFactory, CancellationToken token,Func<DbConnection,CancellationToken,Task<T>> action, int tryCount = 10, int wait = 100)
         {
-            T result = default(T);
-       
-            await ModelTools.RetryOnException<DbException>(async () =>
-            {
-                using (var db = await dbFactory.CreateAsync(token).ConfigureAwait(false))
-                {
-                  result = await action(db,token).ConfigureAwait(false);
-                }
-            }, x =>
-            {
-                if (dbFactory.Provider.IsDbBusy(x)) return OnExceptionAction.IgnoreAndContinue;
-                return OnExceptionAction.Throw;
 
-            }).ConfigureAwait(false);
-            return result;
+            return dbFactory.RetryOnTransientErrorAsync(token, d => action(d.Connection, token));          
         }
 
 
@@ -108,24 +74,22 @@ namespace SqlFu
         /// <param name="wait">How much to wait in miliseconds before retrying</param>
         /// <exception cref="DbException"></exception>
         /// <returns></returns>
-        public static async Task HandleTransientErrorsAsync(this IDbFactory dbFactory, CancellationToken token,Func<DbConnection,CancellationToken,Task> action, int tryCount = 10, int wait = 100)
+        [Obsolete("Use RetryOnTransientErrorAsync")]
+        public static  Task HandleTransientErrorsAsync(this IDbFactory dbFactory, CancellationToken token,Func<DbConnection,CancellationToken,Task> action, int tryCount = 10, int wait = 100)
         {
-            await ModelTools.RetryOnException<DbException>(async () =>
-            {
-                using (var db = await dbFactory.CreateAsync(token).ConfigureAwait(false))
-                {
-                   await action(db,token).ConfigureAwait(false);
-                }
-            }, x =>
-            {
-                if (dbFactory.Provider.IsDbBusy(x)) return OnExceptionAction.IgnoreAndContinue;
-                return OnExceptionAction.Throw;
 
-            }).ConfigureAwait(false);
-        
+            return dbFactory.RetryOnTransientErrorAsync(token, d => action(d.Connection, token));
+          
         }
 
-        public static Task RetryOnTransientError(this IDbFactory factory,CancellationToken token,Func<IWithSqlAsync,Task> action)
+        /// <summary>
+        /// Wraps db access action and retries it for 10 times with a slight delay between retries
+        /// if the db is temporary unavailable (timeout or connection limit reached)
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <param name="token"></param>
+        /// <param name="action"></param>
+        public static Task RetryOnTransientErrorAsync(this IDbFactory factory,CancellationToken token,Func<IWithSqlAsync,Task> action)
         {
             return ModelTools.RetryOnException<DbException>(async () =>
             {
@@ -143,6 +107,12 @@ namespace SqlFu
 
         }
 
+        /// <summary>
+        /// Wraps db access action and retries it for 10 times with a slight delay between retries
+        /// if the db is temporary unavailable (timeout or connection limit reached)
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <param name="action"></param>
         public static void RetryOnTransientError(this IDbFactory factory,Action<IWithSql> action)
         {
             ModelTools.RetryOnException<DbException>(() =>
@@ -158,6 +128,58 @@ namespace SqlFu
                 return OnExceptionAction.Throw;
 
             },SqlFuManager.Config.TransientErrors.Tries,SqlFuManager.Config.TransientErrors.Wait);
+        }
+
+        /// <summary>
+        /// Wraps db access action and retries it for 10 times with a slight delay between retries
+        /// if the db is temporary unavailable (timeout or connection limit reached)
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <param name="action"></param>
+        public static T RetryOnTransientError<T>(this IDbFactory factory,Func<IWithSql,T> action)
+        {
+            T result = default(T);
+            ModelTools.RetryOnException<DbException>(() =>
+            {
+                using (var db = factory.Create())
+                {
+                    var op = new ResilientWithSql(db, CancellationToken.None);
+                    action(op);
+                }
+            }, x =>
+            {
+                if (factory.Provider.IsDbBusy(x)) return OnExceptionAction.IgnoreAndContinue;
+                return OnExceptionAction.Throw;
+
+            },SqlFuManager.Config.TransientErrors.Tries,SqlFuManager.Config.TransientErrors.Wait);
+            return result;
+        }
+
+
+        /// <summary>
+        /// Wraps db access action and retries it for 10 times with a slight delay between retries
+        /// if the db is temporary unavailable (timeout or connection limit reached)
+        /// </summary>
+        /// <param name="factory"></param>
+        /// <param name="token"></param>
+        /// <param name="action"></param>
+        public static async Task<T> RetryOnTransientErrorAsync<T>(this IDbFactory factory, CancellationToken token, Func<IWithSqlAsync, Task<T>> action)
+        {
+            T result = default(T);
+            await ModelTools.RetryOnException<DbException>(async () =>
+            {
+                using (var db = await factory.CreateAsync(token).ConfigureAwait(false))
+                {
+                    var op = new ResilientWithSql(db, token);
+                    result=await action(op).ConfigureAwait(false);
+                }
+            }, x =>
+            {
+                if (factory.Provider.IsDbBusy(x)) return OnExceptionAction.IgnoreAndContinue;
+                return OnExceptionAction.Throw;
+
+            }, SqlFuManager.Config.TransientErrors.Tries, SqlFuManager.Config.TransientErrors.Wait);
+            return result;
         }
 
         class ResilientWithSql : IWithSqlAsync
