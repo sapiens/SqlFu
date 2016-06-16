@@ -4,6 +4,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using CavemanTools.Logging;
 using SqlFu.Configuration.Internals;
 
 namespace SqlFu.Mapping.Internals
@@ -30,6 +31,7 @@ namespace SqlFu.Mapping.Internals
                 var idx = Indexes(parentPrefix);
                 if (idx==null)
                 {
+                    this.LogDebug($"Configuring mapping indexes for '{parentPrefix}'");
                     ConfigureIndexes(reader, parentPrefix);
                 }
             }            
@@ -51,6 +53,7 @@ namespace SqlFu.Mapping.Internals
                 if (colIdx !=null)
                 {
                     idx[colIdx.PocoIdx] = i;
+                    this.LogDebug($"Property {prefix}_{colIdx.Name} is mapped from reader[{i}]");
                 }
             }
         }
@@ -69,7 +72,6 @@ namespace SqlFu.Mapping.Internals
 
         Dictionary<string, Action<T, DbDataReader, IManageConverters, IMapToPoco>>_mappers=new Dictionary<string, Action<T, DbDataReader, IManageConverters, IMapToPoco>>();
 
-        //private Action<T, DbDataReader, IManageConverters, IMapToPoco> _mapper;
         void Populate(T poco, DbDataReader reader, string parentPrefix)
         {
             Action<T, DbDataReader, IManageConverters, IMapToPoco> mapper = null;
@@ -109,8 +111,7 @@ namespace SqlFu.Mapping.Internals
                 }
                 
                 var body = Expression.Block(new[] {populator.ValuesVar},items);
-               
-                //typeof(T).get
+                
                 mapper=Expression.Lambda<Action<T, DbDataReader, IManageConverters, IMapToPoco>>
                     (body, populator.PocoExpr, populator.ReaderExpr, populator.Converter, populator.CustomMapExpr)
                     .Compile();
