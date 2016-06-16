@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CavemanTools.Model.Persistence;
 using SqlFu.Builders;
+using SqlFu.Configuration;
 
 namespace SqlFu
 {
@@ -124,10 +125,57 @@ namespace SqlFu
         
         }
 
+        public static Task RetryOnTransientError(this IDbFactory factory,CancellationToken token,Func<IWithSqlAsync,Task> action)
+        {
+            return ModelTools.RetryOnException<DbException>(async () =>
+            {
+                using (var db = await factory.CreateAsync(token).ConfigureAwait(false))
+                {
+                    var op=new ResilientWithSql(db,token);
+                    await action(op).ConfigureAwait(false);
+                }
+            }, x =>
+            {
+                if (factory.Provider.IsDbBusy(x)) return OnExceptionAction.IgnoreAndContinue;
+                return OnExceptionAction.Throw;
 
-     
+            }, SqlFuManager.Config.TransientErrors.Tries, SqlFuManager.Config.TransientErrors.Wait);
 
+        }
+
+        public static void RetryOnTransientError(this IDbFactory factory,Action<IWithSql> action)
+        {
+            ModelTools.RetryOnException<DbException>(() =>
+            {
+                using (var db = factory.Create())
+                {
+                    var op = new ResilientWithSql(db, CancellationToken.None);
+                    action(op);
+                }
+            }, x =>
+            {
+                if (factory.Provider.IsDbBusy(x)) return OnExceptionAction.IgnoreAndContinue;
+                return OnExceptionAction.Throw;
+
+            },SqlFuManager.Config.TransientErrors.Tries,SqlFuManager.Config.TransientErrors.Wait);
+        }
+
+        class ResilientWithSql : IWithSqlAsync
+        {
+            
+            public ResilientWithSql(DbConnection db,CancellationToken cancel)
+            {
+                Connection = db;
+                Cancel = cancel;
+            }
+
+            public IProcessEachRow<T> WithSql<T>(Func<IBuildQueryFrom, IGenerateSql<T>> sql,
+                Action<DbCommand> cfg = null)
+                => Connection.WithSql(sql, cfg, Cancel);
+
+            public DbConnection Connection { get; }
+       
+            public CancellationToken Cancel { get; }
+        }
     }
-
-   
 }

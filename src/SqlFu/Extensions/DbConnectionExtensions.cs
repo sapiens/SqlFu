@@ -339,6 +339,8 @@ namespace SqlFu
         /// <returns></returns>
         public static async Task<List<TProj>> QueryAsAsync<TProj>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<TProj>> builder, CancellationToken token)
         {
+            
+          //  db.WithSql(builder, cancel: token).GetRowsAsync();
             builder.MustNotBeNull();
             var built = builder(db.GetSqlBuilder());
             var list = new List<TProj>();
@@ -546,10 +548,20 @@ namespace SqlFu
             catch (DbException x) when (db.Provider().ObjectExists(x))
             {
                 //already exists, move on
-            }
-
+            }            
         }
+
+        /// <summary>
+        /// Provides a fluent builder to specify sql, configure and execute the command 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db">Connection</param>
+        /// <param name="sqlBuilder">Sql generator</param>
+        /// <param name="cfg">Command configuration</param>
+        /// <param name="cancel">Cancellation token for async operations</param>
+        /// <returns></returns>
+        public static IProcessEachRow<T> WithSql<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> sqlBuilder,
+            Action<DbCommand> cfg = null,CancellationToken? cancel=null)
+        =>new FluentCommandBuilder<T>(db,sqlBuilder(db.GetSqlBuilder()),cfg,cancel);
     }
-    
-   
 }
