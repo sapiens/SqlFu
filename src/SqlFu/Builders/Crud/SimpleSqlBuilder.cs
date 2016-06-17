@@ -24,14 +24,14 @@ namespace SqlFu.Builders.Crud
             _info = info;
 
             _writer = writer;
+            options.EnsureTableName(_info);
             
-            
-            WriteFrom(provider, _info);
+            WriteFrom(provider, options);
             
      
         }
 
-        private void WriteFrom(IDbProvider provider, TableInfo info) 
+        private void WriteFrom(IDbProvider provider, HelperOptions info) 
             => _sb.AppendLine($" from {provider.EscapeTableName(info.Table)}");
 
 

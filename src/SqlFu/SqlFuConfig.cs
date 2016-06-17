@@ -28,6 +28,9 @@ namespace SqlFu
 
         public MapperFactory MapperFactory { get; }
 
+
+        public TransientErrorsConfig TransientErrors { get; }=new TransientErrorsConfig();
+
         public void ConfigureTableForPoco<T>(Action<ITableInfo> cfg)
         {
             cfg.MustNotBeNull();

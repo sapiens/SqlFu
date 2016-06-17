@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
 using System.Reflection;
 using CavemanTools.Logging;
 using CavemanTools.Model;
@@ -53,15 +54,20 @@ namespace SqlFu.Providers.SqlServer
 
         public override string GetIdentityKeyword() => "identity(1,1)";
 
+        private static string[] _transientErrors = new[]
+        {
+            "40197","40501","10053","10054","10060","40613","40143","233","64"
+        };
+
         public override bool IsDbBusy(DbException ex)
         {
-            if (ex.Message.Contains("is not currently available"))
+            if (_transientErrors.Any(err => ex.Message.Contains(err)))
             {
-                "SqlServer".LogWarn("Too many connections");
+                "SqlServer".LogWarn(ex.Message);
                 return true;
             }
 
-            if (ex.Message.Contains("imeout"))
+          if (ex.Message.Contains("imeout"))
             {
                 "SqlServer".LogWarn("Connection timeout");
                 return true;
