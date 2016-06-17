@@ -144,7 +144,7 @@ namespace SqlFu
                 using (var db = factory.Create())
                 {
                     var op = new ResilientWithSql(db, CancellationToken.None);
-                    action(op);
+                    result=action(op);
                 }
             }, x =>
             {
