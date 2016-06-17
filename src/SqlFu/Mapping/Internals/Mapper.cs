@@ -20,7 +20,7 @@ namespace SqlFu.Mapping.Internals
             _columns = info.Columns.ToArray();
         }
 
-      
+        private string _log = $"Mapper<{typeof(T)}>";
       
         object _sync=new object();
       
@@ -31,7 +31,7 @@ namespace SqlFu.Mapping.Internals
                 var idx = Indexes(parentPrefix);
                 if (idx==null)
                 {
-                    this.LogDebug($"Configuring mapping indexes for '{parentPrefix}'");
+                    _log.LogDebug($"Configuring mapping indexes for '{parentPrefix}'");
                     ConfigureIndexes(reader, parentPrefix);
                 }
             }            
@@ -53,7 +53,7 @@ namespace SqlFu.Mapping.Internals
                 if (colIdx !=null)
                 {
                     idx[colIdx.PocoIdx] = i;
-                    this.LogDebug($"Property {prefix}_{colIdx.Name} is mapped from reader[{i}]");
+                    _log.LogDebug($"Property {prefix}_{colIdx.Name} is mapped from reader[{i}]({name})");
                 }
             }
         }
