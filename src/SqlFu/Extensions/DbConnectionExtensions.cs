@@ -192,14 +192,7 @@ namespace SqlFu
         public static T QueryRow<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> builder)
         {
             builder.MustNotBeNull();
-            var built = builder(db.GetSqlBuilder());
-            T rez = default(T);
-            db.QueryAndProcess<T>(built.GetCommandConfiguration(), d =>
-            {
-                rez = d;
-                return false;
-            }, firstRowOnly: true);
-            return rez;
+            return db.WithSql(builder).GetFirstRow();
         }
         /// <summary>
         /// Gets a single row then maps it to a poco
@@ -209,17 +202,10 @@ namespace SqlFu
         /// <param name="builder"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static async Task<T> QueryRowAsync<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> builder, CancellationToken token)
+        public static  Task<T> QueryRowAsync<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> builder, CancellationToken token)
         {
             builder.MustNotBeNull();
-            var built = builder(db.GetSqlBuilder());
-            T rez = default(T);
-            await db.QueryAndProcessAsync<T>(built.GetCommandConfiguration(), d =>
-            {
-                rez = d;
-                return false;
-            }, token, firstRowOnly: true).ConfigureAwait(false);
-            return rez;
+            return db.WithSql(builder, cancel: token).GetFirstRowAsync();            
         }
 
 
@@ -318,15 +304,7 @@ namespace SqlFu
         /// <returns></returns>
         public static List<TProj> QueryAs<TProj>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<TProj>> builder)
         {
-            builder.MustNotBeNull();
-            var built = builder(db.GetSqlBuilder());
-            var list = new List<TProj>();
-            db.QueryAndProcess<TProj>(built.GetCommandConfiguration(), d =>
-            {
-                list.Add(d);
-                return true;
-            });
-            return list;
+            return db.WithSql(builder).GetRows();
         }
 
         /// <summary>
@@ -337,17 +315,9 @@ namespace SqlFu
         /// <param name="builder"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static async Task<List<TProj>> QueryAsAsync<TProj>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<TProj>> builder, CancellationToken token)
+        public static Task<List<TProj>> QueryAsAsync<TProj>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<TProj>> builder, CancellationToken token)
         {
-            builder.MustNotBeNull();
-            var built = builder(db.GetSqlBuilder());
-            var list = new List<TProj>();
-            await db.QueryAndProcessAsync<TProj>(built.GetCommandConfiguration(), d =>
-            {
-                list.Add(d);
-                return true;
-            }, token).ConfigureAwait(false);
-            return list;
+            return db.WithSql(builder, cancel: token).GetRowsAsync();          
         }
 
         #endregion
@@ -546,10 +516,20 @@ namespace SqlFu
             catch (DbException x) when (db.Provider().ObjectExists(x))
             {
                 //already exists, move on
-            }
-
+            }            
         }
+
+        /// <summary>
+        /// Provides a fluent builder to specify sql, configure and execute the command 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db">Connection</param>
+        /// <param name="sqlBuilder">Sql generator</param>
+        /// <param name="cfg">Command configuration</param>
+        /// <param name="cancel">Cancellation token for async operations</param>
+        /// <returns></returns>
+        public static IProcessEachRow<T> WithSql<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> sqlBuilder,
+            Action<DbCommand> cfg = null,CancellationToken? cancel=null)
+        =>new FluentCommandBuilder<T>(db,sqlBuilder(db.GetSqlBuilder()),cfg,cancel);
     }
-    
-   
 }

@@ -4,6 +4,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using CavemanTools.Logging;
 using SqlFu.Configuration.Internals;
 
 namespace SqlFu.Mapping.Internals
@@ -19,21 +20,18 @@ namespace SqlFu.Mapping.Internals
             _columns = info.Columns.ToArray();
         }
 
+        private string _log = $"Mapper<{typeof(T)}>";
       
-        private void InitColumnsIndexes()
-        {
-            _indexes = new int[_columns.Length];
-            _columns.ForEach((i, s) => _indexes[i] = -1);
-        }
-
         object _sync=new object();
       
         public T Map(DbDataReader reader, string parentPrefix="")
         {
             lock (_sync)
             {
-                if (_indexes == null)
+                var idx = Indexes(parentPrefix);
+                if (idx==null)
                 {
+                    _log.LogDebug($"Configuring mapping indexes for '{parentPrefix}'");
                     ConfigureIndexes(reader, parentPrefix);
                 }
             }            
@@ -43,27 +41,52 @@ namespace SqlFu.Mapping.Internals
             return result;
         }
 
+        const string EmptyPrefix = "#";
+
         private void ConfigureIndexes(DbDataReader reader,string prefix)
         {
-            InitColumnsIndexes();
+            var idx = InitIndexes(prefix);
             for (var i = 0; i < reader.FieldCount; i++)
             {
                 var name = reader.GetName(i);
                 var colIdx = Array.Find(_columns, s => (prefix+s.Name).ToUpper() == name.ToUpper());
                 if (colIdx !=null)
                 {
-                    _indexes[colIdx.PocoIdx] = i;
+                    idx[colIdx.PocoIdx] = i;
+                    _log.LogDebug($"Property {prefix}_{colIdx.Name} is mapped from reader[{i}]({name})");
                 }
             }
         }
 
-        private int[] _indexes;
-        private Action<T, DbDataReader, IManageConverters, IMapToPoco> _mapper;
+        Dictionary<string,int[]> _indexes=new Dictionary<string, int[]>();
+
+        private int[] Indexes(string prefix) => _indexes.GetValueOrDefault(prefix.IsNullOrEmpty()?EmptyPrefix:prefix);
+
+        int[] InitIndexes(string prefix)
+        {
+            if (prefix.IsNullOrEmpty()) prefix = EmptyPrefix;
+            var idx = Enumerable.Repeat(-1, _columns.Length).ToArray();
+            _indexes[prefix] = idx;
+            return idx;
+        }
+
+        Dictionary<string, Action<T, DbDataReader, IManageConverters, IMapToPoco>>_mappers=new Dictionary<string, Action<T, DbDataReader, IManageConverters, IMapToPoco>>();
+
         void Populate(T poco, DbDataReader reader, string parentPrefix)
         {
-            if (_mapper == null)
+            Action<T, DbDataReader, IManageConverters, IMapToPoco> mapper = null;
+            var prefix = parentPrefix.IsNullOrEmpty() ? EmptyPrefix : parentPrefix;
+            lock (_sync)
             {
-                
+                mapper = _mappers.GetValueOrDefault(prefix);
+            }
+            if (mapper == null)
+            {
+                int[] idx = null;
+                lock (_sync)
+                {
+                    idx = Indexes(parentPrefix);
+                }
                 var populator = new PopulatePocoGenerator<T>();
                 var items = new List<Expression>();
                 items.AddRange(populator.ReadValuesIntoArray(reader.FieldCount));
@@ -71,9 +94,9 @@ namespace SqlFu.Mapping.Internals
                 {
                     var column = _columns[i];
 
-                    if (CanBeMappedFromValue(column) && _indexes[i] == -1) continue;
+                    if (CanBeMappedFromValue(column) && idx[i] == -1) continue;
 
-                    var i1 = _indexes[i];
+                    var i1 = idx[i];
 
                     //one value to map
                     if (CanBeMappedFromValue(column))
@@ -88,15 +111,17 @@ namespace SqlFu.Mapping.Internals
                 }
                 
                 var body = Expression.Block(new[] {populator.ValuesVar},items);
-               
-                //typeof(T).get
-                _mapper=Expression.Lambda<Action<T, DbDataReader, IManageConverters, IMapToPoco>>
+                
+                mapper=Expression.Lambda<Action<T, DbDataReader, IManageConverters, IMapToPoco>>
                     (body, populator.PocoExpr, populator.ReaderExpr, populator.Converter, populator.CustomMapExpr)
                     .Compile();
-               
+                lock (_sync)
+                {
+                    _mappers[prefix] = mapper;
+                }
 
             }
-            _mapper(poco, reader, _converter, _customMapper);
+            mapper(poco, reader, _converter, _customMapper);
         } 
         
      
