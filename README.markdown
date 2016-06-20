@@ -2,7 +2,7 @@
 
 SqlFu is a **_versatile_** data mapper (aka micro-ORM)  for .Net 4.6+ and .Net Core.  SqlFu uses Apache 2.0 license.
 
-Latest version: [3.2.1](https://github.com/sapiens/SqlFu/wiki/ChangeLog) 
+Latest version: [3.3.0](https://github.com/sapiens/SqlFu/wiki/ChangeLog) 
 
  [Docs](https://github.com/sapiens/SqlFu/tree/v2) for version v2.
 
@@ -168,11 +168,11 @@ It's a common scenario, especially using a cloud based db like Azure Sql, to rea
 
 IDbFactory getDb;
 
-getDb.HandleTransientErrors(db=>{
- /* do stuff */
+getDb.RetryOnTransientErrorAsync(cancel,async db=>{
+ var items=await db.WithSql(q=>q.From<MyTable>().Where(d=>d.Id==2).SelectAll(useAsterisk:true)).GetRowsAsync();
+ return items;
  });
  
-return getDb.HandleTransientErrors(db=> /* some query */);
 ```
 
 ### CRUD Helpers
@@ -249,6 +249,15 @@ return r.Result;
 
 SqlFu features a quite powerful and flexible query builder that you can use to query one table/view (use views or sprocs when you need joins).
 ```csharp
+
+//starting with ver. 3.3.0
+//alternative syntax
+_db.WithSql(q => q.From<User>()
+            .Where(d=>d.Id==id && !d.IsActive)
+            .OrderByIf(c=>input.ShouldSort,d=>d.Name)
+            .SelectAll())
+    .GetRows();
+
 //a big unrealistic query to showcase the builder capabilities
 var names=new[]{"john","mary"};
 _db.QueryAs(q => q.From<User>()
@@ -267,9 +276,11 @@ _db.QueryAs(q => q.From<User>()
  
 //returns one row only
  _db.QueryRow(q=>q.From<User>().SelectAll());
+ _db.WithSql(q=>q.From<User>().SelectAll()).GetFirstRow();
 
 //returns one value
  _db.QueryValue(q=>q.From<User>().Select(d=>d.Id));
+ _db.WithSql(q=>q.From<User>().Select(d=>d.Id)).GetValue();
  
  //returns a List<int>
  _db.QueryAs(q=>q.From<User>().Select(d=>d.Id));
@@ -280,6 +291,12 @@ _db.QueryAs(q => q.From<User>()
    return true;//continue processing
    return false;//query ends here, no other results are read/mapped
  });
+ _db.WithSql((q=>q.From<User>().SelectAll()).ProcessEachRow(user=>{ 
+   user.Name=user.Name.ToUpper();
+   return true;//continue processing
+   return false;//query ends here, no other results are read/mapped
+ }).Execute();
+ 
  
  //do a paged query, useful for pagination. Here we request page 2 with 30 results per page
  var result=_db.QueryPaged<User>(q=>q.From<User>.SelectAll(),new Pagination(page:2,pageSize:30));
