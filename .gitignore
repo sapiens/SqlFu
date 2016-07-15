@@ -25,6 +25,8 @@ build/tools
 
 !build/tools/nuget.exe
 
+.vs
+*.lock.json
 
 # External tool builders
 .externalToolBuilders/
