@@ -1,6 +1,7 @@
 using System;
 using System.Data.Common;
 using CavemanTools.Logging;
+using SqlFu;
 
 namespace Tests.Providers.MsSql
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 using CavemanTools.Logging;
-using CavemanTools.Testing;
+
 using FluentAssertions;
 using SqlFu.Mapping;
 using SqlFu.Mapping.Internals;
@@ -102,15 +102,7 @@ namespace Tests.Mapping
             sut.Map(data);
 
 
-            Setup.DoBenchmark(500, new[]{new BenchmarkAction(i =>
-            {
-                sut.Map(data, "");
-            })
-            , new BenchmarkAction(i =>
-            {
-                manual.Map(data);
-            }),
-            });
+       
 
 
         }
