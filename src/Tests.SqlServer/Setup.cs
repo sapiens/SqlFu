@@ -3,11 +3,11 @@ using System.Data.Common;
 using SqlFu;
 using SqlFu.Providers.SqlServer;
 using System.Data.SqlClient;
-using System.Data.SQLite;
+
 using CavemanTools;
 using CavemanTools.Logging;
 using CavemanTools.Model.ValueObjects;
-using SqlFu.Providers.Sqlite;
+
 
 namespace Tests.SqlServer
 {

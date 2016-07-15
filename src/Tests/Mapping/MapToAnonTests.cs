@@ -1,6 +1,5 @@
 ﻿using System;
 using CavemanTools.Logging;
-using CavemanTools.Testing;
 using FluentAssertions;
 using SqlFu.Builders;
 using SqlFu.Mapping;
