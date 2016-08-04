@@ -40,7 +40,7 @@ namespace SqlFu.Providers
             var schema = "";
             if (!table.Schema.IsNullOrEmpty())
             {
-                schema = Escape(schema,EscapeChars.Start,EscapeChars.End)+".";
+                schema = Escape(table.Schema,EscapeChars.Start,EscapeChars.End)+".";
             }
 
             return schema + Escape(table.Name,EscapeChars.Start, EscapeChars.End);
