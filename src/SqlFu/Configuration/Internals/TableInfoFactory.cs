@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using SqlFu.Mapping;
 
@@ -8,7 +9,7 @@ namespace SqlFu.Configuration.Internals
     {
         private readonly IManageConverters _converter;
 
-        Dictionary<Type,TableInfo> _cache=new Dictionary<Type, TableInfo>();
+        ConcurrentDictionary<Type,TableInfo> _cache=new ConcurrentDictionary<Type, TableInfo>();
 
         public TableInfoFactory(IManageConverters converter)
         {
