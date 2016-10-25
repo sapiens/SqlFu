@@ -44,9 +44,15 @@ namespace SqlFu.Configuration.Internals
         public string IdentityColumn { get; set; }
         
         Dictionary<string,TableSqlCache> _cache=new Dictionary<string, TableSqlCache>();
-
+        object _sync=new object();
         public TableSqlCache GetSqlCache(string providerId)
-            => _cache.GetValueOrCreate(providerId, () => new TableSqlCache());
+        {
+            lock (_sync)
+            {
+                return _cache.GetValueOrCreate(providerId, () => new TableSqlCache());
+            }
+            
+        }
 
         public PagedBuilderResult PagedSql { get; set; }
         public string EscapeName(IEscapeIdentifier provider,TableName name=null)
