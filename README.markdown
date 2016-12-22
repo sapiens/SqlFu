@@ -7,19 +7,21 @@ Latest version: [3.3.5](https://github.com/sapiens/SqlFu/wiki/ChangeLog)
  **new!!** [How to add strongly typed support for any sql functions](https://github.com/sapiens/SqlFu/wiki/Adding-support-for-sql-functions)
  
  [Docs](https://github.com/sapiens/SqlFu/tree/v2) for version v2.
+ 
 
 ## Features
+* Think strongly typed Ado.Net
 * Versatility 
 * Performance
 * CoreClr support
-* Fully async extension methods and helpers
-* DDL tools
+* Fully (a)sync extension methods and helpers
+* DDL tools 
 * Suport for working with multiple databases/providers in the same app
 * Transient errors resilience
 * Great for maintaining and querying the read model of CQRS apps
 * Support for: SqlServer 2012+ (Azure included), Sqlite. TBA: Postgres, MySql
 
-**Version 3 is not compatible with previous versions**
+**Version 3 is not compatible with previous versions**  [Mini guide to upgrade from v2 to v3](https://github.com/sapiens/SqlFu/wiki/Upgrading-from-v2-to-v3).
 
 ## How SqlFu should be used
 
