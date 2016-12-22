@@ -44,5 +44,6 @@ namespace SqlFu.Providers
 
 
         IDbProviderExpressions ExpressionsHelper { get; }
+        void ReplaceExpressionsProvider(IDbProviderExpressions prov);
     }
 }
