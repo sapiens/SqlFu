@@ -4,7 +4,7 @@ SqlFu is a **_versatile_** data mapper (aka micro-ORM)  for .Net 4.6+ and .Net C
 
 Latest version: [3.3.5](https://github.com/sapiens/SqlFu/wiki/ChangeLog) 
  
- **new!!** [How to add builder support for any sql functions](https://github.com/sapiens/SqlFu/wiki/Adding-support-for-sql-functions)
+ **new!!** [How to add strongly typed support for any sql functions](https://github.com/sapiens/SqlFu/wiki/Adding-support-for-sql-functions)
  
  [Docs](https://github.com/sapiens/SqlFu/tree/v2) for version v2.
 
