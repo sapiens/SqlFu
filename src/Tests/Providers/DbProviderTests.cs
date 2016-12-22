@@ -1,38 +1,69 @@
 ﻿using System;
 using System.Data.Common;
+using System.Linq.Expressions;
+using System.Text;
 using CavemanTools.Model.ValueObjects;
 using FakeItEasy;
 using FluentAssertions;
+using SqlFu;
+using SqlFu.Builders.Expressions;
+using SqlFu.Providers;
 using Tests.TestData;
 using Xunit;
 
 namespace Tests.Providers
 {
-    public class DbProviderTests
-    {
-        private FakeDbProvider _sut;
 
-        public DbProviderTests()
+    public enum TSqlDatePart
+    {
+        Year,
+        Day,
+        Hour
+        //etc
+    }
+    public static class MyExtensions
+    {
+        public static int DateDiff<T>(this T table, TSqlDatePart part, DateTime startDate,DateTime endDate)
         {
-            _sut=new FakeDbProvider();
+            throw new NotImplementedException();
+        }
+    }
+
+    public class MyFunctions : DbProviderExpressions
+    {
+        public MyFunctions()
+        {
+            LinkMethods(()=>1.DateDiff(TSqlDatePart.Day, DateTime.Now, DateTime.Now),DateDiff);    
         }
 
-        //[Fact]
-        //public void value_objects_are_flattened_on_setup_param()
-        //{
-        //    var p = A.Fake<DbParameter>();
-        //    _sut.SetupParameter(p,"t",new Email("t@example.com"));
-        //    p.Value.Should().Be("t@example.com");
-        //}
+        private void DateDiff(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions writer)
+        {
+            sb.Append("datediff(");
+            sb.Append(method.Arguments[1].GetValue().ToString()).Append(",");
+            sb.Append(writer.GetColumnsSql(method.Arguments[2])).Append(",");
+            sb.Append(writer.GetColumnsSql(method.Arguments[3]));
+            sb.Append(")");
+        }
 
-        //[Fact]
-        //public void unregistered_value_objects_throws_on_setup()
-        //{
-        //    var p = A.Fake<DbParameter>();
-        //    _sut.Invoking(d=>d.SetupParameter(p, "t", new Post()))
-        //        .ShouldThrow<InvalidOperationException>()
-        //        .Where(e=>e.Message.Contains(typeof(Post).ToString()));
-            
-        //}
+    }
+
+
+    public class AddingCustomProviderExpressions
+    {
+        private ExpressionSqlGenerator _sut;
+
+        public AddingCustomProviderExpressions()
+        {
+            _sut = Setup.CreateExpressionSqlGenerator(new MyFunctions());
+        }
+
+        [Fact]
+        public void value_objects_are_flattened_on_setup_param()
+        {
+            Expression<Func<MapperPost, object>> l = x => x.DateDiff(TSqlDatePart.Day, x.CreatedOn, DateTime.Now);
+            var rez = _sut.GetSql(l);
+            rez.Should().Be("datediff(Day,CreatedOn,@0)");
+        }
+
     }
 }

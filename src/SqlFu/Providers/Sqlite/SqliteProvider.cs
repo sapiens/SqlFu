@@ -55,8 +55,6 @@ namespace SqlFu.Providers.Sqlite
 
         protected override IDatabaseTools InitTools()
        => new SqliteDbTools(this);
-
-        protected override IDbProviderExpressions InitExpressionHelper()
-        => new DbProviderExpressions();
+       
     }
 }

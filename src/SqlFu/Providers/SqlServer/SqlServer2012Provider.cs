@@ -145,7 +145,6 @@ namespace SqlFu.Providers.SqlServer
         }
 
         protected override IDatabaseTools InitTools() => new SqlServerDbTools(this);
-        protected override IDbProviderExpressions InitExpressionHelper()
-        =>new DbProviderExpressions();
+       
     }
 }

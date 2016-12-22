@@ -26,11 +26,10 @@ namespace Tests.Builders
    
         public ExpressionSqlGeneratorTests()
         {
-            var prov=new TestDbProviderExpression();
             _provider.CallsTo(d => d.GetSql(A<MethodCallExpression>._, A<IGenerateSqlFromExpressions>._))
-                .ReturnsLazily(x=> prov.GetSql(x.GetArgument<MethodCallExpression>(0),
-                            x.GetArgument<IGenerateSqlFromExpressions>(1)));
-            _sut = new ExpressionSqlGenerator(_provider, Setup.InfoFactory(), new FakeEscapeIdentifier());
+            .ReturnsLazily(x => TestDbProviderExpression.Instance.GetSql(x.GetArgument<MethodCallExpression>(0),
+                x.GetArgument<IGenerateSqlFromExpressions>(1)));
+            _sut = Setup.CreateExpressionSqlGenerator(_provider);
         }
 
         [Fact]

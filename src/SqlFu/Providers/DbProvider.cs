@@ -105,7 +105,7 @@ namespace SqlFu.Providers
 
         public SqlFuConfig SqlFuConfiguration { get; }
 
-        protected abstract IDbProviderExpressions InitExpressionHelper();
+        protected Func<IDbProviderExpressions> InitExpressionHelper=()=>new DbProviderExpressions();
 
         public static string Escape(string s,char startId,char endId)
         {

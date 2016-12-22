@@ -1,16 +1,51 @@
 ﻿using System;
 using System.Data.Common;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
 using FluentAssertions;
 using SqlFu;
 using SqlFu.Builders;
 using SqlFu.Builders.CreateTable;
+using SqlFu.Builders.Expressions;
+using SqlFu.Providers;
 using SqlFu.Providers.SqlServer;
 using Xunit;
 
 namespace Tests.SqlServer
 {
+    public enum TSqlDatePart
+    {
+        Year,
+        Day,
+        Hour
+        //etc
+    }
+    public static class MyExtensions
+    {
+        public static int DateDiff<T>(this T table, TSqlDatePart part, DateTime startDate, DateTime endDate)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
+    public class MyFunctions : DbProviderExpressions
+    {
+        public MyFunctions()
+        {
+            LinkMethods(() => 1.DateDiff(TSqlDatePart.Day, DateTime.Now, DateTime.Now), DateDiff);
+        }
+
+        private void DateDiff(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions writer)
+        {
+            sb.Append("datediff(");
+            sb.Append(method.Arguments[1].GetValue().ToString()).Append(",");
+            sb.Append(writer.GetColumnsSql(method.Arguments[2])).Append(",");
+            sb.Append(writer.GetColumnsSql(method.Arguments[3]));
+            sb.Append(")");
+        }
+
+    }
     public class User
     {
         public int Id { get; set; }
@@ -19,7 +54,7 @@ namespace Tests.SqlServer
       
         public bool IsDeleted { get; set; }
         public int Posts { get; set; }
-
+        public DateTime CreatedOn { get; set; }=DateTime.Now;
         public string Category { get; set; } = Type.Post.ToString();
         public User()
         {
@@ -40,6 +75,7 @@ namespace Tests.SqlServer
 
         public DBOperations()
         {
+            _db.Provider().ReplaceExpressionsProvider(new MyFunctions());
             _db.CreateTableFrom<User>(cf =>
             {
                 cf.HandleExisting(TableExistsAction.DropIt)
@@ -111,7 +147,12 @@ namespace Tests.SqlServer
             _db.QueryValue<int>(q => q.From<User>().Select(d => d.Count())).Should().Be(3);
         }
 
-
+        [Fact]
+        public void datediff()
+        {
+            var dif=_db.QueryValue(q => q.From<User>().Select(d => d.DateDiff(TSqlDatePart.Hour, d.CreatedOn, DateTime.Now.AddHours(3))));
+            dif.Should().Be(3);
+        }
 
         [Fact]
         public void sum_of_posts()
