@@ -2,8 +2,10 @@
 
 SqlFu is a **_versatile_** data mapper (aka micro-ORM)  for .Net 4.6+ and .Net Core.  SqlFu uses Apache 2.0 license.
 
-Latest version: [3.3.4](https://github.com/sapiens/SqlFu/wiki/ChangeLog) 
-
+Latest version: [3.3.5](https://github.com/sapiens/SqlFu/wiki/ChangeLog) 
+ 
+ [How to add builder support for any sql functions](https://github.com/sapiens/SqlFu/wiki/Adding-support-for-sql-functions) **new!!**
+ 
  [Docs](https://github.com/sapiens/SqlFu/tree/v2) for version v2.
 
 ## Features
