@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
+using System.Linq.Expressions;
 using CavemanTools.Logging;
 using CavemanTools.Model.ValueObjects;
 using FakeItEasy;
+using FakeItEasy.ExtensionSyntax.Full;
 using SqlFu.Builders.Expressions;
 using SqlFu.Configuration.Internals;
 using SqlFu.Mapping.Internals;
@@ -65,5 +67,13 @@ namespace Tests
         }
 
         public static TableInfoFactory InfoFactory() => new TableInfoFactory(Converters());
+
+        public static ExpressionSqlGenerator CreateExpressionSqlGenerator(IDbProviderExpressions exprProvider)
+        {
+            //exprProvider.CallsTo(d => d.GetSql(A<MethodCallExpression>._, A<IGenerateSqlFromExpressions>._))
+            //    .ReturnsLazily(x => TestDbProviderExpression.Instance.GetSql(x.GetArgument<MethodCallExpression>(0),
+            //        x.GetArgument<IGenerateSqlFromExpressions>(1)));
+            return new ExpressionSqlGenerator(exprProvider, Setup.InfoFactory(), new FakeEscapeIdentifier());
+        }
     }
 }

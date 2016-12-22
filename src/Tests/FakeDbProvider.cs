@@ -65,9 +65,6 @@ namespace Tests
             throw new NotImplementedException();
         }
 
-        protected override IDbProviderExpressions InitExpressionHelper()
-        {
-            throw new NotImplementedException();
-        }
+      
     }
 }
