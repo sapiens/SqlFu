@@ -8,15 +8,14 @@ open Settings
 
 
 let localNugetRepo="E:/Libs/nuget"
-let dotnet="dotnet.exe"
-let nugetServer= "https://www.nuget.org/api/v2/package"
 
 //relative to script
 let nugetExeDir="tools"
-let outDir=(projDir @@ "bin") @@ "Release"
 
+let outDir=combinePaths currentDirectory <|"artifacts" 
 
-let checkResult (msg:string) (res:int) = if res <> 0 then failwith msg
+let dotnet="dotnet.exe"
+let nugetServer= "https://www.nuget.org/api/v2/package"
 
 let restore (proj:string)= 
         let result = ExecProcessAndReturnMessages(fun c -> 
@@ -29,16 +28,19 @@ let restore (proj:string)=
 
 let compile proj= ExecProcess(fun c -> 
                                         c.FileName<-dotnet
-                                        c.Arguments<-("build "+proj+" -c release"))(TimeSpan.FromMinutes 5.0)
+                                        c.Arguments<-("build "+proj+ " -c release"))
+                                        (TimeSpan.FromMinutes 5.0)
 
-
-let runTests dir= ExecProcess(fun c -> 
+let runTests dir= 
+    let result = ExecProcess(fun c -> 
                                         c.FileName<- dotnet
                                         c.Arguments<-("test  \""+dir+"\""))(TimeSpan.FromMinutes 5.0)
-   
+    if result <> 0 then failwith "Tests fail!"
+
+
 let pack proj =ExecProcess(fun c -> 
                                         c.FileName<-dotnet
-                                        c.Arguments<-("pack "+proj+" --no-build -c Release"))(TimeSpan.FromMinutes 5.0)
+                                        c.Arguments<-("pack "+proj+" --include-symbols --include-source -c Release --no-build  -o "+outDir))(TimeSpan.FromMinutes 5.0)
 let push file = ExecProcess(fun c ->
                             c.FileName<- (currentDirectory @@ nugetExeDir @@ "nuget.exe")
                             c.Arguments <- ("push "+ file+" -Source "+nugetServer))(TimeSpan.FromMinutes 5.0)
