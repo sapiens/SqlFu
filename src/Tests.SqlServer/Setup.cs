@@ -20,6 +20,7 @@ namespace Tests.SqlServer
             LogManager.OutputTo(s=>System.Diagnostics.Debug.WriteLine(s));
             SqlFuManager.Configure(c =>
             {
+                
                 c.AddProfile(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection),Connex);              
               //  c.AddProfile(new SqliteProvider(SQLiteFactory.Instance.CreateConnection),"Data Source = mydb.db; Version = 3;","sqlite");              
             });

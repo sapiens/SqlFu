@@ -17,13 +17,6 @@ let buildDir = "./build/"
 
 
 
-let pkgFiles()=
-    let packFilesPattern=outDir @@ "*.nupkg"
-    let ignoreSymbolsPattern=outDir @@ "*symbols.nupkg"
-    (--) !!packFilesPattern <| ignoreSymbolsPattern |> Seq.head
-
-
-
 
 
 Target "Clean" (fun _ ->  
@@ -31,8 +24,9 @@ Target "Clean" (fun _ ->
 )
  
 Target "Build" (fun _ -> 
-    restore projDir |> checkResult "Restore failed"
-    compile projDir |> checkResult "Build failed"     
+    restore projDir |> ignore
+    let result= compile projDir
+    if result <> 0 then failwith "build failed"            
 )
  
 Target "Pack" ( fun _ ->
@@ -45,20 +39,24 @@ Target "Pack" ( fun _ ->
 )
 
 Target "Test" (fun _ ->
-   runTests testDir |> checkResult "Tests failed"  
-   runTests ("..\src\Tests.SqlServer") |> checkResult "Tests failed"  
+   runTests testDir
+  
 )
 
+let pkgFiles= lazy(
+    let packFilesPattern=outDir @@ "*.nupkg"    
+    let ignoreSymbolsPattern=outDir @@ "*symbols.nupkg"
+    let files=ignoreSymbolsPattern|> (--) !!packFilesPattern
+    files
+    )
 
-Target "Push"(fun _ -> pkgFiles()|> push |> ignore)
+Target "Push"(fun _ -> pkgFiles.Value |> Seq.iter(fun i-> push i |> ignore)  )
 
 Target "Local"( fun _ ->
-   !! pkgFiles() |> CopyFiles localNugetRepo)
-
-
+     pkgFiles.Value |> CopyFiles localNugetRepo
+)
 
 // Dependencies
-
 "Clean"
     ==>"Build"
     ==>"Test"
