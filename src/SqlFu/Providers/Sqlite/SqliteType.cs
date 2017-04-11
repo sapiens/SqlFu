@@ -22,6 +22,8 @@ namespace SqlFu.Providers.Sqlite
             this[typeof(DateTimeOffset?)] = Text;
             this[typeof(TimeSpan)] = Text;
             this[typeof(TimeSpan?)] = Text;
+            this[typeof(long)] = Integer;
+
         }
     }
 }

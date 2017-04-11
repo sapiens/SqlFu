@@ -40,8 +40,7 @@ namespace SqlFu.Providers
         /// For create table statements
         /// </summary>
         /// <returns></returns>
-        string GetIdentityKeyword();
-
+        string GetIdentityKeyword();      
 
         IDbProviderExpressions ExpressionsHelper { get; }
         void ReplaceExpressionsProvider(IDbProviderExpressions prov);
