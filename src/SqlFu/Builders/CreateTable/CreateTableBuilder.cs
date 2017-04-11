@@ -123,7 +123,7 @@ namespace SqlFu.Builders.CreateTable
                var pk = "";
                if (_data.PrimaryKey != null && _data.PrimaryKey.Columns.Length==1)
                {
-                   if (name == _data.PrimaryKey.Columns[0]) pk = "primary key";
+                   if (col.PropertyName == _data.PrimaryKey.Columns[0]) pk = "primary key";
                }
                _sb.Append($"{name} {col.DbType}{size} {collation} {def} {isnull} {pk} {identity},");
            });

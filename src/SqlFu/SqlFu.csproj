@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Fast, versatile data mapper with helpers to improve productivity when working with a RDBMS. Designed for flexibility and ease of use. Full async support for operations and helpers, featuring a strongly typed sql builder</Description>
-    <VersionPrefix>3.3.6</VersionPrefix>
+    <VersionPrefix>3.3.7</VersionPrefix>
     <Authors>Mihai Mogosanu</Authors>
     <TargetFrameworks>net46;netstandard1.3</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
