@@ -28,7 +28,7 @@ namespace SqlFu.Builders.CreateTable
           
             _sb.AppendLine("create table " + _tableName + "(");
             AddColumns(data.Columns);
-            AddConstraints(data.PrimaryKey);
+            if (data.PrimaryKey?.Columns.Length>1) AddConstraints(data.PrimaryKey);
             AddConstraints(data.ForeignKeys);
             _sb.Append(");");
             AddIndexes(data.Indexes);
@@ -120,7 +120,12 @@ namespace SqlFu.Builders.CreateTable
                var isnull = col.IsNull ? "null" : "not null";
 
                var identity = col.IsIdentity? _provider.GetIdentityKeyword():"";
-               _sb.Append($"{name} {col.DbType}{size} {collation} {def} {isnull} {identity},");
+               var pk = "";
+               if (_data.PrimaryKey != null && _data.PrimaryKey.Columns.Length==1)
+               {
+                   if (col.PropertyName == _data.PrimaryKey.Columns[0]) pk = "primary key";
+               }
+               _sb.Append($"{name} {col.DbType}{size} {collation} {def} {isnull} {pk} {identity},");
            });
             _sb.RemoveLast().AppendLine();
         }
