@@ -14,7 +14,9 @@ namespace SqlFu.Providers.Sqlite
         {
             this[typeof(string)] = Text;
             this[typeof(int)] = Integer;
+            this[typeof(bool)] = Integer;
             this[typeof(int?)] = Integer;
+            this[typeof(bool?)] = Integer;
             this[typeof(Guid)] = Text;   
             this[typeof(Guid?)] = Text;
             this[typeof(byte[])] = Blob;
