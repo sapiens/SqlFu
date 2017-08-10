@@ -29,13 +29,7 @@ namespace SqlFu
             _connectionString = profile.ConnectionString;
         }
 
-       public IDbProvider Provider => _provider;
-
-        public void UpdateConnection(string cnxString)
-        {
-            cnxString.MustNotBeEmpty();
-            _connectionString = cnxString;
-        }
+       public IDbProvider Provider => _provider;     
 
         public DbConnection Create(DbConnection db=null)
         {
@@ -43,10 +37,20 @@ namespace SqlFu
             return SqlFuManager.OpenConnection(_provider, _connectionString);           
         }
 
+        public DbConnection Create(string cnxString = null)
+        {
+            return SqlFuManager.OpenConnection(_provider, cnxString??_connectionString);
+        }
+
         public Task<DbConnection> CreateAsync(CancellationToken cancel, DbConnection db = null)
         {
             if (db != null) return Task.FromResult((DbConnection)new SqlFuConnection(db, _provider));
             return SqlFuManager.OpenConnectionAsync(_provider, _connectionString,cancel);
+        }
+
+        public Task<DbConnection> CreateAsync(CancellationToken cancel, string cnxString = null)
+        {
+            return SqlFuManager.OpenConnectionAsync(_provider, cnxString ?? _connectionString, cancel);
         }
     }
 
