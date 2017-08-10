@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <PackageReference Include="CavemanTools" Version="4.5.1" />
+    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">

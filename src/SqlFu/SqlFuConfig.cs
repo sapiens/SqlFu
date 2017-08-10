@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Reflection.Emit;
 using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 using SqlFu.Mapping.Internals;
@@ -18,6 +21,9 @@ namespace SqlFu
         {
             _tableInfoFactory = new TableInfoFactory(_converters);
             MapperFactory = new MapperFactory(_customMappers, _tableInfoFactory, _converters);
+            var ab = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("SqlFuDyn"),
+                AssemblyBuilderAccess.Run);
+            _module = ab.DefineDynamicModule("Factories");
         }
 
         public CustomMappersConfiguration CustomMappers => _customMappers;
@@ -122,14 +128,42 @@ namespace SqlFu
 
 
         private Dictionary<string, DbAccessProfile> _profiles = new Dictionary<string, DbAccessProfile>();
+        private ModuleBuilder _module;
+
 
         public void AddProfile(IDbProvider provider, string connectionString, string name = "default")
         {
             provider.MustNotBeNull();
             _profiles[name] = new DbAccessProfile() {ConnectionString = connectionString, Name = name, Provider = provider};
+        }
+        public void AddProfile<T>(IDbProvider provider, string connectionString) where T:IDbFactory
+        {
+            provider.MustNotBeNull();
+            var type = typeof(T);
+            type.GetTypeInfo().IsInterface.MustBe(true);
+            var name = type.Name;
+            var profile = new DbAccessProfile() {ConnectionString = connectionString, Name = name, Provider = provider,Factory = CreateFactory<T>()};
+            profile.Factory.CastAs<DbFactory>().Assign(profile);
+            _profiles[name] = profile;
+        }
+
+        /// <summary>
+        /// Used to identify a db profile associated with a db interface
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static string GetProfileNameFor<T>() where T : IDbFactory => typeof(T).Name;
+
+        T CreateFactory<T>()
+        {
+            var tp = typeof(T);
+            
+            var fact=_module.DefineType(tp.Name + "_class", TypeAttributes.Class, typeof(DbFactory), new[] {tp});
+            return (T) Activator.CreateInstance(fact.CreateTypeInfo().AsType());
 
         }
 
+        public DbAccessProfile GetProfile<T>() where T : IDbFactory => GetProfile(GetProfileNameFor<T>());
         public DbAccessProfile GetProfile(string name="default") => _profiles[name];
 
         public bool HasNoProfiles => !_profiles.HasItems();

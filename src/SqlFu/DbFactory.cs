@@ -1,4 +1,5 @@
-﻿using System.Data.Common;
+﻿using System;
+using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 using SqlFu.Configuration;
@@ -29,7 +30,13 @@ namespace SqlFu
         }
 
        public IDbProvider Provider => _provider;
-        
+
+        public void UpdateConnection(string cnxString)
+        {
+            cnxString.MustNotBeEmpty();
+            _connectionString = cnxString;
+        }
+
         public DbConnection Create(DbConnection db=null)
         {
             if (db!=null) return new SqlFuConnection(db,_provider);

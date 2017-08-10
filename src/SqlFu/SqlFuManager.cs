@@ -31,8 +31,26 @@ namespace SqlFu
             };
         }
 
-        public static IDbFactory GetDbFactory(string profile = "default") =>new DbFactory(Config.GetProfile(profile));
+        /// <summary>
+        /// Returns a <see cref="DbFactory"/> instance for the specified profile
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <returns></returns>
+        public static IDbFactory GetDbFactory(string profile = "default")
+        {
+            var accessProfile = Config.GetProfile(profile);
+            if (accessProfile.Factory == null) accessProfile.Factory = new DbFactory(accessProfile);
+            return accessProfile.Factory;
+        }
 
+        /// <summary>
+        /// Returns a singleton factory instance implementing T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T GetDbFactory<T>() where T : IDbFactory=>(T)Config.GetProfile<T>().Factory;
+       
+        [Obsolete("Use Config.AddProfile<IMyInterface>() to register the db interface and GetDbFactory<IMyInterface>(). This function will be removed in the next major version")]
         public static T GetDbFactory<T>(string name) where T:DbFactory,new()
         {
             var fact=new T();
