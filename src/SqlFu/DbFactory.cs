@@ -37,7 +37,7 @@ namespace SqlFu
             return SqlFuManager.OpenConnection(_provider, _connectionString);           
         }
 
-        public DbConnection Create(string cnxString = null)
+        public DbConnection Create(string cnxString)
         {
             return SqlFuManager.OpenConnection(_provider, cnxString??_connectionString);
         }
@@ -48,7 +48,7 @@ namespace SqlFu
             return SqlFuManager.OpenConnectionAsync(_provider, _connectionString,cancel);
         }
 
-        public Task<DbConnection> CreateAsync(CancellationToken cancel, string cnxString = null)
+        public Task<DbConnection> CreateAsync(CancellationToken cancel, string cnxString)
         {
             return SqlFuManager.OpenConnectionAsync(_provider, cnxString ?? _connectionString, cancel);
         }
