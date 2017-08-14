@@ -3,7 +3,7 @@ using CavemanTools.Model.Persistence;
 
 namespace SqlFu
 {
-    [Obsolete("All db/table create/drop will be removed next major version")]
+    [Obsolete("Will be removed next major version")]
     public abstract class AStorageCreator:ICreateStorage
     {
         private readonly IDbFactory _db;

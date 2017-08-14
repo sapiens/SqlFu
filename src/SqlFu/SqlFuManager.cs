@@ -64,7 +64,7 @@ namespace SqlFu
         /// <param name="conex"></param>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static DbConnection GetConnection(DbConnection conex, IDbProvider provider = null) => new SqlFuConnection(conex, provider ?? Config.GetProfile().Provider);
+        public static DbConnection GetConnection(DbConnection conex, IDbProvider provider = null) => new SqlFuConnection(provider ?? Config.GetProfile().Provider, conex,Config.TransientErrorsStrategyFactory);
 
         public static void Configure(Action<SqlFuConfig> cfg)
         {
@@ -82,7 +82,7 @@ namespace SqlFu
                   throw new InvalidOperationException(
                     "I need a connection! Either set SqlFuFactory.Config.Providers.ConnectionString method or define a connection in config file. If there are more than one connection defined, set SqlFuFactory.Config.Providers.ConnectionString");
             }
-            var sql= new SqlFuConnection(provider,connectionString);
+            var sql= new SqlFuConnection(provider,connectionString, Config.TransientErrorsStrategyFactory);
             sql.Open();
             return sql;
         }
@@ -94,7 +94,7 @@ namespace SqlFu
                   throw new InvalidOperationException(
                     "I need a connection! Either set SqlFuFactory.Config.Providers.ConnectionString method or define a connection in config file. If there are more than one connection defined, set SqlFuFactory.Config.Providers.ConnectionString");
             }
-            var sql= new SqlFuConnection(provider,connectionString);
+            var sql= new SqlFuConnection(provider,connectionString, Config.TransientErrorsStrategyFactory);
             await sql.OpenAsync(cancel).ConfigureAwait(false);
              return sql;
         }
@@ -113,7 +113,7 @@ namespace SqlFu
                   throw new InvalidOperationException(
                     "I need a connection! Either set SqlFuFactory.Config.Providers.ConnectionString method or define a connection in config file. If there are more than one connection defined, set SqlFuFactory.Config.Providers.ConnectionString");
             }
-           return new SqlFuConnection(provider,connectionString);          
+           return new SqlFuConnection(provider,connectionString, Config.TransientErrorsStrategyFactory);          
         }
 
 
