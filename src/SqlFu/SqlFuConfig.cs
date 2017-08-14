@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
 using CavemanTools;
+using CavemanTools.Logging;
 using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 using SqlFu.Executors.Resilience;
@@ -25,10 +26,13 @@ namespace SqlFu
             MapperFactory = new MapperFactory(_customMappers, _tableInfoFactory, _converters);
             var ab = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("SqlFuDyn"),
                 AssemblyBuilderAccess.Run);
-            _module = ab.DefineDynamicModule("Factories");
+            _module = ab.DefineDynamicModule("Factories"); 
         }
 
         public CustomMappersConfiguration CustomMappers => _customMappers;
+
+
+        //public IWriteToLog Logger { get; set; } = NullLogger.Instance; 
 
         public ConvertersManager Converters => _converters;
 

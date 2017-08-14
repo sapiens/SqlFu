@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
+using CavemanTools.Logging;
 using SqlFu.Executors.Resilience;
 using SqlFu.Providers;
 
@@ -187,9 +188,9 @@ namespace SqlFu.Executors
         /// </returns>
         protected override DbCommand CreateDbCommand()
         {
-            var cmd = Connection.CreateCommand();
+            var cmd = new SqlFuCommand(this);
             if (_trans != null) cmd.Transaction = _trans;
-          //  cmd.Connection = this;
+          
             return cmd;
         }
 
@@ -313,43 +314,126 @@ namespace SqlFu.Executors
 
     public class SqlFuCommand : DbCommand
     {
-        public override void Cancel()
+        private readonly SqlFuConnection _cnx;
+        private DbCommand _cmd;
+        
+        public SqlFuCommand(SqlFuConnection cnx)
         {
-            throw new NotImplementedException();
+            _cnx = cnx;
+            
+            _cmd = cnx.Connection.CreateCommand();
         }
+
+        public IRetryOnTransientErrorsStrategy GetErrorsStrategy() => _cnx.CreateErrorStrategy();
+
+
+        public static void HandleTransients(DbCommand cmd,Action sqlAction,IRetryOnTransientErrorsStrategy strat,IDbProvider provider)
+        {
+        
+            start:
+            try
+            {
+                SqlFuManager.Config.OnCommand(cmd);
+                sqlAction();                
+            }
+            catch (DbException ex)
+            {
+                if (provider.IsTransientError(ex))
+                {
+                    "SqlFu".LogInfo("Transient error detected");
+                    if (strat.CanRetry)
+                    {
+                        var period = strat.GetWaitingPeriod();
+                        "SqlFu".LogInfo($"Waiting {period} before retrying");
+                        Thread.Sleep(period);
+                        "SqlFu".LogInfo("Retrying...");
+                        goto start;
+                    }
+                    "SqlFu".LogWarn($"No more retries left. Tried {strat.RetriesCount} times. Throwing exception");
+                }
+
+                SqlFuManager.Config.OnException(cmd, ex);
+                throw;
+            }
+        }
+        void HandleTransients(Action sqlAction)
+        {
+            var strat = _cnx.CreateErrorStrategy();
+            HandleTransients(_cmd,sqlAction,strat,_cnx.Provider);            
+        }
+
+        public override void Cancel()
+            => _cmd.Cancel();
 
         public override int ExecuteNonQuery()
         {
-            throw new NotImplementedException();
+            var rez = -1;
+            HandleTransients(() => rez=_cmd.ExecuteNonQuery());
+            return rez;
         }
-
+        
         public override object ExecuteScalar()
         {
-            throw new NotImplementedException();
+            object obj = DBNull.Value;
+            HandleTransients(() => obj = _cmd.ExecuteScalar());
+            return obj;
         }
 
+        //todo async methods
         public override void Prepare()
+            => _cmd.Prepare();
+
+        public override string CommandText
         {
-            throw new NotImplementedException();
+            get { return _cmd.CommandText; }
+            set { _cmd.CommandText = value; }
         }
 
-        public override string CommandText { get; set; }
-        public override int CommandTimeout { get; set; }
-        public override CommandType CommandType { get; set; }
-        public override UpdateRowSource UpdatedRowSource { get; set; }
-        protected override DbConnection DbConnection { get; set; }
-        protected override DbParameterCollection DbParameterCollection { get; }
-        protected override DbTransaction DbTransaction { get; set; }
-        public override bool DesignTimeVisible { get; set; }
+        public override int CommandTimeout
+        {
+            get => _cmd.CommandTimeout;
+            set => _cmd.CommandTimeout = value;
+        }
+
+        public override CommandType CommandType
+        {
+            get => _cmd.CommandType;
+            set => _cmd.CommandType = value;
+        }
+
+        public override UpdateRowSource UpdatedRowSource
+        {
+            get => _cmd.UpdatedRowSource;
+            set => _cmd.UpdatedRowSource = value;
+        }
+
+        protected override DbConnection DbConnection
+        {
+            get => _cmd.Connection;
+            set => _cmd.Connection = value;
+        }
+
+        protected override DbParameterCollection DbParameterCollection => _cmd.Parameters;
+        protected override DbTransaction DbTransaction
+        {
+            get => _cmd.Transaction;
+            set => _cmd.Transaction = value;
+        }
+
+        public override bool DesignTimeVisible
+        {
+            get => _cmd.DesignTimeVisible;
+            set => _cmd.DesignTimeVisible = value;
+        }
 
         protected override DbParameter CreateDbParameter()
-        {
-            throw new NotImplementedException();
-        }
+            => _cmd.CreateParameter();
+
+        public IDbProvider Provider => _cnx.Provider;
 
         protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
         {
-            throw new NotImplementedException();
+            return _cmd.ExecuteReader(behavior);
         }
     }
 }
