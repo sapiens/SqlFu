@@ -6,8 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using CavemanTools.Model;
 using SqlFu.Builders;
-using SqlFu.Executors;
-using SqlFu.Executors.Resilience;
 
 namespace SqlFu
 {

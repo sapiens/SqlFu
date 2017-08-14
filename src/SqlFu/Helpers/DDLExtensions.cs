@@ -9,15 +9,17 @@ namespace SqlFu
 {
     public static class DDLExtensions
     {
+        [Obsolete("Will be removed next major version")]
         public static void DropTable<T>(this DbConnection cnx)
         {
           var info = cnx.GetPocoInfo<T>();
            cnx.DropTable(info.Table.Name, info.Table.Schema);          
         }
-
+        [Obsolete("Will be removed next major version")]
         public static void DropTable(this DbConnection cnx, string name, string schema = "") 
             => cnx.Provider().DatabaseTools.DropTableIfExists(cnx,new TableName(name,schema));
 
+        [Obsolete("Will be removed next major version")]
         public static void Truncate<T>(this DbConnection db)
         {
             var info = db.GetPocoInfo<T>();
@@ -25,9 +27,11 @@ namespace SqlFu
             db.Execute($"truncate {name}");
         }
 
+        [Obsolete("Will be removed next major version")]
         public static bool TableExists(this DbConnection cnx, string name, string schema = null) 
             => cnx.Provider().DatabaseTools.TableExists(cnx,new TableName(name,schema));
 
+        [Obsolete("Will be removed next major version")]
         public static bool TableExists<T>(this DbConnection cnx)
         {
             var info = cnx.GetPocoInfo<T>();
@@ -40,6 +44,7 @@ namespace SqlFu
         /// <typeparam name="T"></typeparam>
         /// <param name="db"></param>
         /// <param name="cfg"></param>
+        [Obsolete("Will be removed next major version")]
         public static void CreateTableFrom<T>(this DbConnection db, Action<IConfigureTable<T>> cfg)
         {
             var provider = db.Provider();
