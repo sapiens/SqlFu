@@ -4,7 +4,9 @@ using System.Data;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
+using CavemanTools.Logging;
 using SqlFu.Executors;
+using SqlFu.Executors.Resilience;
 
 namespace SqlFu
 {
@@ -21,6 +23,7 @@ namespace SqlFu
             var provider = cnx.Provider();
             var cmd = cnx.CreateCommand();
             cmd.CommandText = cfg.SqlText;
+            
             if (cfg.IsStoredProcedure) cmd.CommandType=CommandType.StoredProcedure;
             var paramNames = cmd.SetupParameters(provider,cfg.Args);
             cmd.CommandText = provider.FormatParameters(cmd.CommandText, paramNames);
@@ -28,21 +31,50 @@ namespace SqlFu
             cfg.ApplyOptions(cmd);
             return cmd;
         }
+        internal static IRetryOnTransientErrorsStrategy GetErrorsStrategy(this DbCommand cmd)
+            => cmd.Connection.CastAs<SqlFuConnection>().CreateErrorStrategy();
 
-        public static int Execute(this DbCommand cmd)
+
+        static void HandleTransients(DbCommand cmd,Action sqlAction)
         {
-            int rez;
+            var strat = cmd.GetErrorsStrategy();
+            var prov = cmd.Connection.Provider();
+           start:
             try
             {
-                rez = cmd.ExecuteNonQuery();
+                sqlAction();
                 SqlFuManager.Config.OnCommand(cmd);
-                return rez;
+                
             }
             catch (DbException ex)
             {
+                if (prov.IsTransientError(ex))
+                {
+                    "SqlFu".LogInfo("Transient error detected");
+                    if (strat.CanRetry)
+                    {
+                        var period = strat.GetWaitingPeriod();
+                        "SqlFu".LogInfo($"Waiting {period} before retrying");
+                        Thread.Sleep(period);
+                        "SqlFu".LogInfo("Retrying...");
+                        goto start;
+                    }
+                    "SqlFu".LogWarn($"No more retries left. Tried {strat.RetriesCount} times. Throwing exception");
+                }
+
                 SqlFuManager.Config.OnException(cmd, ex);
                 throw;
             }
+        }
+
+        public static int Execute(this DbCommand cmd)
+        {
+           
+            int rez=-1;
+            
+            HandleTransients(cmd, () => rez = cmd.ExecuteNonQuery());
+
+            return rez;
         }
        
 

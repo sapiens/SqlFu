@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
+using System.Threading;
+using System.Threading.Tasks;
+using SqlFu.Executors.Resilience;
 using SqlFu.Providers;
 
 namespace SqlFu.Executors
@@ -8,13 +11,15 @@ namespace SqlFu.Executors
 
     public class SqlFuConnection : DbConnection
     {
-      
-        public SqlFuConnection(IDbProvider provider, string cnxString)
+        private readonly Func<IRetryOnTransientErrorsStrategy> _errStrategyFactory;
+
+        public SqlFuConnection(IDbProvider provider, string cnxString,Func<IRetryOnTransientErrorsStrategy> errStrategyFactory)
         {
+            _errStrategyFactory = errStrategyFactory;
             Init(cnxString, provider);
         }
 
-        public SqlFuConnection(DbConnection cnx,IDbProvider provider)
+        public SqlFuConnection(IDbProvider provider, DbConnection cnx, Func<IRetryOnTransientErrorsStrategy> errStrategyFactory)
         {
             cnx.MustNotBeNull();
             provider.MustNotBeNull();
@@ -34,7 +39,7 @@ namespace SqlFu.Executors
          
         }
 
-
+        public IRetryOnTransientErrorsStrategy CreateErrorStrategy() => _errStrategyFactory();
     
         private DbConnection _conex;
 
@@ -83,7 +88,45 @@ namespace SqlFu.Executors
         /// </summary>
         public override void Open()
         {
-            if (_conex.State != ConnectionState.Open) _conex.Open();
+            var s = _errStrategyFactory();
+      start:
+            try
+            {
+                if (_conex.State != ConnectionState.Open) _conex.Open();
+            }
+            catch (DbException ex) when (Provider.IsTransientError(ex))
+            {
+                if (!s.CanRetry)
+                {
+                    throw;
+                }
+                var time=s.GetWaitingPeriod();
+                Thread.Sleep(time);
+                goto start;
+            }
+
+            SqlFuManager.Config.OnOpenConnection(this);
+        }
+
+        public override async Task OpenAsync(CancellationToken cancellationToken)
+        {
+            var s = _errStrategyFactory();
+            start:
+            try
+            {
+                if (_conex.State != ConnectionState.Open) await _conex.OpenAsync(cancellationToken).ConfigureFalse();
+            }
+            catch (DbException ex) when (Provider.IsTransientError(ex))
+            {
+                if (!s.CanRetry)
+                {
+                    throw;
+                }
+                var time = s.GetWaitingPeriod();
+                await Task.Delay(time,cancellationToken).ConfigureFalse();
+                goto start;
+            }
+
             SqlFuManager.Config.OnOpenConnection(this);
         }
 
@@ -265,6 +308,48 @@ namespace SqlFu.Executors
             Close();
             Connection.Dispose();           
             _conex = null;
+        }
+    }
+
+    public class SqlFuCommand : DbCommand
+    {
+        public override void Cancel()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int ExecuteNonQuery()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override object ExecuteScalar()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Prepare()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override string CommandText { get; set; }
+        public override int CommandTimeout { get; set; }
+        public override CommandType CommandType { get; set; }
+        public override UpdateRowSource UpdatedRowSource { get; set; }
+        protected override DbConnection DbConnection { get; set; }
+        protected override DbParameterCollection DbParameterCollection { get; }
+        protected override DbTransaction DbTransaction { get; set; }
+        public override bool DesignTimeVisible { get; set; }
+
+        protected override DbParameter CreateDbParameter()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
+        {
+            throw new NotImplementedException();
         }
     }
 }

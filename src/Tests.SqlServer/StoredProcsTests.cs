@@ -18,7 +18,7 @@ namespace Tests.SqlServer
         {
        
             _db = Setup.GetConnection();
-            h.WriteLine("xxxxxxxxxxx");
+            
             Init();
         }
 
@@ -26,7 +26,7 @@ namespace Tests.SqlServer
 
         void Init()
         {
-            _db.AddDbObjectOrIgnore(@"CREATE PROCEDURE spTest
+            _db.Execute(@"CREATE PROCEDURE spTest
 	@id int,
 	@pout varchar(50) out
 AS

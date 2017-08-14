@@ -8,7 +8,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>SqlFu</AssemblyName>
     <PackageId>SqlFu</PackageId>
-    <PackageTags>datamapper;micro-orm;ado.net;database;tools</PackageTags>
+    <PackageTags>datamapper;micro-orm;ado.net;database;tools;data-mapper;mapper;database</PackageTags>
     <PackageProjectUrl>https://github.com/sapiens/SqlFu</PackageProjectUrl>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
@@ -22,8 +22,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CavemanTools" Version="4.5.1" />
-    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
+    <PackageReference Include="CavemanTools" Version="4.9.0" />
+    <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
+    <PackageReference Include="System.Data.Common" Version="4.3.0" />
+    
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
@@ -37,9 +39,9 @@
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.0.0" />
-    <PackageReference Include="System.Data.Common" Version="4.1.0" />
-    <PackageReference Include="System.Collections.NonGeneric" Version="4.0.1" />
+     
+    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
+    <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>

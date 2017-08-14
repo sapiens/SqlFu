@@ -4,8 +4,10 @@ using System.Data.Common;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
+using CavemanTools;
 using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
+using SqlFu.Executors.Resilience;
 using SqlFu.Mapping.Internals;
 using SqlFu.Providers;
 
@@ -33,6 +35,23 @@ namespace SqlFu
         public TableInfoFactory TableInfoFactory => _tableInfoFactory;
 
         public MapperFactory MapperFactory { get; }
+
+        /// <summary>
+        /// Set/Get factory for transient errors strategy
+        /// </summary>
+        public Func<IRetryOnTransientErrorsStrategy> TransientErrorsStrategyFactory { get; set; } =
+            () => new DefaultTransientErrorsStrategy();
+
+
+        public void ConfigureDefaultTransientResilience(Action<IConfigureDefaultTransientErrorsStrategy> config)
+        {
+            TransientErrorsStrategyFactory = () =>
+            {
+                var s = new DefaultTransientErrorsStrategy();
+                config(s);
+                return s;
+            };
+        }
 
 
         public TransientErrorsConfig TransientErrors { get; }=new TransientErrorsConfig();
