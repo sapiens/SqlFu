@@ -1,5 +1,8 @@
+using System;
+
 namespace SqlFu.Configuration
 {
+    [Obsolete]
     public class TransientErrorsConfig
     {
         /// <summary>

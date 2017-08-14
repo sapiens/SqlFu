@@ -356,11 +356,36 @@ namespace SqlFu.Executors
                 throw;
             }
         }
-        void HandleTransients(Action sqlAction)
+
+        public static async Task HandleTransientsAsync(DbCommand cmd,Func<CancellationToken,Task> sqlAction,IRetryOnTransientErrorsStrategy strat,IDbProvider provider,CancellationToken cancel)
         {
-            var strat = _cnx.CreateErrorStrategy();
-            HandleTransients(_cmd,sqlAction,strat,_cnx.Provider);            
+        start:
+            try
+            {
+                SqlFuManager.Config.OnCommand(cmd);
+                await sqlAction(cancel).ConfigureFalse();                
+            }
+            catch (DbException ex)
+            {
+                if (provider.IsTransientError(ex))
+                {
+                    "SqlFu".LogInfo("Transient error detected");
+                    if (strat.CanRetry)
+                    {
+                        var period = strat.GetWaitingPeriod();
+                        "SqlFu".LogInfo($"Waiting {period} before retrying");
+                        await Task.Delay(period,cancel).ConfigureFalse();
+                        "SqlFu".LogInfo("Retrying...");
+                        goto start;
+                    }
+                    "SqlFu".LogWarn($"No more retries left. Tried {strat.RetriesCount} times. Throwing exception");
+                }
+
+                SqlFuManager.Config.OnException(cmd, ex);
+                throw;
+            }
         }
+        void HandleTransients(Action sqlAction) => HandleTransients(_cmd, sqlAction, _cnx.CreateErrorStrategy(), _cnx.Provider);
 
         public override void Cancel()
             => _cmd.Cancel();
@@ -379,7 +404,22 @@ namespace SqlFu.Executors
             return obj;
         }
 
-        //todo async methods
+        protected override Task<DbDataReader> ExecuteDbDataReaderAsync(CommandBehavior behavior, CancellationToken cancellationToken) => _cmd.ExecuteReaderAsync(behavior, cancellationToken);
+
+        public override async Task<int> ExecuteNonQueryAsync(CancellationToken cancellationToken)
+        {
+            var rez = -1;
+            await HandleTransientsAsync(_cmd, async (t) => rez = await _cmd.ExecuteNonQueryAsync(t).ConfigureFalse(), GetErrorsStrategy(), _cnx.Provider, cancellationToken).ConfigureFalse();
+            return rez;
+        }
+
+        public override async Task<object> ExecuteScalarAsync(CancellationToken cancellationToken)
+        {
+            object obj = DBNull.Value;
+            await HandleTransientsAsync(_cmd,async (t) => obj = await _cmd.ExecuteScalarAsync(t).ConfigureFalse(),GetErrorsStrategy(),_cnx.Provider,cancellationToken).ConfigureFalse();
+            return obj;
+        }
+
         public override void Prepare()
             => _cmd.Prepare();
 
@@ -431,9 +471,6 @@ namespace SqlFu.Executors
 
         public IDbProvider Provider => _cnx.Provider;
 
-        protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior)
-        {
-            return _cmd.ExecuteReader(behavior);
-        }
+        protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior) => _cmd.ExecuteReader(behavior);
     }
 }
