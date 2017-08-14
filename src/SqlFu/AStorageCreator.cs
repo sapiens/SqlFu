@@ -1,7 +1,9 @@
-﻿using CavemanTools.Model.Persistence;
+﻿using System;
+using CavemanTools.Model.Persistence;
 
 namespace SqlFu
 {
+    [Obsolete("Will be removed next major version")]
     public abstract class AStorageCreator:ICreateStorage
     {
         private readonly IDbFactory _db;

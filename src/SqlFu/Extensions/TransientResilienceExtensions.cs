@@ -21,7 +21,7 @@ namespace SqlFu
         /// <param name="wait">How much to wait in miliseconds before retrying</param>
         /// <exception cref="DbException"></exception>
         /// <returns></returns>
-        [Obsolete("Use RetryOnTransientError")]
+        [Obsolete("Resilience is baked-in all db extensions now", true)]
         public static T HandleTransientErrors<T>(this IDbFactory dbFactory,Func<DbConnection,T> action,int tryCount=10,int wait=100)
         {
            return dbFactory.RetryOnTransientError(d => action(d.Connection));
@@ -36,7 +36,7 @@ namespace SqlFu
         /// <param name="wait">How much to wait in miliseconds before retrying</param>
         /// <exception cref="DbException"></exception>
         /// <param name="action"></param>
-        [Obsolete("Use RetryOnTransientError")]
+        [Obsolete("Resilience is baked-in all db extensions now", true)]
         public static void HandleTransientErrors(this IDbFactory dbFactory, Action<DbConnection> action, int tryCount = 10, int wait = 100)
         {
             dbFactory.RetryOnTransientError(d => action(d.Connection));
@@ -54,7 +54,7 @@ namespace SqlFu
         /// <param name="wait">How much to wait in miliseconds before retrying</param>
         /// <exception cref="DbException"></exception>
         /// <returns></returns>
-        [Obsolete("Use RetryOnTransientErrorAsync")]
+        [Obsolete("Resilience is baked-in all db extensions now", true)]
         public static Task<T> HandleTransientErrorsAsync<T>(this IDbFactory dbFactory, CancellationToken token,Func<DbConnection,CancellationToken,Task<T>> action, int tryCount = 10, int wait = 100)
         {
 
@@ -74,7 +74,7 @@ namespace SqlFu
         /// <param name="wait">How much to wait in miliseconds before retrying</param>
         /// <exception cref="DbException"></exception>
         /// <returns></returns>
-        [Obsolete("Use RetryOnTransientErrorAsync")]
+        [Obsolete("Resilience is baked-in all db extensions now", true)]
         public static  Task HandleTransientErrorsAsync(this IDbFactory dbFactory, CancellationToken token,Func<DbConnection,CancellationToken,Task> action, int tryCount = 10, int wait = 100)
         {
 
@@ -89,6 +89,7 @@ namespace SqlFu
         /// <param name="factory"></param>
         /// <param name="token"></param>
         /// <param name="action"></param>
+        [Obsolete("Resilience is baked-in all db extensions now",true)]
         public static Task RetryOnTransientErrorAsync(this IDbFactory factory,CancellationToken token,Func<IWithSqlAsync,Task> action)
         {
             return ModelTools.RetryOnException<DbException>(async () =>
@@ -113,6 +114,7 @@ namespace SqlFu
         /// </summary>
         /// <param name="factory"></param>
         /// <param name="action"></param>
+        [Obsolete("Resilience is baked-in all db extensions now", true)]
         public static void RetryOnTransientError(this IDbFactory factory,Action<IWithSql> action)
         {
             ModelTools.RetryOnException<DbException>(() =>
@@ -136,6 +138,7 @@ namespace SqlFu
         /// </summary>
         /// <param name="factory"></param>
         /// <param name="action"></param>
+        [Obsolete("Resilience is baked-in all db extensions now", true)]
         public static T RetryOnTransientError<T>(this IDbFactory factory,Func<IWithSql,T> action)
         {
             T result = default(T);
@@ -163,6 +166,7 @@ namespace SqlFu
         /// <param name="factory"></param>
         /// <param name="token"></param>
         /// <param name="action"></param>
+        [Obsolete("Resilience is baked-in all db extensions now", true)]
         public static async Task<T> RetryOnTransientErrorAsync<T>(this IDbFactory factory, CancellationToken token, Func<IWithSqlAsync, Task<T>> action)
         {
             T result = default(T);
