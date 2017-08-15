@@ -82,6 +82,11 @@ namespace SqlFu.Providers
         public virtual string FormatIndexOptions(string idxDef, string options = "") => idxDef;
 
         public abstract string GetIdentityKeyword();
+        public bool IsTransientError(DbException ex)
+        {
+            return IsDbBusy(ex);
+        }
+
         public abstract bool IsDbBusy(DbException ex);
         public abstract bool IsUniqueViolation(DbException ex, string keyName = "");
         public abstract bool ObjectExists(DbException ex, string name = null);

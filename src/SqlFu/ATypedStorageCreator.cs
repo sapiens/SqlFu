@@ -5,6 +5,7 @@ using SqlFu.Builders.CreateTable;
 
 namespace SqlFu
 {
+    [Obsolete("Will be removed next major version")]
     public abstract class ATypedStorageCreator<T> : ICreateStorage
     {
         private const string NoSchema = "";

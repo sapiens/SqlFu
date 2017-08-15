@@ -14,15 +14,6 @@ namespace SqlFu
         /// <returns></returns>
         public static bool IsUniqueViolation(this DbConnection db, DbException ex, string keyName = null)
             => db.Provider().IsUniqueViolation(ex, keyName);
-
-        //public static bool TableIsDeleted(this DbException ex, string name)
-        //{
-        //    if (ex.Message.Contains("Invalid object name '{0}'".ToFormat(name)))
-        //    {
-        //        "SqlStorage".LogWarn("Table {0} doesn't exist", name);
-        //        return true;
-        //    }
-        //    return false;
-        //}
+      
     }
 }

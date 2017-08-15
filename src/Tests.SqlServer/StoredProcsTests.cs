@@ -18,7 +18,7 @@ namespace Tests.SqlServer
         {
        
             _db = Setup.GetConnection();
-            h.WriteLine("xxxxxxxxxxx");
+            
             Init();
         }
 
@@ -26,7 +26,9 @@ namespace Tests.SqlServer
 
         void Init()
         {
-            _db.AddDbObjectOrIgnore(@"CREATE PROCEDURE spTest
+            try
+            {
+                _db.Execute(@"CREATE PROCEDURE spTest
 	@id int,
 	@pout varchar(50) out
 AS
@@ -36,7 +38,9 @@ BEGIN
 	SELECT 1 as id,'bla' as name, @id as [input];
 	return 100;
 END");
-          
+            }
+            catch(DbException)  { };
+
 
         }
 
@@ -92,6 +96,7 @@ END");
 
         public void Dispose()
         {
+            _db.Execute("drop procedure sptest");
             _db.Dispose();
         }
     }

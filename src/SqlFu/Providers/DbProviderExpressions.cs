@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Text;
 using SqlFu.Builders;
 using SqlFu.Builders.Expressions;
-#if COREFX
+#if NET13
 using System.Reflection;
 #endif
 
@@ -12,18 +12,20 @@ namespace SqlFu.Providers
 {
     public class DbProviderExpressions : IDbProviderExpressions
     {
+        private const int Placeholder = 1;
+
         public DbProviderExpressions()
         {
-            LinkMethods(()=>1.Count(),CountAll);
-            LinkMethods(()=>1.Count(23),Count);
-            LinkMethods(()=>1.Sum(3),Sum);
-            LinkMethods(()=>1.Max(2),Max);
-            LinkMethods(()=>1.Min(2),Min);
-            LinkMethods(()=>1.Avg(2),Avg);
-            LinkMethods(()=>1.Floor(2),Floor);
-            LinkMethods(()=>1.Ceiling(2),Ceiling);
-            LinkMethods(()=>1.Concat(),Concat);
-            LinkMethods(()=>1.Round(2,2),Round);                     
+            LinkMethods(()=>Placeholder.Count(),CountAll);
+            LinkMethods(()=>Placeholder.Count(23),Count);
+            LinkMethods(()=>Placeholder.Sum(3),Sum);
+            LinkMethods(()=>Placeholder.Max(2),Max);
+            LinkMethods(()=>Placeholder.Min(2),Min);
+            LinkMethods(()=>Placeholder.Avg(2),Avg);
+            LinkMethods(()=>Placeholder.Floor(2),Floor);
+            LinkMethods(()=>Placeholder.Ceiling(2),Ceiling);
+            LinkMethods(()=>Placeholder.Concat(),Concat);
+            LinkMethods(()=>Placeholder.Round(2,2),Round);                     
         }
 
         /// <summary>

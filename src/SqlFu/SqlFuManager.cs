@@ -31,8 +31,26 @@ namespace SqlFu
             };
         }
 
-        public static IDbFactory GetDbFactory(string profile = "default") =>new DbFactory(Config.GetProfile(profile));
+        /// <summary>
+        /// Returns a <see cref="DbFactory"/> instance for the specified profile
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <returns></returns>
+        public static IDbFactory GetDbFactory(string profile = "default")
+        {
+            var accessProfile = Config.GetProfile(profile);
+            if (accessProfile.Factory == null) accessProfile.Factory = new DbFactory(accessProfile);
+            return accessProfile.Factory;
+        }
 
+        /// <summary>
+        /// Returns a singleton factory instance implementing T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T GetDbFactory<T>() where T : IDbFactory=>(T)Config.GetProfile<T>().Factory;
+       
+        [Obsolete("Use Config.AddProfile<IMyInterface>() to register the db interface and GetDbFactory<IMyInterface>(). This function will be removed in the next major version")]
         public static T GetDbFactory<T>(string name) where T:DbFactory,new()
         {
             var fact=new T();
@@ -46,7 +64,7 @@ namespace SqlFu
         /// <param name="conex"></param>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static DbConnection GetConnection(DbConnection conex, IDbProvider provider = null) => new SqlFuConnection(conex, provider ?? Config.GetProfile().Provider);
+        public static DbConnection GetConnection(DbConnection conex, IDbProvider provider = null) => new SqlFuConnection(provider ?? Config.GetProfile().Provider, conex,Config.TransientErrorsStrategyFactory);
 
         public static void Configure(Action<SqlFuConfig> cfg)
         {
@@ -64,7 +82,7 @@ namespace SqlFu
                   throw new InvalidOperationException(
                     "I need a connection! Either set SqlFuFactory.Config.Providers.ConnectionString method or define a connection in config file. If there are more than one connection defined, set SqlFuFactory.Config.Providers.ConnectionString");
             }
-            var sql= new SqlFuConnection(provider,connectionString);
+            var sql= new SqlFuConnection(provider,connectionString, Config.TransientErrorsStrategyFactory);
             sql.Open();
             return sql;
         }
@@ -76,7 +94,7 @@ namespace SqlFu
                   throw new InvalidOperationException(
                     "I need a connection! Either set SqlFuFactory.Config.Providers.ConnectionString method or define a connection in config file. If there are more than one connection defined, set SqlFuFactory.Config.Providers.ConnectionString");
             }
-            var sql= new SqlFuConnection(provider,connectionString);
+            var sql= new SqlFuConnection(provider,connectionString, Config.TransientErrorsStrategyFactory);
             await sql.OpenAsync(cancel).ConfigureAwait(false);
              return sql;
         }
@@ -95,7 +113,7 @@ namespace SqlFu
                   throw new InvalidOperationException(
                     "I need a connection! Either set SqlFuFactory.Config.Providers.ConnectionString method or define a connection in config file. If there are more than one connection defined, set SqlFuFactory.Config.Providers.ConnectionString");
             }
-           return new SqlFuConnection(provider,connectionString);          
+           return new SqlFuConnection(provider,connectionString, Config.TransientErrorsStrategyFactory);          
         }
 
 

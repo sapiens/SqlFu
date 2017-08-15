@@ -64,6 +64,8 @@ namespace SqlFu
                 await cmd.QueryAndProcessAsync(token, processor, firstRowOnly: firstRowOnly).ConfigureAwait(false);
             }
         }
+
+      
         #endregion
         
         #region Execute
@@ -507,6 +509,7 @@ namespace SqlFu
         /// </summary>
         /// <param name="db"></param>
         /// <param name="addObjectStatement"></param>
+        [Obsolete("Will be removed in the next major version")]
         public static void AddDbObjectOrIgnore(this DbConnection db, string addObjectStatement)
         {
             try

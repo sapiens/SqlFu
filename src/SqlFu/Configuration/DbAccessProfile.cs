@@ -7,5 +7,6 @@ namespace SqlFu.Configuration
         public string Name { get; set; }
         public IDbProvider Provider { get; set; }
         public string ConnectionString { get; set; }
+        public IDbFactory Factory { get; set; }
     }
 }

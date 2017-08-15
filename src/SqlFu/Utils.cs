@@ -123,10 +123,7 @@ namespace SqlFu
 
         public static bool IsCustomObject<T>(this T t)
             => t.GetType().IsCustomObjectType();
-        //{
-        //    var type = typeof(T);
-        //    return !type.IsValueType() && (type.GetTypeCode() == TypeCode.Object);
-        //}
+      
 
        
     }

@@ -1,16 +1,10 @@
 ﻿using System;
 using CavemanTools.Model.ValueObjects;
-using FakeItEasy;
-using FakeItEasy.ExtensionSyntax.Full;
 using FluentAssertions;
 using SqlFu;
 using SqlFu.Builders.Crud;
-using SqlFu.Configuration;
-using SqlFu.Providers;
 using Tests.TestData;
-using Tests._Fakes;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Tests.Builders
 {

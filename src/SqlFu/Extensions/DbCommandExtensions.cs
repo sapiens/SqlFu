@@ -4,7 +4,9 @@ using System.Data;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
+using CavemanTools.Logging;
 using SqlFu.Executors;
+using SqlFu.Executors.Resilience;
 
 namespace SqlFu
 {
@@ -21,6 +23,7 @@ namespace SqlFu
             var provider = cnx.Provider();
             var cmd = cnx.CreateCommand();
             cmd.CommandText = cfg.SqlText;
+            
             if (cfg.IsStoredProcedure) cmd.CommandType=CommandType.StoredProcedure;
             var paramNames = cmd.SetupParameters(provider,cfg.Args);
             cmd.CommandText = provider.FormatParameters(cmd.CommandText, paramNames);
@@ -29,21 +32,11 @@ namespace SqlFu
             return cmd;
         }
 
+
+
+
         public static int Execute(this DbCommand cmd)
-        {
-            int rez;
-            try
-            {
-                rez = cmd.ExecuteNonQuery();
-                SqlFuManager.Config.OnCommand(cmd);
-                return rez;
-            }
-            catch (DbException ex)
-            {
-                SqlFuManager.Config.OnException(cmd, ex);
-                throw;
-            }
-        }
+            => cmd.ExecuteNonQuery();
        
 
         /// <summary>
@@ -55,17 +48,7 @@ namespace SqlFu
         /// <returns></returns>
         public static T GetValue<T>(this DbCommand cmd, Func<object, T> converter = null)
         {
-            try
-            {
-                object rez = cmd.ExecuteScalar();
-                SqlFuManager.Config.OnCommand(cmd);
-                return SqlFuManager.GetConverter(converter)(rez);
-            }
-            catch (DbException ex)
-            {
-                SqlFuManager.Config.OnException(cmd, ex);
-                throw;
-            }
+            return SqlFuManager.GetConverter(converter)(cmd.ExecuteScalar());            
         }
 
         /// <summary>
@@ -79,26 +62,21 @@ namespace SqlFu
         public static void QueryAndProcess<T>(this DbCommand cmd, Func<T, bool> processor, Func<DbDataReader, T> mapper = null,
                                      bool firstRowOnly = false)
         {
-            try
+            var fuCommand = cmd.CastAs<SqlFuCommand>();
+            var strat = fuCommand.GetErrorsStrategy();
+            CommandBehavior behavior = firstRowOnly ? CommandBehavior.SingleRow : CommandBehavior.Default;
+            SqlFuCommand.HandleTransients(cmd, () =>
             {
-                CommandBehavior behavior = firstRowOnly ? CommandBehavior.SingleRow : CommandBehavior.Default;
                 using (var reader = cmd.ExecuteReader(behavior))
                 {
-                    SqlFuManager.Config.OnCommand(cmd);
-
                     while (reader.Read())
                     {
                         if (!processor(SqlFuManager.GetMapper(mapper, cmd.CommandText)(reader))) break;
                     }
                 }
 
-
-            }
-            catch (DbException ex)
-            {
-                SqlFuManager.Config.OnException(cmd, ex);
-                throw;
-            }
+            },strat,fuCommand.Provider);
+          
         }
 
 
@@ -120,36 +98,15 @@ namespace SqlFu
 
       
 
-        public static async Task<int> ExecuteAsync(this DbCommand cmd, CancellationToken token)
+        public static Task<int> ExecuteAsync(this DbCommand cmd, CancellationToken token)
         {
-            int rez;
-            try
-            {
-                rez = await cmd.ExecuteNonQueryAsync(token).ConfigureAwait(false);
-                SqlFuManager.Config.OnCommand(cmd);
-                return rez;
-            }
-            catch (DbException ex)
-            {
-                SqlFuManager.Config.OnException(cmd, ex);
-                throw;
-            }
+            return cmd.ExecuteNonQueryAsync(token);            
         }
 
 
         public static async Task<T> GetValueAsync<T>(this DbCommand cmd, CancellationToken token, Func<object, T> converter = null)
         {
-            try
-            {
-                object rez = await cmd.ExecuteScalarAsync(token).ConfigureAwait(false);
-                SqlFuManager.Config.OnCommand(cmd);
-                return SqlFuManager.GetConverter(converter)(rez);
-            }
-            catch (DbException ex)
-            {
-                SqlFuManager.Config.OnException(cmd, ex);
-                throw;
-            }
+            return SqlFuManager.GetConverter(converter)(await cmd.ExecuteScalarAsync(token).ConfigureAwait(false));            
         }
         /// <summary>
         /// Executes an async query then processes each result
@@ -161,29 +118,23 @@ namespace SqlFu
         /// <param name="mapper"></param>
         /// <param name="firstRowOnly"></param>
         /// <returns></returns>
-        public static async Task QueryAndProcessAsync<T>(this DbCommand cmd, CancellationToken cancellation, Func<T, bool> processor, Func<DbDataReader, T> mapper = null,
+        public static Task QueryAndProcessAsync<T>(this DbCommand cmd, CancellationToken cancellation, Func<T, bool> processor, Func<DbDataReader, T> mapper = null,
                                       bool firstRowOnly = false)
         {
-            try
+            var fuCommand = cmd.CastAs<SqlFuCommand>();
+            var strat = fuCommand.GetErrorsStrategy();
+            CommandBehavior behavior = firstRowOnly ? CommandBehavior.SingleRow : CommandBehavior.Default;
+            return SqlFuCommand.HandleTransientsAsync(cmd, async (c) =>
             {
-                CommandBehavior behavior = firstRowOnly ? CommandBehavior.SingleRow : CommandBehavior.Default;
-                using (var reader = await cmd.ExecuteReaderAsync(behavior, cancellation).ConfigureAwait(false))
+                using (var reader = await cmd.ExecuteReaderAsync(behavior,c).ConfigureFalse())
                 {
-                    SqlFuManager.Config.OnCommand(cmd);
-
-                    while (await reader.ReadAsync(cancellation).ConfigureAwait(false))
+                    while (await reader.ReadAsync(c).ConfigureFalse())
                     {
                         if (!processor(SqlFuManager.GetMapper(mapper, cmd.CommandText)(reader))) break;
                     }
                 }
 
-
-            }
-            catch (DbException ex)
-            {
-                SqlFuManager.Config.OnException(cmd, ex);
-                throw;
-            }
+            }, strat, fuCommand.Provider,cancellation);
         }
 
         public static async Task<List<T>> FetchAsync<T>(this DbCommand cmd, CancellationToken cancellation, Func<DbDataReader, T> mapper = null,
@@ -194,7 +145,7 @@ namespace SqlFu
             {
                 rez.Add(d);
                 return true;
-            },mapper,firstRowOnly);
+            },mapper,firstRowOnly).ConfigureFalse();
             return rez;
             
         } 
