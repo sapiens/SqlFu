@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Linq;
-using System.Linq.Expressions;
-using CavemanTools.Logging;
 using CavemanTools.Model.ValueObjects;
-using FakeItEasy;
-using FakeItEasy.ExtensionSyntax.Full;
 using SqlFu.Builders.Expressions;
 using SqlFu.Configuration.Internals;
 using SqlFu.Mapping.Internals;

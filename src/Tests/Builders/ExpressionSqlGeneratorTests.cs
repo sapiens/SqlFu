@@ -6,7 +6,6 @@ using SqlFu.Providers;
 using System.Linq;
 using System.Collections.Generic;
 using FakeItEasy;
-using FakeItEasy.ExtensionSyntax.Full;
 using SqlFu;
 using SqlFu.Builders;
 using SqlFu.Builders.Expressions;
@@ -21,7 +20,7 @@ namespace Tests.Builders
     {
         private ExpressionSqlGenerator _sut;
         Expression<Func<MapperPost, object>> _l;
-        private IDbProviderExpressions _provider = A.Fake<IDbProviderExpressions>();
+        private Fake<IDbProviderExpressions> _provider= new Fake<IDbProviderExpressions>();
 
    
         public ExpressionSqlGeneratorTests()
@@ -29,7 +28,7 @@ namespace Tests.Builders
             _provider.CallsTo(d => d.GetSql(A<MethodCallExpression>._, A<IGenerateSqlFromExpressions>._))
             .ReturnsLazily(x => TestDbProviderExpression.Instance.GetSql(x.GetArgument<MethodCallExpression>(0),
                 x.GetArgument<IGenerateSqlFromExpressions>(1)));
-            _sut = Setup.CreateExpressionSqlGenerator(_provider);
+            _sut = Setup.CreateExpressionSqlGenerator(_provider.FakedObject);
         }
 
         [Fact]
@@ -257,7 +256,7 @@ namespace Tests.Builders
         [Fact]
         public void substring_of_column()
         {
-            A.CallTo(() => _provider.Substring("Title", 0, 1)).Returns("sub(Title)");
+            A.CallTo(() => _provider.FakedObject.Substring("Title", 0, 1)).Returns("sub(Title)");
             _l = d => d.Title.Substring(0, 1);
             Get(_l).Should().Be("sub(Title)");
             _sut.GetColumnsSql(_l).Should().Be("sub(Title)");
@@ -290,7 +289,7 @@ namespace Tests.Builders
         [Fact]
         public void string_length()
         {
-            A.CallTo(() => _provider.Length("Title")).Returns("len(Title)");
+            A.CallTo(() => _provider.FakedObject.Length("Title")).Returns("len(Title)");
             Get(d => d.Title.Length == 2).Should().Be("(len(Title) = @0)");
             
             FirstParameter.Should().Be(2);
@@ -300,28 +299,28 @@ namespace Tests.Builders
         public void to_upper()
         {
             Get(d => d.Title.ToUpper());
-            A.CallTo(()=>_provider.ToUpper("Title")).MustHaveHappened();
+            A.CallTo(()=>_provider.FakedObject.ToUpper("Title")).MustHaveHappened();
         }
 
         [Fact]
         public void to_lower()
         {
             Get(d => d.Title.ToLower());
-            A.CallTo(()=>_provider.ToLower("Title")).MustHaveHappened();
+            A.CallTo(()=>_provider.FakedObject.ToLower("Title")).MustHaveHappened();
         }
 
         [Fact]
         public void call_year_function_for_date()
         {
             Get(d => d.CreatedOn.Year);
-            A.CallTo(()=>_provider.Year("CreatedOn")).MustHaveHappened();
+            A.CallTo(()=>_provider.FakedObject.Year("CreatedOn")).MustHaveHappened();
         }
 
         [Fact]
         public void call_day_function_for_date()
         {
             Get(d => d.CreatedOn.Day);
-            A.CallTo(()=>_provider.Day("CreatedOn")).MustHaveHappened();
+            A.CallTo(()=>_provider.FakedObject.Day("CreatedOn")).MustHaveHappened();
         }
 
         T Cast<T>(object o) => (T)o;

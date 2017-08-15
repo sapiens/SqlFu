@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
-using CavemanTools;
-using CavemanTools.Logging;
 using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 using SqlFu.Executors.Resilience;
