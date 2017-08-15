@@ -18,14 +18,13 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-    <Version>3.3.9</Version>
+    <Version>3.4.0</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="CavemanTools" Version="4.9.0" />
-    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
-    <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
-    <PackageReference Include="System.Data.Common" Version="4.3.0" />
+    
     
   </ItemGroup>
 
@@ -42,9 +41,15 @@
 
 <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
   <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
+  <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
+  <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
+  <PackageReference Include="System.Data.Common" Version="4.3.0" />
   </ItemGroup>
   
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">  
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
+    <!--<PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
+    <PackageReference Include="System.Data.Common" Version="4.3.0" />-->
   </ItemGroup>
 
   <ItemGroup>
