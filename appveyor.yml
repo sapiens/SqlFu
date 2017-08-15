@@ -6,6 +6,8 @@ branches:
 
   - master
 
+skip_non_tags: true
+
 image: Visual Studio 2017 Preview
 
 configuration: Release
@@ -46,4 +48,4 @@ deploy:
 
   api_key:
 
-    secure: UV4wi5mwnxKE84Iq66ICuliIpB58Gl9siNdPMNv6mh7HsAAscGH65AeeDUSA1K2wX0mN40KnKJcKJmly1kCgCcA2zTvXU13taZj3kbHOWd8=
+    secure: zSSdZy/TonHwA3Ltpb2LbBy5zD8+YfYFBayFHPSlkUwR2bj5L9/1MSpMVCqPCCwj

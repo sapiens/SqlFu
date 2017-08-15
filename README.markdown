@@ -2,9 +2,12 @@
 
 SqlFu is a **_versatile_** data mapper (aka micro-ORM)  for .Net 4.6+ and .Net Core.  SqlFu uses Apache 2.0 license.
 
-Latest version: [3.3.5](https://github.com/sapiens/SqlFu/wiki/ChangeLog) 
+Latest version: [3.4.0](https://github.com/sapiens/SqlFu/wiki/ChangeLog) 
  
- **new!!** [How to add strongly typed support for any sql functions](https://github.com/sapiens/SqlFu/wiki/Adding-support-for-sql-functions)
+ ## New in ver 3.4.0
+ * Transient resilience is implicit now, you don't need anymore to wrap everything in ugly lambdas (that are obsolete now). It just works.
+ * Simplified configuration to support multiple dbs. See the updated example.
+ * Added option to override the connection string everytime you're creating a new connection.
  
  [Docs](https://github.com/sapiens/SqlFu/tree/v2) for version v2.
  
@@ -35,7 +38,7 @@ SqlFu is designed to be used in a cloud environment and it works great inside DD
 
 ### Note for contributors
 
-Please create your pull requests to target the "devel" branch. "Master" is only for released code. Thank you.
+Please create your pull requests to target the "v3-devel" branch. "Master" is only for released code. Thank you.
 
 
 
@@ -107,18 +110,9 @@ var repo=new MyRepository(factory);
 
 ```
 
-Let's assume I need 2 connections in my app: one for db "Main", other for db "History". First we add the profiles for each db, then we declare specific interfaces that will be used by the objects which need db access, then the factory classes.
+Let's assume I need 2 connections in my app: one for db "Main", other for db "History". First we we declare specific interfaces that will be used by the objects which need db access, then add the profiles for each db.
 
 ```csharp
-//register the db profiles
- SqlFuManager.Configure(c =>
- {
-     //default profile
-     c.AddProfile(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection),MainConnex);              
-     //history profile
-     c.AddProfile(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection),HistoryConnex,"history");              
- });
-
  public interface IMainDb:IDbFactory
 {
     
@@ -129,21 +123,21 @@ public interface IHistoryDb:IDbFactory
     
 }
 
- public class MainDb : DbFactory, IMainDb
-{
-    
-}
+//register the db profiles
+ SqlFuManager.Configure(c =>
+ {
+     //default profile
+     c.AddProfile<IMainDB>(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection),MainConnex);              
+     //history profile
+     c.AddProfile<IHistoryDb>(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection),HistoryConnex,"history");              
+ });
 
-public class HistoryDb : DbFactory, IHistoryDb
-{
-    
-}
 
-//get main db factory
-var main=  SqlFuManager.GetDbFactory<MainDb>();
+//get main db factory singleton
+var main=  SqlFuManager.GetDbFactory<IMainDb>();
 
-//get history db
-var history=SqlFuManager.GetDbFactory<HistoryDb>("history");
+//get history db singleton
+var history=SqlFuManager.GetDbFactory<IHistoryDb>();
 
 //register into DI Container to be injected in a service
 //autofac
@@ -158,26 +152,10 @@ public class MyService
 }
 
 ```
-**Notes**
-* A custom db factory **must** have a public parameterless constructor.
-* Db factories should be registered/treated as singletons
-* For each database you use, you declare an interface inheriting `IDbFactory` and a type that implements the interface _and_ extends `DbFactory`.
-
 
 ### Transient Errors Resilience
 
-It's a common scenario, especially using a cloud based db like Azure Sql, to reach connections limit or the opening of a connection to timeout. Those are transient errors and SqlFu has some support in handling them. Basically, when one of the above situations is detected, the db operation is retried for a number of times. This means you get an exception only if, after all retries, the error still persists. 
-
-```csharp
-
-IDbFactory getDb;
-
-getDb.RetryOnTransientErrorAsync(cancel,async db=>{
- var items=await db.WithSql(q=>q.From<MyTable>().Where(d=>d.Id==2).SelectAll(useAsterisk:true)).GetRowsAsync();
- return items;
- });
- 
-```
+It's a common scenario, especially using a cloud based db like Azure Sql, to reach connections limit or the opening of a connection to timeout. Those are transient errors and SqlFu has some support in handling them. Basically, when one of the above situations is detected, the db operation is retried for a number of times. This means you get an exception only if, after all retries, the error still persists. This feature is automatic.
 
 ### CRUD Helpers
 
