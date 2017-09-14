@@ -1,4 +1,4 @@
-version: 3.4.0.{build}
+version: 3.4.1.{build}
 
 branches:
 
@@ -23,6 +23,17 @@ assembly_info:
   assembly_file_version: '{version}'
 
   assembly_informational_version: '{version}'
+
+dotnet_csproj:
+
+  patch: true
+
+  file: '**\*.csproj'
+
+  version: '{version}'
+
+  package_version: '{version}'
+
 
 before_build:
 
