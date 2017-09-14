@@ -367,3 +367,8 @@ In order to create the needed tables in an organised manner (ex: part of a compo
 **Notes**
 
 This has nothing to do with migrations support, SqlFu doesn't support schema migrations anymore, it's just a convenient way to create tables. Another way is to register all these creators in a DI Container then resolve `IEnumerable<ICreateStorage>` and then `storages.ForEach(s=>s.Create())`. This allows you to add new table creator classes at any time. Great for development where the db schema is not stable.
+
+
+##### Developed with:
+
+[![Resharper](http://neventstore.org/images/logo_resharper_small.gif)](http://www.jetbrains.com/resharper/)
