@@ -158,14 +158,23 @@ namespace SqlFu
         }
         public void AddProfile<T>(IDbProvider provider, string connectionString) where T:IDbFactory
         {
+           _profiles[typeof(T).Name] = CreateProfile<T>(provider,connectionString);
+        }
+
+        public T CreateFactory<T>(IDbProvider provider, string connectionString) where T : IDbFactory
+            => (T)CreateProfile<T>(provider, connectionString).Factory;
+
+        private DbAccessProfile CreateProfile<T>(IDbProvider provider, string connectionString) where T : IDbFactory
+        {
             provider.MustNotBeNull();
             var type = typeof(T);
             type.GetTypeInfo().IsInterface.MustBe(true);
             var name = type.Name;
-            var profile = new DbAccessProfile() {ConnectionString = connectionString, Name = name, Provider = provider,Factory = CreateFactory<T>()};
+            var profile = new DbAccessProfile() { ConnectionString = connectionString, Name = name, Provider = provider, Factory = CreateFactory<T>() };
             profile.Factory.CastAs<DbFactory>().Assign(profile);
-            _profiles[name] = profile;
+            return profile;
         }
+
 
         /// <summary>
         /// Used to identify a db profile associated with a db interface
@@ -178,7 +187,7 @@ namespace SqlFu
         {
             var tp = typeof(T);
             
-            var fact=_module.DefineType(tp.Name + "_class", TypeAttributes.Class, typeof(DbFactory), new[] {tp});
+            var fact=_module.DefineType(tp.Name + "_class_"+Guid.NewGuid(), TypeAttributes.Class, typeof(DbFactory), new[] {tp});
             return (T) Activator.CreateInstance(fact.CreateTypeInfo().AsType());
 
         }
