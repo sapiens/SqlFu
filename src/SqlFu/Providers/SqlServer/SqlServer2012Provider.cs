@@ -28,13 +28,6 @@ namespace SqlFu.Providers.SqlServer
 
         public override string ParamPrefix => "@";
 
-        private string FormatIdx(string idxDef, string options,string before)
-        {
-            var idx = idxDef.IndexOf(before);
-            return idxDef.Substring(0, idx) + " " + options + " " + idxDef.Substring(idx);
-        }
-
-
         private static string[] _transientErrors = new[]
         {
             "40197","40501","10053","10054","10060","40613","40143","233","64"

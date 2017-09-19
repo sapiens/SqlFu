@@ -2,9 +2,8 @@
 
   <PropertyGroup>
     <Description>Fast, versatile data mapper with helpers to improve productivity when working with a RDBMS. Designed for flexibility and ease of use. Full async support for operations and helpers, featuring a strongly typed sql builder</Description>
-    <VersionPrefix>3.3.8</VersionPrefix>
-    <Authors>Mihai Mogosanu</Authors>
-    <TargetFrameworks>net46;netstandard1.3;netstandard2.0;</TargetFrameworks>
+   <Authors>Mihai Mogosanu</Authors>
+    <TargetFrameworks>net46;netstandard1.6;netstandard2.0;</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>SqlFu</AssemblyName>
     <PackageId>SqlFu</PackageId>
@@ -18,7 +17,7 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-    <Version>3.4.0</Version>
+    <Version>4.0.0-alpha</Version>
     <NoWarn>CS1591</NoWarn>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
@@ -35,12 +34,12 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
     <DefineConstants>$(DefineConstants);NET13</DefineConstants>
    
   </PropertyGroup>
 
-<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
   <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
   <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
   <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
