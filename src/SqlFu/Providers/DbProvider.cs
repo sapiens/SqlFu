@@ -73,15 +73,9 @@ namespace SqlFu.Providers
         public string EscapeIdentifier(string name)
             => Escape(name, EscapeChars.Start, EscapeChars.End);
 
-        public abstract string GetColumnType(Type type);
 
-      
         private IDatabaseTools _tools;
-        public IDatabaseTools DatabaseTools => _tools ?? (_tools = InitTools());
 
-        public virtual string FormatIndexOptions(string idxDef, string options = "") => idxDef;
-
-        public abstract string GetIdentityKeyword();
         public bool IsTransientError(DbException ex)
         {
             return IsDbBusy(ex);
@@ -95,8 +89,6 @@ namespace SqlFu.Providers
         public abstract string AddReturnInsertValue(string sqlValues, string identityColumn);
 
         public abstract string FormatQueryPagination(string sql, Pagination page, ParametersManager pm);
-
-        protected abstract IDatabaseTools InitTools();
 
         private IDbProviderExpressions _expr;
 

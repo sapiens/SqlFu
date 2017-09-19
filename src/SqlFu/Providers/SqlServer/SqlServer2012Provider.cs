@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
@@ -16,9 +15,7 @@ namespace SqlFu.Providers.SqlServer
     public class SqlServer2012Provider:DbProvider
     {
        
-        public const string Id = "SqlServer2012";
-      
-        public readonly SqlServerType DbTypes=new SqlServerType();
+        public const string Id = "SqlServer2012";             
       
 
         public SqlServer2012Provider(Func<DbConnection> factory):base(factory,Id)
@@ -31,28 +28,12 @@ namespace SqlFu.Providers.SqlServer
 
         public override string ParamPrefix => "@";
 
-        public override string FormatIndexOptions(string idxDef, string options = "")
-        {
-            if (options.IsNullOrEmpty()) return idxDef;
-            if (idxDef.Contains("key")) return FormatIdx(idxDef, options,"(");
-            return FormatIdx(idxDef, options,"index");
-        }
-
         private string FormatIdx(string idxDef, string options,string before)
         {
             var idx = idxDef.IndexOf(before);
             return idxDef.Substring(0, idx) + " " + options + " " + idxDef.Substring(idx);
         }
 
-
-
-        public override string GetColumnType(Type type)
-        {
-            if (type.IsEnumType()) type=type.GetUnderlyingTypeForEnum();
-            return DbTypes.GetValueOrDefault(type);
-        }
-
-        public override string GetIdentityKeyword() => "identity(1,1)";
 
         private static string[] _transientErrors = new[]
         {
@@ -143,8 +124,5 @@ namespace SqlFu.Providers.SqlServer
             pm.AddValues(page.Skip, page.PageSize);
             return string.Format("{2} OFFSET @{0} ROWS FETCH NEXT @{1} ROWS ONLY",pm.CurrentIndex-2,pm.CurrentIndex-1 ,sql);
         }
-
-        protected override IDatabaseTools InitTools() => new SqlServerDbTools(this);
-       
     }
 }

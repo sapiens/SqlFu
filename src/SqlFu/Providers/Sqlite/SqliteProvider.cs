@@ -7,8 +7,7 @@ namespace SqlFu.Providers.Sqlite
 {
     public class SqliteProvider:DbProvider
     {
-        public const string Id = "Sqlite";
-        public readonly SqliteType DbTypes = new SqliteType();
+        public const string Id = "Sqlite";       
 
 
         public SqliteProvider(Func<DbConnection> factory) : base(factory, Id)
@@ -19,14 +18,6 @@ namespace SqlFu.Providers.Sqlite
         =>new EscapeIdentifierChars('[',']');
 
         public override string ParamPrefix { get; } = "@";
-        public override string GetColumnType(Type type)
-        {
-            if (type.IsEnumType()) type = typeof(int);
-            return DbTypes[type];
-        }
-
-        public override string GetIdentityKeyword()
-            => "primary key autoincrement";
 
         public override bool IsDbBusy(DbException ex)
         {
@@ -52,9 +43,5 @@ namespace SqlFu.Providers.Sqlite
 
         public override string FormatQueryPagination(string sql, Pagination page, ParametersManager pm) 
             => $"{sql} limit {page.Skip},{page.PageSize}";
-
-        protected override IDatabaseTools InitTools()
-       => new SqliteDbTools(this);
-       
     }
 }

@@ -528,8 +528,7 @@ namespace SqlFu
         /// Used to execute add views/sproc statements and ignore duplication messages
         /// </summary>
         /// <param name="db"></param>
-        /// <param name="addObjectStatement"></param>
-        [Obsolete("Will be removed in the next major version")]
+        /// <param name="addObjectStatement"></param>       
         public static void AddDbObjectOrIgnore(this DbConnection db, string addObjectStatement)
         {
             try
