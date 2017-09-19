@@ -26,6 +26,13 @@ namespace SqlFu.Providers
             LinkMethods(()=>Placeholder.Ceiling(2),Ceiling);
             LinkMethods(()=>Placeholder.Concat(),Concat);
             LinkMethods(()=>Placeholder.Round(2,2),Round);                     
+            LinkMethods(()=>DateTime.MinValue.Between(DateTime.MinValue, DateTime.MinValue),BetweenDates);                                 
+        }
+
+        private void BetweenDates(MethodCallExpression arg1, StringBuilder sb, IGenerateSqlFromExpressions writer)
+        {
+            var date = writer.GetColumnsSql(arg1.Arguments[0]);
+            sb.Append($"{date}>={writer.GetSql(arg1.Arguments[1])} and {date}<={writer.GetSql(arg1.Arguments[2])}");
         }
 
         /// <summary>
