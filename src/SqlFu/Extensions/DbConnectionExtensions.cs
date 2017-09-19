@@ -65,10 +65,30 @@ namespace SqlFu
             }
         }
 
-      
+
         #endregion
-        
+
         #region Execute
+
+        /// <summary>
+        /// Checks if any of provided db objects (table, view) exists
+        /// </summary>
+        /// <param name="cnx"></param>
+        /// <param name="items"></param>
+        public static void ExecuteCreation(this DbConnection cnx, IEnumerable<ICreateDbItem> items)
+        {
+            var prov = cnx.Provider();
+            using (var t = cnx.BeginTransaction())
+            {
+                foreach (var item in items)
+                {
+                    if (prov.DatabaseTools.TableExists(cnx, item.Name)) continue;
+                    cnx.Execute($"create table {cnx.Provider().EscapeTableName(item.Name)} {item.Sql}");
+                }
+                t.Commit();
+            }
+        }
+
         public static int Execute(this DbConnection cnx, Action<IConfigureCommand> cfg)
         {
             var cmd = new CommandConfiguration();

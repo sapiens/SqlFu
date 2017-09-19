@@ -19,17 +19,18 @@ namespace SqlFu.Configuration
             Schema = schema;
         }
 
-        /// <summary>
-        /// To be used in constraints and indexes definitions
-        /// </summary>
-        public string DDLUsableString => Schema + Name;
-
-        //todo account for empty schema
-        public override string ToString()
+       public override string ToString()
         {
             var schema = Schema == null ? "" : Schema + ".";
             return schema + Name;
         }
 
+        public static implicit operator TableName(string d)
+        {
+            d.MustNotBeEmpty();
+            var all = d.Split('.');
+            if(all.Length==1) return new TableName(d);
+            return new TableName(all[0],all[1]);           
+        }
     }
 }
