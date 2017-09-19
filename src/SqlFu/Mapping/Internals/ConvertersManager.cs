@@ -29,7 +29,7 @@ namespace SqlFu.Mapping.Internals
         }
 
         Dictionary<Type,object> _converters=new Dictionary<Type, object>();
-        Dictionary<Type,Func<object,object>> _voMap=new Dictionary<Type, Func<object, object>>();
+        //Dictionary<Type,Func<object,object>> _voMap=new Dictionary<Type, Func<object, object>>();
 
         public bool HasConverter(Type type) => _converters.ContainsKey(type);
         public bool CanFlattenValueObject(Type type) => _voMap.ContainsKey(type);
@@ -87,7 +87,13 @@ namespace SqlFu.Mapping.Internals
             );
             
             RegisterConverter(o=> (o==null || o==DBNull.Value)?(Guid?)null:Guid.Parse(o.ToString()));            
-            RegisterConverter(o=> (o==null || o==DBNull.Value)?(int?)null:(int)o);   
+            RegisterConverter(o=> (o==null || o==DBNull.Value)?(long?)null:(long)o);            
+            RegisterConverter(o=>
+            {
+                if (o == null || o == DBNull.Value) return (int?) null;
+                if (o.GetType() == typeof(long)) return (int) (long) o;
+                return (int) o;
+            });   
             RegisterConverter(o=>(byte[])o);         
         }
 

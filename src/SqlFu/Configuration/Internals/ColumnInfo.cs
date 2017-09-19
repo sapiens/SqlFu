@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using CavemanTools;
 
 namespace SqlFu.Configuration.Internals
 {
@@ -12,8 +13,7 @@ namespace SqlFu.Configuration.Internals
             Table = table;
             PropertyInfo = propertyInfo;
             Name = propertyInfo.Name;
-            IsComplex = Type!=typeof(object) && Type.IsUserDefinedClass();
-        //    IsNullable = Type.IsNullable();
+            IsComplex = Type!=typeof(object) && Type.IsUserDefinedClass();        
             
         }
 
@@ -23,18 +23,10 @@ namespace SqlFu.Configuration.Internals
         public Type Type => PropertyInfo.PropertyType;
         public string Name { get; set; }
 
-      //  public bool CanBeFlattened { get; set; }
-        public bool HasConverter { get; set; }
+        public Func<dynamic, object> Writer = d => d;
+        public Func<object, dynamic> Reader = d => d;
+
+       public bool HasConverter { get; set; }
         public int PocoIdx { get; set; }
-
-     
-        
-     //   public bool IsNullable { get; set; }
-
-   
-
-     
-      
-      
     }
 }
