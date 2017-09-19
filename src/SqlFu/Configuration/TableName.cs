@@ -12,11 +12,11 @@ namespace SqlFu.Configuration
             
         }
 
-        public TableName(string name,string schema="")
+        public TableName(string name,string schema=null)
         {
             name.MustNotBeEmpty();            
             Name = name;
-            Schema = schema??"";
+            Schema = schema;
         }
 
         /// <summary>
@@ -25,7 +25,11 @@ namespace SqlFu.Configuration
         public string DDLUsableString => Schema + Name;
 
         //todo account for empty schema
-        public override string ToString() => Schema + "." + Name;
+        public override string ToString()
+        {
+            var schema = Schema == null ? "" : Schema + ".";
+            return schema + Name;
+        }
 
     }
 }

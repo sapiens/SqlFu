@@ -42,7 +42,6 @@ namespace SqlFu.Configuration.Internals
         {
             var table = GetName(pocoType);
            var info= new TableInfo(pocoType, _converter,table);
-        //    info.HandleAttributeOverride();
             return info;
         });
     }

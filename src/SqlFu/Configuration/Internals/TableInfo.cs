@@ -72,10 +72,6 @@ namespace SqlFu.Configuration.Internals
         public TableName Table { get; set; }
 
       
-
-        public TableExistsAction CreationOptions { get; set; }
-     
-
         public override string ToString()
         {
             return $"[Tableinfo]{Type} as {Table}";

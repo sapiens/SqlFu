@@ -55,9 +55,7 @@ namespace SqlFu
         }
 
 
-        public TransientErrorsConfig TransientErrors { get; }=new TransientErrorsConfig();
-
-        public void ConfigureTableForPoco<T>(Action<ITableInfo> cfg)
+      public void ConfigureTableForPoco<T>(Action<ITableInfo> cfg)
         {
             cfg.MustNotBeNull();
             var table = TableInfoFactory.GetInfo(typeof (T));

@@ -50,15 +50,7 @@ namespace SqlFu
         /// <returns></returns>
         public static T GetDbFactory<T>() where T : IDbFactory=>(T)Config.GetProfile<T>().Factory;
        
-        [Obsolete("Use Config.AddProfile<IMyInterface>() to register the db interface and GetDbFactory<IMyInterface>(). This function will be removed in the next major version")]
-        public static T GetDbFactory<T>(string name) where T:DbFactory,new()
-        {
-            var fact=new T();
-            fact.Assign(config.GetProfile(name));
-            return fact;
-        }
-
-        /// <summary>
+       /// <summary>
         /// Wraps an existing connection into a SqlFu connection. If provider is not specified, the default one is used
         /// </summary>
         /// <param name="conex"></param>
