@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Data.Common;
+using System.Data.SQLite;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using SqlFu;
 using SqlFu.Builders;
 using SqlFu.Builders.CreateTable;
 using SqlFu.Builders.Expressions;
 using SqlFu.Providers;
+using SqlFu.Providers.Sqlite;
 using SqlFu.Providers.SqlServer;
 using Xunit;
 
@@ -173,6 +177,15 @@ namespace Tests.SqlServer
                 d => d.Category == Type.Page.ToString())
                 .Should().Be(1);
             _db.CountRows<User>().Should().Be(2);
+        }
+
+      
+        [Fact]
+        public async Task get_single_row_no_result()
+        {
+            var user=await _db.QueryRowAsync(q => q.From<User>().Where(d => d.Id == 1000).Limit(1).SelectAll(useAsterisk: true),
+                CancellationToken.None);
+            user.Should().BeNull();
         }
 
         [Fact]

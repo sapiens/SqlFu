@@ -35,7 +35,7 @@ namespace SqlFu.Providers.Sqlite
 
         public override bool IsUniqueViolation(DbException ex, string keyName = "")
         {
-            if (!ex.Message.Contains("UNIQUE constraint failed:")) return false;
+            if (!ex.Message.Contains("UNIQUE constraint failed:")) return false;            
             if (keyName.IsNullOrEmpty()) return false;
             return ex.Message.Contains(keyName);
         }

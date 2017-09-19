@@ -24,6 +24,7 @@ namespace SqlFu.Configuration
         /// </summary>
         public string DDLUsableString => Schema + Name;
 
+        //todo account for empty schema
         public override string ToString() => Schema + "." + Name;
 
     }
