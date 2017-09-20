@@ -15,7 +15,13 @@ namespace SqlFu
 {
     public static class Utils
     {
-       
+
+        public static IInsertableOptions<T> AutoincrementedColumnIs<T>(this IInsertableOptions<T> c,
+            Expression<Func<T, object>> column)
+        {
+            c.IdentityColumn = column.GetPropertyName();
+            return c;
+        }
 
         /// <summary>
         /// Used to generate sql bits from expressions
@@ -36,7 +42,6 @@ namespace SqlFu
         {
             name.MustNotBeEmpty();
             opt.TableName = name;
-            opt.DbSchema = schema;
             return opt;
         }
 

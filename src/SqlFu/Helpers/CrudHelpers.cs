@@ -25,8 +25,41 @@ namespace SqlFu
 
             return db.GetValue<InsertedId>(builder.GetCommandConfiguration());
         }
+        /// <summary>
+        /// Inserts and ignores unique constraint exception.
+        /// Useful when updating read models
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="data"></param>
+        /// <param name="cfg"></param>
+        /// <param name="keyName">unique constraint partial name</param>
+     public static void InsertIgnore<T>(this DbConnection db, T data, Action<IInsertableOptions<T>> cfg = null,string keyName=null)
+        {
+            try
+            {
+                Insert(db, data, cfg);
+            }
+            catch (DbException ex) when (db.Provider().IsUniqueViolation(ex,keyName))
+            {
+                
+                //ignore this    
+            }
+        }
+     public static async Task InsertIgnoreAsync<T>(this DbConnection db, T data, CancellationToken? token = null, Action<IInsertableOptions<T>> cfg = null,string keyName=null)
+        {
+            try
+            {
+                await InsertAsync(db, data,token,cfg).ConfigureFalse();
+            }
+            catch (DbException ex) when (db.Provider().IsUniqueViolation(ex,keyName))
+            {
+                
+                //ignore this    
+            }
+        }
 
-        public static Task<InsertedId> InsertAsync<T>(this DbConnection db, T data,CancellationToken cancel ,Action<IInsertableOptions<T>> cfg = null)
+        public static Task<InsertedId> InsertAsync<T>(this DbConnection db, T data,CancellationToken? cancel=null ,Action<IInsertableOptions<T>> cfg = null)
         {
             var info = db.GetPocoInfo<T>();
             var options = info.CreateInsertOptions<T>();
@@ -35,14 +68,14 @@ namespace SqlFu
             var provider = db.Provider();
             var builder=new InsertSqlBuilder(info,data,provider,options);
 
-            return db.GetValueAsync<InsertedId>(builder.GetCommandConfiguration(), cancel);
+            return db.GetValueAsync<InsertedId>(builder.GetCommandConfiguration(), cancel??CancellationToken.None);
         }
         static Insertable<T> CreateInsertOptions<T>(this TableInfo info) => 
             new Insertable<T>()
             {
-                DbSchema = info.Table.Schema,
-                TableName = info.Table.Name,
-                IdentityColumn = info.IdentityColumn
+                
+                TableName = info.TableName,
+                IdentityColumn = info.GetIdentityColumnName()
             };
 
         public static IBuildUpdateTable<T> Update<T>(this DbConnection db,Action<IHelperOptions> cfg=null)

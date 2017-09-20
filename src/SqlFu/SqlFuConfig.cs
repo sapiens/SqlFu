@@ -52,11 +52,11 @@ namespace SqlFu
         }
 
 
-      public void ConfigureTableForPoco<T>(Action<ITableInfo> cfg)
+      public void ConfigureTableForPoco<T>(Action<ITableInfo<T>> cfg)
         {
             cfg.MustNotBeNull();
             var table = TableInfoFactory.GetInfo(typeof (T));
-            cfg(table);
+            cfg(new TableInfo<T>(table));                  
         }
 
         public void RegisterConverter<T>(Func<object, T> converter)

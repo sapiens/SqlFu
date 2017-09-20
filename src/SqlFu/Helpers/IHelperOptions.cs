@@ -1,12 +1,12 @@
 using System;
 using System.Data.Common;
+using SqlFu.Configuration;
 
 namespace SqlFu
 {
     public interface IHelperOptions
     {
-        string TableName { get; set; }
-        string DbSchema { get; set; }
+        TableName TableName { get; set; }
         Action<DbCommand> CmdOptions { get; set; }
     }
 }
