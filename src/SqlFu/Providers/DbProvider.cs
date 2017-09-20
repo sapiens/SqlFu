@@ -74,8 +74,6 @@ namespace SqlFu.Providers
             => Escape(name, EscapeChars.Start, EscapeChars.End);
 
 
-        private IDatabaseTools _tools;
-
         public bool IsTransientError(DbException ex)
         {
             return IsDbBusy(ex);

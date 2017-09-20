@@ -4,9 +4,7 @@ using System.Data;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
-using CavemanTools.Logging;
 using SqlFu.Executors;
-using SqlFu.Executors.Resilience;
 
 namespace SqlFu
 {
