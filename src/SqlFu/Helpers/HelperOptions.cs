@@ -8,13 +8,24 @@ namespace SqlFu
 {
     public class HelperOptions : IHelperOptions
     {
-        public TableName TableName { get; set; }
+        private TableName _tableName;
+
+        public TableName TableName
+        {
+            get { return _tableName; }
+            set
+            {
+                value.MustNotBeNull();
+                _tableName = value;
+            }
+        }
+
         public Action<DbCommand> CmdOptions { get; set; } = Empty.ActionOf<DbCommand>();
 
-        public void EnsureTableName(TableInfo info)
-        {
-            if (TableName == null) TableName = info.TableName;            
-        }
+        //public void EnsureTableName(TableInfo info)
+        //{
+        //    if (TableName == null) TableName = info.TableName;            
+        //}
 
       
     }

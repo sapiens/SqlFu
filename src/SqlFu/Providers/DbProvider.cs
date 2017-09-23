@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 using CavemanTools.Model;
 using SqlFu.Mapping;
 
@@ -84,7 +86,8 @@ namespace SqlFu.Providers
         public abstract bool ObjectExists(DbException ex, string name = null);
 
 
-        public abstract string AddReturnInsertValue(string sqlValues, string identityColumn);
+        //public abstract string AddReturnInsertValue(string sqlValues, string identityColumn);
+        public abstract string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues);
 
         public abstract string FormatQueryPagination(string sql, Pagination page, ParametersManager pm);
 
@@ -101,6 +104,9 @@ namespace SqlFu.Providers
         public SqlFuConfig SqlFuConfiguration { get; }
 
         protected Func<IDbProviderExpressions> InitExpressionHelper=()=>new DbProviderExpressions();
+
+        protected string JoinValuesAsParameters(IDictionary<string, object> data)
+            => data.Values.Select((idx, v) => $@"{idx}").StringJoin();
 
         public static string Escape(string s,char startId,char endId)
         {

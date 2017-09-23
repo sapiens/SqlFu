@@ -14,14 +14,25 @@ namespace SqlFu
     public static class CrudHelpers
     {
 
-        public static InsertedId Insert<T>(this DbConnection db, T data, Action<IInsertableOptions<T>> cfg = null)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="data"></param>
+        /// <param name="cfg"></param>
+        /// <returns></returns>
+        public static InsertedId Insert<T>(this DbConnection db, T data, Action<IInsertableOptions<T>> cfg = null) where T:class
         {
+            data.MustNotBeNull();
+            if (data.IsAnonymousType()) cfg.MustNotBeNull("You need to specify table name at least");
             var info = db.GetPocoInfo<T>();
             var options = info.CreateInsertOptions<T>();
+            
             cfg?.Invoke(options);
 
             var provider = db.Provider();
-            var builder=new InsertSqlBuilder(info,data,provider,options);
+            var builder=new InsertSqlBuilder(data,provider,options);
 
             return db.GetValue<InsertedId>(builder.GetCommandConfiguration());
         }
@@ -34,7 +45,7 @@ namespace SqlFu
         /// <param name="data"></param>
         /// <param name="cfg"></param>
         /// <param name="keyName">unique constraint partial name</param>
-     public static void InsertIgnore<T>(this DbConnection db, T data, Action<IInsertableOptions<T>> cfg = null,string keyName=null)
+     public static void InsertIgnore<T>(this DbConnection db, T data, Action<IInsertableOptions<T>> cfg = null,string keyName=null) where T : class
         {
             try
             {
@@ -46,8 +57,8 @@ namespace SqlFu
                 //ignore this    
             }
         }
-     public static async Task InsertIgnoreAsync<T>(this DbConnection db, T data, CancellationToken? token = null, Action<IInsertableOptions<T>> cfg = null,string keyName=null)
-        {
+     public static async Task InsertIgnoreAsync<T>(this DbConnection db, T data, CancellationToken? token = null, Action<IInsertableOptions<T>> cfg = null,string keyName=null) where T : class
+     {
             try
             {
                 await InsertAsync(db, data,token,cfg).ConfigureFalse();
@@ -59,24 +70,22 @@ namespace SqlFu
             }
         }
 
-        public static Task<InsertedId> InsertAsync<T>(this DbConnection db, T data,CancellationToken? cancel=null ,Action<IInsertableOptions<T>> cfg = null)
+        public static Task<InsertedId> InsertAsync<T>(this DbConnection db, T data,CancellationToken? cancel=null ,Action<IInsertableOptions<T>> cfg = null) where T:class
         {
+            data.MustNotBeNull();
+            if (data.IsAnonymousType()) cfg.MustNotBeNull("You need to specify table name at least");
             var info = db.GetPocoInfo<T>();
             var options = info.CreateInsertOptions<T>();
             cfg?.Invoke(options);
 
             var provider = db.Provider();
-            var builder=new InsertSqlBuilder(info,data,provider,options);
+            var builder=new InsertSqlBuilder(data,provider,options);
 
             return db.GetValueAsync<InsertedId>(builder.GetCommandConfiguration(), cancel??CancellationToken.None);
         }
-        static Insertable<T> CreateInsertOptions<T>(this TableInfo info) => 
-            new Insertable<T>()
-            {
-                
-                TableName = info.TableName,
-                IdentityColumn = info.GetIdentityColumnName()
-            };
+
+        static Insertable<T> CreateInsertOptions<T>(this TableInfo info) =>new Insertable<T>(info);
+            
 
         public static IBuildUpdateTable<T> Update<T>(this DbConnection db,Action<IHelperOptions> cfg=null)
         {

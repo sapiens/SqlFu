@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using SqlFu.Builders.Expressions;
 using SqlFu.Configuration;
@@ -15,6 +16,15 @@ namespace SqlFu
 {
     public static class Utils
     {
+        public static bool IsAnonymousType<T>(this T val) where T : class
+        {
+            var type = typeof(T);
+            Boolean hasCompilerGeneratedAttribute = type.HasCustomAttribute<CompilerGeneratedAttribute>();
+            Boolean nameContainsAnonymousType = type.FullName.Contains("AnonymousType");
+            Boolean isAnonymousType = hasCompilerGeneratedAttribute && nameContainsAnonymousType;
+
+            return isAnonymousType;
+        }
 
         public static IInsertableOptions<T> AutoincrementedColumnIs<T>(this IInsertableOptions<T> c,
             Expression<Func<T, object>> column)

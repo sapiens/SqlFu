@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
@@ -60,13 +61,20 @@ namespace SqlFu.Providers.SqlServer
 
 
 
-        public override string AddReturnInsertValue(string sqlValues, string identityColumn)
+        //public override string AddReturnInsertValue(string sqlValues, string identityColumn)
+        //{
+        //    if (identityColumn.IsNullOrEmpty()) return sqlValues;
+        //    return $"\nOUTPUT INSERTED.{identityColumn} AS ID " + sqlValues;
+        //}
+
+        public override string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues)
         {
-            if (identityColumn.IsNullOrEmpty()) return sqlValues;
-            return $"\nOUTPUT INSERTED.{identityColumn} AS ID " + sqlValues;
+            var ins = options.IdentityColumn.IsNullOrEmpty() ? "" : $"\nOUTPUT INSERTED.{options.IdentityColumn} AS ID ";
+            return $"create table {EscapeTableName(options.TableName)}({columnValues.Keys.StringJoin()})" +
+                   $"\n values({JoinValuesAsParameters(columnValues)})";
         }
 
-  
+
         public override void SetupParameter(DbParameter param, string name, object value)
         {
             base.SetupParameter(param, name, value);
