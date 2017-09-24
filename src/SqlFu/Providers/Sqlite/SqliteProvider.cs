@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using CavemanTools.Model;
 using SqlFu.Builders;
@@ -38,8 +39,14 @@ namespace SqlFu.Providers.Sqlite
             return ex.Message.Contains(name);
         }
 
-        public override string AddReturnInsertValue(string sqlValues, string identityColumn)
-            => $"{sqlValues};SELECT last_insert_rowid()";
+        public override string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues)
+        {
+          return $"create table {EscapeTableName(options.TableName)}({columnValues.Keys.StringJoin()})" +
+                   $"\n values({JoinValuesAsParameters(columnValues)});SELECT last_insert_rowid()";
+        }
+
+        //public override string AddReturnInsertValue(string sqlValues, string identityColumn)
+        //    => $"{sqlValues};SELECT last_insert_rowid()";
 
         public override string FormatQueryPagination(string sql, Pagination page, ParametersManager pm) 
             => $"{sql} limit {page.Skip},{page.PageSize}";
