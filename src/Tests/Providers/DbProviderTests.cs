@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Data.Common;
 using System.Linq.Expressions;
 using System.Text;
-using CavemanTools.Model.ValueObjects;
-using FakeItEasy;
 using FluentAssertions;
-using SqlFu;
 using SqlFu.Builders.Expressions;
 using SqlFu.Providers;
 using Tests.TestData;

@@ -1,8 +1,8 @@
 ﻿using System.Data.Common;
 using CavemanTools;
 using CavemanTools.Model;
-using FakeItEasy;
 using FluentAssertions;
+using NSubstitute;
 using SqlFu.Builders;
 using SqlFu.Providers.SqlServer;
 using Xunit;
@@ -27,8 +27,8 @@ namespace Tests.Providers
         [Fact]
         public void exception_when_object_exists()
         {
-            var ex = A.Fake<DbException>();
-            A.CallTo(() => ex.Message).Returns("There is already an object named 'IsSomething ' in the database.");
+            var ex = Substitute.For<DbException>();
+            ex.Message.Returns("There is already an object named 'IsSomething ' in the database.");
             _sut.ObjectExists(ex).Should().BeTrue();
             _sut.ObjectExists(ex, "IsSomething").Should().BeTrue();
             _sut.ObjectExists(ex, "Nope").Should().BeFalse();

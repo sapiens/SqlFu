@@ -17,7 +17,7 @@ namespace Tests.Builders
 
         public InsertBuilderTests()
         {
-            _opt=new InsertSqlOptions();
+            _opt=new InsertSqlOptions(Setup.GetTableInfo<Post>());
             _data=new Post()
             {
                 Id = Guid.NewGuid(),
@@ -25,7 +25,7 @@ namespace Tests.Builders
                 SomeId = 23,                
             };
           
-         _sut = new InsertSqlBuilder(Setup.GetTableInfo<Post>(),_data,new FakeDbProvider(), _opt);
+         _sut = new InsertSqlBuilder(_data,new FakeDbProvider(), _opt);
        
         }
 
@@ -59,7 +59,7 @@ namespace Tests.Builders
         [Fact]
         public void specified_ignored_columns_are_ignored()
         {
-            _opt.IgnoreColumns = new[] { "Title" };
+            _opt.IgnoreProperties.Add("Title");
             var cmd = _sut.GetCommandConfiguration();
             cmd.SqlText.Should().Be("insert into SomePost (Id,Email,CreatedOn)\n values(@0,@1,@2)");
             cmd.Args.ShouldAllBeEquivalentTo(new object[] { _data.Id, _data.Email, _data.CreatedOn });

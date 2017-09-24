@@ -28,7 +28,7 @@ namespace Tests
         {
             var r= new ConvertersManager();
 
-            r.MapValueObject(e=>e.Value,o=> o.CastAs<string>().IsNullOrEmpty()?null:new Email(o.ToString()));
+         //   r.MapValueObject(e=>e.Value,o=> o.CastAs<string>().IsNullOrEmpty()?null:new Email(o.ToString()));
             return r;
         }
 

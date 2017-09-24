@@ -3,6 +3,7 @@ using FluentAssertions;
 using SqlFu;
 using SqlFu.Builders;
 using SqlFu.Builders.Crud;
+using SqlFu.Configuration.Internals;
 using Tests.TestData;
 using Tests._Fakes;
 using Xunit;
@@ -18,10 +19,10 @@ namespace Tests.Builders
 
         public SelectBuilderTests()
         {
-            _opt=new HelperOptions();
+            _opt=new HelperOptions(Setup.GetTableInfo<Post>());
             _prov=new FakeDbProvider();
             _writer=new FakeWriter();
-            _sut =new SimpleSqlBuilder<Post>(_opt,_prov,Setup.GetTableInfo<Post>(),_writer);
+            _sut =new SimpleSqlBuilder<Post>(_opt,_prov,_writer,Setup.InfoFactory());
         }
 
         IWhere<Post> Where => _sut as IWhere<Post>;
