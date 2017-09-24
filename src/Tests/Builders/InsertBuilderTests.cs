@@ -32,7 +32,9 @@ namespace Tests.Builders
         [Fact]
         public void insert_considers_primitives_and_registered_value_objects()
         {
+            _opt.IgnoreProperties.Add("SomeId");
             var cmd = _sut.GetCommandConfiguration();
+            
             cmd.SqlText.Should().Be("insert into SomePost (Id,Title,Email,CreatedOn)\n values(@0,@1,@2,@3)");
             cmd.Args.ShouldAllBeEquivalentTo(new object[] { _data.Id, _data.Title, _data.Email, _data.CreatedOn });
         }
@@ -41,6 +43,7 @@ namespace Tests.Builders
         public void override_table_name()
         {
             _opt.TableName = "bubu";
+            _opt.IgnoreProperties.Add("SomeId");
             var cmd = _sut.GetCommandConfiguration();
             cmd.SqlText.Should().Be("insert into bubu (Id,Title,Email,CreatedOn)\n values(@0,@1,@2,@3)");
             cmd.Args.ShouldAllBeEquivalentTo(new object[] { _data.Id, _data.Title, _data.Email, _data.CreatedOn });
@@ -60,6 +63,8 @@ namespace Tests.Builders
         public void specified_ignored_columns_are_ignored()
         {
             _opt.IgnoreProperties.Add("Title");
+            _opt.IgnoreProperties.Add("SomeId");
+            
             var cmd = _sut.GetCommandConfiguration();
             cmd.SqlText.Should().Be("insert into SomePost (Id,Email,CreatedOn)\n values(@0,@1,@2)");
             cmd.Args.ShouldAllBeEquivalentTo(new object[] { _data.Id, _data.Email, _data.CreatedOn });

@@ -34,15 +34,7 @@ namespace Tests.Configuration
             _sut.TableName.Name.Should().Be("MapperPost");
         }
 
-        //[Fact]
-        //public void name_from_attribute()
-        //{
-        //    var sut=new TableInfo(typeof(Post),_manageConverters);
-        //    sut.HandleAttributeOverride();
-        //    sut.TableName.Name.Should().Be("SomePost");
-        //    sut.GetIdentityColumnName().Should().Be("SomeId");
-        //}
-
+      
         [Fact]
         public void name_from_convention()
         {
@@ -53,14 +45,6 @@ namespace Tests.Configuration
             info.TableName.Name.Should().Be("Post1");
         }
 
-        [Fact]
-        public void attribute_override_convention()
-        {
-            var factory = Setup.InfoFactory();
-            factory.AddNamingConvention(t => t == typeof(Post), t => new TableName("Post1"));
-
-            var info = factory.GetInfo(typeof(Post));
-            info.TableName.Name.Should().Be("SomePost");
-        }
+     
     }
 }

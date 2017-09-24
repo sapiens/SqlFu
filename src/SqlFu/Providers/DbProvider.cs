@@ -106,7 +106,7 @@ namespace SqlFu.Providers
         protected Func<IDbProviderExpressions> InitExpressionHelper=()=>new DbProviderExpressions();
 
         protected string JoinValuesAsParameters(IDictionary<string, object> data)
-            => data.Values.Select((idx, v) => $@"{idx}").StringJoin();
+            => data.Values.Select((v, idx) => $"@{idx}").StringJoin();
 
         public static string Escape(string s,char startId,char endId)
         {

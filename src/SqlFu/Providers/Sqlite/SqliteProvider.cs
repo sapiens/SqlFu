@@ -41,7 +41,7 @@ namespace SqlFu.Providers.Sqlite
 
         public override string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues)
         {
-          return $"create table {EscapeTableName(options.TableName)}({columnValues.Keys.StringJoin()})" +
+          return $"insert into {EscapeTableName(options.TableName)} ({columnValues.Keys.StringJoin()})" +
                    $"\n values({JoinValuesAsParameters(columnValues)});SELECT last_insert_rowid()";
         }
 

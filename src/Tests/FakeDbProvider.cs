@@ -49,10 +49,7 @@ namespace Tests
         }
 
         public override string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues)
-        {
-            throw new NotImplementedException();
-        }
-
+          =>  $"insert into {EscapeTableName(options.TableName)} ({columnValues.Keys.StringJoin()})\n values({JoinValuesAsParameters(columnValues)})";
      
         public override string FormatQueryPagination(string sql, Pagination page, ParametersManager pm)
             => sql + " limit";

@@ -53,7 +53,18 @@ namespace Tests
             return r;
         }
 
-        public static TableInfo GetTableInfo<T>()=>new TableInfo(typeof(T),Converters());
+        public static TableInfo GetTableInfo<T>()
+        {
+            var info = new TableInfo(typeof(T), Converters());
+            if (typeof(T) == typeof(Post))
+            {
+                info.TableName = "SomePost";
+                //var sid = info["SomeId"];
+                //sid.IgnoreWrite = sid.IgnoreRead = true;
+            }
+            
+            return info;
+        }
 
 
         public static MapperFactory MapperFactory()
@@ -65,10 +76,7 @@ namespace Tests
 
         public static ExpressionSqlGenerator CreateExpressionSqlGenerator(IDbProviderExpressions exprProvider)
         {
-            //exprProvider.CallsTo(d => d.GetSql(A<MethodCallExpression>._, A<IGenerateSqlFromExpressions>._))
-            //    .ReturnsLazily(x => TestDbProviderExpression.Instance.GetSql(x.GetArgument<MethodCallExpression>(0),
-            //        x.GetArgument<IGenerateSqlFromExpressions>(1)));
-            return new ExpressionSqlGenerator(exprProvider, Setup.InfoFactory(), new FakeEscapeIdentifier());
+          return new ExpressionSqlGenerator(exprProvider, Setup.InfoFactory(), new FakeEscapeIdentifier());
         }
     }
 }
