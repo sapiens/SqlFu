@@ -22,28 +22,14 @@ namespace SqlFu.Mapping.Internals
             _converters[typeof (T)] = converter;
         }
 
-        public void MapValueObject<T>(Func<T, object> @from, Func<object, T> to = null) 
-        {
-            _voMap[typeof (T)] = o=>from((T) o);
-            if (to!=null) RegisterConverter(to);
-        }
+      
 
         Dictionary<Type,object> _converters=new Dictionary<Type, object>();
         //Dictionary<Type,Func<object,object>> _voMap=new Dictionary<Type, Func<object, object>>();
 
         public bool HasConverter(Type type) => _converters.ContainsKey(type);
-        public bool CanFlattenValueObject(Type type) => _voMap.ContainsKey(type);
-       
-
-        public object ConvertValueObject(object value)
-        {
-            if (value == null) return null;
-            var f = _voMap.GetValueOrDefault(value.GetType());
-            f = f ?? (o => o);
-            return f(value);
-        }
-
-        public Func<object, T> GetConverter<T>()
+      
+       public Func<object, T> GetConverter<T>()
         {
             var c = _converters.GetValueOrDefault(typeof (T));
             if (c == null)
