@@ -5,7 +5,7 @@ using SqlFu;
 
 namespace Tests.TestData
 {
-    [Table("SomePost",IdentityColumn = "SomeId")]
+    //[Table("SomePost",IdentityColumn = "SomeId")]
     public class Post
     {
         public int SomeId { get; set; }

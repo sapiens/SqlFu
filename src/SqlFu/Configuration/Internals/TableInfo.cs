@@ -29,11 +29,9 @@ namespace SqlFu.Configuration.Internals
                     .Select((m, idx) => new ColumnInfo(this, m)
                     {
                         PocoIdx = idx,
-                        HasConverter = converter.HasConverter(m.PropertyType)
-
-                        //  ,CanBeFlattened = !m.PropertyType.IsCustomObjectType() || converter.CanFlattenValueObject(m.PropertyType)
+                        HasConverter = converter.HasConverter(m.PropertyType)                        
                     }).ToArray();
-            HandleAttributeOverride();
+           // HandleAttributeOverride();
         }
 
         public ColumnInfo this[string propertyName] => Columns.FirstOrDefault(d => d.PropertyInfo.Name == propertyName);
@@ -43,13 +41,13 @@ namespace SqlFu.Configuration.Internals
         public string[] GetColumnNames(IEnumerable<string> properties=null)
             => (properties??Columns.Select(d=>d.PropertyInfo.Name)).Select(p => this[p]).Where(d => !d.IgnoreRead).Select(d => d.Name).ToArray();
 
-        public void HandleAttributeOverride()
-        {
-            var attrib = Type.GetSingleAttribute<TableAttribute>(false);
+        //public void HandleAttributeOverride()
+        //{
+        //    var attrib = Type.GetSingleAttribute<TableAttribute>(false);
 
-            if (attrib == null) return;
-            TableName = new TableName(attrib.Name, attrib.DbSchema);
-        }
+        //    if (attrib == null) return;
+        //    TableName = new TableName(attrib.Name, attrib.DbSchema);
+        //}
 
         public ColumnInfo[] Columns { get; }
 

@@ -34,14 +34,14 @@ namespace Tests.Configuration
             _sut.TableName.Name.Should().Be("MapperPost");
         }
 
-        [Fact]
-        public void name_from_attribute()
-        {
-            var sut=new TableInfo(typeof(Post),_manageConverters);
-            sut.HandleAttributeOverride();
-            sut.TableName.Name.Should().Be("SomePost");
-            sut.GetIdentityColumnName().Should().Be("SomeId");
-        }
+        //[Fact]
+        //public void name_from_attribute()
+        //{
+        //    var sut=new TableInfo(typeof(Post),_manageConverters);
+        //    sut.HandleAttributeOverride();
+        //    sut.TableName.Name.Should().Be("SomePost");
+        //    sut.GetIdentityColumnName().Should().Be("SomeId");
+        //}
 
         [Fact]
         public void name_from_convention()
