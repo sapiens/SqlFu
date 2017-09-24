@@ -77,13 +77,11 @@ namespace SqlFu
         /// <param name="items"></param>
         public static void ExecuteCreation(this DbConnection cnx, IEnumerable<ICreateDbItem> items)
         {
-            var prov = cnx.Provider();
             using (var t = cnx.BeginTransaction())
             {
                 foreach (var item in items)
                 {
-                    if (prov.DatabaseTools.TableExists(cnx, item.Name)) continue;
-                    cnx.Execute($"create table {cnx.Provider().EscapeTableName(item.Name)} {item.Sql}");
+                    cnx.AddDbObjectOrIgnore($"create table {cnx.Provider().EscapeTableName(item.Name)} {item.Sql}");
                 }
                 t.Commit();
             }

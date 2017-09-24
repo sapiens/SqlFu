@@ -9,7 +9,6 @@ namespace SqlFu
 {
     public class InsertSqlOptions:HelperOptions
     {
-        public TableInfo Info { get; }
         private string _identityColumn;
 
         public string IdentityColumn

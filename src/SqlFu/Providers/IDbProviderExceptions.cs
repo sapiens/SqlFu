@@ -33,8 +33,7 @@ namespace SqlFu.Providers
         /// <param name="ex"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        [Obsolete("Will be removed the next major version")]
-        bool ObjectExists(DbException ex, string name = null);
+      bool ObjectExists(DbException ex, string name = null);
 
         SqlFuConfig SqlFuConfiguration { get; }
     }

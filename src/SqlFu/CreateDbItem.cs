@@ -7,6 +7,11 @@ namespace SqlFu
         public TableName Name { get; }
         public string Sql { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="sql">Ex: (id int not null, [..])</param>
         public CreateDbItem(TableName name,CreateDbItemBody sql)
         {
             Name = name;
