@@ -101,11 +101,11 @@ namespace SqlFu
             => cnx.ExecuteAsync(c => c.Sql(sql, args), token);
         
 
-        public static Task<int> ExecuteAsync(this DbConnection cnx, Action<IConfigureCommand> cfg, CancellationToken token)
+        public static Task<int> ExecuteAsync(this DbConnection cnx, Action<IConfigureCommand> cfg, CancellationToken? token=null)
         {
             var cmd = new CommandConfiguration();
             cfg(cmd);
-            return cnx.ExecuteAsync(cmd,token);
+            return cnx.ExecuteAsync(cmd,token??CancellationToken.None);
         }
         #endregion
 
@@ -126,11 +126,11 @@ namespace SqlFu
 
        
 
-        public static Task<T> GetValueAsync<T>(this DbConnection db, Action<IConfigureCommand> cfg, CancellationToken token)
+        public static Task<T> GetValueAsync<T>(this DbConnection db, Action<IConfigureCommand> cfg, CancellationToken? token=null)
         {
             var cmd=new CommandConfiguration();
             cfg(cmd);
-            return GetValueAsync<T>(db,cmd, token);
+            return GetValueAsync<T>(db,cmd, token??CancellationToken.None);
         }
 
         /// <summary>
@@ -153,9 +153,9 @@ namespace SqlFu
         /// <param name="builder"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public static Task<T> QueryValueAsync<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> builder, CancellationToken token)
+        public static Task<T> QueryValueAsync<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> builder, CancellationToken? token=null)
         {
-            return db.GetValueAsync<T>(builder(db.GetSqlBuilder()).GetCommandConfiguration(), token);
+            return db.GetValueAsync<T>(builder(db.GetSqlBuilder()).GetCommandConfiguration(), token??CancellationToken.None);
         }
 
 
@@ -391,12 +391,12 @@ namespace SqlFu
         /// <param name="firstRowOnly"></param>
         /// <returns></returns>
         public static Task QueryAndProcessAsync<T>(this DbConnection cnx, Action<IConfigureCommand> cfg,
-            Func<T, bool> processor,CancellationToken token, T anonModel = default(T),
+            Func<T, bool> processor,CancellationToken? token=null, T anonModel = default(T),
             bool firstRowOnly = false)
         {
             var cmdConfig = new CommandConfiguration();
             cfg(cmdConfig);
-            return cnx.QueryAndProcessAsync(cmdConfig,processor,token,anonModel,firstRowOnly);
+            return cnx.QueryAndProcessAsync(cmdConfig,processor,token??CancellationToken.None,anonModel,firstRowOnly);
         }
 
         /// <summary>
@@ -411,10 +411,10 @@ namespace SqlFu
         /// <param name="firstRowOnly"></param>
         /// <returns></returns>
         public static Task QueryAndProcessAsync<T>(this DbConnection cnx, Func<IBuildQueryFrom, IGenerateSql<T>> sqlBuilder,
-           Func<T, bool> processor, CancellationToken token,
+           Func<T, bool> processor, CancellationToken? token=null,
            bool firstRowOnly = false)
         {
-            return cnx.QueryAndProcessAsync(sqlBuilder(cnx.GetSqlBuilder()).GetCommandConfiguration(), processor, token,default(T), firstRowOnly);
+            return cnx.QueryAndProcessAsync(sqlBuilder(cnx.GetSqlBuilder()).GetCommandConfiguration(), processor, token??CancellationToken.None,default(T), firstRowOnly);
         }
 
 
@@ -461,13 +461,13 @@ namespace SqlFu
         /// <param name="builder">Don't use Limit, pagination must be specified in the next argument</param>
         /// <param name="page"></param>
         /// <param name="token"></param>
-        public static Task<PagedResult<T>> QueryPagedAsync<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> builder,Pagination page,CancellationToken token) where T : class
+        public static Task<PagedResult<T>> QueryPagedAsync<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> builder,Pagination page,CancellationToken? token=null) where T : class
         {
             var cfg = builder(db.GetSqlBuilder()).GetCommandConfiguration();
-            return db.FetchPagedAsync<T>(c => c.Sql(cfg.SqlText, cfg.Args), page,token);
+            return db.FetchPagedAsync<T>(c => c.Sql(cfg.SqlText, cfg.Args), page,token??CancellationToken.None);
         }
 
-         public static async Task<PagedResult<T>> FetchPagedAsync<T>(this DbConnection db,Action<IConfigureCommand> cfg,Pagination page,CancellationToken token,T anonModel=null) where T:class
+         public static async Task<PagedResult<T>> FetchPagedAsync<T>(this DbConnection db,Action<IConfigureCommand> cfg,Pagination page,CancellationToken? token=null,T anonModel=null) where T:class
         {
             typeof(T).Must(t => t != typeof(object), "Dynamic types are not supported");
             var cmd=new CommandConfiguration();
@@ -480,7 +480,7 @@ namespace SqlFu
                 db.GetValueAsync<long>(c => c.Sql(data.CountSql, cmd.Args).WithCommandOptions(cmd.ApplyOptions),token).ConfigureAwait(false);
             if (result.Count == 0) return result;
 
-            result.Items = await db.FetchAsync<T>(c => c.Sql(data.PagedSql, data.Args).WithCommandOptions(cmd.ApplyOptions),token).ConfigureAwait(false);
+            result.Items = await db.FetchAsync<T>(c => c.Sql(data.PagedSql, data.Args).WithCommandOptions(cmd.ApplyOptions),token??CancellationToken.None).ConfigureAwait(false);
             return result;
         }
         #endregion
