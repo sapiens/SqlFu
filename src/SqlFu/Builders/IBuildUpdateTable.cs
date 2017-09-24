@@ -78,6 +78,15 @@ namespace SqlFu.Builders
         /// <returns></returns>
         IColumnsToUpdate<T> Ignore(params Expression<Func<T, object>>[] ignore);
     }
+     public interface IIgnoreSelectColumns<T> where T:class
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ignore">List of columns to ignore</param>
+        /// <returns></returns>
+        void Ignore(params Expression<Func<T, object>>[] ignore);
+    }
 
     public interface IExecuteSql
     {

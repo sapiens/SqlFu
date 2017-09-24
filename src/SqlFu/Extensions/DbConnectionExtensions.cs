@@ -281,9 +281,10 @@ namespace SqlFu
         /// <typeparam name="T"></typeparam>
         /// <param name="cnx"></param>
         /// <param name="cfg"></param>
+        /// <param name="token"></param>
         /// <param name="anonModel"></param>
         /// <returns></returns>
-        public static async Task<List<T>> FetchAsync<T>(this DbConnection cnx, Action<IConfigureCommand> cfg,CancellationToken token ,T anonModel = default(T))
+        public static async Task<List<T>> FetchAsync<T>(this DbConnection cnx, Action<IConfigureCommand> cfg,CancellationToken? token=null ,T anonModel = default(T))
         {
             var list=new List<T>();
             await cnx.QueryAndProcessAsync(cfg,d=> { list.Add(d);

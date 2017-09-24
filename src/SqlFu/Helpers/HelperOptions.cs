@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using CavemanTools;
 using SqlFu.Configuration;
@@ -22,6 +23,7 @@ namespace SqlFu
         }
 
         public Action<DbCommand> CmdOptions { get; set; } = Empty.ActionOf<DbCommand>();
+        public List<string> IgnoreProperties { get; }=new List<string>();
 
         public HelperOptions(TableInfo info)            
         {

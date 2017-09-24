@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Text;
 using CavemanTools.Model;
 using SqlFu.Builders.Expressions;
+using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 using SqlFu.Providers;
 
@@ -11,28 +12,38 @@ namespace SqlFu.Builders.Crud
 {
     public class SimpleSqlBuilder<T>:IWhere<T>,IConnectWhere<T>,IConnectHaving<T>
     {
-        private readonly HelperOptions _options;
+        private HelperOptions _options;
+        public IGenerateSql<TProj> Select<TProj>(bool distinct = false, Action<IIgnoreSelectColumns<TProj>> ignore = null) where TProj : class
+        {
+           var s=new SelectOptions<TProj>(_infos.GetInfo(typeof(TProj)));
+           ignore?.Invoke(s);
+            var txt = s.GetSelectColumns().Select(d=>_provider.EscapeIdentifier(d)).StringJoin();
+            _options = s;
+            return Select<TProj>(txt,distinct);
+        }
+
         private readonly IDbProvider _provider;
         private readonly TableInfo _info;
         private readonly IGenerateSqlFromExpressions _writer;
+        private readonly ITableInfoFactory _infos;
         private StringBuilder _sb=new StringBuilder();
 
-        public SimpleSqlBuilder(HelperOptions options,IDbProvider provider,TableInfo info,IGenerateSqlFromExpressions writer)
+        public SimpleSqlBuilder(HelperOptions options, IDbProvider provider, IGenerateSqlFromExpressions writer, ITableInfoFactory infos)
         {
             _options = options;
             _provider = provider;
-            _info = info;
+            _info = options.Info;
 
             _writer = writer;
-            options.EnsureTableName(_info);
-            
+            _infos = infos;
+
             WriteFrom(provider, options);
             
      
         }
 
         private void WriteFrom(IDbProvider provider, HelperOptions info) 
-            => _sb.AppendLine($" from {provider.EscapeTableName(info.Table)}");
+            => _sb.AppendLine($" from {provider.EscapeTableName(info.TableName)}");
 
 
         public IGenerateSql<T> SelectAll(bool distinct=false,bool useAsterisk=false)
@@ -40,14 +51,7 @@ namespace SqlFu.Builders.Crud
             var columns = "*";
             if (!useAsterisk)
             {
-                var sb = new StringBuilder();
-
-                _info.Columns.Select(c => c.Name)
-                    .ForEach(n =>
-                    {
-                        sb.Append($" {_provider.EscapeIdentifier(n)},");
-                    });
-                columns = sb.RemoveLast().ToString();
+                columns = _info.GetColumnNames().Select(c => _provider.EscapeIdentifier(c)).StringJoin();                
             }
            
             return Select<T>(columns, distinct);

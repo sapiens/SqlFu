@@ -40,6 +40,9 @@ namespace SqlFu.Configuration.Internals
 
         public string GetIdentityColumnName() => Columns.FirstOrDefault(d => d.IsIdentity)?.Name??null;
 
+        public string[] GetColumnNames(IEnumerable<string> properties=null)
+            => (properties??Columns.Select(d=>d.PropertyInfo.Name)).Select(p => this[p]).Where(d => !d.IgnoreRead).Select(d => d.Name).ToArray();
+
         public void HandleAttributeOverride()
         {
             var attrib = Type.GetSingleAttribute<TableAttribute>(false);

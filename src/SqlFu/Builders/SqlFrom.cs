@@ -19,20 +19,19 @@ namespace SqlFu.Builders
 
         public IWhere<T> From<T>(Action<IHelperOptions> cfg = null)
         {
-            var data = new HelperOptions();
+            var data = new HelperOptions(_infos.GetInfo(typeof(T)));
             cfg?.Invoke(data);
             return SqlBuilder<T>(data);
         }
 
         IWhere<T> SqlBuilder<T>(HelperOptions options)=> new SimpleSqlBuilder<T>(
-                options, _provider, _infos.GetInfo(typeof(T))
-                , new ExpressionSqlGenerator(_provider.ExpressionsHelper,_infos,_provider));
+                options, _provider, new ExpressionSqlGenerator(_provider.ExpressionsHelper,_infos,_provider),_infos);
 
-        public IWhere<T> FromAnonymous<T>(T anon, Action<IHelperOptions> options) where T : class
+        public IWhere<T> FromAnonymous<T>(T anon, TableName tableName) where T : class
         {
-            var data=new HelperOptions();
-            options.MustNotBeNull();
-            options(data);
+            var data=new HelperOptions(_infos.GetInfo(typeof(T)));
+            tableName.MustNotBeNull();
+            data.TableName = tableName;
             return SqlBuilder<T>(data);
         }
     }

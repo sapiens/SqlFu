@@ -30,15 +30,7 @@ namespace SqlFu.Builders.Expressions
 
         public ParametersManager Parameters { get; }
 
-        //string GetColumnName(LambdaExpression member)
-        //{
-        //    var mbody = member.Body as MemberExpression;
-        //    if (mbody != null) return GetColumnName(mbody);
-        //    var ubody = member.Body as UnaryExpression;
-        //    if (ubody == null) throw new NotSupportedException("Only members and unary expressions are supported");
-        //    return GetColumnName(ubody);
-        //}
-
+        
         private string GetColumnName(UnaryExpression member)
         {
             var mbody = member.Operand as MemberExpression;

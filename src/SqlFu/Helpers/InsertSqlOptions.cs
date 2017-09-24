@@ -18,23 +18,21 @@ namespace SqlFu
             {
                 if (!_identityColumn.IsNullOrEmpty())
                 {
-                    IgnoreColumns.Remove(_identityColumn);
+                    IgnoreProperties.Remove(_identityColumn);
                 }
                 if (!value.IsNullOrEmpty())
                 {
-                    IgnoreColumns.Add(value);                    
+                    IgnoreProperties.Add(value);                    
                 }
                 _identityColumn = value;
             }
         }
 
-        public List<string> IgnoreColumns { get; }=new List<string>();
-
         public InsertSqlOptions(TableInfo info):base(info)
         {
            
             IdentityColumn = info.GetIdentityColumnName();
-            info.Columns.Where(d=>d.IgnoreWrite).ForEach(d=>IgnoreColumns.Add(d.Name));
+            info.Columns.Where(d=>d.IgnoreWrite).ForEach(d=>IgnoreProperties.Add(d.Name));
            
         }
     }
@@ -47,7 +45,7 @@ namespace SqlFu
 
         public void Ignore(params Expression<Func<T, object>>[] columns)
         {
-            IgnoreColumns.AddRange(columns.GetNames());
+            IgnoreProperties.AddRange(columns.GetNames());
         }
     }
 
