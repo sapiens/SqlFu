@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using SqlFu.Builders.Crud;
 
 namespace SqlFu.Builders
 {
@@ -17,6 +18,42 @@ namespace SqlFu.Builders
      
         IExecuteSql Where(Expression<Func<T, bool>> criteria);        
 
+    }
+
+
+    public interface IBuildAnonymousUpdate : IExecuteSql
+    {
+        IExecuteSql Where<T>(T anonymousCriteria, Expression<Func<T, bool>> criteria = null) where T:class;
+    }
+
+    class UpdateAnonymousBuilder<R> : IBuildAnonymousUpdate
+    {
+        private readonly UpdateTableBuilder<R> _builder;
+
+        public UpdateAnonymousBuilder(UpdateTableBuilder<R> builder)
+        {
+            _builder = builder;
+        }
+
+        public int Execute()=> _builder.Execute();
+
+        public Task<int> ExecuteAsync(CancellationToken? token=null) => _builder.ExecuteAsync(token);
+        
+
+        public IExecuteSql Where<T>(T anonymousCriteria, Expression<Func<T, bool>> criteria = null) where T : class
+        {
+            anonymousCriteria.MustNotBeNull();
+            if (criteria != null)
+            {
+                _builder.Where(criteria);
+                return this;
+            }
+            foreach (var cv in anonymousCriteria.ToDictionary())
+            {
+                _builder.WriteEqualityCriteria(cv.Key,cv.Value);
+            }
+            return this;
+        }
     }
 
     public interface IUpdateColumns
@@ -45,6 +82,6 @@ namespace SqlFu.Builders
     public interface IExecuteSql
     {
         int Execute();
-        Task<int> ExecuteAsync(CancellationToken token);
+        Task<int> ExecuteAsync(CancellationToken? token=null);
     }
 }

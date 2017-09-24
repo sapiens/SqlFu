@@ -8,6 +8,7 @@ namespace SqlFu
 {
     public class HelperOptions : IHelperOptions
     {
+        public TableInfo Info { get; }
         private TableName _tableName;
 
         public TableName TableName
@@ -22,11 +23,11 @@ namespace SqlFu
 
         public Action<DbCommand> CmdOptions { get; set; } = Empty.ActionOf<DbCommand>();
 
-        //public void EnsureTableName(TableInfo info)
-        //{
-        //    if (TableName == null) TableName = info.TableName;            
-        //}
-
+        public HelperOptions(TableInfo info)            
+        {
+            Info = info;
+            _tableName = info.TableName;
+        }
       
     }
 }

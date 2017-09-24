@@ -87,12 +87,11 @@ namespace SqlFu
         static Insertable<T> CreateInsertOptions<T>(this TableInfo info) =>new Insertable<T>(info);
             
 
-        public static IBuildUpdateTable<T> Update<T>(this DbConnection db,Action<IHelperOptions> cfg=null)
+        public static IBuildUpdateTable<T> Update<T>(this DbConnection db,Action<IHelperOptions> cfg=null) where T:class
         {
-            var opt = new HelperOptions();
-            cfg?.Invoke(opt);
+            var opt = new HelperOptions(db.GetPocoInfo<T>());
+            cfg?.Invoke(opt); 
             var executor = new CustomSqlExecutor(db);
-            opt.EnsureTableName(db.GetPocoInfo<T>());
             return new UpdateTableBuilder<T>(executor, db.GetExpressionSqlGenerator(), db.Provider(), opt);
         }
 
@@ -106,16 +105,40 @@ namespace SqlFu
         /// <returns></returns>
         public static IBuildUpdateTableFrom<T> UpdateFrom<T>(this DbConnection db, Func<IUpdateColumns, IColumnsToUpdate<T>> columns, Action<IHelperOptions> cfg) where  T:class 
         {
-            var options=new HelperOptions(); 
+            var options=new HelperOptions(db.GetPocoInfo<T>()); 
             var u = new UpdateColumns();
             cfg(options);
-            options.EnsureTableName(db.GetPocoInfo<T>());
+            
             var builder = columns(u) as UpdateColumns.CreateBuilder<T>;
             var executor=new CustomSqlExecutor(db);
             var updater=new UpdateTableBuilder<T>(executor,db.GetExpressionSqlGenerator(),db.Provider(),options);
             builder.PopulateBuilder(updater);
             return updater;
         }
+
+        /// <summary>
+        /// Perform update table with data from an anonymous object
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="valuesToUpdate"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public static IBuildAnonymousUpdate UpdateFrom<T>(this DbConnection db, T valuesToUpdate, TableName tableName) where  T:class 
+        {
+            tableName.MustNotBeNull();
+            var options=new HelperOptions(db.GetPocoInfo<T>());
+            options.TableName = tableName;
+            
+            var executor=new CustomSqlExecutor(db);
+            var updater=new UpdateTableBuilder<T>(executor,db.GetExpressionSqlGenerator(),db.Provider(),options);
+            updater.SetUpdates(valuesToUpdate);
+
+            return new UpdateAnonymousBuilder<T>(updater);
+        }
+
+
+
 
         public static int CountRows<T>(this DbConnection db,Expression<Func<T,bool>> condition=null)
             => db.QueryValue(d =>

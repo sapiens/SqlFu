@@ -31,12 +31,12 @@ namespace SqlFu
 
         public List<string> IgnoreColumns { get; }=new List<string>();
 
-        public InsertSqlOptions(TableInfo info)
+        public InsertSqlOptions(TableInfo info):base(info)
         {
-            Info = info;
+           
             IdentityColumn = info.GetIdentityColumnName();
             info.Columns.Where(d=>d.IgnoreWrite).ForEach(d=>IgnoreColumns.Add(d.Name));
-            TableName = info.TableName;
+           
         }
     }
 
