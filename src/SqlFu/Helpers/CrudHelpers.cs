@@ -152,11 +152,9 @@ namespace SqlFu
             });
         
 
-        public static int DeleteFromAnonymous<T>(this DbConnection db,T data,Action<IHelperOptions> opt,Expression<Func<T, bool>> criteria = null)
+        public static int DeleteFromAnonymous<T>(this DbConnection db,T data,TableName tableName,Expression<Func<T, bool>> criteria = null)
         {
-            var options=new HelperOptions();
-            opt(options);
-            var name = db.Provider().EscapeTableName(new TableName(options.TableName, options.DbSchema));
+            var name = db.Provider().EscapeTableName(tableName);
             var builder = new DeleteTableBuilder(name, db.GetExpressionSqlGenerator());
             if (criteria != null) builder.WriteCriteria(criteria);
             return db.Execute(builder.GetCommandConfiguration());
@@ -169,11 +167,11 @@ namespace SqlFu
             return db.Execute(builder.GetCommandConfiguration());
         }
 
-        public static Task<int> DeleteFromAsync<T>(this DbConnection db,CancellationToken token,Expression<Func<T, bool>> criteria=null)
+        public static Task<int> DeleteFromAsync<T>(this DbConnection db,CancellationToken? token=null,Expression<Func<T, bool>> criteria=null)
         {
             var builder=new DeleteTableBuilder(db.GetTableName<T>(), db.GetExpressionSqlGenerator());
             if (criteria!=null) builder.WriteCriteria(criteria);
-            return db.ExecuteAsync(builder.GetCommandConfiguration(),token);
+            return db.ExecuteAsync(builder.GetCommandConfiguration(),token??CancellationToken.None);
         }
       
     }
