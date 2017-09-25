@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Data.Common;
 using CavemanTools.Model.ValueObjects;
+using SqlFu;
 using SqlFu.Builders.Expressions;
 using SqlFu.Configuration.Internals;
 using SqlFu.Mapping.Internals;
@@ -19,9 +21,18 @@ namespace Tests
 
         }
 
-        public static FakeWriter FakeWriter() => new FakeWriter();
-      
+        public static DbConnection SqlFuConnection(string cnx)
+        {
+            SqlFuManager.Configure(c =>
+            {
+                c.
+            });
+        }
 
+        public static FakeWriter FakeWriter() => new FakeWriter();
+
+        public static readonly bool IsAppVeyor =
+            Environment.GetEnvironmentVariable("Appveyor")?.ToUpperInvariant() == "TRUE";
 
 
         public static ConvertersManager Converters()

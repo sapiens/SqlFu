@@ -14,7 +14,7 @@ namespace Tests.SqlServer
     public class Setup
     {
         public const string Connex = @"Data Source=.\SQLExpress;Initial Catalog=tempdb;Integrated Security=True;MultipleActiveResultSets=True;Asynchronous Processing=True";
-
+        
         static Setup()
         {
             LogManager.OutputTo(s=>System.Diagnostics.Debug.WriteLine(s));

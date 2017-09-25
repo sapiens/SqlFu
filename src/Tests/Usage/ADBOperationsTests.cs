@@ -67,13 +67,14 @@ namespace Tests.SqlServer
         Page
     }
 
-    public class DBOperations:IDisposable
+    public class ADBOperationsTests:IDisposable
     {
-        private DbConnection _db = Setup.GetConnection();
+        protected DbConnection _db;
 
 
-        public DBOperations()
+        public ADBOperationsTests(DbConnection db)
         {
+            _db = db;
             _db.Provider().ReplaceExpressionsProvider(new MyFunctions());
             _db.CreateTableFrom<User>(cf =>
             {
@@ -198,6 +199,19 @@ namespace Tests.SqlServer
         public void Dispose()
         {
            _db.Dispose();
+        }
+    }
+
+    public class SqlServerTests : ADBOperationsTests
+    {
+        public static string ConnectionString =>
+            Setup.IsAppVeyor
+                ? @"Server=(local)\SQL2016;Database=tempdb;User ID=sa;Password=Password12!"
+                : @"Data Source=.\SQLExpress;Initial Catalog=tempdb;Integrated Security=True;MultipleActiveResultSets=True";
+
+        public SqlServerTests() : base(db)
+        {
+
         }
     }
 }

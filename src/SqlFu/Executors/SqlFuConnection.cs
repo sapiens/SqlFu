@@ -26,7 +26,7 @@ namespace SqlFu.Executors
             provider.MustNotBeNull();
             _conex = cnx;
             _provider = provider;
-          
+            _errStrategyFactory = errStrategyFactory;
         }
 
         
