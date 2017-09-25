@@ -13,83 +13,22 @@ using Xunit;
 
 namespace Tests.SqlServer
 {
-    public enum TSqlDatePart
-    {
-        Year,
-        Day,
-        Hour
-        //etc
-    }
-    public static class MyExtensions
-    {
-        public static int DateDiff<T>(this T table, TSqlDatePart part, DateTime startDate, DateTime endDate)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class MyFunctions : DbProviderExpressions
-    {
-        public MyFunctions()
-        {
-            LinkMethods(() => 1.DateDiff(TSqlDatePart.Day, DateTime.Now, DateTime.Now), DateDiff);
-        }
-
-        private void DateDiff(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions writer)
-        {
-            sb.Append("datediff(");
-            sb.Append(method.Arguments[1].GetValue().ToString()).Append(",");
-            sb.Append(writer.GetColumnsSql(method.Arguments[2])).Append(",");
-            sb.Append(writer.GetColumnsSql(method.Arguments[3]));
-            sb.Append(")");
-        }
-
-    }
-    public class User
-    {
-        public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-      
-        public bool IsDeleted { get; set; }
-        public int Posts { get; set; }
-        public DateTime CreatedOn { get; set; }=DateTime.Now;
-        public string Category { get; set; } = Type.Post.ToString();
-        public User()
-        {
-         
-        }
-    }
-
-    public enum Type
-    {
-        Post,
-        Page
-    }
-
-    public class ADBOperationsTests:IDisposable
+   
+    public abstract class ADBOperationsTests:IDisposable
     {
         protected DbConnection _db;
 
 
-        public ADBOperationsTests(DbConnection db)
+        public ADBOperationsTests()
         {
-            _db = db;
-            _db.Provider().ReplaceExpressionsProvider(new MyFunctions());
-            _db.CreateTableFrom<User>(cf =>
-            {
-                cf.HandleExisting(TableExistsAction.DropIt)
-                    .TableName("users")
-                    .Column(t => t.Id, c => c.AutoIncrement())
-                    .ColumnSize(c=>c.FirstName,150)
-                    .ColumnSize(c=>c.LastName,150)
-                    .Column(d=>d.Category,c=>c
-                                            .HasDbType(SqlServerType.Varchar)
-                                            .HasSize(10)
-                                            .HasDefaultValue(Type.Page.ToString()))
-                 
-                    .PrimaryKey(t=>t.OnColumns(d=>d.Id));
-            });
+            _db = GetConnection();
+
+
+            AddData();
+        }
+
+        private void AddData()
+        {
             _db.Insert(new User()
             {
                 FirstName = "John",
@@ -103,17 +42,17 @@ namespace Tests.SqlServer
                 Posts = 3
             });
 
-              _db.Insert(new User()
+            _db.Insert(new User()
             {
                 FirstName = "Jane",
                 LastName = "Doe",
                 Category = Type.Page.ToString(),
                 Posts = 0
             });
-
-           
         }
 
+        protected abstract DbConnection GetConnection();
+        protected abstract void Init();
 
         [Fact]
         public void insert_and_return_id()
@@ -199,19 +138,6 @@ namespace Tests.SqlServer
         public void Dispose()
         {
            _db.Dispose();
-        }
-    }
-
-    public class SqlServerTests : ADBOperationsTests
-    {
-        public static string ConnectionString =>
-            Setup.IsAppVeyor
-                ? @"Server=(local)\SQL2016;Database=tempdb;User ID=sa;Password=Password12!"
-                : @"Data Source=.\SQLExpress;Initial Catalog=tempdb;Integrated Security=True;MultipleActiveResultSets=True";
-
-        public SqlServerTests() : base()
-        {
-
         }
     }
 }

@@ -4,8 +4,10 @@ using CavemanTools.Model.ValueObjects;
 using SqlFu;
 using SqlFu.Builders.Expressions;
 using SqlFu.Configuration.Internals;
+using SqlFu.Executors;
 using SqlFu.Mapping.Internals;
 using SqlFu.Providers;
+using Tests.SqlServer;
 using Tests.TestData;
 using Tests._Fakes;
 
@@ -21,9 +23,15 @@ namespace Tests
 
         }
 
-        public static DbConnection SqlFuConnection(string cnx)
+        public static DbConnection SqlFuConnection(DbProvider provider,string cnx,Action<SqlFuConfig> config=null)
         {
-           
+           var c=new SqlFuConfig();
+            c.ConfigureTableForPoco<User>(d =>
+            {
+                d.TableName = "Users-" + Guid.NewGuid();
+            });
+            config?.Invoke(c);
+            return new SqlFuConnection(provider,cnx,c);
         }
 
         public static FakeWriter FakeWriter() => new FakeWriter();

@@ -14,7 +14,7 @@ namespace Tests.Usage
     {
         protected DbConnection _db;
 
-        protected AStoredProcsTests(DbConnection db)
+        protected AStoredProcsTests()
         {
           CreateSproc();
         }
