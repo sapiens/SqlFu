@@ -17,11 +17,6 @@ namespace Tests.SqlServer
     [Collection("SqlServer")]
     public class SqlServerTests : ADBOperationsTests
     {
-        public static string ConnectionString =>
-            Setup.IsAppVeyor
-                ? @"Server=(local)\SQL2016;Database=tempdb;User ID=sa;Password=Password12!"
-                : @"Data Source=.\SQLExpress;Initial Catalog=tempdb;Integrated Security=True;MultipleActiveResultSets=True";
-
         public SqlServerTests()
         {
 
@@ -29,8 +24,7 @@ namespace Tests.SqlServer
 
         protected override DbConnection GetConnection()
         {
-            return Setup.SqlFuConnection(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection),
-                ConnectionString);
+            return Setup.SqlFuConnection(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection), global::Tests.Setup.SqlServerConnection);
         }
 
         protected override void Init()

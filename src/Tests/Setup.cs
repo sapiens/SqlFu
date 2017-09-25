@@ -30,7 +30,7 @@ namespace Tests
             var c=new SqlFuConfig();
             c.ConfigureTableForPoco<User>(d =>
             {
-                d.TableName = "Users" + new string(Guid.NewGuid().ToByteArray().ToBase64().Where(w=>/*(w>='0' && w<='9') ||*/ (w>='a' && w<='z')).Take(5).ToArray());
+                d.TableName = "Users" + new string(Guid.NewGuid().ToByteArray().ToBase64().Where(w=>(w>='a' && w<='z')).Take(5).ToArray());
                 d.Property(f => f.Id).IsAutoincremented();
             });
             config?.Invoke(c);
@@ -97,5 +97,12 @@ namespace Tests
         {
           return new ExpressionSqlGenerator(exprProvider, Setup.InfoFactory(), new FakeEscapeIdentifier());
         }
+
+        public static string SqlServerConnection =>
+            IsAppVeyor
+                ? @"Server=(local)\SQL2016;Database=tempdb;User ID=sa;Password=Password12!"
+                : @"Data Source=.\SQLExpress;Initial Catalog=tempdb;Integrated Security=True;MultipleActiveResultSets=True";
+
+        public static string SqliteConnection { get; } = "Data Source=:memory:;Version=3;New=True;BinaryGUID=False";
     }
 }

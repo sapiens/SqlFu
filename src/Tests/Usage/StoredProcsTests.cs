@@ -16,8 +16,12 @@ namespace Tests.Usage
 
         protected AStoredProcsTests()
         {
-          CreateSproc();
+            _db = GetConnection();
+            _db.Open();
+            CreateSproc();
         }
+
+        protected abstract DbConnection GetConnection();
 
         protected abstract void CreateSproc();
 
