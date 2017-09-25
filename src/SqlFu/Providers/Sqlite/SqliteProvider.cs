@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 using CavemanTools.Model;
 using SqlFu.Builders;
 
@@ -41,7 +42,7 @@ namespace SqlFu.Providers.Sqlite
 
         public override string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues)
         {
-          return $"insert into {EscapeTableName(options.TableName)} ({columnValues.Keys.StringJoin()})" +
+          return $"insert into {EscapeTableName(options.TableName)} ({columnValues.Keys.Select(EscapeIdentifier).StringJoin()})" +
                    $"\n values({JoinValuesAsParameters(columnValues)});SELECT last_insert_rowid()";
         }
 

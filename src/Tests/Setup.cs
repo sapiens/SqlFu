@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Common;
+using System.Linq;
 using CavemanTools.Model.ValueObjects;
 using SqlFu;
 using SqlFu.Builders.Expressions;
@@ -25,10 +26,12 @@ namespace Tests
 
         public static DbConnection SqlFuConnection(DbProvider provider,string cnx,Action<SqlFuConfig> config=null)
         {
-           var c=new SqlFuConfig();
+           
+            var c=new SqlFuConfig();
             c.ConfigureTableForPoco<User>(d =>
             {
-                d.TableName = "Users-" + Guid.NewGuid();
+                d.TableName = "Users" + new string(Guid.NewGuid().ToByteArray().ToBase64().Where(w=>/*(w>='0' && w<='9') ||*/ (w>='a' && w<='z')).Take(5).ToArray());
+                d.Property(f => f.Id).IsAutoincremented();
             });
             config?.Invoke(c);
             return new SqlFuConnection(provider,cnx,c);

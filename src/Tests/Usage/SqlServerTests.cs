@@ -7,9 +7,14 @@ using SqlFu;
 using SqlFu.Builders.Expressions;
 using SqlFu.Providers;
 using SqlFu.Providers.SqlServer;
+using Xunit;
+
+[assembly: CollectionBehavior(DisableTestParallelization = true, MaxParallelThreads = 1)]
 
 namespace Tests.SqlServer
 {
+
+    [Collection("SqlServer")]
     public class SqlServerTests : ADBOperationsTests
     {
         public static string ConnectionString =>
@@ -34,14 +39,15 @@ namespace Tests.SqlServer
             _db.Provider().ReplaceExpressionsProvider(new MyFunctions());
             _db.AddDbObjectOrIgnore($@"
 create table {_db.GetTableName<User>()} (
-Id int identity(1,1) not null primary key,
+[Id] [int] IDENTITY(1,1) NOT NULL primary key,
 FirstName nvarchar(150),
 LastName nvarchar(150),
 Category varchar(10) default('Page'),
-CreatedOn datetime ,
+CreatedOn datetime default (getdate()),
 IsDeleted bit default 0,
-Posts int not null
+Posts int not null default 0
 )
+
 ");
         }
     }

@@ -70,7 +70,7 @@ namespace SqlFu.Providers.SqlServer
         public override string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues)
         {
             var ins = options.IdentityColumn.IsNullOrEmpty() ? "" : $"\nOUTPUT INSERTED.{options.IdentityColumn} AS ID ";
-            return $"create table {EscapeTableName(options.TableName)}({columnValues.Keys.StringJoin()})" +
+            return $"insert into {EscapeTableName(options.TableName)}({columnValues.Keys.Select(EscapeIdentifier).StringJoin()})" +ins+
                    $"\n values({JoinValuesAsParameters(columnValues)})";
         }
 

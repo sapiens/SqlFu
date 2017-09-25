@@ -23,7 +23,8 @@ namespace Tests.SqlServer
         {
             _db = GetConnection();
 
-
+            _db.Open();
+            Init();
             AddData();
         }
 
@@ -108,7 +109,7 @@ namespace Tests.SqlServer
         [Fact]
         public void delete_where()
         {
-            _db.DeleteFromAnonymous(new {Category = ""}, "users",
+            _db.DeleteFromAnonymous(new {Category = ""}, _db.GetTableName<User>(),
                 d => d.Category == Type.Page.ToString())
                 .Should().Be(1);
             _db.CountRows<User>().Should().Be(2);
@@ -128,7 +129,7 @@ namespace Tests.SqlServer
         {
             _db.UpdateFrom(
                 q => q.Data(new { Firstname = "John3", Id = 3 }).Ignore(d => d.Id)
-                ,o => o.SetTableName("users")
+                ,o => o.SetTableName(_db.GetTableName<User>())
                 )
                 .Where(d => d.Firstname == "John")
                 .Execute().Should().Be(1);
@@ -137,7 +138,9 @@ namespace Tests.SqlServer
 
         public void Dispose()
         {
+            _db.Execute($"drop table {_db.GetTableName<User>()}");
            _db.Dispose();
+
         }
     }
 }

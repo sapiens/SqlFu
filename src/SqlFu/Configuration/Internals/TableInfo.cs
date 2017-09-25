@@ -112,6 +112,7 @@ namespace SqlFu.Configuration.Internals
     public class TableInfo<T>:ITableInfo<T>
     {
         private readonly TableInfo _info;
+        private TableName _tableName;
 
         public TableInfo(TableInfo info)
         {
@@ -130,6 +131,10 @@ namespace SqlFu.Configuration.Internals
         public IConfigurePropertyInfo<R> Property<R>(Expression<Func<T, R>> property)
        =>new ColumnInfo<R>(_info[property.GetPropertyName()]);
 
-        public TableName TableName { get; set; }
+        public TableName TableName
+        {
+            get { return _info.TableName; }
+            set { _info.TableName = value; }
+        }
     }
 } 
