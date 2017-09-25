@@ -3,6 +3,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq.Expressions;
 using System.Text;
+using FluentAssertions;
 using SqlFu;
 using SqlFu.Builders.Expressions;
 using SqlFu.Providers;
@@ -44,6 +45,13 @@ Posts int not null default 0
 
 ");
         }
+
+        [Fact]
+        public void datediff()
+        {
+            var dif = _db.QueryValue(q => q.From<User>().Select(d => d.DateDiff(TSqlDatePart.Hour, d.CreatedOn, DateTime.Now.AddHours(3))));
+            dif.Should().Be(3);
+        }
     }
 
 
@@ -80,5 +88,6 @@ Posts int not null default 0
         Hour
         //etc
     }
+
 
 }

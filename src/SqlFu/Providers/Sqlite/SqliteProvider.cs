@@ -46,10 +46,7 @@ namespace SqlFu.Providers.Sqlite
                    $"\n values({JoinValuesAsParameters(columnValues)});SELECT last_insert_rowid()";
         }
 
-        //public override string AddReturnInsertValue(string sqlValues, string identityColumn)
-        //    => $"{sqlValues};SELECT last_insert_rowid()";
-
-        public override string FormatQueryPagination(string sql, Pagination page, ParametersManager pm) 
+       public override string FormatQueryPagination(string sql, Pagination page, ParametersManager pm) 
             => $"{sql} limit {page.Skip},{page.PageSize}";
     }
 }

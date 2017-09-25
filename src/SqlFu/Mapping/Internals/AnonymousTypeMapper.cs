@@ -21,6 +21,7 @@ namespace SqlFu.Mapping.Internals
                 var args = new List<Expression>();
                 var input = Expression.Parameter(typeof (object[]));
                 var props = type.GetProperties();
+
                 for (var i = 0; i < reader.FieldCount; i++)
                 {
                     Expression getValue = Expression.ArrayIndex(input, Expression.Constant(i));
@@ -40,6 +41,11 @@ namespace SqlFu.Mapping.Internals
             object[] values=new object[reader.FieldCount];
             reader.GetValues(values);
             return _mapper(values);
+        }
+
+        Expression HandleSpecificCase(PropertyInfo pi,Type fieldType)
+        {
+            
         }
     }
 }

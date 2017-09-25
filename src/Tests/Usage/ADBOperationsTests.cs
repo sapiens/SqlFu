@@ -87,12 +87,7 @@ namespace Tests.SqlServer
             _db.QueryValue<int>(q => q.From<User>().Select(d => d.Count())).Should().Be(3);
         }
 
-        [Fact]
-        public void datediff()
-        {
-            var dif=_db.QueryValue(q => q.From<User>().Select(d => d.DateDiff(TSqlDatePart.Hour, d.CreatedOn, DateTime.Now.AddHours(3))));
-            dif.Should().Be(3);
-        }
+      
 
         [Fact]
         public void sum_of_posts()
