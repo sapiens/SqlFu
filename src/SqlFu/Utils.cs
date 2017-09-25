@@ -10,6 +10,7 @@ using System.Text;
 using SqlFu.Builders.Expressions;
 using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
+using SqlFu.Executors;
 using SqlFu.Providers;
 
 namespace SqlFu
@@ -71,11 +72,9 @@ namespace SqlFu
             new TableName(t.Name.SubstringUntil(suffix),schema));
         }
 
-        public static SqlFuConfig SqlFuConfig(this DbConnection db) => SqlFuManager.Config;
+        public static SqlFuConfig SqlFuConfig(this DbConnection db) => db.CastAs<SqlFuConnection>().Config;
 
-        public static TableInfo GetTableInfo(this Type type) => SqlFuManager.Config.TableInfoFactory.GetInfo(type);
-
-        public static string GetColumnName(this TableInfo info, MemberExpression member, IEscapeIdentifier provider)
+       public static string GetColumnName(this TableInfo info, MemberExpression member, IEscapeIdentifier provider)
         {
             var col = info.Columns.First(d => d.PropertyInfo.Name == member.Member.Name);
             return provider.EscapeIdentifier(col.Name);

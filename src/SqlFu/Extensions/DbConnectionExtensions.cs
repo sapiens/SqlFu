@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CavemanTools.Model;
 using SqlFu.Builders;
+using SqlFu.Executors;
 
 namespace SqlFu
 {
@@ -510,7 +511,7 @@ namespace SqlFu
         /// <typeparam name="T"></typeparam>
         /// <param name="cnx"></param>
         /// <returns></returns>
-        public static string GetTableName<T>(this DbConnection cnx) => SqlFuManager.Config.TableInfoFactory.GetInfo(typeof(T)).EscapeName(cnx.Provider());
+        public static string GetTableName<T>(this DbConnection cnx) => cnx.CastAs<SqlFuConnection>().Config.TableInfoFactory.GetInfo(typeof(T)).EscapeName(cnx.Provider());
 
 
         /// <summary>

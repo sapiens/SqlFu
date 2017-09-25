@@ -12,21 +12,24 @@ namespace SqlFu.Executors
 
     public class SqlFuConnection : DbConnection
     {
+        public SqlFuConfig Config { get; }
         private readonly Func<IRetryOnTransientErrorsStrategy> _errStrategyFactory;
 
-        public SqlFuConnection(IDbProvider provider, string cnxString,Func<IRetryOnTransientErrorsStrategy> errStrategyFactory)
+        public SqlFuConnection(IDbProvider provider, string cnxString,SqlFuConfig config)
         {
-            _errStrategyFactory = errStrategyFactory;
+            Config = config;
+            _errStrategyFactory = Config.TransientErrorsStrategyFactory;
             Init(cnxString, provider);
         }
 
-        public SqlFuConnection(IDbProvider provider, DbConnection cnx, Func<IRetryOnTransientErrorsStrategy> errStrategyFactory)
+        public SqlFuConnection(IDbProvider provider, DbConnection cnx, SqlFuConfig config)
         {
+            Config = config;
             cnx.MustNotBeNull();
             provider.MustNotBeNull();
             _conex = cnx;
             _provider = provider;
-            _errStrategyFactory = errStrategyFactory;
+            _errStrategyFactory = config.TransientErrorsStrategyFactory;
         }
 
         
@@ -470,6 +473,11 @@ namespace SqlFu.Executors
             => _cmd.CreateParameter();
 
         public IDbProvider Provider => _cnx.Provider;
+
+        public SqlFuConnection SqlFuConnection
+        {
+            get { return _cnx; }
+        }
 
         protected override DbDataReader ExecuteDbDataReader(CommandBehavior behavior) => _cmd.ExecuteReader(behavior);
     }

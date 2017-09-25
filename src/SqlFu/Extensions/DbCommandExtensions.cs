@@ -46,7 +46,7 @@ namespace SqlFu
         /// <returns></returns>
         public static T GetValue<T>(this DbCommand cmd, Func<object, T> converter = null)
         {
-            return SqlFuManager.GetConverter(converter)(cmd.ExecuteScalar());            
+            return cmd.GetConverter(converter)(cmd.ExecuteScalar());            
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace SqlFu
                 {
                     while (reader.Read())
                     {
-                        if (!processor(SqlFuManager.GetMapper(mapper, cmd.CommandText)(reader))) break;
+                        if (!processor(cmd.GetMapper(mapper, cmd.CommandText)(reader))) break;
                     }
                 }
 
@@ -104,7 +104,7 @@ namespace SqlFu
 
         public static async Task<T> GetValueAsync<T>(this DbCommand cmd, CancellationToken token, Func<object, T> converter = null)
         {
-            return SqlFuManager.GetConverter(converter)(await cmd.ExecuteScalarAsync(token).ConfigureAwait(false));            
+            return cmd.GetConverter(converter)(await cmd.ExecuteScalarAsync(token).ConfigureAwait(false));            
         }
         /// <summary>
         /// Executes an async query then processes each result
@@ -128,7 +128,7 @@ namespace SqlFu
                 {
                     while (await reader.ReadAsync(c).ConfigureFalse())
                     {
-                        if (!processor(SqlFuManager.GetMapper(mapper, cmd.CommandText)(reader))) break;
+                        if (!processor(cmd.GetMapper(mapper, cmd.CommandText)(reader))) break;
                     }
                 }
 

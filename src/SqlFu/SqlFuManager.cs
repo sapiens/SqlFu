@@ -14,7 +14,7 @@ namespace SqlFu
     {
         static SqlFuConfig config=new SqlFuConfig();
 
-        public static SqlFuConfig Config => config;
+        internal static SqlFuConfig Config => config;
 
         public static void ResetConfig()
         {
@@ -56,7 +56,7 @@ namespace SqlFu
         /// <param name="conex"></param>
         /// <param name="provider"></param>
         /// <returns></returns>
-        public static DbConnection GetConnection(DbConnection conex, IDbProvider provider = null) => new SqlFuConnection(provider ?? Config.GetProfile().Provider, conex,Config.TransientErrorsStrategyFactory);
+        public static DbConnection GetConnection(DbConnection conex, IDbProvider provider = null) => new SqlFuConnection(provider ?? Config.GetProfile().Provider, conex,Config);
 
         public static void Configure(Action<SqlFuConfig> cfg)
         {
@@ -74,7 +74,7 @@ namespace SqlFu
                   throw new InvalidOperationException(
                     "I need a connection! Either set SqlFuFactory.Config.Providers.ConnectionString method or define a connection in config file. If there are more than one connection defined, set SqlFuFactory.Config.Providers.ConnectionString");
             }
-            var sql= new SqlFuConnection(provider,connectionString, Config.TransientErrorsStrategyFactory);
+            var sql= new SqlFuConnection(provider,connectionString, Config);
             sql.Open();
             return sql;
         }
@@ -86,7 +86,7 @@ namespace SqlFu
                   throw new InvalidOperationException(
                     "I need a connection! Either set SqlFuFactory.Config.Providers.ConnectionString method or define a connection in config file. If there are more than one connection defined, set SqlFuFactory.Config.Providers.ConnectionString");
             }
-            var sql= new SqlFuConnection(provider,connectionString, Config.TransientErrorsStrategyFactory);
+            var sql= new SqlFuConnection(provider,connectionString, Config);
             await sql.OpenAsync(cancel).ConfigureAwait(false);
              return sql;
         }
@@ -105,7 +105,7 @@ namespace SqlFu
                   throw new InvalidOperationException(
                     "I need a connection! Either set SqlFuFactory.Config.Providers.ConnectionString method or define a connection in config file. If there are more than one connection defined, set SqlFuFactory.Config.Providers.ConnectionString");
             }
-           return new SqlFuConnection(provider,connectionString, Config.TransientErrorsStrategyFactory);          
+           return new SqlFuConnection(provider,connectionString, Config);          
         }
 
 
@@ -115,7 +115,7 @@ namespace SqlFu
         /// <typeparam name="T"></typeparam>
         /// <param name="db"></param>
         /// <returns></returns>
-        public static TableInfo GetPocoInfo<T>(this DbConnection db) => Config.TableInfoFactory.GetInfo(typeof (T));
+        public static TableInfo GetPocoInfo<T>(this DbConnection db) => db.CastAs<SqlFuConnection>().Config.TableInfoFactory.GetInfo(typeof (T));
 
 
         public static IDbProvider Provider(this DbConnection cnx)
@@ -128,18 +128,20 @@ namespace SqlFu
           
             throw new NotSupportedException("Only SqlFu connections are supported");
         }
-        
 
-        public static Func<object, T> GetConverter<T>(Func<object, T> converter)
+        public static SqlFuConfig GetConfig(this DbCommand cmd) => cmd.CastAs<SqlFuCommand>().SqlFuConnection.Config;
+
+        public static Func<object, T> GetConverter<T>(this DbCommand cmd,Func<object, T> converter)
         {
             if (converter != null) return converter;
-            return Config.Converters.Convert<T>;
+
+            return cmd.GetConfig().Converters.Convert<T>;
         }
 
-        public static Func<DbDataReader, T> GetMapper<T>(Func<DbDataReader, T> mapper,string cmdText)
+        public static Func<DbDataReader, T> GetMapper<T>(this DbCommand cmd,Func<DbDataReader, T> mapper,string cmdText)
         {
             if (mapper != null) return mapper;
-            return reader => config.MapperFactory.Map<T>(reader, cmdText.GetCachingId());
+            return reader => cmd.GetConfig().MapperFactory.Map<T>(reader, cmdText.GetCachingId());
         }
         
     }

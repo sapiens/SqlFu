@@ -23,10 +23,7 @@ namespace Tests
 
         public static DbConnection SqlFuConnection(string cnx)
         {
-            SqlFuManager.Configure(c =>
-            {
-                c.
-            });
+           
         }
 
         public static FakeWriter FakeWriter() => new FakeWriter();

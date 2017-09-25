@@ -33,7 +33,7 @@ namespace SqlFu
 
         public DbConnection Create(DbConnection db=null)
         {
-            if (db!=null) return new SqlFuConnection(_provider, db,SqlFuManager.Config.TransientErrorsStrategyFactory);
+            if (db!=null) return new SqlFuConnection(_provider, db,SqlFuManager.Config);
             return SqlFuManager.OpenConnection(_provider, _connectionString);           
         }
 
@@ -44,7 +44,7 @@ namespace SqlFu
 
         public Task<DbConnection> CreateAsync(CancellationToken cancel, DbConnection db = null)
         {
-            if (db != null) return Task.FromResult((DbConnection)new SqlFuConnection(_provider, db, SqlFuManager.Config.TransientErrorsStrategyFactory));
+            if (db != null) return Task.FromResult((DbConnection)new SqlFuConnection(_provider, db, SqlFuManager.Config));
             return SqlFuManager.OpenConnectionAsync(_provider, _connectionString,cancel);
         }
 

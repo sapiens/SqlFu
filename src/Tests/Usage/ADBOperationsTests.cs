@@ -169,7 +169,7 @@ namespace Tests.SqlServer
         [Fact]
         public void delete_where()
         {
-            _db.DeleteFromAnonymous(new {Category = ""}, o => o.SetTableName("users"),
+            _db.DeleteFromAnonymous(new {Category = ""}, "users",
                 d => d.Category == Type.Page.ToString())
                 .Should().Be(1);
             _db.CountRows<User>().Should().Be(2);
@@ -209,7 +209,7 @@ namespace Tests.SqlServer
                 ? @"Server=(local)\SQL2016;Database=tempdb;User ID=sa;Password=Password12!"
                 : @"Data Source=.\SQLExpress;Initial Catalog=tempdb;Integrated Security=True;MultipleActiveResultSets=True";
 
-        public SqlServerTests() : base(db)
+        public SqlServerTests() : base()
         {
 
         }
