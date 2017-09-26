@@ -5,7 +5,9 @@ using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Tests.Usage;
 using Xunit;
+using Type = Tests.Usage.Type;
 
 namespace Tests.SqlServer
 {
@@ -43,7 +45,7 @@ namespace Tests.SqlServer
             {
                 FirstName = "Jane",
                 LastName = "Doe",
-                Category = Type.Page.ToString(),
+                Category = Type.Page,
                 Posts = 0
             });
         }
@@ -59,7 +61,7 @@ namespace Tests.SqlServer
             {
                 FirstName = "Jane2",
                 LastName = "Doe",
-                Category = Type.Page.ToString(),
+                Category = Type.Page,
                 Posts = 0
             }).GetInsertedId<int>().Should().Be(4);
           
@@ -74,7 +76,7 @@ namespace Tests.SqlServer
             {
                 FirstName = "Jane2",
                 LastName = "Doe",
-                Category = Type.Page.ToString(),
+                Category = Type.Page,
                 Posts = 0
             }).GetInsertedId<int>().Should().Be(4);
 
@@ -82,7 +84,7 @@ namespace Tests.SqlServer
             {
                 FirstName = "Jane2",
                 LastName = "Doe",
-                Category = Type.Page.ToString(),
+                Category = Type.Page,
                 Posts = 0
             })).ShouldThrow<DbException>();
            
@@ -90,20 +92,24 @@ namespace Tests.SqlServer
             {
                 FirstName = "Jane2",
                 LastName = "Doe",
-                Category = Type.Page.ToString(),
+                Category = Type.Page,
                 Posts = 0
             })).ShouldNotThrow();
-           
-
+                     
         }
 
+        [Fact]
+        public void convert_value_at_writing()
+        {
+            
+        }
 
         [Fact]
         public void get_user_with_fullname()
         {
            
             var user=_db.QueryRow(q => q.From<User>()
-                .Where(d => !d.IsDeleted && d.Category==Type.Page.ToString())
+                .Where(d => !d.IsDeleted && d.Category==Type.Page)
                 .And(d => d.InjectSql("Posts= @no", new {no = 0}))
                 .Select(d=>new {d.Id,Fullname=d.Concat(d.FirstName," ",d.LastName)}));
             user.Fullname.Should().Be("Jane Doe");
@@ -117,7 +123,12 @@ namespace Tests.SqlServer
             _db.QueryValue<int>(q => q.From<User>().Select(d => d.Count())).Should().Be(3);
         }
 
-      
+        [Fact]
+        public void update_user_where_writable_converter()
+        {
+            _db.Update<User>().Set(d => d.Category ,Type.Post).Where(d => d.Category == Type.Page).Execute()
+                .Should().Be(1);
+        }
 
         [Fact]
         public void sum_of_posts()
@@ -125,7 +136,7 @@ namespace Tests.SqlServer
             var all=_db.QueryAs(q => q.From<User>()
                 .GroupBy(d => d.Category)
                 .Select(d => new {d.Category, total= d.Sum(d.Posts + 1)})
-                ).ToDictionary(d=>d.Category.ToEnum<Type>(),d=>d.total);
+                ).ToDictionary(d=>d.Category,d=>d.total);
             all[Type.Post].Should().Be(5);
             all[Type.Page].Should().Be(1);
         }

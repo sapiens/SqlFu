@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
@@ -89,7 +88,9 @@ namespace SqlFu.Builders.Crud
 
         public IBuildUpdateTable<T> Set(Expression<Func<T, object>> column, object value)
         {
+            _writer.EscapeIdentifiers = false;
             var name = _writer.GetColumnsSql(column);
+            _writer.EscapeIdentifiers = true;
             return Set(name, value);
         }
 
@@ -97,7 +98,7 @@ namespace SqlFu.Builders.Crud
         {
             var name = _options.Info[propertyName].Name;
             _sb.Append($"{_utils.EscapeIdentifier(name)}=@{_writer.Parameters.CurrentIndex},");
-            _writer.Parameters.AddValues(value);
+            _writer.Parameters.AddValues(_options.Info.ConvertWriteValue(propertyName,value));
             return this;
         }
     }

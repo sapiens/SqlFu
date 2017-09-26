@@ -30,14 +30,14 @@ namespace SqlFu.Builders.Crud
             {
                 cache.InsertSql = _provider.CreateInsertSql(_options, columnValues);
             }
-
+            
             return new CommandConfiguration(cache.InsertSql,columnValues.Values.ToArray()) {ApplyOptions = _options.CmdOptions};
         }
 
         private IDictionary<string, object> FilterIgnored()
         {
             //property name -> column's name 
-            var columnValues = _data.ToDictionary().ToDictionary(k=>_options.Info[k.Key].Name,v=>v.Value);
+            var columnValues = _data.ToDictionary().ToDictionary(k=>_options.Info[k.Key].Name,v=> _options.Info.ConvertWriteValue(v.Key, v.Value));
             foreach (var name in GetIgnoredColumns(_options))
             {
                 columnValues.Remove(name);

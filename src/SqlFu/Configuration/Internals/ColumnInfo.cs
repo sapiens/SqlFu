@@ -29,7 +29,12 @@ namespace SqlFu.Configuration.Internals
         public string Name { get; set; }
 
         public Func<dynamic, object> Writer = null;
-        
+
+        public object ConvertWritableValue(object value)
+        {
+            if (Writer == null) return value;
+            return Writer((dynamic) value);
+        }
 
         public bool HasConverter { get; set; }
         public int PocoIdx { get; set; }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Tests.SqlServer
+namespace Tests.Usage
 {
     public class User
     {
@@ -11,7 +11,7 @@ namespace Tests.SqlServer
         public bool IsDeleted { get; set; }
         public int Posts { get; set; }
         public DateTime CreatedOn { get; set; }=DateTime.Now;
-        public string Category { get; set; } = Type.Post.ToString();
+        public Type Category { get; set; }/* = Type.Post.ToString();*/
         public User()
         {
          

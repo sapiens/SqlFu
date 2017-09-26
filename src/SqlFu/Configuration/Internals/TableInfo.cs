@@ -49,6 +49,12 @@ namespace SqlFu.Configuration.Internals
         //    TableName = new TableName(attrib.Name, attrib.DbSchema);
         //}
 
+        public object ConvertWriteValue(string propertyName, object value)
+        {
+            var p=this[propertyName];
+            return p.ConvertWritableValue(value);
+        }
+
         public ColumnInfo[] Columns { get; }
 
         Dictionary<string, TableSqlCache> _cache = new Dictionary<string, TableSqlCache>();
@@ -127,6 +133,8 @@ namespace SqlFu.Configuration.Internals
                 info.IgnoreWrite= info.IgnoreRead = true;                
             }
         }
+
+        
 
         public IConfigurePropertyInfo<R> Property<R>(Expression<Func<T, R>> property)
        =>new ColumnInfo<R>(_info[property.GetPropertyName()]);

@@ -8,6 +8,7 @@ using SqlFu;
 using SqlFu.Builders.Expressions;
 using SqlFu.Providers;
 using SqlFu.Providers.SqlServer;
+using Tests.Usage;
 using Xunit;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true, MaxParallelThreads = 1)]
@@ -25,7 +26,7 @@ namespace Tests.SqlServer
 
         protected override DbConnection GetConnection()
         {
-            return Setup.SqlFuConnection(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection), global::Tests.Setup.SqlServerConnection);
+            return Setup.SqlFuConnection(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection), Setup.SqlServerConnection);
         }
 
         protected override void Init()

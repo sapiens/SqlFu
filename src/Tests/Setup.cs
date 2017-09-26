@@ -12,6 +12,7 @@ using SqlFu.Mapping.Internals;
 using SqlFu.Providers;
 using Tests.SqlServer;
 using Tests.TestData;
+using Tests.Usage;
 using Tests._Fakes;
 
 namespace Tests
@@ -36,6 +37,8 @@ namespace Tests
             {
                 d.TableName = "Users" + new string(Guid.NewGuid().ToByteArray().ToBase64().Where(w=>(w>='a' && w<='z')).Take(5).ToArray());
                 d.Property(f => f.Id).IsAutoincremented();
+                d.Property(f => f.Category).BeforeWritingUseConverter(t => 
+                t.ToString());
             });
             config?.Invoke(c);
             return new SqlFuConnection(provider,cnx,c);

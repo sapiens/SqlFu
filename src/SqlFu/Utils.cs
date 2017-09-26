@@ -40,7 +40,7 @@ namespace SqlFu
         /// <param name="db"></param>
         /// <returns></returns>
         public static IGenerateSqlFromExpressions GetExpressionSqlGenerator(this DbConnection db)
-            => new ExpressionSqlGenerator(db.Provider().ExpressionsHelper,SqlFuManager.Config.TableInfoFactory,db.Provider());
+            => new ExpressionSqlGenerator(db.Provider().ExpressionsHelper,db.SqlFuConfig().TableInfoFactory,db.Provider());
 
         /// <summary>
         /// Sets table name/schema in one statement
@@ -74,10 +74,10 @@ namespace SqlFu
 
         public static SqlFuConfig SqlFuConfig(this DbConnection db) => db.CastAs<SqlFuConnection>().Config;
 
-       public static string GetColumnName(this TableInfo info, MemberExpression member, IEscapeIdentifier provider)
+       public static string GetColumnName(this TableInfo info, MemberExpression member, IEscapeIdentifier provider=null)
         {
-            var col = info.Columns.First(d => d.PropertyInfo.Name == member.Member.Name);
-            return provider.EscapeIdentifier(col.Name);
+            var col = info.Columns.First(d => d.PropertyInfo.Name == member.Member.Name);            
+            return provider?.EscapeIdentifier(col.Name)??col.Name;
         }
         public static string GetColumnName(this TableInfo info, string property, IEscapeIdentifier provider)
         {
