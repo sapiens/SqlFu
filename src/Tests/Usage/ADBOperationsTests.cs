@@ -1,19 +1,15 @@
-﻿using System;
+﻿using FluentAssertions;
+using SqlFu;
+using System;
 using System.Data.Common;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentAssertions;
-using SqlFu;
-using SqlFu.Builders.Expressions;
-using SqlFu.Providers;
 using Xunit;
 
 namespace Tests.SqlServer
 {
-   
+
     public abstract class ADBOperationsTests:IDisposable
     {
         protected DbConnection _db;
@@ -22,7 +18,7 @@ namespace Tests.SqlServer
         public ADBOperationsTests()
         {
             _db = GetConnection();
-
+      
             _db.Open();
             Init();
             AddData();
@@ -66,12 +62,15 @@ namespace Tests.SqlServer
                 Category = Type.Page.ToString(),
                 Posts = 0
             }).GetInsertedId<int>().Should().Be(4);
+           var d= _db.QueryAs(q => q.From<User>().SelectAll().MapTo<dynamic>());
+
         }
 
 
         [Fact]
         public void get_user_with_fullname()
         {
+           
             var user=_db.QueryRow(q => q.From<User>()
                 .Where(d => !d.IsDeleted && d.Category==Type.Page.ToString())
                 .And(d => d.InjectSql("Posts= @no", new {no = 0}))

@@ -14,6 +14,7 @@ namespace SqlFu.Providers.Sqlite
 
         public SqliteProvider(Func<DbConnection> factory) : base(factory, Id)
         {
+            InitExpressionHelper=()=>new SqliteExpressions();
         }
 
         protected override EscapeIdentifierChars GetEscapeIdentifierChars()
@@ -48,5 +49,7 @@ namespace SqlFu.Providers.Sqlite
 
        public override string FormatQueryPagination(string sql, Pagination page, ParametersManager pm) 
             => $"{sql} limit {page.Skip},{page.PageSize}";
+
+        
     }
 }

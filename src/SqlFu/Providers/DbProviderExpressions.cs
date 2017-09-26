@@ -12,7 +12,7 @@ namespace SqlFu.Providers
 {
     public class DbProviderExpressions : IDbProviderExpressions
     {
-        private const int Placeholder = 1;
+        internal const int Placeholder = 1;
 
         public DbProviderExpressions()
         {
@@ -45,7 +45,7 @@ namespace SqlFu.Providers
         {
             var metho = function.Body as MethodCallExpression;
             metho.MustNotBeNull();
-            Functions.Add(GetKey(metho),func);
+            Functions[GetKey(metho)]=func;
         }
 
         private string GetKey(MethodCallExpression e) => e.Method.DeclaringType + e.Method.Name+e.Arguments.Count;

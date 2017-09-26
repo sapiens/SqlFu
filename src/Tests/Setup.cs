@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Linq;
+using CavemanTools.Logging;
 using CavemanTools.Model.ValueObjects;
 using SqlFu;
 using SqlFu.Builders.Expressions;
@@ -26,8 +28,10 @@ namespace Tests
 
         public static DbConnection SqlFuConnection(DbProvider provider,string cnx,Action<SqlFuConfig> config=null)
         {
-           
+            LogManager.OutputTo(w => Trace.WriteLine(w));
+            
             var c=new SqlFuConfig();
+            SqlFuManager.UseLogManager();
             c.ConfigureTableForPoco<User>(d =>
             {
                 d.TableName = "Users" + new string(Guid.NewGuid().ToByteArray().ToBase64().Where(w=>(w>='a' && w<='z')).Take(5).ToArray());

@@ -329,6 +329,8 @@ namespace SqlFu
             return db.WithSql(builder).GetRows();
         }
 
+        //public static List<T> Select<T>(this DbConnection db,Expression<Func<T,bool>> criteria)
+
         /// <summary>
         /// It's Fetch with a strongly typed builder
         /// </summary>

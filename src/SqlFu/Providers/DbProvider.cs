@@ -19,11 +19,12 @@ namespace SqlFu.Providers
         {
             _factory = factory;
             SqlFuConfiguration = config ?? SqlFuManager.Config;
+            Converters = SqlFuConfiguration.Converters;
             ProviderId = providerId;
             EscapeChars = GetEscapeIdentifierChars();
         }
 
-        protected IManageConverters Converters= SqlFuManager.Config.Converters;
+        protected IManageConverters Converters;
 
         public virtual void SetupParameter(DbParameter param, string name, object value)
         {
@@ -86,7 +87,6 @@ namespace SqlFu.Providers
         public abstract bool ObjectExists(DbException ex, string name = null);
 
 
-        //public abstract string AddReturnInsertValue(string sqlValues, string identityColumn);
         public abstract string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues);
 
         public abstract string FormatQueryPagination(string sql, Pagination page, ParametersManager pm);

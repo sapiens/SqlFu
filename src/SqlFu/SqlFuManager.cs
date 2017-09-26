@@ -12,19 +12,20 @@ namespace SqlFu
 {
     public static class SqlFuManager
     {
-        static SqlFuConfig config=new SqlFuConfig();
+        static SqlFuConfig _config=new SqlFuConfig();
 
-        internal static SqlFuConfig Config => config;
+        internal static SqlFuConfig Config => _config;
 
         public static void ResetConfig()
         {
-            config=new SqlFuConfig();
+            _config=new SqlFuConfig();
         }
 
         public static void UseLogManager()
         {
+            
             Config.OnCommand = cmd => "SqlFu".LogDebug(cmd.FormatCommand());
-            config.OnException = (cmd, ex) =>
+            Config.OnException = (cmd, ex) =>
             {
                 "SqlFu".LogError("Command threw exception {0}", cmd.FormatCommand());
                 "SqlFu".LogError(ex);
@@ -63,7 +64,7 @@ namespace SqlFu
             cfg.MustNotBeNull();
             UseLogManager();
             cfg(Config);
-            if (config.HasNoProfiles) throw new InvalidOperationException("You need to define a profile in order to continue");
+            if (_config.HasNoProfiles) throw new InvalidOperationException("You need to define a profile in order to continue");
         }
 
         public static DbConnection OpenConnection(IDbProvider provider,string connectionString)
@@ -129,19 +130,19 @@ namespace SqlFu
             throw new NotSupportedException("Only SqlFu connections are supported");
         }
 
-        public static SqlFuConfig GetConfig(this DbCommand cmd) => cmd.CastAs<SqlFuCommand>().SqlFuConnection.Config;
+        public static SqlFuConfig SqlConfig(this DbCommand cmd) => cmd.CastAs<SqlFuCommand>().SqlFuConnection.Config;
 
         public static Func<object, T> GetConverter<T>(this DbCommand cmd,Func<object, T> converter)
         {
             if (converter != null) return converter;
 
-            return cmd.GetConfig().Converters.Convert<T>;
+            return cmd.SqlConfig().Converters.Convert<T>;
         }
 
         public static Func<DbDataReader, T> GetMapper<T>(this DbCommand cmd,Func<DbDataReader, T> mapper,string cmdText)
         {
             if (mapper != null) return mapper;
-            return reader => cmd.GetConfig().MapperFactory.Map<T>(reader, cmdText.GetCachingId());
+            return reader => cmd.SqlConfig().MapperFactory.Map<T>(reader, cmdText.GetCachingId());
         }
         
     }

@@ -19,7 +19,7 @@ namespace Tests.Usage
         {
             _db.AddDbObjectOrIgnore($@"
 create table {_db.GetTableName<User>()} (
-[Id] [int] primary key,
+Id integer primary key not null,
 FirstName nvarchar(150),
 LastName nvarchar(150),
 Category varchar(10) default('Page'),
