@@ -53,7 +53,8 @@ namespace SqlFu.Providers.SqlServer
         public override bool IsUniqueViolation(DbException ex, string keyName = "")
         {
             if (!ex.Message.Contains("Cannot insert duplicate")) return false;
-            return !keyName.IsNotEmpty() || ex.Message.Contains(keyName);
+            if (!keyName.IsNotEmpty()) return true;
+            return ex.Message.Contains(keyName);
         }
 
         public override bool ObjectExists(DbException ex, string name = null)

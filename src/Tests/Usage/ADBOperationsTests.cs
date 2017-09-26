@@ -62,7 +62,38 @@ namespace Tests.SqlServer
                 Category = Type.Page.ToString(),
                 Posts = 0
             }).GetInsertedId<int>().Should().Be(4);
-           var d= _db.QueryAs(q => q.From<User>().SelectAll().MapTo<dynamic>());
+          
+
+        }
+
+        [Fact]
+        public void insert_ignore()
+        {
+
+            _db.Insert(new User()
+            {
+                FirstName = "Jane2",
+                LastName = "Doe",
+                Category = Type.Page.ToString(),
+                Posts = 0
+            }).GetInsertedId<int>().Should().Be(4);
+
+            _db.Invoking(d => d.Insert(new User()
+            {
+                FirstName = "Jane2",
+                LastName = "Doe",
+                Category = Type.Page.ToString(),
+                Posts = 0
+            })).ShouldThrow<DbException>();
+           
+         _db.Invoking(d=>d.InsertIgnore(new User()
+            {
+                FirstName = "Jane2",
+                LastName = "Doe",
+                Category = Type.Page.ToString(),
+                Posts = 0
+            })).ShouldNotThrow();
+           
 
         }
 

@@ -40,7 +40,8 @@ LastName nvarchar(150),
 Category varchar(10) default('Page'),
 CreatedOn datetime default (getdate()),
 IsDeleted bit default 0,
-Posts int not null default 0
+Posts int not null default 0,
+unique(FirstName)
 )
 
 ");
