@@ -61,13 +61,7 @@ namespace SqlFu.Providers.SqlServer
 
 
 
-        //public override string AddReturnInsertValue(string sqlValues, string identityColumn)
-        //{
-        //    if (identityColumn.IsNullOrEmpty()) return sqlValues;
-        //    return $"\nOUTPUT INSERTED.{identityColumn} AS ID " + sqlValues;
-        //}
-
-        public override string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues)
+      public override string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues)
         {
             var ins = options.IdentityColumn.IsNullOrEmpty() ? "" : $"\nOUTPUT INSERTED.{options.IdentityColumn} AS ID ";
             return $"insert into {EscapeTableName(options.TableName)}({columnValues.Keys.Select(EscapeIdentifier).StringJoin()})" +ins+

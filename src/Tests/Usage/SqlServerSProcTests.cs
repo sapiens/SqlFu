@@ -11,6 +11,7 @@ namespace Tests.Usage
     {
         public SqlServerSProcTests()
         {
+            SqlFuManager.UseLogManager();
         }
 
         protected override DbConnection GetConnection()
