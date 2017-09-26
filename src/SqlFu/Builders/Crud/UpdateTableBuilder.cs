@@ -75,6 +75,7 @@ namespace SqlFu.Builders.Crud
         {
             if (!_hasWhere)
             {
+                _sb.RemoveLastIfEquals(',');
                 _sb.Append(" where ");
                 _hasWhere = true;
             }

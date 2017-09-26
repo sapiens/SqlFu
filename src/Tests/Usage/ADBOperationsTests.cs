@@ -101,7 +101,7 @@ namespace Tests.SqlServer
 
 
         [Fact]
-        public void delete_where()
+        public void delete_anon_where()
         {
             _db.DeleteFromAnonymous(new {Category = ""}, _db.GetTableName<User>(),
                 d => d.Category == Type.Page.ToString())
@@ -129,6 +129,26 @@ namespace Tests.SqlServer
                 .Execute().Should().Be(1);
             _db.CountRows<User>(d => d.FirstName != "John3").Should().Be(2);         
         }
+
+        [Fact]
+        public void simpler_update_from_values()
+        {
+            _db.UpdateFrom(new {FirstName = "John3"}, _db.GetTableName<User>()).Where(new {Id = 1}).Execute().Should()
+                .Be(1);
+            _db.CountRows<User>(d => d.FirstName != "John3").Should().Be(2);         
+        }
+
+        [Fact]
+        public void simpler_update_from_values_with_criteria()
+        {
+            _db.UpdateFrom(new {FirstName = "Jane4"}, _db.GetTableName<User>())
+                .Where(new {Id = 1,FirstName=""},d=>d.FirstName=="Jane")
+                .Execute().Should().Be(1);
+            _db.CountRows<User>(d => d.FirstName != "Jane4").Should().Be(2);         
+            _db.CountRows<User>(d => d.FirstName == "Jane4").Should().Be(1);         
+        }
+
+
 
         public void Dispose()
         {
