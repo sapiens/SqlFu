@@ -33,8 +33,9 @@ namespace SqlFu
 
         public DbConnection Create(DbConnection db=null)
         {
-            if (db!=null) return new SqlFuConnection(_provider, db,SqlFuManager.Config);
-            return SqlFuManager.OpenConnection(_provider, _connectionString);           
+            if (db == null) return SqlFuManager.OpenConnection(_provider, _connectionString);
+            if (db is SqlFuConnection) return db;
+            return new SqlFuConnection(_provider, db,SqlFuManager.Config);
         }
 
         public DbConnection Create(string cnxString)
