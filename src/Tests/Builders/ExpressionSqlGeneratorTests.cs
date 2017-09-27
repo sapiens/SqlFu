@@ -441,6 +441,30 @@ namespace Tests.Builders
         }
 
         [Fact]
+        public void between_datetime()
+        {
+            var start = new DateTime();
+            var end = new DateTime(100, 1, 1);
+            var sql = Get(d => d.CreatedOn.Between(start, end));
+            sql.Should().Be("CreatedOn>=@0 and CreatedOn<=@1");
+            var args = _sut.Parameters.ToArray();
+            args[0].Should().Be(start);
+            args[1].Should().Be(end);
+        }
+
+        [Fact]
+        public void between_datetimeoffset()
+        {
+            var start = new DateTimeOffset();
+            var end = new DateTimeOffset(new DateTime(100, 1, 1));
+            var sql = Get(d => d.RegOn.Between(start, end));
+            sql.Should().Be("RegOn>=@0 and RegOn<=@1");
+            var args = _sut.Parameters.ToArray();
+            args[0].Should().Be(start);
+            args[1].Should().Be(end);
+        }
+
+        [Fact]
         public void func_ceiling_columns()
         {
             var sql = Get(d => d.Ceiling(d.SomeId));

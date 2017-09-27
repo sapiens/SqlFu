@@ -30,7 +30,7 @@ namespace SqlFu.Providers.Sqlite
             => $"strftime('%Y',{column})";
 
         public override string Length(string column)
-            => $"length({column})";
+            => $"length({column})";        
 
         public override string Substring(string column, int pos, int length)
         {

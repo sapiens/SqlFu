@@ -26,6 +26,7 @@ namespace SqlFu.Providers
             LinkMethods(()=>Placeholder.Concat(),Concat);
             LinkMethods(()=>Placeholder.Round(2,2),Round);                     
             LinkMethods(()=>DateTime.MinValue.Between(DateTime.MinValue, DateTime.MinValue),BetweenDates);                                 
+            LinkMethods(()=>DateTimeOffset.MinValue.Between(DateTimeOffset.MinValue, DateTimeOffset.MinValue),BetweenDates);                                 
         }
 
         private void BetweenDates(MethodCallExpression arg1, StringBuilder sb, IGenerateSqlFromExpressions writer)

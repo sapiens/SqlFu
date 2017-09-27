@@ -25,6 +25,10 @@ namespace SqlFu
         {
             throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
         }
+          public static bool Between(this DateTimeOffset column, DateTimeOffset start,DateTimeOffset end)
+        {
+            throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
+        }
 
 
         /// <summary>

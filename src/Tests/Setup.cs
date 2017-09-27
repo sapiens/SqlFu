@@ -85,6 +85,7 @@ namespace Tests
             if (typeof(T) == typeof(Post))
             {
                 info.TableName = "SomePost";
+                info["RegOn"].IgnoreWrite = true;
                 //var sid = info["SomeId"];
                 //sid.IgnoreWrite = sid.IgnoreRead = true;
             }

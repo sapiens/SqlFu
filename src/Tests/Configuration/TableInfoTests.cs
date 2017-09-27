@@ -24,7 +24,7 @@ namespace Tests.Configuration
         [Fact]
         public void all_properties_are_considered_columns()
         {
-            _sut.Columns.Count().Should().Be(13);
+            _sut.Columns.Count().Should().Be(14);
 
         }
 

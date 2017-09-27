@@ -21,7 +21,7 @@ namespace SqlFu.Providers.SqlServer
 
         public SqlServer2012Provider(Func<DbConnection> factory):base(factory,Id)
         {
-           
+           InitExpressionHelper=()=>new SqlServer2012Expressions();
         }
 
         protected override EscapeIdentifierChars GetEscapeIdentifierChars()
