@@ -1,4 +1,4 @@
-version: 3.4.1.{build}
+version: 4.0.0.{build}-alpha-1
 
 branches:
 
@@ -6,9 +6,7 @@ branches:
 
   - master
 
-skip_non_tags: true
-
-image: Visual Studio 2017 Preview
+image: Visual Studio 2017
 
 configuration: Release
 
@@ -34,6 +32,7 @@ dotnet_csproj:
 
   package_version: '{version}'
 
+services: mssql2016
 
 before_build:
 
