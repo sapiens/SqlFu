@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CavemanTools.Model;
 using Tests.Usage;
 using Xunit;
 using Type = Tests.Usage.Type;
@@ -26,28 +27,31 @@ namespace Tests.SqlServer
             AddData();
         }
 
-        private void AddData()
+        private User[] _inserted =
         {
-            _db.Insert(new User()
+            new User()
             {
                 FirstName = "John",
                 LastName = "Doe"
-            });
-
-            _db.Insert(new User()
+            }
+            ,new User()
             {
                 FirstName = "John1",
                 LastName = "Doe",
                 Posts = 3
-            });
-
-            _db.Insert(new User()
+            }
+            ,
+            new User()
             {
                 FirstName = "Jane",
                 LastName = "Doe",
                 Category = Type.Page,
                 Posts = 0
-            });
+            }
+        };
+        private void AddData()
+        {
+            foreach (var d in _inserted) _db.Insert(d);
         }
 
         protected abstract DbConnection GetConnection();
@@ -151,6 +155,14 @@ namespace Tests.SqlServer
             _db.CountRows<User>().Should().Be(2);
         }
 
+
+        [Fact]
+        public void pagination()
+        {
+            var p=_db.QueryPaged(q => q.From<User>().OrderBy(d=>d.Id).SelectAll(), Pagination.Create(1, 1));
+            p.Count.Should().Be(3);
+            p.Items.First().ShouldBeEquivalentTo(_inserted[1],d=>d.Excluding(s=>s.Id).Excluding(s=>s.CreatedOn));
+        }
       
         [Fact]
         public async Task get_single_row_no_result()
