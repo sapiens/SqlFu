@@ -9,6 +9,8 @@ namespace Tests.Usage
         public string LastName { get; set; }
       
         public bool IsDeleted { get; set; }
+        public int Ignored { get; set; }
+
         public int Posts { get; set; }
         public DateTime CreatedOn { get; set; }=DateTime.Now;
         public Type Category { get; set; }/* = Type.Post.ToString();*/
