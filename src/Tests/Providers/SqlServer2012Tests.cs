@@ -1,10 +1,13 @@
-﻿using System.Data.Common;
+﻿using System;
+using System.Data.Common;
+using System.Linq.Expressions;
 using CavemanTools;
 using CavemanTools.Model;
 using FluentAssertions;
 using NSubstitute;
 using SqlFu.Builders;
 using SqlFu.Providers.SqlServer;
+using Tests.TestData;
 using Xunit;
 
 namespace Tests.Providers
@@ -43,6 +46,15 @@ namespace Tests.Providers
             _sut.FormatQueryPagination("", page, pm)
             .Should().Be(" order by 1 OFFSET @0 ROWS FETCH NEXT @1 ROWS ONLY");
             pm.ToArray().ShouldAllBeEquivalentTo(new[] {page.Skip,page.PageSize});
+        }
+
+        [Fact]
+        public void date_diff()
+        {
+            var sut = Setup.CreateExpressionSqlGenerator(new SqlServer2012Expressions());
+            Expression<Func<MapperPost, object>> l = x => x.DateDiff(TSqlDatePart.Day, x.CreatedOn, DateTime.Now);
+            var rez = sut.GetSql(l);
+            rez.Should().Be("datediff(Day,CreatedOn,@0)");
         }
 
         [Fact]
