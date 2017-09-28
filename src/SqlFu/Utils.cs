@@ -137,8 +137,9 @@ namespace SqlFu
 
         public static bool IsCustomObject<T>(this T t)
             => t.GetType().IsCustomObjectType();
-      
 
+        public static IDbFactory CreateFactoryForTesting(this SqlFuConfig cfg, IDbProvider prov, string cnx)
+        =>new DbFactoryForTest(prov,cnx,cfg);
        
     }
 }

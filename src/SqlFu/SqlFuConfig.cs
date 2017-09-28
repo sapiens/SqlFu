@@ -69,7 +69,7 @@ namespace SqlFu
             TableInfoFactory.AddNamingConvention(match, convention);
         }
 
-      
+       
         #region Events
 
         private Action<DbCommand, DbException> _onException = (s, e) => { };
