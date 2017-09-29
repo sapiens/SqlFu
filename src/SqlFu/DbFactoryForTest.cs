@@ -45,7 +45,7 @@ namespace SqlFu
 
         public Task<DbConnection> CreateAsync(CancellationToken cancel, DbConnection db = null)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(Create());
         }
 
         public Task<DbConnection> CreateAsync(CancellationToken cancel, string cnxString)
