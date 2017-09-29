@@ -15,6 +15,7 @@ namespace SqlFu.Providers.Sqlite
         public SqliteProvider(Func<DbConnection> factory) : base(factory, Id)
         {
             InitExpressionHelper=()=>new SqliteExpressions();
+            DbSupportsSchemas = false;
         }
 
         protected override EscapeIdentifierChars GetEscapeIdentifierChars()

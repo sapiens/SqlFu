@@ -24,6 +24,7 @@ namespace SqlFu.Providers
             EscapeChars = GetEscapeIdentifierChars();
         }
 
+        protected bool DbSupportsSchemas = true;
         protected IManageConverters Converters;
 
         public virtual void SetupParameter(DbParameter param, string name, object value)
@@ -41,7 +42,7 @@ namespace SqlFu.Providers
         public string EscapeTableName(TableName table)
         {
             var schema = "";
-            if (!table.Schema.IsNullOrEmpty())
+            if (DbSupportsSchemas && !table.Schema.IsNullOrEmpty())
             {
                 schema = Escape(table.Schema,EscapeChars.Start,EscapeChars.End)+".";
             }
