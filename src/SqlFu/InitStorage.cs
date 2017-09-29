@@ -6,10 +6,14 @@ namespace SqlFu
 {
     public static class InitStorage
     {
-        public static void CreateStorage(this DbConnection cnx,Func<IEscapeIdentifier,string> getSql,Action<SqlFuConfig> config=null)
+        public static void CreateStorage(this DbConnection cnx, Func<IEscapeIdentifier, string> getSql,
+            Action<SqlFuConfig> config = null)
+            => CreateStorage(cnx, getSql(cnx.Provider()), config);
+      
+        public static void CreateStorage(this DbConnection cnx,string sql,Action<SqlFuConfig> config=null)
         {
             config?.Invoke(cnx.SqlFuConfig());
-            cnx.AddDbObjectOrIgnore(getSql(cnx.Provider()));
+            cnx.AddDbObjectOrIgnore(sql);
         }
     }
 }
