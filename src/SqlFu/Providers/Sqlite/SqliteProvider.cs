@@ -38,7 +38,7 @@ namespace SqlFu.Providers.Sqlite
         public override bool ObjectExists(DbException ex, string name = null)
         {
             if (!ex.Message.Contains("already exists")) return false;
-            if (name.IsNullOrEmpty()) return false;
+            if (name.IsNullOrEmpty()) return true;
             return ex.Message.Contains(name);
         }
 
