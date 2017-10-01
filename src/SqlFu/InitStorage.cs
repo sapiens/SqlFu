@@ -20,19 +20,19 @@ namespace SqlFu
 
     public interface ICreateForProviders
     {
-        ICreateForProviders When<T>(Func<IEscapeIdentifier,string> getSql) where T : IDbProvider;
+        ICreateForProviders When<T>(string getSql) where T : IDbProvider;
     }
 
-    public class SqlForProviders : Dictionary<Type, Func<IEscapeIdentifier, string>>, ICreateForProviders
+    public class SqlForProviders : Dictionary<Type,string>, ICreateForProviders
     {
         public string GetSqlForProvider(IDbProvider prov)
         {
-            var func = this.GetValueOrDefault(prov.GetType());
-            if(func==null) throw new InvalidOperationException($"No sql is specified for provider {prov.ProviderId}");
-            return func(prov);
+            var sql = this.GetValueOrDefault(prov.GetType());
+            if(sql==null) throw new InvalidOperationException($"No sql is specified for provider {prov.ProviderId}");
+            return sql;
         }
 
-        public ICreateForProviders When<T>(Func<IEscapeIdentifier, string> getSql) where T : IDbProvider
+        public ICreateForProviders When<T>(string getSql) where T : IDbProvider
         {
             getSql.MustNotBeNull();
             this[typeof(T)] = getSql;
