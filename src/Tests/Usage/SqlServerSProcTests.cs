@@ -4,9 +4,11 @@ using SqlFu;
 using SqlFu.Executors;
 using SqlFu.Providers.SqlServer;
 using Tests.Providers;
+using Xunit;
 
 namespace Tests.Usage
 {
+    [Collection("SqlServer Sproc")]
     public class SqlServerSProcTests : AStoredProcsTests
     {
         public SqlServerSProcTests()
