@@ -19,9 +19,11 @@ namespace SqlFu
         {
             _cnx = cnx;
             _config = config;
-            Provider = provider;
+            Provider = provider;            
         }
         public IDbProvider Provider { get; }
+        public SqlFuConfig Configuration => _config;
+
         public DbConnection Create(DbConnection db = null)
         {
             SqlFuConnection cnx ;

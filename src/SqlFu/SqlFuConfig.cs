@@ -154,7 +154,7 @@ namespace SqlFu
             type.GetTypeInfo().IsInterface.MustBe(true);
             var name = type.Name;
             var profile = new DbAccessProfile() { ConnectionString = connectionString, Name = name, Provider = provider, Factory = CreateFactory<T>() };
-            profile.Factory.CastAs<DbFactory>().Assign(profile);
+            profile.Factory.CastAs<DbFactory>().Assign(profile,this);
             return profile;
         }
 

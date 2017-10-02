@@ -13,9 +13,9 @@ namespace SqlFu
         private  IDbProvider _provider;
         private  string _connectionString;
 
-        public DbFactory(DbAccessProfile profile)
+        public DbFactory(DbAccessProfile profile, SqlFuConfig config)
         {
-            Assign(profile);
+            Assign(profile,config);
         }
 
         protected DbFactory()
@@ -23,13 +23,15 @@ namespace SqlFu
             
         }
 
-        internal void Assign(DbAccessProfile profile)
+        internal void Assign(DbAccessProfile profile,SqlFuConfig config)
         {
             _provider = profile.Provider;
             _connectionString = profile.ConnectionString;
+            Configuration = config;
         }
 
-       public IDbProvider Provider => _provider;     
+       public IDbProvider Provider => _provider;
+        public SqlFuConfig Configuration { get; private set; }
 
         public DbConnection Create(DbConnection db=null)
         {

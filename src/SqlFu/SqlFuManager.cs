@@ -40,7 +40,7 @@ namespace SqlFu
         public static IDbFactory GetDbFactory(string profile = "default")
         {
             var accessProfile = Config.GetProfile(profile);
-            if (accessProfile.Factory == null) accessProfile.Factory = new DbFactory(accessProfile);
+            if (accessProfile.Factory == null) accessProfile.Factory = new DbFactory(accessProfile,_config);
             return accessProfile.Factory;
         }
 
