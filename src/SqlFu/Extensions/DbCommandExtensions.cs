@@ -73,7 +73,7 @@ namespace SqlFu
                     }
                 }
 
-            },strat,fuCommand.Provider);
+            },strat,fuCommand.Provider,cmd.SqlConfig());
           
         }
 
@@ -132,7 +132,7 @@ namespace SqlFu
                     }
                 }
 
-            }, strat, fuCommand.Provider,cancellation);
+            }, strat, fuCommand.Provider,cancellation,cmd.SqlConfig());
         }
 
         public static async Task<List<T>> FetchAsync<T>(this DbCommand cmd, CancellationToken cancellation, Func<DbDataReader, T> mapper = null,

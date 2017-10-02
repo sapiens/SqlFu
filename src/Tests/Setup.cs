@@ -32,7 +32,7 @@ namespace Tests
             LogManager.OutputTo(w => Debug.WriteLine(w));
             
             var c=new SqlFuConfig();
-            SqlFuManager.UseLogManager();
+            c.UseLogManager();
             c.ConfigureTableForPoco<User>(d =>
             {
                 d.TableName = "Users" + new string(Guid.NewGuid().ToByteArray().ToBase64().Where(w=>(w>='a' && w<='z')).Take(5).ToArray());

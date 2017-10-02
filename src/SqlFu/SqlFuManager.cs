@@ -21,11 +21,11 @@ namespace SqlFu
             _config=new SqlFuConfig();
         }
 
-        public static void UseLogManager()
+        public static void UseLogManager(this SqlFuConfig config)
         {
             
-            Config.OnCommand = cmd => "SqlFu".LogDebug(cmd.FormatCommand());
-            Config.OnException = (cmd, ex) =>
+            config.OnCommand = cmd => "SqlFu".LogDebug(cmd.FormatCommand());
+            config.OnException = (cmd, ex) =>
             {
                 "SqlFu".LogError("Command threw exception {0}", cmd.FormatCommand());
                 "SqlFu".LogError(ex);
@@ -62,7 +62,7 @@ namespace SqlFu
         public static void Configure(Action<SqlFuConfig> cfg)
         {
             cfg.MustNotBeNull();
-            UseLogManager();
+            UseLogManager(Config);
             cfg(Config);
             if (_config.HasNoProfiles) throw new InvalidOperationException("You need to define a profile in order to continue");
         }
