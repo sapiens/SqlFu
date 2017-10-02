@@ -3,6 +3,7 @@ using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
 using CavemanTools.Logging;
+using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 using SqlFu.Executors;
 using SqlFu.Providers;
@@ -139,6 +140,20 @@ namespace SqlFu
             return cmd.SqlConfig().Converters.Convert<T>;
         }
 
+        /// <summary>
+        /// Configure how the poco will be mapped to table
+        /// </summary>
+        /// <param name="cnx"></param>
+        /// <param name="cfg"></param>
+        /// <typeparam name="T"></typeparam>
+        public static void ConfigureTableFor<T>(this DbConnection cnx, Action<ITableInfo<T>> cfg) where T : class
+            => cnx.SqlFuConfig().ConfigureTableForPoco(cfg);
+        
+        public static void TableNameFor<T>(this DbConnection cnx, TableName name) where T:class
+        {
+            cnx.SqlFuConfig().ConfigureTableForPoco<T>(s=>s.TableName=name);
+        } 
+        
         public static Func<DbDataReader, T> GetMapper<T>(this DbCommand cmd,Func<DbDataReader, T> mapper,string cmdText)
         {
             if (mapper != null) return mapper;

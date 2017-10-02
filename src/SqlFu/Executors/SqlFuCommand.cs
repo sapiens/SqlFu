@@ -27,8 +27,7 @@ namespace SqlFu.Executors
 
         public static void HandleTransients(DbCommand cmd,Action sqlAction,IRetryOnTransientErrorsStrategy strat,IDbProvider provider,SqlFuConfig cfg)
         {
-          //  var cfg = cmd.SqlConfig();
-            start:
+          start:
             try
             {
                 cfg.OnCommand(cmd);
