@@ -29,7 +29,7 @@ namespace Tests
 
         public static DbConnection SqlFuConnection(DbProvider provider,string cnx,Action<SqlFuConfig> config=null)
         {
-            LogManager.OutputTo(w => Trace.WriteLine(w));
+            LogManager.OutputTo(w => Debug.WriteLine(w));
             
             var c=new SqlFuConfig();
             SqlFuManager.UseLogManager();
