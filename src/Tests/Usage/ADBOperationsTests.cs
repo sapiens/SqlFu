@@ -73,6 +73,15 @@ namespace Tests.SqlServer
         }
 
         [Fact]
+        public void use_simple_sql_builder()
+        {
+            var tname = _db.GetPocoInfo<User>().TableName.ToString();
+            var posts = 3;
+            var name=_db.SqlTo<string>(s=>s.AppendRaw($"select FirstName from {tname}").Append($" where Posts={posts}")).GetValue();
+            name.Should().Be("John1");
+        }
+
+        [Fact]
         public void insert_ignore()
         {
 

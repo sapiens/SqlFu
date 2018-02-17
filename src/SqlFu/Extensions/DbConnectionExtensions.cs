@@ -97,6 +97,8 @@ namespace SqlFu
 
         public static int Execute(this DbConnection cnx, string sql, params object[] args)
             => cnx.Execute(c => c.Sql(sql, args));
+  public static int Execute(this DbConnection cnx, FormattableString sql)
+            => cnx.Execute(new SqlStringBuilder().Append(sql).GetCommandConfiguration());
 
         public static Task<int> ExecuteAsync(this DbConnection cnx, CancellationToken token,string sql, params object[] args)
             => cnx.ExecuteAsync(c => c.Sql(sql, args), token);
@@ -496,6 +498,7 @@ namespace SqlFu
         /// <returns></returns>
         public static IBuildQueryFrom GetSqlBuilder(this DbConnection db) => new SqlFrom(db.Provider(), db.SqlFuConfig().TableInfoFactory);
 
+       
         
 
         /// <summary>
@@ -557,5 +560,28 @@ namespace SqlFu
         public static IProcessEachRow<T> WithSql<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> sqlBuilder,
             Action<DbCommand> cfg = null,CancellationToken? cancel=null)
         =>new FluentCommandBuilder<T>(db,sqlBuilder(db.GetSqlBuilder()),cfg,cancel);
+
+        /// <summary>
+        /// Dynamically build sql query using a simple string builder that automatically uses string interpolation to parametrize the query
+        /// </summary>
+        /// <typeparam name="T">Destination object</typeparam>
+        /// <param name="db"></param>
+        /// <param name="builder"></param>
+        /// <param name="cancel"></param>
+        /// <returns></returns>
+        public static IProcessEachRow<T> SqlTo<T>(this DbConnection db,Func<SqlStringBuilder,IGenerateSql> builder,CancellationToken? cancel=null) 
+            =>new FluentCommandBuilder<T>(db,builder(new SqlStringBuilder()),null,cancel);
+
+        /// <summary>
+        /// Dynamically build sql query using a simple string builder that automatically uses string interpolation to parametrize the query.
+        /// Caveat: if table name is an argument instead of being hardcoded into the string, use the overload and invoke buildere's `AppendRaw()` method.
+        /// </summary>
+        /// <typeparam name="T">Destination object</typeparam>
+        /// <param name="db"></param>
+        /// <param name="sql">formatted sql string</param>
+        /// <param name="cancel"></param>
+        /// <returns></returns>
+        public static IProcessEachRow<T> SqlTo<T>(this DbConnection db,FormattableString sql,CancellationToken? cancel=null) 
+            =>new FluentCommandBuilder<T>(db,new SqlStringBuilder().Append(sql), null,cancel);
     }
 }

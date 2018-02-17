@@ -37,6 +37,7 @@ namespace SqlFu.Builders
         {
             
         }
+
         public SqlStringBuilder Append(FormattableString data)
         {
             var s = data.Format;
@@ -53,6 +54,7 @@ namespace SqlFu.Builders
       public SqlStringBuilder AppendRaw(string data)
         {
             _sql.Append(data);
+           
             return this;
         }
 

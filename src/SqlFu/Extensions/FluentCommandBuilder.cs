@@ -9,13 +9,13 @@ namespace SqlFu
 {
     class FluentCommandBuilder<T>:IProcessEachRow<T>
     {
-        private readonly DbConnection _cnx;
+      //  private readonly DbConnection _cnx;
         private readonly CancellationToken _cancel;
         private DbCommand _cmd;
 
-        public FluentCommandBuilder(DbConnection cnx, IGenerateSql<T> sqlGen, Action<DbCommand> cfg, CancellationToken? cancel)
+        public FluentCommandBuilder(DbConnection cnx, IGenerateSql sqlGen, Action<DbCommand> cfg, CancellationToken? cancel)
         {
-            _cnx = cnx;
+       //     _cnx = cnx;
             _cancel = cancel??CancellationToken.None;
 
             var cmdConfig = sqlGen.GetCommandConfiguration();

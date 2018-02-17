@@ -35,6 +35,7 @@ namespace Tests
             c.UseLogManager();
             c.ConfigureTableForPoco<User>(d =>
             {
+                
                 d.TableName = "Users" + new string(Guid.NewGuid().ToByteArray().ToBase64().Where(w=>(w>='a' && w<='z')).Take(5).ToArray());
                 d.Property(f => f.Id).IsAutoincremented();
                 d.IgnoreProperties(f=>f.Ignored);
@@ -109,7 +110,7 @@ namespace Tests
         public static string SqlServerConnection =>
             IsAppVeyor
                 ? @"Server=(local)\SQL2016;Database=tempdb;User ID=sa;Password=Password12!"
-                : @"Data Source=.\SQLExpress;Initial Catalog=tempdb;Integrated Security=True;MultipleActiveResultSets=True";
+                : @"Data Source=(localdb)\ProjectsV13;Initial Catalog=tempdb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
         public static string SqliteConnection { get; } = "Data Source=:memory:;Version=3;New=True;BinaryGUID=False";
     }
