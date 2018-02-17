@@ -496,6 +496,8 @@ namespace SqlFu
         /// <returns></returns>
         public static IBuildQueryFrom GetSqlBuilder(this DbConnection db) => new SqlFrom(db.Provider(), db.SqlFuConfig().TableInfoFactory);
 
+        
+
         /// <summary>
         /// Generates sql from strongly typed query
         /// </summary>
