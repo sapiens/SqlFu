@@ -22,6 +22,8 @@ namespace SqlFu.Configuration.Internals
             info.Converter = _converter;
          }
 
+        internal string DefaultSchema { get; set; }
+
         List<Tuple<Func<Type,bool>,Func<Type,TableName>>> _conventions=new List<Tuple<Func<Type, bool>, Func<Type, TableName>>>();
 
         public void AddNamingConvention(Func<Type, bool> match, Func<Type, TableName> convention)
@@ -33,7 +35,7 @@ namespace SqlFu.Configuration.Internals
         TableName GetName(Type type)
         {
             var convention = _conventions.Find(d => d.Item1(type));
-            if (convention==null) return new TableName(type.Name);
+            if (convention==null) return new TableName(type.Name,DefaultSchema);
             return convention.Item2(type);
         }
 

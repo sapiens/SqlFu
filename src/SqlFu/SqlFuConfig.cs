@@ -69,7 +69,12 @@ namespace SqlFu
             TableInfoFactory.AddNamingConvention(match, convention);
         }
 
-       
+        public void SetDefaultDbSchema(string schema)
+        {
+            schema.MustNotBeEmpty();
+            TableInfoFactory.DefaultSchema = schema;
+        }
+
         #region Events
 
         private Action<DbCommand, DbException> _onException = (s, e) => { };
