@@ -574,7 +574,7 @@ namespace SqlFu
 
         /// <summary>
         /// Dynamically build sql query using a simple string builder that automatically uses string interpolation to parametrize the query.
-        /// Caveat: if table name is an argument instead of being hardcoded into the string, use the overload and invoke buildere's `AppendRaw()` method.
+        /// Caveat: if table name is an argument instead of being hardcoded into the string, use the overload and invoke builder's `AppendRaw()` method.
         /// </summary>
         /// <typeparam name="T">Destination object</typeparam>
         /// <param name="db"></param>
