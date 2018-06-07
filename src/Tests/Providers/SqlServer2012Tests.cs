@@ -45,7 +45,7 @@ namespace Tests.Providers
             var page = new Pagination();
             _sut.FormatQueryPagination("", page, pm)
             .Should().Be(" order by 1 OFFSET @0 ROWS FETCH NEXT @1 ROWS ONLY");
-            pm.ToArray().ShouldAllBeEquivalentTo(new[] {page.Skip,page.PageSize});
+            pm.ToArray().Should().BeEquivalentTo(new[] {page.Skip,page.PageSize});
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace Tests.Providers
             var page = new Pagination();
             _sut.FormatQueryPagination("order by Id", page, pm)
             .Should().Be("order by Id OFFSET @0 ROWS FETCH NEXT @1 ROWS ONLY");
-            pm.ToArray().ShouldAllBeEquivalentTo(new[] {page.Skip,page.PageSize});
+            pm.ToArray().Should().BeEquivalentTo(new[] {page.Skip,page.PageSize});
         }
     }
 }

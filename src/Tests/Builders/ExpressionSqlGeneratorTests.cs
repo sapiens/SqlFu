@@ -178,7 +178,7 @@ namespace Tests.Builders
         {
             Get(d => d.Order == SomeEnum.First).Should().Be("(Order = @0)");
             FirstParameter.Should().Be(SomeEnum.First);
-            FirstParameter.Should().NotBe((int)SomeEnum.First);
+            //FirstParameter.Should().NotBe((int)SomeEnum.First);
             FirstParameter.Should().BeOfType<SomeEnum>();
         }
 
@@ -333,11 +333,12 @@ namespace Tests.Builders
             IEnumerable<string> val = new[] { "bula","strula" };
             Get(d => val.Contains(d.Title)).Should().Be("Title in (@0)");
 
-            Cast<IEnumerable<string>>(FirstParameter).ShouldAllBeEquivalentTo(val);
+            Cast<IEnumerable<string>>(FirstParameter).Should().BeEquivalentTo(val);
+            
 
             _sut.Parameters.Clear();
             Get(d => d.Title.HasValueIn(val)).Should().Be("Title in (@0)"); ;
-            Cast<IEnumerable<string>>(FirstParameter).ShouldAllBeEquivalentTo(val);
+            Cast<IEnumerable<string>>(FirstParameter).Should().BeEquivalentTo(val);
         }
 
         [Fact]
@@ -346,11 +347,11 @@ namespace Tests.Builders
             string[] val = new[] { "bula","strula" };
             Get(d => val.Contains(d.Title)).Should().Be("Title in (@0)");
 
-            Cast<IEnumerable<string>>(FirstParameter).ShouldAllBeEquivalentTo(val);
+            Cast<IEnumerable<string>>(FirstParameter).Should().BeEquivalentTo(val);
 
             _sut.Parameters.Clear();
             Get(d => d.Title.HasValueIn(val)).Should().Be("Title in (@0)"); ;
-            Cast<IEnumerable<string>>(FirstParameter).ShouldAllBeEquivalentTo(val);
+            Cast<IEnumerable<string>>(FirstParameter).Should().BeEquivalentTo(val);
         }
 
         [Fact]
@@ -359,11 +360,11 @@ namespace Tests.Builders
             List<string> val = new List<string>(){ "bula","strula" };
             Get(d => val.Contains(d.Title)).Should().Be("Title in (@0)");
 
-            Cast<IEnumerable<string>>(FirstParameter).ShouldAllBeEquivalentTo(val);
+            Cast<IEnumerable<string>>(FirstParameter).Should().BeEquivalentTo(val);
 
             _sut.Parameters.Clear();
             Get(d => d.Title.HasValueIn(val)).Should().Be("Title in (@0)"); ;
-            Cast<IEnumerable<string>>(FirstParameter).ShouldAllBeEquivalentTo(val);
+            Cast<IEnumerable<string>>(FirstParameter).Should().BeEquivalentTo(val);
         }
 
         #endregion

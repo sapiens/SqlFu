@@ -36,7 +36,7 @@ namespace Tests.Builders
             var cmd = _sut.GetCommandConfiguration();
             
             cmd.SqlText.Should().Be("insert into SomePost (Id,Title,Email,CreatedOn)\n values(@0,@1,@2,@3)");
-            cmd.Args.ShouldAllBeEquivalentTo(new object[] { _data.Id, _data.Title, _data.Email, _data.CreatedOn });
+            cmd.Args.Should().BeEquivalentTo(new object[] { _data.Id, _data.Title, _data.Email, _data.CreatedOn });
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace Tests.Builders
             _opt.IgnoreProperties.Add("SomeId");
             var cmd = _sut.GetCommandConfiguration();
             cmd.SqlText.Should().Be("insert into bubu (Id,Title,Email,CreatedOn)\n values(@0,@1,@2,@3)");
-            cmd.Args.ShouldAllBeEquivalentTo(new object[] { _data.Id, _data.Title, _data.Email, _data.CreatedOn });
+            cmd.Args.Should().BeEquivalentTo(new object[] { _data.Id, _data.Title, _data.Email, _data.CreatedOn });
         }
 
         [Fact]
@@ -55,7 +55,7 @@ namespace Tests.Builders
             _opt.IdentityColumn = "Id";
             var cmd = _sut.GetCommandConfiguration();
             cmd.SqlText.Should().Be("insert into SomePost (SomeId,Title,Email,CreatedOn)\n values(@0,@1,@2,@3)");
-            cmd.Args.ShouldAllBeEquivalentTo(new object[] { _data.SomeId, _data.Title, _data.Email, _data.CreatedOn });
+            cmd.Args.Should().BeEquivalentTo(new object[] { _data.SomeId, _data.Title, _data.Email, _data.CreatedOn });
         }
 
 
@@ -67,7 +67,7 @@ namespace Tests.Builders
             
             var cmd = _sut.GetCommandConfiguration();
             cmd.SqlText.Should().Be("insert into SomePost (Id,Email,CreatedOn)\n values(@0,@1,@2)");
-            cmd.Args.ShouldAllBeEquivalentTo(new object[] { _data.Id, _data.Email, _data.CreatedOn });
+            cmd.Args.Should().BeEquivalentTo(new object[] { _data.Id, _data.Email, _data.CreatedOn });
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Tests.Mapping
         [Fact]
         public void converting_from_null_to_value_throws_InvalidCastException()
         {
-            _sut.Invoking(s => s.Convert<int>(null)).ShouldThrow<InvalidCastException>();
+            _sut.Invoking(s => s.Convert<int>(null)).Should().Throw<InvalidCastException>();
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace Tests.Mapping
             _sut.Convert<string>(guid).Should().Be(guid.ToString());
 
             var byteArr = new byte[] {1, 2, 3};
-            _sut.Convert<byte[]>(byteArr).ShouldAllBeEquivalentTo(byteArr);
+            _sut.Convert<byte[]>(byteArr).Should().BeEquivalentTo(byteArr);
         }
 
       

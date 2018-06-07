@@ -99,7 +99,7 @@ namespace Tests.SqlServer
                 LastName = "Doe",
                 Category = Type.Page,
                 Posts = 0
-            })).ShouldThrow<DbException>();
+            })).Should().Throw<DbException>();
            
          _db.Invoking(d=>d.InsertIgnore(new User()
             {
@@ -107,7 +107,7 @@ namespace Tests.SqlServer
                 LastName = "Doe",
                 Category = Type.Page,
                 Posts = 0
-            })).ShouldNotThrow();
+            })).Should().NotThrow();
                      
         }
 
@@ -170,7 +170,7 @@ namespace Tests.SqlServer
         {
             var p=_db.QueryPaged(q => q.From<User>().OrderBy(d=>d.Id).SelectAll(), Pagination.Create(1, 1));
             p.Count.Should().Be(3);
-            p.Items.First().ShouldBeEquivalentTo(_inserted[1],d=>d.Excluding(s=>s.Id).Excluding(s=>s.CreatedOn));
+            p.Items.First().Should().BeEquivalentTo(_inserted[1],d=>d.Excluding(s=>s.Id).Excluding(s=>s.CreatedOn));
         }
       
         [Fact]
