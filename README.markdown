@@ -1,30 +1,21 @@
 #Welcome to SqlFu
 
-SqlFu is a **_versatile_** data mapper (aka micro-ORM)  for .Net 4.6+ and .Net Core.  SqlFu uses Apache 2.0 license.
+SqlFu is a **_versatile_** data mapper (aka micro-ORM) for .Net Core and .Net 4.6+ . Apache 2.0 license.
 
-Latest version: [3.4.0](https://github.com/sapiens/SqlFu/wiki/ChangeLog) 
- 
- ## New in ver 3.4.0
- * Transient resilience is implicit now, you don't need anymore to wrap everything in ugly lambdas (that are obsolete now). It just works.
- * Simplified configuration to support multiple dbs. See the updated example.
- * Added option to override the connection string everytime you're creating a new connection.
- 
- [Docs](https://github.com/sapiens/SqlFu/tree/v2) for version v2.
- 
-
+Latest version: [4.0.0](https://github.com/sapiens/SqlFu/wiki/ChangeLog) 
+  
 ## Features
-* Think strongly typed Ado.Net
-* Versatility 
-* Performance
-* CoreClr support
-* Fully (a)sync extension methods and helpers
-* DDL tools 
-* Suport for working with multiple databases/providers in the same app
-* Transient errors resilience
-* Great for maintaining and querying the read model of CQRS apps
-* Support for: SqlServer 2012+ (Azure included), Sqlite. TBA: Postgres, MySql
+* Think Ado.Net on steroids also featuring a strongly typed query builder (not LINQ).
+* Designed to increase productivity while maintaining simplicity
+* Runs on any platfrom implementing NetStandard 1.6
+* All helpers have sync/async versions
+* Dependency Injection support for working with multiple databases/providers in the same app
+* Implicit transient errors resilience
+* Great for CRUD apps and for maintaining and querying the read model of CQRS apps
+* Lightweight
+* Supports: SqlServer 2012+ (Azure included), Sqlite.
 
-**Version 3 is not compatible with previous versions**  [Mini guide to upgrade from v2 to v3](https://github.com/sapiens/SqlFu/wiki/Upgrading-from-v2-to-v3).
+
 
 ## How SqlFu should be used
 

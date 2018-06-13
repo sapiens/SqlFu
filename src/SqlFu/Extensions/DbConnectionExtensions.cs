@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using CavemanTools.Model;
 using SqlFu.Builders;
-using SqlFu.Executors;
 
 namespace SqlFu
 {
@@ -70,23 +69,6 @@ namespace SqlFu
         #endregion
 
         #region Execute
-
-        ///// <summary>
-        ///// Checks if any of provided db objects (table, view) exists
-        ///// </summary>
-        ///// <param name="cnx"></param>
-        ///// <param name="items"></param>
-        //public static void ExecuteCreation(this DbConnection cnx, IEnumerable<ICreateDbItem> items)
-        //{
-        //    using (var t = cnx.BeginTransaction())
-        //    {
-        //        foreach (var item in items)
-        //        {
-        //            cnx.AddDbObjectOrIgnore($"create table {cnx.Provider().EscapeTableName(item.Name)} {item.Sql}");
-        //        }
-        //        t.Commit();
-        //    }
-        //}
 
         public static int Execute(this DbConnection cnx, Action<IConfigureCommand> cfg)
         {
@@ -584,4 +566,17 @@ namespace SqlFu
         public static IProcessEachRow<T> SqlTo<T>(this DbConnection db,FormattableString sql,CancellationToken? cancel=null) 
             =>new FluentCommandBuilder<T>(db,new SqlStringBuilder().Append(sql), null,cancel);
     }
+
+
+    //public class SqlAction
+    //{
+    //    public string SqlText { get; }
+    //    public List<object> Arguments { get; }= new List<object>();
+
+    //    public SqlAction(string sqlText,params object[] args)
+    //    {
+    //        SqlText = sqlText;
+    //        Arguments.AddRange(args);
+    //    }
+    //}
 }

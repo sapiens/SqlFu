@@ -32,6 +32,12 @@ dotnet_csproj:
 
   package_version: '{version}'
 
+skip_commits:
+  files:
+    - appveyor*
+    - '*gitignore'
+    - '**/*.md'
+
 services: mssql2016
 
 before_build:
