@@ -7,6 +7,8 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using SqlFu.Builders.Expressions;
 using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
@@ -25,6 +27,16 @@ namespace SqlFu
             Boolean isAnonymousType = hasCompilerGeneratedAttribute && nameContainsAnonymousType;
 
             return isAnonymousType;
+        }
+
+        public static Func<DbConnection> ToConnectionFactory(this IDbFactory factory)
+        {
+            return ()=>factory.Create((string)null);
+        }
+        
+        public static Func<Task<DbConnection>> ToAsyncConnectionFactory(this IDbFactory factory)
+        {
+            return ()=>factory.CreateAsync(CancellationToken.None,(string)null);
         }
 
         public static IInsertableOptions<T> AutoincrementedColumnIs<T>(this IInsertableOptions<T> c,

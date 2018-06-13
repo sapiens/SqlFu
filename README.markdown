@@ -5,16 +5,14 @@ SqlFu is a **_versatile_** data mapper (aka micro-ORM) for .Net Core and .Net 4.
 Latest version: [4.0.0](https://github.com/sapiens/SqlFu/wiki/ChangeLog) 
   
 ## Features
-* Think Ado.Net on steroids also featuring a strongly typed query builder (not LINQ).
-* Designed to increase productivity while maintaining simplicity
-* Runs on any platfrom implementing NetStandard 1.6
+* Think Ado.Net on steroids with the addition of a strongly typed query builder (not LINQ).
+* **Designed to increase developer productivity** while remaining simple to use and fast
+* Runs on any platform implementing NetStandard 1.6
 * All helpers have sync/async versions
 * Dependency Injection support for working with multiple databases/providers in the same app
 * Implicit transient errors resilience
 * Great for CRUD apps and for maintaining and querying the read model of CQRS apps
-* Lightweight
 * Supports: SqlServer 2012+ (Azure included), Sqlite.
-
 
 
 ## How SqlFu should be used
@@ -29,7 +27,7 @@ SqlFu is designed to be used in a cloud environment and it works great inside DD
 
 ### Note for contributors
 
-Please create your pull requests to target the "v3-devel" branch. "Master" is only for released code. Thank you.
+Please create your pull requests to target the "v4-devel" branch. "Master" is only for released code. Thank you.
 
 
 
@@ -53,8 +51,32 @@ LogManager.OutputToTrace();
                c.CustomMappers.Register(reader=> new MyPoco(){ /* init from DbDataReader */});
                
                //set the table name to be used when dealing with this POCO. 
-               //You can also set the name when using the helper to create a table, or in the helper options when using a helper
-               c.ConfigureTableForPoco<MyPoco>(info=>info.Table=new TableName("my_pocos"));
+             		   
+               c.ConfigureTableForPoco<MyPoco>(info=>
+											{
+												info.Table=new TableName("my_pocos");
+												
+												//new in ver. 4.0.0 - additional info used by helpers
+												
+												//Any table name used by helpers will use it by default
+												c.SetDefaultDbSchema("foo");
+												
+												//the Insert helper uses it
+												 d.Property(f => f.Id).IsAutoincremented();
+												 
+												 //properties will be always be ignored
+												 d.IgnoreProperties(f=>f.Ignored);
+												 
+												 //use it when you want to convert value just before writing to the db
+												 // store an enum as a string instead of the default int
+												 d.Property(f => f.Category)
+												 .BeforeWritingUseConverter(t => t.ToString())
+												 //the column name in the db is 'Categ'
+												 .MapToColumn("Categ");
+
+
+											}
+										);
                
               //register a naming convention
               c.AddNamingConvention(predicate,type=> new TableName(type.Fullname));

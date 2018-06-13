@@ -33,13 +33,16 @@ namespace Tests
             
             var c=new SqlFuConfig();
             c.UseLogManager();
+            
             c.ConfigureTableForPoco<User>(d =>
             {
                 
                 d.TableName = "Users" + new string(Guid.NewGuid().ToByteArray().ToBase64().Where(w=>(w>='a' && w<='z')).Take(5).ToArray());
                 d.Property(f => f.Id).IsAutoincremented();
                 d.IgnoreProperties(f=>f.Ignored);
-                d.Property(f => f.Category).BeforeWritingUseConverter(t => t.ToString());
+                d.Property(f => f.Category)
+                    .BeforeWritingUseConverter(t => t.ToString())
+                    .MapToColumn("other");
             });
             config?.Invoke(c);
             return new SqlFuConnection(provider,cnx,c);

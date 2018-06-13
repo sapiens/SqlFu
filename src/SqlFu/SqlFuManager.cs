@@ -13,6 +13,7 @@ namespace SqlFu
 {
     public static class SqlFuManager
     {
+        private const string DefaultProfile = "default";
         static SqlFuConfig _config=new SqlFuConfig();
 
         internal static SqlFuConfig Config => _config;
@@ -38,7 +39,7 @@ namespace SqlFu
         /// </summary>
         /// <param name="profile"></param>
         /// <returns></returns>
-        public static IDbFactory GetDbFactory(string profile = "default")
+        public static IDbFactory GetDbFactory(string profile = DefaultProfile)
         {
             var accessProfile = Config.GetProfile(profile);
             if (accessProfile.Factory == null) accessProfile.Factory = new DbFactory(accessProfile,_config);
@@ -52,7 +53,7 @@ namespace SqlFu
         /// <returns></returns>
         public static T GetDbFactory<T>() where T : IDbFactory=>(T)Config.GetProfile<T>().Factory;
        
-       /// <summary>
+        /// <summary>
         /// Wraps an existing connection into a SqlFu connection. If provider is not specified, the default one is used
         /// </summary>
         /// <param name="conex"></param>
@@ -60,6 +61,10 @@ namespace SqlFu
         /// <returns></returns>
         public static DbConnection GetConnection(DbConnection conex, IDbProvider provider = null) => new SqlFuConnection(provider ?? Config.GetProfile().Provider, conex,Config);
 
+        /// <summary>
+        /// You can invoke this as many times as you want, only one configuration is created
+        /// </summary>
+        /// <param name="cfg"></param>
         public static void Configure(Action<SqlFuConfig> cfg)
         {
             cfg.MustNotBeNull();
