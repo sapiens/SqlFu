@@ -354,4 +354,9 @@ return r.Result;
 ```
 
 **Notes**
+
 * Output arguments are identified through the `_` prefix.
+
+#### Developed with
+
+[![Resharper](http://neventstore.org/images/logo_resharper_small.gif)](http://www.jetbrains.com/resharper/)
