@@ -6,8 +6,6 @@ branches:
     - master
     - devel
     
-skip_non_tags: true
-
 image: Visual Studio 2017
 
 configuration: Release
