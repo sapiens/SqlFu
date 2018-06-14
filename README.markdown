@@ -122,8 +122,10 @@ var factory=SqlFuManager.GetDbFactory("other");
 var repo=new MyRepository(factory);
 
 ```
+### Working with multiple databases/providers
 
 Let's assume I need 2 connections in my app: one for db "Main", other for db "History". First we we declare specific interfaces that will be used by the objects which need db access, then add the profiles for each db.
+SqlFu automatically generates concrete classes deriving from `DbFactory` and implementing the interfaces. All factories are singletons.
 
 ```csharp
  public interface IMainDb:IDbFactory
@@ -168,12 +170,29 @@ public class MyService
 
 ### Transient Errors Resilience
 
-It's a common scenario, especially using a cloud based db like Azure Sql, to reach connections limit or the opening of a connection to timeout. Those are transient errors and SqlFu has some support in handling them. Basically, when one of the above situations is detected, the db operation is retried for a number of times. This means you get an exception only if, after all retries, the error still persists. This feature is automatic.
+It's a common scenario, especially using a cloud based db like Azure Sql, to reach connections limit or the opening of a connection to timeout. 
+SqlFu automatically employs a simple strategy to retry the operation a number of times. You can configure it like this:
+
+```csharp
+	SqlFuManager.Configure(c=>
+					{
+						//other options are available too
+						c.ConfigureDefaultTransientResilience(f=>f.MaxRetries=5);
+
+						//if you want to implement your own strategy, you need to create a class implementing `IRetryOnTransientErrorsStrategy`
+						c.TransientErrorsStrategyFactory=()=>new MyStrategy();
+					});
+	
+```
+
 
 ### CRUD Helpers
 
+Almost all helpers have async counterparts
+
 ```csharp
-DbConnection _db;
+
+DbConnection _db=dbFactory.Create();
 
 //insert
 _db.Insert(new User()
@@ -194,6 +213,15 @@ _db.Insert(new
                 cf.Ignore(d=>d.Bla);
             });
 
+//Ignores unique key constraints. Useful when updating read models
+_db.InsertIgnore(new User()
+            {
+                FirstName = "John",
+                LastName = "Doe"
+            });
+
+
+
 //update
 _db.Update<User>()
 .Set(c=>c.FirstName,"John").Set(c=>c.Posts,c.Posts+1)
@@ -208,6 +236,10 @@ _db.Update<User>()
                 .Where(d => d.Firstname == "John")
                 .Execute();
 
+//quick update
+//"schema.table" is implicit converted to `TableName` instance
+_db.UpdateFrom(new {Name="Foo"},"myTable").Where(new{Id=2}).Execute();
+
 //delete
 _db.DeleteFrom<User>(d=>d.Id==id);
 _db.DeleteFromAnonymous(
@@ -217,41 +249,20 @@ _db.DeleteFromAnonymous(
 
 ```
 
-### SPoc Support
-
-```csharp
-//execute a sproc
- var result = _db.ExecuteSProc(s =>
-              {
-                  s.ProcName = "spTest";
-                  s.Arguments = new { id = 47, _pout = "" };
-              });
-result.ReturnValue.Should().Be(100);
-string pout = r.OutputValues.pout;
-
-//execute a sproc which returns a result set
-var res = _db.QuerySProc<MyPoco>("spTest", new { id = 46, _pout = "" });
-res.ReturnValue.Should().Be(100);
-//do something with the result set List<MyPoco>
-return r.Result;
-  
-```
-
-**Notes**
-* Output arguments are identified through the `_` prefix.
-
 ### Queries
 
 SqlFu features a quite powerful and flexible query builder that you can use to query one table/view (use views or sprocs when you need joins).
+Note that it can be useful or a big PITA, in doubt go for the simplest thing.
+
 ```csharp
 
-//starting with ver. 3.3.0
 //alternative syntax
 _db.WithSql(q => q.From<User>()
             .Where(d=>d.Id==id && !d.IsActive)
             .OrderByIf(c=>input.ShouldSort,d=>d.Name)
             .SelectAll())
     .GetRows();
+
 
 //a big unrealistic query to showcase the builder capabilities
 var names=new[]{"john","mary"};
@@ -286,13 +297,17 @@ _db.QueryAs(q => q.From<User>()
    return true;//continue processing
    return false;//query ends here, no other results are read/mapped
  });
- _db.WithSql((q=>q.From<User>().SelectAll()).ProcessEachRow(user=>{ 
-   user.Name=user.Name.ToUpper();
-   return true;//continue processing
-   return false;//query ends here, no other results are read/mapped
- }).Execute();
+ _db.WithSql((q=>q.From<User>().SelectAll())
+	.ProcessEachRow(user=>{ 
+		   user.Name=user.Name.ToUpper();
+		   return true;//continue processing
+		   return false;//query ends here, no other results are read/mapped
+		 }).Execute();
  
- 
+ //query using interpolated strings . Variables are converted into query params
+ _db.SqlTo<User>($"select * from users where id ={id}").GetRows();          
+_db.SqlTo<User>(q=>q.Append("select * from users").AppendIf(d=>id>0,$" where id={id}")).GetRows()
+
  //do a paged query, useful for pagination. Here we request page 2 with 30 results per page
  var result=_db.QueryPaged<User>(q=>q.From<User>.SelectAll(),new Pagination(page:2,pageSize:30));
  //total existing users
@@ -301,8 +316,12 @@ _db.QueryAs(q => q.From<User>()
  //result set with 30 users
  result.Items
  
+
  //execute some sql
  _db.Execute($"delete from {_db.GetTableName<User>()} where Id=@0",userId);
+
+
+
 ```
 
 **Notes**
@@ -314,69 +333,25 @@ _db.QueryAs(q => q.From<User>()
 * Sql functions should be used only on the expression parameter. Supported functions are: Sum, Count, Avg, Floor, Ceiling, Min, Max,Concat, Round.
 * String methods/properties support: Contains, Length, StartsWith, EndsWith, ToUpper, ToLower.
 
-### Db Tools
+### SProc Support
 
 ```csharp
-_db.DropTable<User>();
-_db.DropTable("users");
+//execute a sproc
+ var result = _db.ExecuteSProc(s =>
+              {
+                  s.ProcName = "spTest";
+                  s.Arguments = new { id = 47, _pout = "" };
+              });
+result.ReturnValue.Should().Be(100);
+string pout = r.OutputValues.pout;
 
-_db.Truncate<User>();
-
-if (_db.TableExists<User>()){}
-
-//creates table starting from POCO. This is not poco to table mapping, just a fluent builder to generate 'create table' command
-_db.CreateTableFrom<User>(cf=>{
-              cf.DropIfExists()
-                .TableName("users")
-                .Column(t => t.Id, c => c.AutoIncrement())
-                .ColumnSize(c=>c.FirstName,150)
-                .ColumnSize(c=>c.LastName,150)
-                .Column(d=>d.Category,c=>c
-                                        .HasDbType(SqlServerType.Varchar)
-                                        .HasSize(10)
-                                        .HasDefaultValue(Type.Page.ToString()))
-             
-                .PrimaryKey(pk=>pk.OnColumns(d=>d.Id))
-                .Index(ix=>ix.OnColumns(d=>d.FirstName).Unique().WithOptions("nonclustered"));
-                ;
-});
-
+//execute a sproc which returns a result set
+var res = _db.QuerySProc<MyPoco>("spTest", new { id = 46, _pout = "" });
+res.ReturnValue.Should().Be(100);
+//do something with the result set List<MyPoco>
+return r.Result;
+  
 ```
 
 **Notes**
-* SqlServer type `rowversion` should be a byte[8] property of the POCO.
-* By default enums are considered ints, in order to store strings, the POCO property must be string. This limitation is because of how the c# compiler treats enums in an Expression (it always converts it to int).
-* But when mapping a result to POCO, `int` and `string` are automatically maped to enum without any configuration.
-
-#### The strongly typed table creator
-
-In order to create the needed tables in an organised manner (ex: part of a component which needs those tables) you can use the `ATypedStorageCreator<>` base class (one for each table). This is actual code from another library
-```csharp
- public class UniqueStorageCreator : ATypedStorageCreator<UniqueStoreRow>
-    {
-        public const string DefaultTableName = "uniques";
-        public const string DefaultSchema = "";
-
-        public UniqueStorageCreator(IDbFactory db) : base(db)
-        {
-        }
-
-       
-        protected override void Configure(IConfigureTable<UniqueStoreRow> cfg)
-        {
-            cfg.Column(d => d.Scope, c => c.HasDbType("char").HasSize(32).NotNull())
-                .Column(d => d.Aspect, c => c.HasDbType("char").HasSize(32).NotNull())
-                .Column(d => d.Value, c => c.HasDbType("char").HasSize(32).NotNull())
-                .Column(d => d.Bucket, c => c.HasDbType("char").HasSize(32).NotNull())
-                .Index(i => i.OnColumns(c=>c.Bucket,c => c.Scope,c=>c.Aspect,c=>c.Value).Unique())
-                .Index(d=>d.OnColumns(c=>c.EntityId))
-                .HandleExisting(HandleExistingTable);
-        }
-    }
-    
-    //usage
-    new UniqueStorageCreator(factory).WithTableName(name,schema).IfExists(TableExistsAction.DropIt).Create();
-  ```
-**Notes**
-
-This has nothing to do with migrations support, SqlFu doesn't support schema migrations anymore, it's just a convenient way to create tables. Another way is to register all these creators in a DI Container then resolve `IEnumerable<ICreateStorage>` and then `storages.ForEach(s=>s.Create())`. This allows you to add new table creator classes at any time. Great for development where the db schema is not stable.
+* Output arguments are identified through the `_` prefix.
