@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using SqlFu.Configuration;
+using SqlFu.Configuration.Internals;
 using SqlFu.Providers;
 
 namespace SqlFu.Builders.Expressions
@@ -30,15 +31,7 @@ namespace SqlFu.Builders.Expressions
 
         public ParametersManager Parameters { get; }
 
-        //string GetColumnName(LambdaExpression member)
-        //{
-        //    var mbody = member.Body as MemberExpression;
-        //    if (mbody != null) return GetColumnName(mbody);
-        //    var ubody = member.Body as UnaryExpression;
-        //    if (ubody == null) throw new NotSupportedException("Only members and unary expressions are supported");
-        //    return GetColumnName(ubody);
-        //}
-
+        
         private string GetColumnName(UnaryExpression member)
         {
             var mbody = member.Operand as MemberExpression;
@@ -54,12 +47,16 @@ namespace SqlFu.Builders.Expressions
             return _factory.GetInfo(column.DeclaringType).GetColumnName(column.Name, _escape);
         }
 
-
+        private Stack<ColumnInfo> _columnInfos=new Stack<ColumnInfo>();
         private string GetColumnName(MemberExpression member)
         {
             var tableType = member.Expression.Type;
             var info = _factory.GetInfo(tableType);
-            return info.GetColumnName(member, _escape);
+            if (_visitingBinary)
+            {
+                _columnInfos.Push(info[member.GetPropertyName()]);
+            }
+            return info.GetColumnName(member,EscapeIdentifiers? _escape:null);
         }
 
         public override string ToString() => _sb.ToString();
@@ -71,10 +68,15 @@ namespace SqlFu.Builders.Expressions
         bool IsSingleBooleanConstant(ConstantExpression node)
             => node != null && node.Type.Is<bool>();
 
-
+        private bool _visitingBinary;
         protected override Expression VisitBinary(BinaryExpression node)
         {
+            _visitingBinary = true;
             string op = "";
+            if (node.IsEnumComparison())
+            {
+                node=HandleEnumComparison(node);             
+            }
             switch (node.NodeType)
             {
                 case ExpressionType.AndAlso:
@@ -92,7 +94,7 @@ namespace SqlFu.Builders.Expressions
                     if (IsSingleBooleanProperty(node.Left))
                     {
                         HandleSingleBooleanProperty(node.Left as MemberExpression, (bool)node.Right.GetValue());
-                        return node;
+                        goto end;
                     }
 
                     op = "=";
@@ -119,7 +121,7 @@ namespace SqlFu.Builders.Expressions
                     if (IsSingleBooleanProperty(node.Left))
                     {
                         HandleSingleBooleanProperty(node.Left as MemberExpression, false);
-                        return node;
+                        goto end;                        
                     }
                     op = "<>";
                     break;
@@ -146,9 +148,50 @@ namespace SqlFu.Builders.Expressions
             Visit(node.Right);
 
             _sb.Append(")");
+        end:
+            _visitingBinary = false;
+            if (_columnInfos.Count>0) _columnInfos.Pop();
             return node;
         }
 
+        private BinaryExpression HandleEnumComparison(BinaryExpression node)
+        {
+            var f= new RewriteEnumEquality(node);
+            var prop = f.PropertyExpression;
+            Expression<Func<OrderBy>> g = () => (OrderBy)Enum.ToObject(typeof(OrderBy),1);
+            var call = Expression.Call(typeof(Enum).GetMethod("ToObject", new []{typeof(Type),typeof(Int32)}),
+                Expression.Constant(f.PropertyExpression.Type), f.OtherNode);
+            var convert = Expression.Convert(call, prop.Type);
+            var bin = Expression.MakeBinary(ExpressionType.Equal, prop, convert);
+            return bin;
+        }
+
+        class RewriteEnumEquality
+        {
+            private readonly BinaryExpression _node;
+
+            public RewriteEnumEquality(BinaryExpression node)
+            {
+                _node = node;
+                if (node.Left.CastAs<UnaryExpression>()?.IsEnumCast() ?? false)
+                {
+                    ConvertExpression = node.Left.CastAs<UnaryExpression>();
+                    OtherNode = node.Right;
+                }
+                else
+                {
+                    ConvertExpression = node.Right.CastAs<UnaryExpression>();
+                    OtherNode = node.Left;
+                }
+            }
+
+            public Expression OtherNode { get; }
+            public UnaryExpression ConvertExpression { get; private set; }
+
+            public Expression PropertyExpression => ConvertExpression.Operand;
+
+
+        }
 
         protected override Expression VisitConstant(ConstantExpression node)
         {
@@ -191,8 +234,9 @@ namespace SqlFu.Builders.Expressions
             }
             else
             {
-                _sb.Append("@" + Parameters.CurrentIndex);
-                Parameters.AddValues(node.GetValue());
+                WriteParameter(node);
+                //_sb.Append("@" + Parameters.CurrentIndex);
+                //Parameters.AddValues(node.GetValue());
             }
             return node;
         }
@@ -202,7 +246,13 @@ namespace SqlFu.Builders.Expressions
         private void WriteParameter(Expression node)
         {
             _sb.Append("@" + Parameters.CurrentIndex);
-            Parameters.AddValues(node.GetValue());
+            var value = node.GetValue();
+            if (_visitingBinary && _columnInfos.Count>0)
+            {
+                var info = _columnInfos.Peek();
+                value = info.ConvertWritableValue(value);
+            }
+            Parameters.AddValues(value);
         }
 
         /// <summary>
@@ -490,6 +540,8 @@ namespace SqlFu.Builders.Expressions
             _sb.Append(val ? "1=1" : "1<1");
         }
 
+
+
         protected override Expression VisitUnary(UnaryExpression node)
         {
             switch (node.NodeType)
@@ -506,6 +558,7 @@ namespace SqlFu.Builders.Expressions
                         HandleSingleBooleanConstant(op);
                         return node;
                     }
+
                     Visit(node.Operand);
                     break;
                 case ExpressionType.New:
@@ -592,6 +645,7 @@ namespace SqlFu.Builders.Expressions
 
         }
 
+        public bool EscapeIdentifiers { get; set; } = true;
     }
 
 

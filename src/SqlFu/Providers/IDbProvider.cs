@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data.Common;
+﻿using System.Data.Common;
 
 namespace SqlFu.Providers
 {
@@ -24,23 +23,6 @@ namespace SqlFu.Providers
         void OnCommandExecuting(DbCommand cmd);
         string ProviderId { get; }
         DbConnection CreateConnection();
-        string GetColumnType(Type type);
-       
-        IDatabaseTools DatabaseTools { get; }
-
-        /// <summary>
-        /// Formats table index create options
-        /// </summary>
-        /// <param name="idxDef"></param>
-        /// <param name="options"></param>
-        /// <returns></returns>
-        string FormatIndexOptions(string idxDef,string options="");
-        
-        /// <summary>
-        /// For create table statements
-        /// </summary>
-        /// <returns></returns>
-        string GetIdentityKeyword();      
 
         IDbProviderExpressions ExpressionsHelper { get; }
         void ReplaceExpressionsProvider(IDbProviderExpressions prov);

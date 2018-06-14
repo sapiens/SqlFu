@@ -8,6 +8,7 @@ namespace SqlFu
     public interface IDbFactory
     {
         IDbProvider Provider { get; }
+        SqlFuConfig Configuration { get; }
         DbConnection Create(DbConnection db=null);
         DbConnection Create(string cnxString);
         Task<DbConnection> CreateAsync(CancellationToken cancel, DbConnection db = null);

@@ -8,7 +8,7 @@ namespace SqlFu.Builders.Expressions
      
         ParametersManager Parameters { get; }
     
-      
+      bool EscapeIdentifiers { get; set; }
      
         /// <summary>
         /// Use it when you need to generate only columns for select,order by, group by

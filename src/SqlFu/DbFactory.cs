@@ -13,9 +13,9 @@ namespace SqlFu
         private  IDbProvider _provider;
         private  string _connectionString;
 
-        public DbFactory(DbAccessProfile profile)
+        public DbFactory(DbAccessProfile profile, SqlFuConfig config)
         {
-            Assign(profile);
+            Assign(profile,config);
         }
 
         protected DbFactory()
@@ -23,18 +23,21 @@ namespace SqlFu
             
         }
 
-        internal void Assign(DbAccessProfile profile)
+        internal void Assign(DbAccessProfile profile,SqlFuConfig config)
         {
             _provider = profile.Provider;
             _connectionString = profile.ConnectionString;
+            Configuration = config;
         }
 
-       public IDbProvider Provider => _provider;     
+       public IDbProvider Provider => _provider;
+        public SqlFuConfig Configuration { get; private set; }
 
         public DbConnection Create(DbConnection db=null)
         {
-            if (db!=null) return new SqlFuConnection(_provider, db,SqlFuManager.Config.TransientErrorsStrategyFactory);
-            return SqlFuManager.OpenConnection(_provider, _connectionString);           
+            if (db == null) return SqlFuManager.OpenConnection(_provider, _connectionString);
+            if (db is SqlFuConnection) return db;
+            return new SqlFuConnection(_provider, db,Configuration);
         }
 
         public DbConnection Create(string cnxString)
@@ -44,7 +47,7 @@ namespace SqlFu
 
         public Task<DbConnection> CreateAsync(CancellationToken cancel, DbConnection db = null)
         {
-            if (db != null) return Task.FromResult((DbConnection)new SqlFuConnection(_provider, db, SqlFuManager.Config.TransientErrorsStrategyFactory));
+            if (db != null) return Task.FromResult((DbConnection)new SqlFuConnection(_provider, db,Configuration));
             return SqlFuManager.OpenConnectionAsync(_provider, _connectionString,cancel);
         }
 

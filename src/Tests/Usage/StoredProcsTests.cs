@@ -8,41 +8,24 @@ using SqlFu;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Tests.SqlServer
+namespace Tests.Usage
 {
-    public class StoredProcsTests : IDisposable
+    public abstract class AStoredProcsTests : IDisposable
     {
-        private DbConnection _db;
+        protected DbConnection _db;
 
-        public StoredProcsTests(ITestOutputHelper h)
+        protected AStoredProcsTests()
         {
+            _db = GetConnection();
+            _db.Open();
+            CreateSproc();
+        }
+
+        protected abstract DbConnection GetConnection();
+
+        protected abstract void CreateSproc();
+
        
-            _db = Setup.GetConnection();
-            
-            Init();
-        }
-
-
-
-        void Init()
-        {
-            try
-            {
-                _db.Execute(@"CREATE PROCEDURE spTest
-	@id int,
-	@pout varchar(50) out
-AS
-BEGIN
-		SET NOCOUNT ON;
-   set @pout='bla';
-	SELECT 1 as id,'bla' as name, @id as [input];
-	return 100;
-END");
-            }
-            catch(DbException)  { };
-
-
-        }
 
         [Fact]
         public void execSp()

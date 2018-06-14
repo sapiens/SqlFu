@@ -6,6 +6,6 @@ namespace SqlFu.Builders
     public interface IExecuteCustomSql
     {
         int Execute(CommandConfiguration cfg);
-        Task<int> ExecuteAsync(CommandConfiguration cfg,CancellationToken cancel);
+        Task<int> ExecuteAsync(CommandConfiguration cfg, CancellationToken? cancel=null);
     }
 }

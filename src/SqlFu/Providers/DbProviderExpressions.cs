@@ -2,17 +2,16 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
-using SqlFu.Builders;
 using SqlFu.Builders.Expressions;
-#if NET13
-using System.Reflection;
-#endif
+//#if NET13
+////using System.Reflection;
+//#endif
 
 namespace SqlFu.Providers
 {
     public class DbProviderExpressions : IDbProviderExpressions
     {
-        private const int Placeholder = 1;
+        internal const int Placeholder = 1;
 
         public DbProviderExpressions()
         {
@@ -26,6 +25,14 @@ namespace SqlFu.Providers
             LinkMethods(()=>Placeholder.Ceiling(2),Ceiling);
             LinkMethods(()=>Placeholder.Concat(),Concat);
             LinkMethods(()=>Placeholder.Round(2,2),Round);                     
+            LinkMethods(()=>DateTime.MinValue.Between(DateTime.MinValue, DateTime.MinValue),BetweenDates);                                 
+            LinkMethods(()=>DateTimeOffset.MinValue.Between(DateTimeOffset.MinValue, DateTimeOffset.MinValue),BetweenDates);                                 
+        }
+
+        private void BetweenDates(MethodCallExpression arg1, StringBuilder sb, IGenerateSqlFromExpressions writer)
+        {
+            var date = writer.GetColumnsSql(arg1.Arguments[0]);
+            sb.Append($"{date}>={writer.GetSql(arg1.Arguments[1])} and {date}<={writer.GetSql(arg1.Arguments[2])}");
         }
 
         /// <summary>
@@ -38,7 +45,7 @@ namespace SqlFu.Providers
         {
             var metho = function.Body as MethodCallExpression;
             metho.MustNotBeNull();
-            Functions.Add(GetKey(metho),func);
+            Functions[GetKey(metho)]=func;
         }
 
         private string GetKey(MethodCallExpression e) => e.Method.DeclaringType + e.Method.Name+e.Arguments.Count;

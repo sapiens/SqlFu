@@ -14,43 +14,84 @@ namespace SqlFu
     public static class CrudHelpers
     {
 
-        public static InsertedId Insert<T>(this DbConnection db, T data, Action<IInsertableOptions<T>> cfg = null)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="data"></param>
+        /// <param name="cfg"></param>
+        /// <returns></returns>
+        public static InsertedId Insert<T>(this DbConnection db, T data, Action<IInsertableOptions<T>> cfg = null) where T:class
         {
+            data.MustNotBeNull();
+            if (data.IsAnonymousType()) cfg.MustNotBeNull("You need to specify table name at least");
             var info = db.GetPocoInfo<T>();
             var options = info.CreateInsertOptions<T>();
+            
             cfg?.Invoke(options);
 
             var provider = db.Provider();
-            var builder=new InsertSqlBuilder(info,data,provider,options);
+            var builder=new InsertSqlBuilder(data,provider,options);
 
             return db.GetValue<InsertedId>(builder.GetCommandConfiguration());
         }
-
-        public static Task<InsertedId> InsertAsync<T>(this DbConnection db, T data,CancellationToken cancel ,Action<IInsertableOptions<T>> cfg = null)
+        /// <summary>
+        /// Inserts and ignores unique constraint exception.
+        /// Useful when updating read models
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="data"></param>
+        /// <param name="cfg"></param>
+        /// <param name="keyName">unique constraint partial name</param>
+     public static void InsertIgnore<T>(this DbConnection db, T data, Action<IInsertableOptions<T>> cfg = null,string keyName=null) where T : class
         {
+            try
+            {
+                Insert(db, data, cfg);
+            }
+            catch (DbException ex) when (db.Provider().IsUniqueViolation(ex,keyName))
+            {
+                
+                //ignore this    
+            }
+        }
+     public static async Task InsertIgnoreAsync<T>(this DbConnection db, T data, CancellationToken? token = null, Action<IInsertableOptions<T>> cfg = null,string keyName=null) where T : class
+     {
+            try
+            {
+                await InsertAsync(db, data,token,cfg).ConfigureFalse();
+            }
+            catch (DbException ex) when (db.Provider().IsUniqueViolation(ex,keyName))
+            {
+                
+                //ignore this    
+            }
+        }
+
+        public static Task<InsertedId> InsertAsync<T>(this DbConnection db, T data,CancellationToken? cancel=null ,Action<IInsertableOptions<T>> cfg = null) where T:class
+        {
+            data.MustNotBeNull();
+            if (data.IsAnonymousType()) cfg.MustNotBeNull("You need to specify table name at least");
             var info = db.GetPocoInfo<T>();
             var options = info.CreateInsertOptions<T>();
             cfg?.Invoke(options);
 
             var provider = db.Provider();
-            var builder=new InsertSqlBuilder(info,data,provider,options);
+            var builder=new InsertSqlBuilder(data,provider,options);
 
-            return db.GetValueAsync<InsertedId>(builder.GetCommandConfiguration(), cancel);
+            return db.GetValueAsync<InsertedId>(builder.GetCommandConfiguration(), cancel??CancellationToken.None);
         }
-        static Insertable<T> CreateInsertOptions<T>(this TableInfo info) => 
-            new Insertable<T>()
-            {
-                DbSchema = info.Table.Schema,
-                TableName = info.Table.Name,
-                IdentityColumn = info.IdentityColumn
-            };
 
-        public static IBuildUpdateTable<T> Update<T>(this DbConnection db,Action<IHelperOptions> cfg=null)
+        static Insertable<T> CreateInsertOptions<T>(this TableInfo info) =>new Insertable<T>(info);
+            
+
+        public static IBuildUpdateTable<T> Update<T>(this DbConnection db,Action<IHelperOptions> cfg=null) where T:class
         {
-            var opt = new HelperOptions();
-            cfg?.Invoke(opt);
+            var opt = new HelperOptions(db.GetPocoInfo<T>());
+            cfg?.Invoke(opt); 
             var executor = new CustomSqlExecutor(db);
-            opt.EnsureTableName(db.GetPocoInfo<T>());
             return new UpdateTableBuilder<T>(executor, db.GetExpressionSqlGenerator(), db.Provider(), opt);
         }
 
@@ -64,16 +105,40 @@ namespace SqlFu
         /// <returns></returns>
         public static IBuildUpdateTableFrom<T> UpdateFrom<T>(this DbConnection db, Func<IUpdateColumns, IColumnsToUpdate<T>> columns, Action<IHelperOptions> cfg) where  T:class 
         {
-            var options=new HelperOptions(); 
+            var options=new HelperOptions(db.GetPocoInfo<T>()); 
             var u = new UpdateColumns();
             cfg(options);
-            options.EnsureTableName(db.GetPocoInfo<T>());
+            
             var builder = columns(u) as UpdateColumns.CreateBuilder<T>;
             var executor=new CustomSqlExecutor(db);
             var updater=new UpdateTableBuilder<T>(executor,db.GetExpressionSqlGenerator(),db.Provider(),options);
             builder.PopulateBuilder(updater);
             return updater;
         }
+
+        /// <summary>
+        /// Perform update table with data from an anonymous object
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="valuesToUpdate"></param>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public static IBuildAnonymousUpdate UpdateFrom<T>(this DbConnection db, T valuesToUpdate, TableName tableName) where  T:class 
+        {
+            tableName.MustNotBeNull();
+            var options=new HelperOptions(db.GetPocoInfo<T>());
+            options.TableName = tableName;
+            
+            var executor=new CustomSqlExecutor(db);
+            var updater=new UpdateTableBuilder<T>(executor,db.GetExpressionSqlGenerator(),db.Provider(),options);
+            updater.SetUpdates(valuesToUpdate);
+
+            return new UpdateAnonymousBuilder<T>(updater);
+        }
+
+
+
 
         public static int CountRows<T>(this DbConnection db,Expression<Func<T,bool>> condition=null)
             => db.QueryValue(d =>
@@ -87,11 +152,9 @@ namespace SqlFu
             });
         
 
-        public static int DeleteFromAnonymous<T>(this DbConnection db,T data,Action<IHelperOptions> opt,Expression<Func<T, bool>> criteria = null)
+        public static int DeleteFromAnonymous<T>(this DbConnection db,T data,TableName tableName,Expression<Func<T, bool>> criteria = null)
         {
-            var options=new HelperOptions();
-            opt(options);
-            var name = db.Provider().EscapeTableName(new TableName(options.TableName, options.DbSchema));
+            var name = db.Provider().EscapeTableName(tableName);
             var builder = new DeleteTableBuilder(name, db.GetExpressionSqlGenerator());
             if (criteria != null) builder.WriteCriteria(criteria);
             return db.Execute(builder.GetCommandConfiguration());
@@ -104,11 +167,11 @@ namespace SqlFu
             return db.Execute(builder.GetCommandConfiguration());
         }
 
-        public static Task<int> DeleteFromAsync<T>(this DbConnection db,CancellationToken token,Expression<Func<T, bool>> criteria=null)
+        public static Task<int> DeleteFromAsync<T>(this DbConnection db,CancellationToken? token=null,Expression<Func<T, bool>> criteria=null)
         {
             var builder=new DeleteTableBuilder(db.GetTableName<T>(), db.GetExpressionSqlGenerator());
             if (criteria!=null) builder.WriteCriteria(criteria);
-            return db.ExecuteAsync(builder.GetCommandConfiguration(),token);
+            return db.ExecuteAsync(builder.GetCommandConfiguration(),token??CancellationToken.None);
         }
       
     }

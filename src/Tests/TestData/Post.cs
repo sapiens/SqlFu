@@ -5,7 +5,6 @@ using SqlFu;
 
 namespace Tests.TestData
 {
-    [Table("SomePost",IdentityColumn = "SomeId")]
     public class Post
     {
         public int SomeId { get; set; }
@@ -14,6 +13,6 @@ namespace Tests.TestData
         public IdName Author { get; set; }
         public string Email { get; set; }
         public DateTime CreatedOn { get; set; }
-
+        public DateTimeOffset RegOn { get; set; }
     }
 }

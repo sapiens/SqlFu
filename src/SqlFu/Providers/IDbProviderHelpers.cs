@@ -1,4 +1,5 @@
-﻿using CavemanTools.Model;
+﻿using System.Collections.Generic;
+using CavemanTools.Model;
 using SqlFu.Builders;
 
 namespace SqlFu.Providers
@@ -6,14 +7,15 @@ namespace SqlFu.Providers
     public interface IDbProviderHelpers
     {
 
-        /// <summary>
-        /// Adds sql to return newly inserted id for the Insert helper
-        /// </summary>
-        /// <param name="sqlValues">String containing the values to insert e.g: values (@0,@1)</param>
-        /// <param name="identityColumn"></param>
-        /// <returns></returns>
-        string AddReturnInsertValue(string sqlValues, string identityColumn);
+        ///// <summary>
+        ///// Adds sql to return newly inserted id for the Insert helper
+        ///// </summary>
+        ///// <param name="sqlValues">String containing the values to insert e.g: values (@0,@1)</param>
+        ///// <param name="identityColumn"></param>
+        ///// <returns></returns>
+        //string AddReturnInsertValue(string sqlValues, string identityColumn);
 
+        string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues);
         /// <summary>
         /// Adds the pagination syntax to sql
         /// </summary>

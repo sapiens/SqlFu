@@ -14,7 +14,7 @@ namespace Tests._Fakes
             return 0;
         }
 
-        public Task<int> ExecuteAsync(CommandConfiguration cfg, CancellationToken cancel)
+        public Task<int> ExecuteAsync(CommandConfiguration cfg, CancellationToken? cancel)
         {
             throw new System.NotImplementedException();
         }
