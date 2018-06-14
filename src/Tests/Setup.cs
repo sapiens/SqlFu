@@ -34,6 +34,7 @@ namespace Tests
             var c=new SqlFuConfig();
             c.UseLogManager();
             
+            
             c.ConfigureTableForPoco<User>(d =>
             {
                 
@@ -44,7 +45,7 @@ namespace Tests
                     .BeforeWritingUseConverter(t => t.ToString())
                     .MapToColumn("other");
             });
-            config?.Invoke(c);
+            config?.Invoke(c);            
             return new SqlFuConnection(provider,cnx,c);
         }
 

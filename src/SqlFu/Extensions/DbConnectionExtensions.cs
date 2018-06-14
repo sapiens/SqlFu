@@ -73,7 +73,7 @@ namespace SqlFu
         public static int Execute(this DbConnection cnx, Action<IConfigureCommand> cfg)
         {
             var cmd = new CommandConfiguration();
-            cfg(cmd);
+            cfg(cmd);          
             return cnx.Execute(cmd);
         }
 
