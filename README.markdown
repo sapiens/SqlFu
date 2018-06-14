@@ -1,4 +1,4 @@
-#Welcome to SqlFu
+# Welcome to SqlFu
 
 SqlFu is a **_flexibile_** data mapper (aka micro-ORM) for .Net Core and .Net 4.6+ . Apache 2.0 license.
 
@@ -31,7 +31,7 @@ Please create your pull requests to target the "v4-devel" branch. "Master" is on
 
 
 
-##Usage
+## Usage
 
 ### Config options
 ```csharp
