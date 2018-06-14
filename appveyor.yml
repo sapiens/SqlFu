@@ -1,10 +1,12 @@
-version: 4.0.0-beta2-{build}
+version: 4.0.0.{build}
 
 branches:
 
   only:
-
-  - master
+    - master
+    - devel
+    
+skip_non_tags: true
 
 image: Visual Studio 2017
 
