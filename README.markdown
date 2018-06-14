@@ -351,7 +351,7 @@ return r.Result;
 
 **Notes**
 
-* Output arguments are identified through the `_` prefix.
+* Output arguments are identified by the `_` prefix.
 
 #### Developed with
 
