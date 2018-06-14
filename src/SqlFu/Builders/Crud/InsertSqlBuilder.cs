@@ -1,81 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using SqlFu.Configuration.Internals;
 using SqlFu.Providers;
 
 namespace SqlFu.Builders.Crud
 {
     public class InsertSqlBuilder:IGenerateSql
     {
-        private readonly TableInfo _info;
+        
         private readonly object _data;
         private readonly IDbProvider _provider;
         private readonly InsertSqlOptions _options;
-
-        public InsertSqlBuilder(TableInfo info,object data,IDbProvider provider,InsertSqlOptions options)
+        
+        public InsertSqlBuilder(object data,IDbProvider provider,InsertSqlOptions options)
         {
-            _info = info;
+        
             _data = data;
             _provider = provider;
-            _options = options;      
-            options.EnsureTableName(info);      
+            _options = options;
+             
         }
 
 
         public CommandConfiguration GetCommandConfiguration()
         {
-            var cache = _info.GetSqlCache(_provider.ProviderId);
+            var cache = _options.Info.GetSqlCache(_provider.ProviderId);
+            var columnValues =FilterIgnored();
             if (cache.InsertSql.IsNullOrEmpty())
             {
-                cache.InsertSql = Build();             
+                cache.InsertSql = _provider.CreateInsertSql(_options, columnValues);
             }
-
-            return new CommandConfiguration(cache.InsertSql,GetValues()) {ApplyOptions = _options.CmdOptions};
+            
+            return new CommandConfiguration(cache.InsertSql,columnValues.Values.ToArray()) {ApplyOptions = _options.CmdOptions};
         }
 
+        private IDictionary<string, object> FilterIgnored()
+        {
+            //property name -> column's name 
+            var columnValues = _data.ToDictionary().ToDictionary(k=>_options.Info[k.Key].Name,v=> _options.Info.ConvertWriteValue(v.Key, v.Value));
+            foreach (var name in GetIgnoredColumns(_options))
+            {
+                columnValues.Remove(name);
+            }            
+            return columnValues;
+        }
         
-        private string Build()
-        {
-            var columns = GetInsertColumns();
-            var values = _provider.AddReturnInsertValue(GetValuesPlaceholders(),_options.IdentityColumn);
-            return $"{columns}\n {values}";
-        }
+        private static IEnumerable<string> GetIgnoredColumns(InsertSqlOptions options) 
+            => options.Info.Columns.Where(d=>d.IsComplex || options.IgnoreProperties.Contains(d.PropertyInfo.Name)).Select(d=>d.Name);
 
-        private object[] GetValues() => GetInsertableColumns().Select(c => _data.GetPropertyValue(c)).ToArray();
-
-        private string GetInsertColumns()
-        {
-            var builder = new StringBuilder();
-            if (_options.IdentityColumn.IsNullOrEmpty()) _options.IdentityColumn = _info.IdentityColumn;
-            builder.Append($"insert into {_info.EscapeName(_provider, _options.Table)} (");
-
-            GetInsertableColumns().ForEach(n =>
-                 {
-                     builder.Append($"{ _provider.EscapeIdentifier(n)},");
-                 });
-
-            builder.RemoveLastIfEquals(',').Append(")");
-            return builder.ToString();
-        }
-
-        private IEnumerable<string> GetInsertableColumns() 
-            => _info.Columns
-           .Where(d=>!d.IsComplex)
-            .Select(d => d.Name).Where(
-                c => c != _options.IdentityColumn && !_options.IgnoreColumns.Contains(c));
-
-        private string GetValuesPlaceholders()
-        {
-            var sb = new StringBuilder();
-            sb.Append("values(");
-
-            GetInsertableColumns().ForEach((idx, name) => sb.Append($"@{idx},"));
-
-            return sb.RemoveLastIfEquals(',').Append(")").ToString();
-        }
-      
+       
     }
 }

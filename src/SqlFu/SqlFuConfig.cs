@@ -28,9 +28,6 @@ namespace SqlFu
 
         public CustomMappersConfiguration CustomMappers => _customMappers;
 
-
-        //public IWriteToLog Logger { get; set; } = NullLogger.Instance; 
-
         public ConvertersManager Converters => _converters;
 
         public TableInfoFactory TableInfoFactory => _tableInfoFactory;
@@ -55,26 +52,12 @@ namespace SqlFu
         }
 
 
-        public TransientErrorsConfig TransientErrors { get; }=new TransientErrorsConfig();
-
-        public void ConfigureTableForPoco<T>(Action<ITableInfo> cfg)
+      public void ConfigureTableForPoco<T>(Action<ITableInfo<T>> cfg)
         {
             cfg.MustNotBeNull();
             var table = TableInfoFactory.GetInfo(typeof (T));
-            cfg(table);
+            cfg(new TableInfo<T>(table));                  
         }
-
-        ///// <summary>
-        ///// Registers mappings for a value object, in order to flatten it (insert/update helpers only) or to restore it.
-        ///// For simple conversion of a result to a value object use <see cref="SqlFuConfig.RegisterConverter"/>
-        ///// </summary>
-        ///// <typeparam name="T"></typeparam>
-        ///// <param name="from">Flattens the value object</param>
-        ///// <param name="to">Restores the value object</param>
-        //public void MapValueObject<T>(Func<T, object> from, Func<object, T> to = null)
-        //{
-        //    Converters.MapValueObject(from, to);
-        //}
 
         public void RegisterConverter<T>(Func<object, T> converter)
         {
@@ -86,7 +69,12 @@ namespace SqlFu
             TableInfoFactory.AddNamingConvention(match, convention);
         }
 
-      
+        public void SetDefaultDbSchema(string schema)
+        {
+            schema.MustNotBeEmpty();
+            TableInfoFactory.DefaultSchema = schema;
+        }
+
         #region Events
 
         private Action<DbCommand, DbException> _onException = (s, e) => { };
@@ -171,7 +159,7 @@ namespace SqlFu
             type.GetTypeInfo().IsInterface.MustBe(true);
             var name = type.Name;
             var profile = new DbAccessProfile() { ConnectionString = connectionString, Name = name, Provider = provider, Factory = CreateFactory<T>() };
-            profile.Factory.CastAs<DbFactory>().Assign(profile);
+            profile.Factory.CastAs<DbFactory>().Assign(profile,this);
             return profile;
         }
 

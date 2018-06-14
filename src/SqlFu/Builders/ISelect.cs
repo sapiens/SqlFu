@@ -13,6 +13,7 @@ namespace SqlFu.Builders
         /// <returns></returns>
         IGenerateSql<T> SelectAll(bool distinct=false,bool useAsterisk=false);
         IGenerateSql<TProj> Select<TProj>(Expression<Func<T, TProj>> selector,bool distinct=false);
+        IGenerateSql<TProj> Select<TProj>(bool distinct = false, Action<IIgnoreSelectColumns<TProj>> ignore = null) where TProj:class;
 
     }
 

@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Linq.Expressions;
 using System.Text;
-using FakeItEasy;
 using FluentAssertions;
 using SqlFu.Builders.Crud;
 using Tests._Fakes;
 using Xunit;
 using Xunit.Abstractions;
 using SqlFu;
-using SqlFu.Builders.Expressions;
-using SqlFu.Configuration.Internals;
 using System.Linq;
 using Tests.TestData;
 
@@ -30,8 +26,7 @@ namespace Tests.Builders
             _sb = new StringBuilder();
           
             _executor = new FakeSqlExecutor();
-            _options = new HelperOptions();
-            _options.EnsureTableName(Setup.GetTableInfo<Post>());
+            _options = new HelperOptions(Setup.GetTableInfo<Post>());
             _sut = new UpdateTableBuilder<Post>(_executor, _writer, new FakeEscapeIdentifier(), _options);
         }
 

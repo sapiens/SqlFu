@@ -17,7 +17,7 @@ namespace SqlFu.Builders
 
         public int Execute(CommandConfiguration cfg) => _db.Execute(cfg);
 
-        public Task<int> ExecuteAsync(CommandConfiguration cfg, CancellationToken cancel)
-            => _db.ExecuteAsync(cfg, cancel);
+        public Task<int> ExecuteAsync(CommandConfiguration cfg, CancellationToken? cancel=null)
+            => _db.ExecuteAsync(cfg, cancel??CancellationToken.None);
     }
 }

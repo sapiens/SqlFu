@@ -5,7 +5,7 @@ using Xunit;
 using SqlFu.Providers;
 using System.Linq;
 using System.Collections.Generic;
-using FakeItEasy;
+using NSubstitute;
 using SqlFu;
 using SqlFu.Builders;
 using SqlFu.Builders.Expressions;
@@ -20,15 +20,15 @@ namespace Tests.Builders
     {
         private ExpressionSqlGenerator _sut;
         Expression<Func<MapperPost, object>> _l;
-        private Fake<IDbProviderExpressions> _provider= new Fake<IDbProviderExpressions>();
+        private IDbProviderExpressions _provider = Substitute.For<IDbProviderExpressions>();
+
 
    
         public ExpressionSqlGeneratorTests()
         {
-            _provider.CallsTo(d => d.GetSql(A<MethodCallExpression>._, A<IGenerateSqlFromExpressions>._))
-            .ReturnsLazily(x => TestDbProviderExpression.Instance.GetSql(x.GetArgument<MethodCallExpression>(0),
-                x.GetArgument<IGenerateSqlFromExpressions>(1)));
-            _sut = Setup.CreateExpressionSqlGenerator(_provider.FakedObject);
+            _provider.GetSql(Arg.Any<MethodCallExpression>(), Arg.Any<IGenerateSqlFromExpressions>())
+            .Returns(x => TestDbProviderExpression.Instance.GetSql(x.ArgAt<MethodCallExpression>(0),x.ArgAt<IGenerateSqlFromExpressions>(1)));
+            _sut = Setup.CreateExpressionSqlGenerator(_provider);
         }
 
         [Fact]
@@ -178,7 +178,7 @@ namespace Tests.Builders
         {
             Get(d => d.Order == SomeEnum.First).Should().Be("(Order = @0)");
             FirstParameter.Should().Be(SomeEnum.First);
-            FirstParameter.Should().NotBe((int)SomeEnum.First);
+            //FirstParameter.Should().NotBe((int)SomeEnum.First);
             FirstParameter.Should().BeOfType<SomeEnum>();
         }
 
@@ -256,7 +256,7 @@ namespace Tests.Builders
         [Fact]
         public void substring_of_column()
         {
-            A.CallTo(() => _provider.FakedObject.Substring("Title", 0, 1)).Returns("sub(Title)");
+            _provider.Substring("Title", 0, 1).Returns("sub(Title)");
             _l = d => d.Title.Substring(0, 1);
             Get(_l).Should().Be("sub(Title)");
             _sut.GetColumnsSql(_l).Should().Be("sub(Title)");
@@ -289,7 +289,8 @@ namespace Tests.Builders
         [Fact]
         public void string_length()
         {
-            A.CallTo(() => _provider.FakedObject.Length("Title")).Returns("len(Title)");
+            _provider.Length("Title").Returns("len(Title)");
+            
             Get(d => d.Title.Length == 2).Should().Be("(len(Title) = @0)");
             
             FirstParameter.Should().Be(2);
@@ -299,28 +300,29 @@ namespace Tests.Builders
         public void to_upper()
         {
             Get(d => d.Title.ToUpper());
-            A.CallTo(()=>_provider.FakedObject.ToUpper("Title")).MustHaveHappened();
-        }
+            _provider.Received().ToUpper("Title");
+         }
 
         [Fact]
         public void to_lower()
         {
             Get(d => d.Title.ToLower());
-            A.CallTo(()=>_provider.FakedObject.ToLower("Title")).MustHaveHappened();
+            _provider.Received().ToLower("Title");
+            
         }
 
         [Fact]
         public void call_year_function_for_date()
         {
             Get(d => d.CreatedOn.Year);
-            A.CallTo(()=>_provider.FakedObject.Year("CreatedOn")).MustHaveHappened();
+            _provider.Received(1).Year("CreatedOn");            
         }
 
         [Fact]
         public void call_day_function_for_date()
         {
             Get(d => d.CreatedOn.Day);
-            A.CallTo(()=>_provider.FakedObject.Day("CreatedOn")).MustHaveHappened();
+            _provider.Received(1).Day("CreatedOn");            
         }
 
         T Cast<T>(object o) => (T)o;
@@ -331,11 +333,12 @@ namespace Tests.Builders
             IEnumerable<string> val = new[] { "bula","strula" };
             Get(d => val.Contains(d.Title)).Should().Be("Title in (@0)");
 
-            Cast<IEnumerable<string>>(FirstParameter).ShouldAllBeEquivalentTo(val);
+            Cast<IEnumerable<string>>(FirstParameter).Should().BeEquivalentTo(val);
+            
 
             _sut.Parameters.Clear();
             Get(d => d.Title.HasValueIn(val)).Should().Be("Title in (@0)"); ;
-            Cast<IEnumerable<string>>(FirstParameter).ShouldAllBeEquivalentTo(val);
+            Cast<IEnumerable<string>>(FirstParameter).Should().BeEquivalentTo(val);
         }
 
         [Fact]
@@ -344,11 +347,11 @@ namespace Tests.Builders
             string[] val = new[] { "bula","strula" };
             Get(d => val.Contains(d.Title)).Should().Be("Title in (@0)");
 
-            Cast<IEnumerable<string>>(FirstParameter).ShouldAllBeEquivalentTo(val);
+            Cast<IEnumerable<string>>(FirstParameter).Should().BeEquivalentTo(val);
 
             _sut.Parameters.Clear();
             Get(d => d.Title.HasValueIn(val)).Should().Be("Title in (@0)"); ;
-            Cast<IEnumerable<string>>(FirstParameter).ShouldAllBeEquivalentTo(val);
+            Cast<IEnumerable<string>>(FirstParameter).Should().BeEquivalentTo(val);
         }
 
         [Fact]
@@ -357,11 +360,11 @@ namespace Tests.Builders
             List<string> val = new List<string>(){ "bula","strula" };
             Get(d => val.Contains(d.Title)).Should().Be("Title in (@0)");
 
-            Cast<IEnumerable<string>>(FirstParameter).ShouldAllBeEquivalentTo(val);
+            Cast<IEnumerable<string>>(FirstParameter).Should().BeEquivalentTo(val);
 
             _sut.Parameters.Clear();
             Get(d => d.Title.HasValueIn(val)).Should().Be("Title in (@0)"); ;
-            Cast<IEnumerable<string>>(FirstParameter).ShouldAllBeEquivalentTo(val);
+            Cast<IEnumerable<string>>(FirstParameter).Should().BeEquivalentTo(val);
         }
 
         #endregion
@@ -436,6 +439,30 @@ namespace Tests.Builders
             var sql = Get(d => d.Floor(d.SomeId));
             sql.Should().Be("floor(SomeId)");
             
+        }
+
+        [Fact]
+        public void between_datetime()
+        {
+            var start = new DateTime();
+            var end = new DateTime(100, 1, 1);
+            var sql = Get(d => d.CreatedOn.Between(start, end));
+            sql.Should().Be("CreatedOn>=@0 and CreatedOn<=@1");
+            var args = _sut.Parameters.ToArray();
+            args[0].Should().Be(start);
+            args[1].Should().Be(end);
+        }
+
+        [Fact]
+        public void between_datetimeoffset()
+        {
+            var start = new DateTimeOffset();
+            var end = new DateTimeOffset(new DateTime(100, 1, 1));
+            var sql = Get(d => d.RegOn.Between(start, end));
+            sql.Should().Be("RegOn>=@0 and RegOn<=@1");
+            var args = _sut.Parameters.ToArray();
+            args[0].Should().Be(start);
+            args[1].Should().Be(end);
         }
 
         [Fact]

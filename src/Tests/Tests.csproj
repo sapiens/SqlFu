@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Tests Class Library</Description>
     <Authors>t</Authors>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssemblyName>Tests</AssemblyName>
     <PackageId>Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -27,18 +27,20 @@
 
   <ItemGroup>
   
-    <PackageReference Include="FluentAssertions" Version="4.19.3" />
+    <PackageReference Include="FluentAssertions" Version="5.3.2" />
   
-    <PackageReference Include="xunit" Version="2.2.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0-preview-20180605-02" />
   
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
-  </ItemGroup>
+    <PackageReference Include="NSubstitute" Version="3.1.0" />
+  
+    <PackageReference Include="System.Data.SqlClient" Version="4.5.0" />
+  
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.108" />
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <PackageReference Include="FakeItEasy" Version="4.0.0" />
-    <Reference Include="System.Data" />
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
+    <PackageReference Include="xunit" Version="2.4.0-beta.2.build4010" />
 
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0-beta.2.build4010" />
+    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.0-beta4-build3742" />
+  </ItemGroup>
+ 
 </Project>

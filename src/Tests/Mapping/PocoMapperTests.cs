@@ -18,7 +18,7 @@ namespace Tests.Mapping
         public PocoMapperTests(ITestOutputHelper x)
         {
             x.Logger();
-            LogManager.OutputToTrace();
+          //  LogManager.OutputToTrace();
             _sut = Setup.MapperFactory().CreateMapper<MapperPost>("1") as Mapper<MapperPost>;
 
         }
@@ -70,42 +70,11 @@ namespace Tests.Mapping
                   r.Add("title","hey00");
               }));
             post.Title.Should().Be("hey00");
-            post.Version.ShouldAllBeEquivalentTo(new byte[] { 0, 1 });
+            post.Version.Should().BeEquivalentTo(new byte[] { 0, 1 });
         }
 
 
-        // [Fact]
-        public void Benchmark()
-        {
-
-            var manual = new ManualMapper<SimplePost>(r =>
-            {
-
-                var dt = new SimplePost(34);
-
-                dt.Id = (Guid)r["Id"];
-                dt.Name = r["Name"].ToString();
-                dt.SetNumber((int)r["Number"]);
-                return dt;
-
-            });
-            var data = Setup.FakeReader(r =>
-            {
-                r.Clear();
-                r.Add("Id",Guid.NewGuid());
-                r.Add("Name", "bla");
-                r.Add("Number", 23);
-            });
-
-
-            var sut = Setup.MapperFactory().CreateMapper<SimplePost>("1") as Mapper<SimplePost>;
-            sut.Map(data);
-
-
-       
-
-
-        }
+     
 
         private MapperPost MapWithReader(Action<FakeReader> config)
         {

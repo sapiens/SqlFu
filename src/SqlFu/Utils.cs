@@ -5,17 +5,46 @@ using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using SqlFu.Builders.Expressions;
 using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
+using SqlFu.Executors;
 using SqlFu.Providers;
 
 namespace SqlFu
 {
     public static class Utils
     {
-       
+        public static bool IsAnonymousType<T>(this T val) where T : class
+        {
+            var type = typeof(T);
+            Boolean hasCompilerGeneratedAttribute = type.HasCustomAttribute<CompilerGeneratedAttribute>();
+            Boolean nameContainsAnonymousType = type.FullName.Contains("AnonymousType");
+            Boolean isAnonymousType = hasCompilerGeneratedAttribute && nameContainsAnonymousType;
+
+            return isAnonymousType;
+        }
+
+        public static Func<DbConnection> ToConnectionFactory(this IDbFactory factory)
+        {
+            return ()=>factory.Create((string)null);
+        }
+        
+        public static Func<Task<DbConnection>> ToAsyncConnectionFactory(this IDbFactory factory)
+        {
+            return ()=>factory.CreateAsync(CancellationToken.None,(string)null);
+        }
+
+        public static IInsertableOptions<T> AutoincrementedColumnIs<T>(this IInsertableOptions<T> c,
+            Expression<Func<T, object>> column)
+        {
+            c.IdentityColumn = column.GetPropertyName();
+            return c;
+        }
 
         /// <summary>
         /// Used to generate sql bits from expressions
@@ -23,7 +52,7 @@ namespace SqlFu
         /// <param name="db"></param>
         /// <returns></returns>
         public static IGenerateSqlFromExpressions GetExpressionSqlGenerator(this DbConnection db)
-            => new ExpressionSqlGenerator(db.Provider().ExpressionsHelper,SqlFuManager.Config.TableInfoFactory,db.Provider());
+            => new ExpressionSqlGenerator(db.Provider().ExpressionsHelper,db.SqlFuConfig().TableInfoFactory,db.Provider());
 
         /// <summary>
         /// Sets table name/schema in one statement
@@ -36,7 +65,6 @@ namespace SqlFu
         {
             name.MustNotBeEmpty();
             opt.TableName = name;
-            opt.DbSchema = schema;
             return opt;
         }
 
@@ -56,14 +84,12 @@ namespace SqlFu
             new TableName(t.Name.SubstringUntil(suffix),schema));
         }
 
-        public static SqlFuConfig SqlFuConfig(this DbConnection db) => SqlFuManager.Config;
+        public static SqlFuConfig SqlFuConfig(this DbConnection db) => db.CastAs<SqlFuConnection>().Config;
 
-        public static TableInfo GetTableInfo(this Type type) => SqlFuManager.Config.TableInfoFactory.GetInfo(type);
-
-        public static string GetColumnName(this TableInfo info, MemberExpression member, IEscapeIdentifier provider)
+       public static string GetColumnName(this TableInfo info, MemberExpression member, IEscapeIdentifier provider=null)
         {
-            var col = info.Columns.First(d => d.PropertyInfo.Name == member.Member.Name);
-            return provider.EscapeIdentifier(col.Name);
+            var col = info.Columns.First(d => d.PropertyInfo.Name == member.Member.Name);            
+            return provider?.EscapeIdentifier(col.Name)??col.Name;
         }
         public static string GetColumnName(this TableInfo info, string property, IEscapeIdentifier provider)
         {
@@ -123,8 +149,9 @@ namespace SqlFu
 
         public static bool IsCustomObject<T>(this T t)
             => t.GetType().IsCustomObjectType();
-      
 
+        public static IDbFactory CreateFactoryForTesting(this SqlFuConfig cfg, IDbProvider prov, string cnx)
+        =>new DbFactoryForTest(prov,cnx,cfg);
        
     }
 }

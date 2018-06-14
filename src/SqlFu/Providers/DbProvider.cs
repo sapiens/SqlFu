@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 using CavemanTools.Model;
 using SqlFu.Mapping;
 
@@ -17,11 +19,13 @@ namespace SqlFu.Providers
         {
             _factory = factory;
             SqlFuConfiguration = config ?? SqlFuManager.Config;
+            Converters = SqlFuConfiguration.Converters;
             ProviderId = providerId;
             EscapeChars = GetEscapeIdentifierChars();
         }
 
-        protected IManageConverters Converters= SqlFuManager.Config.Converters;
+        protected bool DbSupportsSchemas = true;
+        protected IManageConverters Converters;
 
         public virtual void SetupParameter(DbParameter param, string name, object value)
         {
@@ -38,7 +42,7 @@ namespace SqlFu.Providers
         public string EscapeTableName(TableName table)
         {
             var schema = "";
-            if (!table.Schema.IsNullOrEmpty())
+            if (DbSupportsSchemas && !table.Schema.IsNullOrEmpty())
             {
                 schema = Escape(table.Schema,EscapeChars.Start,EscapeChars.End)+".";
             }
@@ -73,15 +77,7 @@ namespace SqlFu.Providers
         public string EscapeIdentifier(string name)
             => Escape(name, EscapeChars.Start, EscapeChars.End);
 
-        public abstract string GetColumnType(Type type);
 
-      
-        private IDatabaseTools _tools;
-        public IDatabaseTools DatabaseTools => _tools ?? (_tools = InitTools());
-
-        public virtual string FormatIndexOptions(string idxDef, string options = "") => idxDef;
-
-        public abstract string GetIdentityKeyword();
         public bool IsTransientError(DbException ex)
         {
             return IsDbBusy(ex);
@@ -92,11 +88,9 @@ namespace SqlFu.Providers
         public abstract bool ObjectExists(DbException ex, string name = null);
 
 
-        public abstract string AddReturnInsertValue(string sqlValues, string identityColumn);
+        public abstract string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues);
 
         public abstract string FormatQueryPagination(string sql, Pagination page, ParametersManager pm);
-
-        protected abstract IDatabaseTools InitTools();
 
         private IDbProviderExpressions _expr;
 
@@ -111,6 +105,9 @@ namespace SqlFu.Providers
         public SqlFuConfig SqlFuConfiguration { get; }
 
         protected Func<IDbProviderExpressions> InitExpressionHelper=()=>new DbProviderExpressions();
+
+        protected string JoinValuesAsParameters(IDictionary<string, object> data)
+            => data.Values.Select((v, idx) => $"@{idx}").StringJoin();
 
         public static string Escape(string s,char startId,char endId)
         {

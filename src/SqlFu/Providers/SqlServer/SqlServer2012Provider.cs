@@ -16,43 +16,18 @@ namespace SqlFu.Providers.SqlServer
     public class SqlServer2012Provider:DbProvider
     {
        
-        public const string Id = "SqlServer2012";
-      
-        public readonly SqlServerType DbTypes=new SqlServerType();
+        public const string Id = "SqlServer2012";             
       
 
         public SqlServer2012Provider(Func<DbConnection> factory):base(factory,Id)
         {
-           
+           InitExpressionHelper=()=>new SqlServer2012Expressions();
         }
 
         protected override EscapeIdentifierChars GetEscapeIdentifierChars()
       => new EscapeIdentifierChars('[', ']');
 
         public override string ParamPrefix => "@";
-
-        public override string FormatIndexOptions(string idxDef, string options = "")
-        {
-            if (options.IsNullOrEmpty()) return idxDef;
-            if (idxDef.Contains("key")) return FormatIdx(idxDef, options,"(");
-            return FormatIdx(idxDef, options,"index");
-        }
-
-        private string FormatIdx(string idxDef, string options,string before)
-        {
-            var idx = idxDef.IndexOf(before);
-            return idxDef.Substring(0, idx) + " " + options + " " + idxDef.Substring(idx);
-        }
-
-
-
-        public override string GetColumnType(Type type)
-        {
-            if (type.IsEnumType()) type=type.GetUnderlyingTypeForEnum();
-            return DbTypes.GetValueOrDefault(type);
-        }
-
-        public override string GetIdentityKeyword() => "identity(1,1)";
 
         private static string[] _transientErrors = new[]
         {
@@ -78,7 +53,8 @@ namespace SqlFu.Providers.SqlServer
         public override bool IsUniqueViolation(DbException ex, string keyName = "")
         {
             if (!ex.Message.Contains("Cannot insert duplicate")) return false;
-            return !keyName.IsNotEmpty() || ex.Message.Contains(keyName);
+            if (!keyName.IsNotEmpty()) return true;
+            return ex.Message.Contains(keyName);
         }
 
         public override bool ObjectExists(DbException ex, string name = null)
@@ -86,13 +62,14 @@ namespace SqlFu.Providers.SqlServer
 
 
 
-        public override string AddReturnInsertValue(string sqlValues, string identityColumn)
+      public override string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues)
         {
-            if (identityColumn.IsNullOrEmpty()) return sqlValues;
-            return $"\nOUTPUT INSERTED.{identityColumn} AS ID " + sqlValues;
+            var ins = options.IdentityColumn.IsNullOrEmpty() ? "" : $"\nOUTPUT INSERTED.{options.IdentityColumn} AS ID ";
+            return $"insert into {EscapeTableName(options.TableName)}({columnValues.Keys.Select(EscapeIdentifier).StringJoin()})" +ins+
+                   $"\n values({JoinValuesAsParameters(columnValues)})";
         }
 
-  
+
         public override void SetupParameter(DbParameter param, string name, object value)
         {
             base.SetupParameter(param, name, value);
@@ -143,8 +120,5 @@ namespace SqlFu.Providers.SqlServer
             pm.AddValues(page.Skip, page.PageSize);
             return string.Format("{2} OFFSET @{0} ROWS FETCH NEXT @{1} ROWS ONLY",pm.CurrentIndex-2,pm.CurrentIndex-1 ,sql);
         }
-
-        protected override IDatabaseTools InitTools() => new SqlServerDbTools(this);
-       
     }
 }

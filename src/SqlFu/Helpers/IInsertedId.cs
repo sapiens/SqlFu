@@ -16,6 +16,11 @@
 
         public T GetInsertedId<T>()
         {
+            if (_value!=null && _value is long)
+            {
+                var value = (int)(long)_value;
+                return (T) (object)value;//ugly hack for providers returning longs
+            }
             return (T) _value;
         }
     }

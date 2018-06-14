@@ -73,8 +73,7 @@ namespace SqlFu.Mapping.Internals
 
                 value=Expression.Condition(Expression.NotEqual(valueExpr, Expression.Constant(DBNull.Value)),
                     Expression.Convert(valueExpr, data.Type),GetPropertyExpression(data));
-                //(Type)valueExpr
-                //value = Expression.Convert(valueExpr, data.Type);
+                
             }
             else{
                 //converter.Convert<Type>(valueExpr)

@@ -29,6 +29,8 @@ namespace Tests._Fakes
         }
 
         public ParametersManager Parameters { get; }= new ParametersManager();
+        public bool EscapeIdentifiers { get; set; }
+
         public string GetColumnsSql(params Expression[] columns)
         {
             var sb=new StringBuilder();

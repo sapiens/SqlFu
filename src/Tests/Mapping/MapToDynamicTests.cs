@@ -17,7 +17,7 @@ namespace Tests.Mapping
         public MapToDynamicTests(ITestOutputHelper x)
         {
             x.Logger();
-            LogManager.OutputToTrace();
+            //LogManager.OutputToTrace();
         }
 
         [Fact]

@@ -1,4 +1,4 @@
-version: 3.4.1.{build}
+version: 4.0.0-beta2-{build}
 
 branches:
 
@@ -6,9 +6,7 @@ branches:
 
   - master
 
-skip_non_tags: true
-
-image: Visual Studio 2017 Preview
+image: Visual Studio 2017
 
 configuration: Release
 
@@ -34,6 +32,13 @@ dotnet_csproj:
 
   package_version: '{version}'
 
+skip_commits:
+  files:
+    - appveyor*
+    - '*gitignore'
+    - '**/*.md'
+
+services: mssql2016
 
 before_build:
 
@@ -45,7 +50,13 @@ build:
 
   verbosity: quiet
 
-test: off
+test_script:
+
+- cmd: >-
+
+    cd src/tests
+
+    dotnet xunit
 
 artifacts:
 

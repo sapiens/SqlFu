@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using CavemanTools;
 using SqlFu.Configuration;
@@ -8,16 +9,27 @@ namespace SqlFu
 {
     public class HelperOptions : IHelperOptions
     {
-        public string TableName { get; set; }
-        public string DbSchema { get; set; }
-        public Action<DbCommand> CmdOptions { get; set; } = Empty.ActionOf<DbCommand>();
+        public TableInfo Info { get; }
+        private TableName _tableName;
 
-        public void EnsureTableName(TableInfo info)
+        public TableName TableName
         {
-            if (TableName.IsNullOrEmpty()) TableName = info.Table.Name;
-            if (DbSchema.IsNullOrEmpty()) DbSchema = info.Table.Schema;
+            get { return _tableName; }
+            set
+            {
+                value.MustNotBeNull();
+                _tableName = value;
+            }
         }
 
-        public  TableName Table=>new TableName(TableName,DbSchema);
+        public Action<DbCommand> CmdOptions { get; set; } = Empty.ActionOf<DbCommand>();
+        public List<string> IgnoreProperties { get; }=new List<string>();
+
+        public HelperOptions(TableInfo info)            
+        {
+            Info = info;
+            _tableName = info.TableName;
+        }
+      
     }
 }

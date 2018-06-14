@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Common;
 using CavemanTools;
 using CavemanTools.Model;
+using SqlFu;
 using SqlFu.Builders;
 using SqlFu.Providers;
 using Tests._Fakes;
@@ -29,15 +31,7 @@ namespace Tests
 
         
 
-        public override string GetColumnType(Type type)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string GetIdentityKeyword()
-        {
-            throw new NotImplementedException();
-        }
+       
 
         public override bool IsDbBusy(DbException ex)
         {
@@ -54,17 +48,13 @@ namespace Tests
             throw new NotImplementedException();
         }
 
-        public override string AddReturnInsertValue(string sqlValues, string identityColumn)
-            => sqlValues;
-
+        public override string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues)
+          =>  $"insert into {EscapeTableName(options.TableName)} ({columnValues.Keys.StringJoin()})\n values({JoinValuesAsParameters(columnValues)})";
+     
         public override string FormatQueryPagination(string sql, Pagination page, ParametersManager pm)
             => sql + " limit";
 
-        protected override IDatabaseTools InitTools()
-        {
-            throw new NotImplementedException();
-        }
-
+      
       
     }
 }
