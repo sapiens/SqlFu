@@ -42,8 +42,7 @@ namespace Tests
                 d.Property(f => f.Id).IsAutoincremented();
                 d.IgnoreProperties(f=>f.Ignored);
                 d.Property(f => f.Category)
-                    .BeforeWritingUseConverter(t => t.ToString())
-                    .MapToColumn("other");
+                    .BeforeWritingUseConverter(t => t.ToString());
             });
             config?.Invoke(c);            
             return new SqlFuConnection(provider,cnx,c);
