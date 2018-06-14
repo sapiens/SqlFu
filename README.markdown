@@ -52,31 +52,27 @@ LogManager.OutputToTrace();
                
                //set the table name to be used when dealing with this POCO. 
              		   
-               c.ConfigureTableForPoco<MyPoco>(info=>
-											{
-												info.Table=new TableName("my_pocos");
-												
-												//new in ver. 4.0.0 - additional info used by helpers
-												
-												//Any table name used by helpers will use it by default
-												c.SetDefaultDbSchema("foo");
-												
-												//the Insert helper uses it
-												 d.Property(f => f.Id).IsAutoincremented();
-												 
-												 //properties will be always be ignored
-												 d.IgnoreProperties(f=>f.Ignored);
-												 
-												 //use it when you want to convert value just before writing to the db
-												 // store an enum as a string instead of the default int
-												 d.Property(f => f.Category)
-												 .BeforeWritingUseConverter(t => t.ToString())
-												 //the column name in the db is 'Categ'
-												 .MapToColumn("Categ");
+               c.ConfigureTableForPoco<MyPoco>(info=>											
+	       {
+		info.Table=new TableName("my_pocos");
+		//new in ver. 4.0.0 - additional info used by helpers
+		//Any table name used by helpers will use it by default
+		c.SetDefaultDbSchema("foo");
 
+		//the Insert helper uses it
+		 d.Property(f => f.Id).IsAutoincremented();
 
-											}
-										);
+		 //properties will be always be ignored
+		 d.IgnoreProperties(f=>f.Ignored);
+
+		 //use it when you want to convert value just before writing to the db
+		 // store an enum as a string instead of the default int
+		 d.Property(f => f.Category)
+		 .BeforeWritingUseConverter(t => t.ToString())
+		 //the column name in the db is 'Categ'
+		 .MapToColumn("Categ");
+					}
+				);
                
               //register a naming convention
               c.AddNamingConvention(predicate,type=> new TableName(type.Fullname));
