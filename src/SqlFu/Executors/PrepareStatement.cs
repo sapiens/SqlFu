@@ -78,7 +78,7 @@ namespace SqlFu.Executors
                 {
                     if (!poco.IsListParam() && poco.IsCustomObject())
                     {
-                        return poco.ToDictionary().ToArray();
+                        return poco.ValuesToDictionary().ToArray();
                     }
                 }
 

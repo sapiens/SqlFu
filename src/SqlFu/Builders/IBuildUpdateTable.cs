@@ -48,7 +48,7 @@ namespace SqlFu.Builders
                 _builder.Where(criteria);
                 return this;
             }
-            foreach (var cv in anonymousCriteria.ToDictionary())
+            foreach (var cv in anonymousCriteria.ValuesToDictionary())
             {
                 _builder.WriteEqualityCriteria(cv.Key,cv.Value);
             }

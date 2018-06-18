@@ -62,7 +62,7 @@ namespace SqlFu.Builders.Crud
 
         public void SetUpdates(T data)
         {
-            foreach (var kv in data.ToDictionary())
+            foreach (var kv in data.ValuesToDictionary())
             {
 
                 Set(kv.Key, kv.Value);

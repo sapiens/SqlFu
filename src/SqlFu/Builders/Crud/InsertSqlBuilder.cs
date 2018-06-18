@@ -37,7 +37,7 @@ namespace SqlFu.Builders.Crud
         private IDictionary<string, object> FilterIgnored()
         {
             //property name -> column's name 
-            var columnValues = _data.ToDictionary().ToDictionary(k=>_options.Info[k.Key].Name,v=> _options.Info.ConvertWriteValue(v.Key, v.Value));
+            var columnValues = _data.ValuesToDictionary().ToDictionary(k=>_options.Info[k.Key].Name,v=> _options.Info.ConvertWriteValue(v.Key, v.Value));
             foreach (var name in GetIgnoredColumns(_options))
             {
                 columnValues.Remove(name);

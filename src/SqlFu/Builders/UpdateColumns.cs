@@ -30,7 +30,7 @@ namespace SqlFu.Builders
 
            public void PopulateBuilder(UpdateTableBuilder<T> builder)
            {
-               _data.ToDictionary().Where(kv=>!_ignore.Contains(kv.Key))
+               _data.ValuesToDictionary().Where(kv=>!_ignore.Contains(kv.Key))
                     .ForEach(kv=>builder.Set(kv.Key,kv.Value));
            }
        }
