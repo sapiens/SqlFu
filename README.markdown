@@ -4,7 +4,7 @@ SqlFu is a **_flexibile_** data mapper (aka micro-ORM) for .Net Core and .Net 4.
 
 [![Appveyor stat](https://ci.appveyor.com/api/projects/status/github/sapiens/sqlfu?svg=true)](https://ci.appveyor.com/project/sapiens/sqlfu) [![NuGet](https://img.shields.io/nuget/v/SqlFu.svg)](https://www.nuget.org/packages/sqlfu)
 
-Latest version: [4.0.0](https://github.com/sapiens/SqlFu/wiki/ChangeLog) 
+[Change Log](https://github.com/sapiens/SqlFu/wiki/ChangeLog) 
 
   
 ## Features
