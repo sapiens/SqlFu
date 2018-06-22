@@ -62,7 +62,7 @@ LogManager.OutputToTrace();
 		//Any table name used by helpers will use it by default
 		c.SetDefaultDbSchema("foo");
 
-		//the Insert helper uses it
+		//the Insert helper uses it to return inserted id
 		 d.Property(f => f.Id).IsAutoincremented();
 
 		 //properties will be always be ignored
@@ -200,6 +200,13 @@ _db.Insert(new User()
                 LastName = "Doe"
             });
 
+//optional, specify what column is PK
+ c.ConfigureTableForPoco<MyPoco>(info=>											
+	       {
+		//the Insert helper uses it to return inserted id
+		 d.Property(f => f.Id).IsAutoincremented();
+	}
+
 //insert with options
 _db.Insert(new 
             {
@@ -209,6 +216,7 @@ _db.Insert(new
             }, cf =>
             {
                 cf.SetTableName("mytable");
+		c.IdentityColumn = "Id";
                 cf.Ignore(d=>d.Bla);
             });
 
