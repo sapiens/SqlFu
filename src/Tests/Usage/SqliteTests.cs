@@ -23,7 +23,7 @@ Id integer primary key not null,
 FirstName nvarchar(150),
 LastName nvarchar(150),
 Category varchar(10) default('Page'),
-CreatedOn datetime default (getdate()),
+CreatedOn datetime DEFAULT CURRENT_TIMESTAMP,
 IsDeleted bit default 0,
 Posts int not null default 0,
 unique(FirstName)

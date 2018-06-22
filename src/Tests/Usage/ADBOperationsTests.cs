@@ -61,15 +61,28 @@ namespace Tests.SqlServer
         public void insert_and_return_id()
         {
 
-            _db.Insert(new User()
+           var rez= _db.Insert(new User()
             {
                 FirstName = "Jane2",
                 LastName = "Doe",
                 Category = Type.Page,
                 Posts = 0
-            }).GetInsertedId<int>().Should().Be(4);
-          
-
+            });
+            rez.IsEmpty.Should().BeFalse();
+            rez.InsertWasSuccessful.Should().BeTrue();
+            rez.GetInsertedId<int>().Should().Be(4);
+            var name = _db.GetTableName<User>();
+            var r = _db.Insert(
+                new
+                {
+                    FirstName = "Jane200",
+                    LastName = "Doe",
+                    Category = Type.Page,
+                    Posts = 0
+                }, c => c.SetTableName(name));
+            r.IsEmpty.Should().BeTrue();
+            r.InsertWasSuccessful.Should().BeTrue();
+            r.Invoking(d => d.GetInsertedId<int>()).Should().Throw<InvalidOperationException>();
         }
 
         [Fact]
