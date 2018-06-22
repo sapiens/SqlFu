@@ -33,7 +33,12 @@ namespace SqlFu
 
             var provider = db.Provider();
             var builder=new InsertSqlBuilder(data,provider,options);
-
+            if (options.IdentityColumn.IsNullOrEmpty())
+            {
+                var count = db.Execute(builder.GetCommandConfiguration());
+                if (count!=0) return InsertedId.OkWithNoResult;    
+                return InsertedId.NotOkWithNoResult;
+            }
             return db.GetValue<InsertedId>(builder.GetCommandConfiguration());
         }
         /// <summary>
@@ -70,9 +75,10 @@ namespace SqlFu
             }
         }
 
-        public static Task<InsertedId> InsertAsync<T>(this DbConnection db, T data,CancellationToken? cancel=null ,Action<IInsertableOptions<T>> cfg = null) where T:class
+        public static async Task<InsertedId> InsertAsync<T>(this DbConnection db, T data,CancellationToken? cancel=null ,Action<IInsertableOptions<T>> cfg = null) where T:class
         {
             data.MustNotBeNull();
+            cancel = cancel ?? CancellationToken.None;
             if (data.IsAnonymousType()) cfg.MustNotBeNull("You need to specify table name at least");
             var info = db.GetPocoInfo<T>();
             var options = info.CreateInsertOptions<T>();
@@ -80,8 +86,14 @@ namespace SqlFu
 
             var provider = db.Provider();
             var builder=new InsertSqlBuilder(data,provider,options);
-
-            return db.GetValueAsync<InsertedId>(builder.GetCommandConfiguration(), cancel??CancellationToken.None);
+            if (options.IdentityColumn.IsNullOrEmpty())
+            {
+                var count = await db.ExecuteAsync(builder.GetCommandConfiguration(),cancel.Value);
+                if (count!=0) return InsertedId.OkWithNoResult;  
+                return InsertedId.NotOkWithNoResult;
+            }
+            
+            return await db.GetValueAsync<InsertedId>(builder.GetCommandConfiguration(), cancel.Value);
         }
 
         static Insertable<T> CreateInsertOptions<T>(this TableInfo info) =>new Insertable<T>(info);
