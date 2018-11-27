@@ -31,7 +31,7 @@ namespace SqlFu.Providers
         {
             name.MustNotBeEmpty();
             param.ParameterName = ParamPrefix+name;
-            
+            value = SqlFuConfiguration.Converters.ProcessBeforeWriting(value);
             param.Value = value ?? DBNull.Value;
         }
 

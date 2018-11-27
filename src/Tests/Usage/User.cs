@@ -13,14 +13,14 @@ namespace Tests.Usage
 
         public int Posts { get; set; }
         public DateTime CreatedOn { get; set; }=DateTime.Now;
-        public Type Category { get; set; }/* = Type.Post.ToString();*/
+        public ArticleType Category { get; set; }/* = Type.Post.ToString();*/
         public User()
         {
          
         }
     }
 
-    public enum Type
+    public enum ArticleType
     {
         Post,
         Page

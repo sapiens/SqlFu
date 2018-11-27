@@ -22,14 +22,28 @@ namespace SqlFu.Mapping.Internals
             _converters[typeof (T)] = converter;
         }
 
-      
+        public void RegisterWriteConverter<T>(Func<T, object> writeToDb)
+        {
+            Func<dynamic, object> func = f=> writeToDb(f);
+            _writeConverters[typeof(T)] = func;
+        }
+
 
         Dictionary<Type,object> _converters=new Dictionary<Type, object>();
-        //Dictionary<Type,Func<object,object>> _voMap=new Dictionary<Type, Func<object, object>>();
-
+        
         public bool HasConverter(Type type) => _converters.ContainsKey(type);
-      
-       public Func<object, T> GetConverter<T>()
+
+        public object ProcessBeforeWriting(object value)
+        {
+            if (value == null) return null;
+            var act = _writeConverters.GetValueOrDefault(value.GetType());
+            if (act == null) return value;
+            return ((Func<dynamic, object>) act)((dynamic)value);
+        }
+
+        Dictionary<Type,object> _writeConverters=new Dictionary<Type, object>();
+
+        public Func<object, T> GetConverter<T>()
         {
             var c = _converters.GetValueOrDefault(typeof (T));
             if (c == null)

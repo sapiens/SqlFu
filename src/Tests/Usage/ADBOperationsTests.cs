@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using CavemanTools.Model;
 using Tests.Usage;
 using Xunit;
-using Type = Tests.Usage.Type;
 
 namespace Tests.SqlServer
 {
@@ -45,7 +44,7 @@ namespace Tests.SqlServer
             {
                 FirstName = "Jane",
                 LastName = "Doe",
-                Category = Type.Page,
+                Category = ArticleType.Page,
                 Posts = 0
             }
         };
@@ -65,7 +64,7 @@ namespace Tests.SqlServer
             {
                 FirstName = "Jane2",
                 LastName = "Doe",
-                Category = Type.Page,
+                Category = ArticleType.Page,
                 Posts = 0
             });
             rez.IsEmpty.Should().BeFalse();
@@ -77,7 +76,7 @@ namespace Tests.SqlServer
                 {
                     FirstName = "Jane200",
                     LastName = "Doe",
-                    Category = Type.Page,
+                    Category = ArticleType.Page,
                     Posts = 0
                 }, c => c.SetTableName(name));
             r.IsEmpty.Should().BeTrue();
@@ -102,7 +101,7 @@ namespace Tests.SqlServer
             {
                 FirstName = "Jane2",
                 LastName = "Doe",
-                Category = Type.Page,
+                Category = ArticleType.Page,
                 Posts = 0
             }).GetInsertedId<int>().Should().Be(4);
 
@@ -110,7 +109,7 @@ namespace Tests.SqlServer
             {
                 FirstName = "Jane2",
                 LastName = "Doe",
-                Category = Type.Page,
+                Category = ArticleType.Page,
                 Posts = 0
             })).Should().Throw<DbException>();
            
@@ -118,7 +117,7 @@ namespace Tests.SqlServer
             {
                 FirstName = "Jane2",
                 LastName = "Doe",
-                Category = Type.Page,
+                Category = ArticleType.Page,
                 Posts = 0
             })).Should().NotThrow();
                      
@@ -135,7 +134,7 @@ namespace Tests.SqlServer
         {
            
             var user=_db.QueryRow(q => q.From<User>()
-                .Where(d => !d.IsDeleted && d.Category==Type.Page)
+                .Where(d => !d.IsDeleted && d.Category==ArticleType.Page)
                 .And(d => d.InjectSql("Posts= @no", new {no = 0}))
                 .Select(d=>new {d.Id,Fullname=d.Concat(d.FirstName," ",d.LastName)}));
             user.Fullname.Should().Be("Jane Doe");
@@ -152,7 +151,7 @@ namespace Tests.SqlServer
         [Fact]
         public void update_user_where_writable_converter()
         {
-            _db.Update<User>().Set(d => d.Category ,Type.Post).Where(d => d.Category == Type.Page).Execute()
+            _db.Update<User>().Set(d => d.Category ,ArticleType.Post).Where(d => d.Category == ArticleType.Page).Execute()
                 .Should().Be(1);
         }
 
@@ -163,8 +162,8 @@ namespace Tests.SqlServer
                 .GroupBy(d => d.Category)
                 .Select(d => new {d.Category, total= d.Sum(d.Posts + 1)})
                 ).ToDictionary(d=>d.Category,d=>d.total);
-            all[Type.Post].Should().Be(5);
-            all[Type.Page].Should().Be(1);
+            all[ArticleType.Post].Should().Be(5);
+            all[ArticleType.Page].Should().Be(1);
         }
 
 
@@ -172,7 +171,7 @@ namespace Tests.SqlServer
         public void delete_anon_where()
         {
             _db.DeleteFromAnonymous(new {Category = ""}, _db.GetTableName<User>(),
-                d => d.Category == Type.Page.ToString())
+                d => d.Category == ArticleType.Page.ToString())
                 .Should().Be(1);
             _db.CountRows<User>().Should().Be(2);
         }
