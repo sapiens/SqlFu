@@ -6,6 +6,7 @@ using CavemanTools.Logging;
 using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 using SqlFu.Executors;
+using SqlFu.Mapping;
 using SqlFu.Providers;
 
 
@@ -164,6 +165,47 @@ namespace SqlFu
             if (mapper != null) return mapper;
             return reader => cmd.SqlConfig().MapperFactory.Map<T>(reader, cmdText.GetCachingId());
         }
-        
+
+        public interface IRegisterTypeConverterForWriting<T>
+        {
+            IRegisterTypeConverterForReading<T> WriteAs(Func<T, object> write);
+        }
+        public interface IRegisterTypeConverterForReading<T>
+        {
+            IRegisterTypeConverterForWriting<T> ReadAs(Func<object, T> write);
+        }
+
+        public interface IRegisterTypeConverter<T>:IRegisterTypeConverterForWriting<T>,IRegisterTypeConverterForReading<T>
+        {
+
+        }
+
+        class ConverterRegister<T> : IRegisterTypeConverter<T>
+        {
+            private readonly IRegisterConverter _cfg;
+
+            public ConverterRegister(IRegisterConverter cfg)
+            {
+                _cfg = cfg;
+            }
+            public IRegisterTypeConverterForReading<T> WriteAs(Func<T, object> write)
+            {
+                _cfg.RegisterWriteConverter(write);
+                return this;
+            }
+
+            public IRegisterTypeConverterForWriting<T> ReadAs(Func<object,T> read)
+            {
+                _cfg.RegisterConverter(read);
+                return this;
+            }
+        }
+
+        /// <summary>
+        /// How SqlFu will handle value of type when writing/reading to/from db
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static IRegisterTypeConverter<T> WhenType<T>(this SqlFuConfig cfg)=> new ConverterRegister<T>(Config.Converters);
     }
 }

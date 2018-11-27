@@ -17,6 +17,14 @@ namespace Tests.Mapping
         }
 
         [Fact]
+        public void write_converters()
+        {
+            _sut.RegisterWriteConverter<DateTime>(d=>d.Ticks);
+            var dt = DateTime.Now;
+            _sut.ProcessBeforeWriting(dt).Should().Be(dt.Ticks);
+        }
+
+        [Fact]
         public void for_a_type_without_converter_a_default_converter_is_used()
         {
             _sut.Convert<string>((object) 3).Should().Be("3");
