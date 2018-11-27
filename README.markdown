@@ -2,7 +2,7 @@
 
 SqlFu is a **_flexibile_** data mapper (aka micro-ORM) for .Net Core and .Net 4.6+ . Apache 2.0 license.
 
-Latest version: [4.0.0](https://github.com/sapiens/SqlFu/wiki/ChangeLog) 
+Latest version: [4.1.0](https://github.com/sapiens/SqlFu/wiki/ChangeLog) 
   
 ## Features
 * Think Ado.Net on steroids with the addition of a strongly typed query builder (not LINQ).
@@ -50,6 +50,9 @@ LogManager.OutputToTrace();
                //register a custom (manual) mapper
                c.CustomMappers.Register(reader=> new MyPoco(){ /* init from DbDataReader */});
                
+			   //set how a certain type should be treated at writing/reading. Useful for enums, DateTime or value objects
+			    c.WhenType<ArticleType>().WriteAs(a => a.ToString());
+
                //set the table name to be used when dealing with this POCO. 
              		   
                c.ConfigureTableForPoco<MyPoco>(info=>
