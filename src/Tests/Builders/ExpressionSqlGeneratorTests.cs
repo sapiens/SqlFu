@@ -178,8 +178,46 @@ namespace Tests.Builders
         {
             Get(d => d.Order == SomeEnum.First).Should().Be("(Order = @0)");
             FirstParameter.Should().Be(SomeEnum.First);
-            //FirstParameter.Should().NotBe((int)SomeEnum.First);
             FirstParameter.Should().BeOfType<SomeEnum>();
+        }
+    
+        [Fact]
+        public void enum_that_requires_casting_handling()
+        {
+            Get(d => d.Order == (SomeEnum?)1).Should().Be("(Order = @0)");
+            FirstParameter.Should().Be(SomeEnum.First);
+            FirstParameter.Should().BeOfType<SomeEnum>();
+         
+        }
+
+       public class ClassA
+        {
+            public SomeEnum Enum { get; set; }
+        }
+
+        [Fact]
+        public void enum_variable_handling()
+        {
+            var e = SomeEnum.First;
+          
+            Expression<Func<ClassA, bool>> func = x=>x.Enum==e;
+            _sut.GetSql(func).Should().Be("(Enum = @0)");
+            FirstParameter.Should().Be(SomeEnum.First);           
+        }
+        
+        SomeEnum Get()
+        {
+            return SomeEnum.Last;
+
+        }
+
+
+        [Fact]
+        public void enum_from_method_handling()
+        {
+           Expression<Func<ClassA, bool>> func = x=>x.Enum==Get();
+            _sut.GetSql(func).Should().Be("(Enum = @0)");
+            FirstParameter.Should().Be(SomeEnum.Last);           
         }
 
         [Fact]
@@ -187,6 +225,7 @@ namespace Tests.Builders
         {
             Get(d => d.Order == null).Should().Be("(Order is null)");
             _sut.Parameters.CurrentIndex.Should().Be(0);
+            _sut.Parameters.ToArray().ToArray().Should().BeEmpty();
         }
 
         [Fact]

@@ -14,21 +14,21 @@ namespace SqlFu.Builders.Expressions
             return GetPropertyName(node.Body);            
         }
 
-        public static bool IsEnumComparison(this BinaryExpression node)
-        {
-            if (node.NodeType != ExpressionType.Equal) return false;
-            var un = node.Left as UnaryExpression;
-            if (un != null)
-            {
-                if (un.IsEnumCast()) return true;
-            }
-            un = node.Right as UnaryExpression;
-            if (un != null)
-            {
-                if (un.IsEnumCast()) return true;
-            }
-            return false;
-        }
+        //public static bool IsEnumComparison(this BinaryExpression node)
+        //{
+        //    if (node.NodeType != ExpressionType.Equal) return false;
+        //    var un = node.Left as UnaryExpression;
+        //    if (un != null)
+        //    {
+        //        if (un.IsEnumCast()) return true;
+        //    }
+        //    un = node.Right as UnaryExpression;
+        //    if (un != null)
+        //    {
+        //        if (un.IsEnumCast()) return true;
+        //    }
+        //    return false;
+        //}
 
         public static bool IsEnumCast(this UnaryExpression node)
         {

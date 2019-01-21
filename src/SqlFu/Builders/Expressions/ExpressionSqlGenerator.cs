@@ -73,10 +73,11 @@ namespace SqlFu.Builders.Expressions
         {
             _visitingBinary = true;
             string op = "";
-            if (node.IsEnumComparison())
-            {
-                node=HandleEnumComparison(node);             
-            }
+            //all tests involving enums work without it
+            //if (node.IsEnumComparison())
+            //{
+            //    node = HandleEnumComparison(node);
+            //}
             switch (node.NodeType)
             {
                 case ExpressionType.AndAlso:
@@ -154,44 +155,44 @@ namespace SqlFu.Builders.Expressions
             return node;
         }
 
-        private BinaryExpression HandleEnumComparison(BinaryExpression node)
-        {
-            var f= new RewriteEnumEquality(node);
-            var prop = f.PropertyExpression;
-            Expression<Func<OrderBy>> g = () => (OrderBy)Enum.ToObject(typeof(OrderBy),1);
-            var call = Expression.Call(typeof(Enum).GetMethod("ToObject", new []{typeof(Type),typeof(Int32)}),
-                Expression.Constant(f.PropertyExpression.Type), f.OtherNode);
-            var convert = Expression.Convert(call, prop.Type);
-            var bin = Expression.MakeBinary(ExpressionType.Equal, prop, convert);
-            return bin;
-        }
+        //private BinaryExpression HandleEnumComparison(BinaryExpression node)
+        //{
+        //    var f= new RewriteEnumEquality(node);
+        //    var prop = f.PropertyExpression;
+        //    Expression<Func<OrderBy>> g = () => (OrderBy)Enum.ToObject(typeof(OrderBy),1);
+        //    var call = Expression.Call(typeof(Enum).GetMethod("ToObject", new []{typeof(Type),typeof(Int32)}),
+        //        Expression.Constant(f.PropertyExpression.Type), f.OtherNode);
+        //    var convert = Expression.Convert(call, prop.Type);
+        //    var bin = Expression.MakeBinary(ExpressionType.Equal, prop, convert);
+        //    return bin;
+        //}
 
-        class RewriteEnumEquality
-        {
-            private readonly BinaryExpression _node;
+        //class RewriteEnumEquality
+        //{
+        //    private readonly BinaryExpression _node;
 
-            public RewriteEnumEquality(BinaryExpression node)
-            {
-                _node = node;
-                if (node.Left.CastAs<UnaryExpression>()?.IsEnumCast() ?? false)
-                {
-                    ConvertExpression = node.Left.CastAs<UnaryExpression>();
-                    OtherNode = node.Right;
-                }
-                else
-                {
-                    ConvertExpression = node.Right.CastAs<UnaryExpression>();
-                    OtherNode = node.Left;
-                }
-            }
+        //    public RewriteEnumEquality(BinaryExpression node)
+        //    {
+        //        _node = node;
+        //        if (node.Left.CastAs<UnaryExpression>()?.IsEnumCast() ?? false)
+        //        {
+        //            ConvertExpression = node.Left.CastAs<UnaryExpression>();
+        //            OtherNode = node.Right;
+        //        }
+        //        else
+        //        {
+        //            ConvertExpression = node.Right.CastAs<UnaryExpression>();
+        //            OtherNode = node.Left;
+        //        }
+        //    }
 
-            public Expression OtherNode { get; }
-            public UnaryExpression ConvertExpression { get; private set; }
+        //    public Expression OtherNode { get; }
+        //    public UnaryExpression ConvertExpression { get; private set; }
 
-            public Expression PropertyExpression => ConvertExpression.Operand;
+        //    public Expression PropertyExpression => ConvertExpression.Operand;
 
 
-        }
+        //}
 
         protected override Expression VisitConstant(ConstantExpression node)
         {
@@ -552,6 +553,13 @@ namespace SqlFu.Builders.Expressions
                         HandleSingleBooleanProperty(node.Operand as MemberExpression, true);
                         break;
                     }
+
+                    if (node.Operand.Type.Is<MethodCallExpression>())
+                    {
+                        HandleAsMethodCall(node.Operand as MethodCallExpression);
+                        break;
+                    }
+
                     var op = node.Operand as ConstantExpression;
                     if (IsSingleBooleanConstant(op))
                     {
@@ -590,6 +598,11 @@ namespace SqlFu.Builders.Expressions
             }
 
             return node;
+        }
+
+        private void HandleAsMethodCall(MethodCallExpression exp)
+        {
+            Visit(exp.Arguments[1]);
         }
 
         bool IsLambdaBooleanConstantHandled(LambdaExpression expression)
