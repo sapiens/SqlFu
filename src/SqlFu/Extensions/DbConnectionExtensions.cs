@@ -565,18 +565,5 @@ namespace SqlFu
         /// <returns></returns>
         public static IProcessEachRow<T> SqlTo<T>(this DbConnection db,FormattableString sql,CancellationToken? cancel=null) 
             =>new FluentCommandBuilder<T>(db,new SqlStringBuilder().Append(sql), null,cancel);
-    }
-
-
-    //public class SqlAction
-    //{
-    //    public string SqlText { get; }
-    //    public List<object> Arguments { get; }= new List<object>();
-
-    //    public SqlAction(string sqlText,params object[] args)
-    //    {
-    //        SqlText = sqlText;
-    //        Arguments.AddRange(args);
-    //    }
-    //}
+    }    
 }
