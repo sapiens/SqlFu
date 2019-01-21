@@ -33,26 +33,6 @@ namespace SqlFu
         protected abstract Task<TResult> Execute(TInput i, DbConnection db, CancellationToken cancel);
     }
 
-    public class QueryOver<T>
-    {
-        private readonly IDbFactory _fact;
-
-        public QueryOver(IDbFactory fact)
-        {
-            _fact = fact;
-            var db = _fact.Create();
-            
-        }
-        Task<List<TResult>> GetRowsAsync<TResult>(Expression<Func<T, bool>> criteria,
-            Expression<Func<T, TResult>> selector)
-        {
-            
-        }
-
-        public IQuerySql<TResult> With<TResult>()
-        {
-            
-        }
-    }
+  
    
 }
