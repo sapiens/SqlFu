@@ -3,7 +3,8 @@
   <PropertyGroup>
     <Description>Tests Class Library</Description>
     <Authors>t</Authors>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>net47</TargetFramework>
+    <!--<TargetFramework>netcoreapp2.0</TargetFramework>-->
     <AssemblyName>Tests</AssemblyName>
     <PackageId>Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>

@@ -108,12 +108,12 @@ namespace SqlFu
             return Enum.GetUnderlyingType(type.GetGenericArgument());
         }
 
-        /// <summary>
-        /// Is Enum or nullable of Enum
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public static bool IsEnumType(this Type type) => type.IsEnum() || (type.IsNullable() && type.GetGenericArgument().IsEnum());
+        ///// <summary>
+        ///// Is Enum or nullable of Enum
+        ///// </summary>
+        ///// <param name="type"></param>
+        ///// <returns></returns>
+      //  public static bool IsEnumType(this Type type) => type.IsEnum() || (type.IsNullable() && type.GetGenericArgument().IsEnum());
 
        
         public static string GetCachingId(this string data) => Convert.ToBase64String(data.MurmurHash());

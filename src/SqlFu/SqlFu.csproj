@@ -1,8 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Description>Fast, versatile data mapper with helpers to improve productivity when working with a RDBMS. Designed for flexibility and ease of use. Full async support for operations and helpers, featuring a strongly typed sql builder</Description>
+    <Description>Fast, versatile Ado.Net data mapper with helpers to improve productivity when working with a RDBMS. 
+      Designed for flexibility and ease of use. 
+      Full async support for operations and helpers, featuring a strongly typed sql builder</Description>
     <Authors>Mihai Mogosanu</Authors>
-    <TargetFrameworks>netstandard1.6</TargetFrameworks>
+    <TargetFramework>netstandard20</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>SqlFu</AssemblyName>
     <PackageId>SqlFu</PackageId>
@@ -21,9 +23,10 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CavemanTools" Version="5.0.0" />
+    <PackageReference Include="CavemanTools" Version="5.1.0" />
+    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
+  <!--<ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
     <Reference Include="System.Data" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
@@ -36,7 +39,7 @@
     <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
     <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
-  </ItemGroup>
+  </ItemGroup>-->
   <!--<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
     -->
