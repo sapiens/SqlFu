@@ -543,7 +543,7 @@ namespace SqlFu.Builders.Expressions
         {
             var w = 0;
             node.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(d => !skip.Any(s => d.Name == s))
+                .Where(d => skip.All(s => d.Name != s))
                 .ForEach(n =>
                 {
                     _sb

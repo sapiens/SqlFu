@@ -23,7 +23,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CavemanTools" Version="5.1.0" />
+    <PackageReference Include="CavemanTools" Version="5.1.1" />
     <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
   </ItemGroup>
   <!--<ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
