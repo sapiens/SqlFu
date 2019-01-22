@@ -48,6 +48,28 @@ namespace SqlFu
         }
 
         /// <summary>
+        /// Used to issue quick queries that are using <see cref="T"/> as a source
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="profile"></param>
+        /// <returns></returns>
+      public static QueryOver<T> QueryOver<T>(string profile=DefaultProfile)=>new QueryOver<T>(GetDbFactory());
+
+        /// <summary>
+        /// Used to issue quick queries that are using <see cref="T"/> as a source
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="anonymous">Source to build query</param>
+        /// <param name="name">Table/view name that the objects represents</param>
+        /// <param name="profile"></param>
+        public static QueryOver<T> QueryOver<T>(T anonymous, TableName name, string profile = DefaultProfile)
+        {
+            var f = GetDbFactory(profile);
+            f.Configuration.ConfigureTableForPoco<T>(c=>c.TableName=name);
+            return new QueryOver<T>(f);
+        }
+
+        /// <summary>
         /// Returns a singleton factory instance implementing T
         /// </summary>
         /// <typeparam name="T"></typeparam>

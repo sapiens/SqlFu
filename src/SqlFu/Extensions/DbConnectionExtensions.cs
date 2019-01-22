@@ -541,7 +541,7 @@ namespace SqlFu
         /// <returns></returns>
         public static IProcessEachRow<T> WithSql<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> sqlBuilder,
             Action<DbCommand> cfg = null,CancellationToken? cancel=null)
-        =>new FluentCommandBuilder<T>(db,sqlBuilder(db.GetSqlBuilder()),cfg,cancel);
+        =>new FluentCommandExecutor<T>(db,sqlBuilder(db.GetSqlBuilder()),cfg,false,cancel);
 
         /// <summary>
         /// Dynamically build sql query using a simple string builder that automatically uses string interpolation to parametrize the query
@@ -552,7 +552,7 @@ namespace SqlFu
         /// <param name="cancel"></param>
         /// <returns></returns>
         public static IProcessEachRow<T> SqlTo<T>(this DbConnection db,Func<SqlStringBuilder,IGenerateSql> builder,CancellationToken? cancel=null) 
-            =>new FluentCommandBuilder<T>(db,builder(new SqlStringBuilder()),null,cancel);
+            =>new FluentCommandExecutor<T>(db,builder(new SqlStringBuilder()),null,false,cancel);
 
         /// <summary>
         /// Dynamically build sql query using a simple string builder that automatically uses string interpolation to parametrize the query.
@@ -564,6 +564,6 @@ namespace SqlFu
         /// <param name="cancel"></param>
         /// <returns></returns>
         public static IProcessEachRow<T> SqlTo<T>(this DbConnection db,FormattableString sql,CancellationToken? cancel=null) 
-            =>new FluentCommandBuilder<T>(db,new SqlStringBuilder().Append(sql), null,cancel);
+            =>new FluentCommandExecutor<T>(db,new SqlStringBuilder().Append(sql), null,false,cancel);
     }    
 }
