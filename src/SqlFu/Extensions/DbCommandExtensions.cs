@@ -57,8 +57,9 @@ namespace SqlFu
         /// <param name="processor">Result processor</param>
         /// <param name="mapper"></param>
         /// <param name="firstRowOnly"></param>
+        /// <param name="disposeConnection">True to dispose the connection</param>
         public static void QueryAndProcess<T>(this DbCommand cmd, Func<T, bool> processor, Func<DbDataReader, T> mapper = null,
-                                     bool firstRowOnly = false)
+                                     bool firstRowOnly = false,bool disposeConnection=false)
         {
             var fuCommand = cmd.CastAs<SqlFuCommand>();
             var strat = fuCommand.GetErrorsStrategy();
@@ -74,7 +75,11 @@ namespace SqlFu
                 }
 
             },strat,fuCommand.Provider,cmd.SqlConfig());
-          
+            if (disposeConnection)
+            {
+                cmd.Connection.Dispose();
+                cmd.Dispose();
+            }
         }
 
 
@@ -116,13 +121,13 @@ namespace SqlFu
         /// <param name="mapper"></param>
         /// <param name="firstRowOnly"></param>
         /// <returns></returns>
-        public static Task QueryAndProcessAsync<T>(this DbCommand cmd, CancellationToken cancellation, Func<T, bool> processor, Func<DbDataReader, T> mapper = null,
-                                      bool firstRowOnly = false)
+        public static async Task QueryAndProcessAsync<T>(this DbCommand cmd, CancellationToken cancellation, Func<T, bool> processor, Func<DbDataReader, T> mapper = null,
+                                      bool firstRowOnly = false,bool disposeConnection=false)
         {
             var fuCommand = cmd.CastAs<SqlFuCommand>();
             var strat = fuCommand.GetErrorsStrategy();
             CommandBehavior behavior = firstRowOnly ? CommandBehavior.SingleRow : CommandBehavior.Default;
-            return SqlFuCommand.HandleTransientsAsync(cmd, async (c) =>
+           await SqlFuCommand.HandleTransientsAsync(cmd, async (c) =>
             {
                 using (var reader = await cmd.ExecuteReaderAsync(behavior,c).ConfigureFalse())
                 {
@@ -132,7 +137,15 @@ namespace SqlFu
                     }
                 }
 
-            }, strat, fuCommand.Provider,cancellation,cmd.SqlConfig());
+            }, strat, fuCommand.Provider,cancellation,cmd.SqlConfig()).ConfigureFalse();
+
+            if (disposeConnection)
+            {
+                cmd.Connection.Dispose();
+                cmd.Dispose();
+            }
+            
+            
         }
 
         public static async Task<List<T>> FetchAsync<T>(this DbCommand cmd, CancellationToken cancellation, Func<DbDataReader, T> mapper = null,

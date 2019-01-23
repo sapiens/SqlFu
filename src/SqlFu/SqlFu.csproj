@@ -1,8 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Description>Fast, versatile data mapper with helpers to improve productivity when working with a RDBMS. Designed for flexibility and ease of use. Full async support for operations and helpers, featuring a strongly typed sql builder</Description>
+    <Description>Fast, versatile Ado.Net data mapper with helpers to improve productivity when working with a RDBMS. 
+      Designed for flexibility and ease of use. 
+      Full async support for operations and helpers, featuring a strongly typed sql builder</Description>
     <Authors>Mihai Mogosanu</Authors>
-    <TargetFrameworks>netstandard1.6</TargetFrameworks>
+    <TargetFramework>netstandard20</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>SqlFu</AssemblyName>
     <PackageId>SqlFu</PackageId>
@@ -15,35 +17,18 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <IncludeSource>True</IncludeSource>
+    <IncludeSymbols>True</IncludeSymbols>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <Version>4.0.0-alpha-1</Version>
     <NoWarn>CS1591</NoWarn>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CavemanTools" Version="5.0.0" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <Reference Include="System.Data" />
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <DefineConstants>$(DefineConstants);NET13</DefineConstants>
-  </PropertyGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
+    <PackageReference Include="CavemanTools" Version="5.1.1" />
     <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
-    <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
-    <PackageReference Include="System.Data.Common" Version="4.3.0" />
   </ItemGroup>
-  <!--<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
-    -->
-  <!--<PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
-    <PackageReference Include="System.Data.Common" Version="4.3.0" />-->
-  <!--
-  </ItemGroup>-->
+ 
   <ItemGroup>
     <Compile Update="Executors\SqlFuConnection.cs">
       <SubType>Component</SubType>

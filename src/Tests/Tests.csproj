@@ -3,7 +3,8 @@
   <PropertyGroup>
     <Description>Tests Class Library</Description>
     <Authors>t</Authors>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFrameworks>net47;netcoreapp2.1</TargetFrameworks>
+    <!--<TargetFramework>netcoreapp2.1</TargetFramework>-->
     <AssemblyName>Tests</AssemblyName>
     <PackageId>Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -17,9 +18,10 @@
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Providers\MsSql\**\*" />
-  </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SqlFu\SqlFu.csproj" />
@@ -27,20 +29,25 @@
 
   <ItemGroup>
   
-    <PackageReference Include="FluentAssertions" Version="5.3.2" />
+    <PackageReference Include="FluentAssertions" Version="5.6.0" />
   
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0-preview-20180605-02" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
   
     <PackageReference Include="NSubstitute" Version="3.1.0" />
   
-    <PackageReference Include="System.Data.SqlClient" Version="4.5.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
   
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.108" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.109.2" />
+  
+    <PackageReference Include="xunit" Version="2.4.1" />
+  
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
 
-    <PackageReference Include="xunit" Version="2.4.0-beta.2.build4010" />
+   
 
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0-beta.2.build4010" />
-    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.0-beta4-build3742" />
   </ItemGroup>
  
 </Project>

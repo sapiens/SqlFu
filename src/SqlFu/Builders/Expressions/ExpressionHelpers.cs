@@ -14,6 +14,11 @@ namespace SqlFu.Builders.Expressions
             return GetPropertyName(node.Body);            
         }
 
+        /// <summary>
+        /// True if the expression involves directly a comparison of enum 
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         public static bool IsEnumComparison(this BinaryExpression node)
         {
             if (node.NodeType != ExpressionType.Equal) return false;

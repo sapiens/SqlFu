@@ -114,6 +114,6 @@ namespace Tests
                 ? @"Server=(local)\SQL2016;Database=tempdb;User ID=sa;Password=Password12!"
                 : @"Data Source=(localdb)\ProjectsV13;Initial Catalog=tempdb;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
-        public static string SqliteConnection { get; } = "Data Source=:memory:;Version=3;New=True;BinaryGUID=False";
+        public static string SqliteConnection { get; } = "Data Source=test.db;Version=3;New=True;BinaryGUID=False";
     }
 }

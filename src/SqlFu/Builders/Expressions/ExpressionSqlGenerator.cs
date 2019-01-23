@@ -73,9 +73,13 @@ namespace SqlFu.Builders.Expressions
         {
             _visitingBinary = true;
             string op = "";
+           
+            //required for cases when an enum comparison is a small part of a bigger criteria
+            // the compiler converts the enum to int and we have to cast it back
+            //it isn't needed for cases where the enum comparison is the criteria, the expression keeps the proper type
             if (node.IsEnumComparison())
             {
-                node=HandleEnumComparison(node);             
+                node = HandleEnumComparison(node);
             }
             switch (node.NodeType)
             {
@@ -156,14 +160,16 @@ namespace SqlFu.Builders.Expressions
 
         private BinaryExpression HandleEnumComparison(BinaryExpression node)
         {
-            var f= new RewriteEnumEquality(node);
-            var prop = f.PropertyExpression;
-            Expression<Func<OrderBy>> g = () => (OrderBy)Enum.ToObject(typeof(OrderBy),1);
-            var call = Expression.Call(typeof(Enum).GetMethod("ToObject", new []{typeof(Type),typeof(Int32)}),
-                Expression.Constant(f.PropertyExpression.Type), f.OtherNode);
-            var convert = Expression.Convert(call, prop.Type);
-            var bin = Expression.MakeBinary(ExpressionType.Equal, prop, convert);
-            return bin;
+            var f = new RewriteEnumEquality(node);
+            return f.NeedsRewriting ? f.Rewrite() : node;
+
+            //var prop = f.PropertyExpression;
+            
+            //var call = Expression.Call(typeof(Enum).GetMethod("ToObject", new[] { typeof(Type), typeof(Int32) }),
+            //    Expression.Constant(f.PropertyExpression.Type), f.OtherNode);
+            //var convert = Expression.Convert(call, prop.Type);
+            //var bin = Expression.MakeBinary(ExpressionType.Equal, prop, convert);
+            //return bin;
         }
 
         class RewriteEnumEquality
@@ -183,7 +189,23 @@ namespace SqlFu.Builders.Expressions
                     ConvertExpression = node.Right.CastAs<UnaryExpression>();
                     OtherNode = node.Left;
                 }
+                CheckForRewriting();
             }
+
+            void CheckForRewriting()
+            {
+                var ct = OtherNode as ConstantExpression;
+                if(ct==null || ct.Type!=typeof(int)) return;
+                NeedsRewriting = true;
+            }
+
+            public BinaryExpression Rewrite()
+            {
+                var right = Expression.Convert(OtherNode, ConvertExpression.Operand.Type);
+                return Expression.Equal(ConvertExpression.Operand, right);
+            }
+
+            public bool NeedsRewriting { get; set; }
 
             public Expression OtherNode { get; }
             public UnaryExpression ConvertExpression { get; private set; }
@@ -247,6 +269,25 @@ namespace SqlFu.Builders.Expressions
         {
             _sb.Append("@" + Parameters.CurrentIndex);
             var value = node.GetValue();
+            ////
+            //if (node.Type.IsEnumType())
+            //{
+            //    if (node.Type.IsEnum())
+            //    {
+                    
+            //        value= value is string?Enum.Parse(node.Type,value.ToString()): Enum.ToObject(node.Type, value);
+            //    }
+            //    else
+            //    {
+            //        //nullable
+            //        if(value!=null)                    
+            //        value= value is string?Enum.Parse(node.Type.GetGenericArgument(),value.ToString()): Enum.ToObject(node.Type.GetGenericArgument(), value);
+            //    }
+
+                
+            //}
+            //
+           
             if (_visitingBinary && _columnInfos.Count>0)
             {
                 var info = _columnInfos.Peek();
@@ -502,7 +543,7 @@ namespace SqlFu.Builders.Expressions
         {
             var w = 0;
             node.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(d => !skip.Any(s => d.Name == s))
+                .Where(d => skip.All(s => d.Name != s))
                 .ForEach(n =>
                 {
                     _sb
@@ -552,6 +593,19 @@ namespace SqlFu.Builders.Expressions
                         HandleSingleBooleanProperty(node.Operand as MemberExpression, true);
                         break;
                     }
+
+                    if (node.Operand.Type.Is<MethodCallExpression>())
+                    {
+                        HandleAsMethodCall(node.Operand as MethodCallExpression);
+                        break;
+                    }
+
+                    if (node.Type.IsEnumType() && !node.BelongsToParameter())
+                    {
+                        WriteParameter(node);
+                        break;
+                    }
+
                     var op = node.Operand as ConstantExpression;
                     if (IsSingleBooleanConstant(op))
                     {
@@ -590,6 +644,11 @@ namespace SqlFu.Builders.Expressions
             }
 
             return node;
+        }
+
+        private void HandleAsMethodCall(MethodCallExpression exp)
+        {
+            Visit(exp.Arguments[1]);
         }
 
         bool IsLambdaBooleanConstantHandled(LambdaExpression expression)
