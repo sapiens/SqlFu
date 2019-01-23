@@ -1,13 +1,13 @@
 #Welcome to SqlFu
 
-SqlFu is a **_flexibile_** data mapper (aka micro-ORM) for .Net Core and .Net 4.6+ . Apache 2.0 license.
+SqlFu is a **_flexibile_** data mapper (aka micro-ORM) for .Net Core 2 and .Net 4.6+ . Apache 2.0 license.
 
-Latest version: [4.1.0](https://github.com/sapiens/SqlFu/wiki/ChangeLog) 
+Latest version: [4.2.0](https://github.com/sapiens/SqlFu/wiki/ChangeLog) 
   
 ## Features
 * Think Ado.Net on steroids with the addition of a strongly typed query builder (not LINQ).
 * **Designed to increase developer productivity** while remaining simple to use and fast
-* Runs on any platform implementing NetStandard 1.6
+* Runs on any platform implementing NetStandard 2.0
 * All helpers have sync/async versions
 * Dependency Injection support for working with multiple databases/providers in the same app
 * Implicit transient errors resilience
@@ -32,6 +32,20 @@ Please create your pull requests to target the "v4-devel" branch. "Master" is on
 
 
 ##Usage
+
+### New!!!
+
+```csharp
+
+//quick query using the default connection
+var name=SqlFuManager.QueryOver<MyObject>().Select(d => d.FirstName,criteria: d => d.FirstName == "John").GetValue();
+
+
+//quick update
+//"schema.table" is implicit converted to `TableName` instance
+_db.UpdateFrom(new {Name="Foo"},"myTable").Where(new{Id=2}).Execute();
+
+```
 
 ### Config options
 ```csharp
@@ -239,9 +253,7 @@ _db.Update<User>()
                 .Where(d => d.Firstname == "John")
                 .Execute();
 
-//quick update
-//"schema.table" is implicit converted to `TableName` instance
-_db.UpdateFrom(new {Name="Foo"},"myTable").Where(new{Id=2}).Execute();
+
 
 //delete
 _db.DeleteFrom<User>(d=>d.Id==id);
