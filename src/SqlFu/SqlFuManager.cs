@@ -53,8 +53,21 @@ namespace SqlFu
         /// <typeparam name="T"></typeparam>
         /// <param name="profile"></param>
         /// <returns></returns>
-      public static QueryOver<T> QueryOver<T>(string profile=DefaultProfile)=>new QueryOver<T>(GetDbFactory());
+      public static QueryOver<T> QueryOver<T>(string profile=DefaultProfile) where T : class =>new QueryOver<T>(GetDbFactory().ToConnectionFactory());
 
+        /// <summary>
+        /// Used to issue quick queries that are using <see cref="T"/> as a source
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public static  QueryOver<T> QueryOver<T>(this IDbFactory fac) where T : class =>new QueryOver<T>(fac.ToConnectionFactory());
+
+        /// <summary>
+        /// Used to issue quick queries that are using <see cref="T"/> as a source
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public static  QueryOver<T> QueryOver<T>(this IDbFactory fac,T anon,TableName name) where T : class =>new QueryOver<T>(fac.ToConnectionFactory(),name);
+        
+        
         /// <summary>
         /// Used to issue quick queries that are using <see cref="T"/> as a source
         /// </summary>
@@ -62,11 +75,10 @@ namespace SqlFu
         /// <param name="anonymous">Source to build query</param>
         /// <param name="name">Table/view name that the objects represents</param>
         /// <param name="profile"></param>
-        public static QueryOver<T> QueryOver<T>(T anonymous, TableName name, string profile = DefaultProfile)
+        public static QueryOver<T> QueryOver<T>(T anonymous, TableName name, string profile = DefaultProfile) where T : class
         {
-            var f = GetDbFactory(profile);
-            f.Configuration.ConfigureTableForPoco<T>(c=>c.TableName=name);
-            return new QueryOver<T>(f);
+            var f = GetDbFactory(profile).ToConnectionFactory();
+           return new QueryOver<T>(f,name);
         }
 
         /// <summary>
@@ -177,6 +189,12 @@ namespace SqlFu
         public static void ConfigureTableFor<T>(this DbConnection cnx, Action<ITableInfo<T>> cfg) where T : class
             => cnx.SqlFuConfig().ConfigureTableForPoco(cfg);
         
+        /// <summary>
+        /// Sets the table name for <see cref="T"/>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="cnx"></param>
+        /// <param name="name"></param>
         public static void TableNameFor<T>(this DbConnection cnx, TableName name) where T:class
         {
             cnx.SqlFuConfig().ConfigureTableForPoco<T>(s=>s.TableName=name);

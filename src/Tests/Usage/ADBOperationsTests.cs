@@ -23,6 +23,7 @@ namespace Tests.SqlServer
       
             _db.Open();
             Init();
+            _table = _db.GetTableName<User>();
             AddData();
         }
 
@@ -48,6 +49,9 @@ namespace Tests.SqlServer
                 Posts = 0
             }
         };
+
+        private string _table;
+
         private void AddData()
         {
             foreach (var d in _inserted) _db.Insert(d);
@@ -55,6 +59,38 @@ namespace Tests.SqlServer
 
         protected abstract DbConnection GetConnection();
         protected abstract void Init();
+
+        [Fact]
+        public void query_over()
+        {
+            new QueryOver<User>(() =>
+                {
+                    var db = GetConnection();//any new connection resets table name
+                    db.Open();
+               return db;
+                },_table).Select(d => d.FirstName, d => d.FirstName == "John").GetValue().Should()
+                .Be("John");
+            
+            var u=new QueryOver<User>(() =>
+                {
+                    var db = GetConnection();
+                    db.Open();                    
+                    return db;
+                },_table).SelectAllColumns(d => d.FirstName == "John").GetFirstRow();
+            u.FirstName.Should().Be("John");
+
+
+            var count = new QueryOver<User>(() =>
+            {
+                var db = GetConnection(); 
+                db.Open();
+                return db;
+            }, _table).Build(q => q.Where(d => d.Id > 0).Select(d => d.Count())).GetValue();
+
+            count.Should().Be(_inserted.Length);
+
+
+        }
 
         [Fact]
         public void insert_and_return_id()
@@ -146,6 +182,7 @@ namespace Tests.SqlServer
         public void count_users()
         {
             _db.QueryValue<int>(q => q.From<User>().Select(d => d.Count())).Should().Be(3);
+            _db.WithSql(q => q.From<User>().Select(d => d.Count())).GetValue().Should().Be(3);
         }
 
         [Fact]
@@ -227,7 +264,8 @@ namespace Tests.SqlServer
 
         public void Dispose()
         {
-            _db.Execute($"drop table {_db.GetTableName<User>()}");
+            
+            _db.Execute($"drop table {_table??_db.GetTableName<User>()}");
            _db.Dispose();
 
         }
