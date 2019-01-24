@@ -8,14 +8,14 @@ using SqlFu.Providers;
 namespace SqlFu
 {
     /// <summary>
-    /// It should be used when testing by libraries using SqlFu
+    /// It should be used for testing by libraries using SqlFu
     /// </summary>
-    public class DbFactoryForTest:IDbFactory
+    public class DbFactoryForTests:IDbFactory
     {
         private readonly string _cnx;
         private readonly SqlFuConfig _config;
 
-        public DbFactoryForTest(IDbProvider provider,string cnx,SqlFuConfig config)
+        public DbFactoryForTests(IDbProvider provider,string cnx,SqlFuConfig config)
         {
             _cnx = cnx;
             _config = config;
@@ -42,7 +42,9 @@ namespace SqlFu
 
         public DbConnection Create(string cnxString)
         {
-            throw new NotImplementedException();
+            var db=new SqlFuConnection(Provider,cnxString??_cnx,_config);
+            db.Open();
+            return db;
         }
 
         public Task<DbConnection> CreateAsync(CancellationToken cancel, DbConnection db = null)
@@ -52,7 +54,7 @@ namespace SqlFu
 
         public Task<DbConnection> CreateAsync(CancellationToken cancel, string cnxString)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(Create(cnxString));
         }
     }
 }

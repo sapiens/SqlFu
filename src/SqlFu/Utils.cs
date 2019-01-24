@@ -153,7 +153,7 @@ namespace SqlFu
             => t.GetType().IsCustomObjectType();
 
         public static IDbFactory CreateFactoryForTesting(this SqlFuConfig cfg, IDbProvider prov, string cnx)
-        =>new DbFactoryForTest(prov,cnx,cfg);
+        =>new DbFactoryForTests(prov,cnx,cfg);
        
     }
 }
