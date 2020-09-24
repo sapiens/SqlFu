@@ -37,7 +37,7 @@ skip_commits:
     - '*gitignore'
     - '**/*.markdown'
 
-services: mssql2016
+services: mssql2017
 
 before_build:
 
