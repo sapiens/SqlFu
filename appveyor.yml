@@ -1,11 +1,11 @@
-version: 4.2.1.{build}
+version: 5.0.0.{build}
 
 branches:
 
   only:
     - master    
     
-image: Visual Studio 2017
+image: Visual Studio 2019
 
 configuration: Release
 
@@ -69,4 +69,4 @@ deploy:
 
   api_key:
 
-    secure: zSSdZy/TonHwA3Ltpb2LbBy5zD8+YfYFBayFHPSlkUwR2bj5L9/1MSpMVCqPCCwj
+    secure: 6W7USG8YoCPjDSV9agsMdy9P1nTzDmhv9gWoHvqtECiKNSHNYVWwf69m88S84eKv

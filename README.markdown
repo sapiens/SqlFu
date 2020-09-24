@@ -1,15 +1,15 @@
 # Welcome to SqlFu
 
-SqlFu is a **_flexibile_** data mapper (aka micro-ORM) for .Net Core 2 and .Net 4.6+ . Apache 2.0 license.
+SqlFu is a **_flexibile_** data mapper (aka micro-ORM) for .Net Core 3 Apache 2.0 license.
 
 [![Appveyor stat](https://ci.appveyor.com/api/projects/status/github/sapiens/sqlfu?svg=true)](https://ci.appveyor.com/project/sapiens/sqlfu) [![NuGet](https://img.shields.io/nuget/v/SqlFu.svg)](https://www.nuget.org/packages/sqlfu)
 
-Latest version: [4.2.0](https://github.com/sapiens/SqlFu/wiki/ChangeLog) 
+Latest version: [5.0.0](https://github.com/sapiens/SqlFu/wiki/ChangeLog) 
   
 ## Features
 * Think Ado.Net on steroids with the addition of a strongly typed query builder (not LINQ).
 * **Designed to increase developer productivity** while remaining simple to use and fast
-* Runs on any platform implementing NetStandard 2.0
+* Runs on any platform implementing NetStandard 2.1
 * All helpers have sync/async versions
 * Dependency Injection support for working with multiple databases/providers in the same app
 * Implicit transient errors resilience
@@ -282,19 +282,6 @@ _db.WithSql(q => q.From<User>()
     .GetRows();
 
 
-//a big unrealistic query to showcase the builder capabilities
-var names=new[]{"john","mary"};
-_db.QueryAs(q => q.From<User>()
-            .Where(d=>d.Id==id && !d.IsActive)
-            .And(d=>d.InjectSql("Posts=@no",new {no=100}))
-            .Or(d=>d.FirstName.HasValueIn(names))
-            .Or(d=>names.Contains(d.FirstName))
-            .GroupBy(d => d.Category)
-            .Limit(10)
-            .Select(d => new {
-                             d.Category
-                             , total= d.Sum(d.Posts * d.Count(d.Id))})
-                );
  //you can use pocos to create the sql but map the result to a different poco
  _db.QueryAs(q => q.From<User>().SelectAll().MapTo<OtherPoco>());
  
@@ -344,11 +331,9 @@ _db.SqlTo<User>(q=>q.Append("select * from users").AppendIf(d=>id>0,$" where id=
 
 **Notes**
 * The convention is that every extension method starting with `Query` uses the strongly typed sql builder.
-* `InjectSql` is used only on the epxression parameter; as the name implies, it allows you to inject raw sql in the builder.
 * `HasValueIn` is for `column in (values)` sql.
 * Any IEnumerable variable can use `Contains(column)` to generate `column in (values)` sql;
 * `Select` is about specifying the sql column and an implicit mapping to the projection, however `MapTo` applies after the sql has been built and the query executed.
-* Sql functions should be used only on the expression parameter. Supported functions are: Sum, Count, Avg, Floor, Ceiling, Min, Max,Concat, Round.
 * String methods/properties support: Contains, Length, StartsWith, EndsWith, ToUpper, ToLower.
 
 ### SProc Support
@@ -374,7 +359,3 @@ return r.Result;
 **Notes**
 
 * Output arguments are identified by the `_` prefix.
-
-#### Developed with
-
-[![Resharper](http://neventstore.org/images/logo_resharper_small.gif)](http://www.jetbrains.com/resharper/)
