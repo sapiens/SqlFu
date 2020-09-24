@@ -18,6 +18,7 @@ namespace SqlFu.Mapping.Internals
             _queryId = queryId;
             _columns = info.Columns.ToArray();
         }
+        static readonly Func<T> Creator = Expression.Lambda<Func<T>>(Expression.New(typeof(T).GetConstructor(Type.EmptyTypes))).Compile();
 
         private string _log = $"Mapper<{typeof(T)}>";
       
@@ -34,7 +35,7 @@ namespace SqlFu.Mapping.Internals
                     ConfigureIndexes(reader, parentPrefix);
                 }
             }            
-            var result = (T)typeof (T).GetFactory()();
+            var result = Creator();
    
            Populate(result, reader,parentPrefix);
             return result;
