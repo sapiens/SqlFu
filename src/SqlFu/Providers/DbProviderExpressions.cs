@@ -13,18 +13,18 @@ namespace SqlFu.Providers
 
         public DbProviderExpressions()
         {
-            LinkMethods(()=>Placeholder.Count(),CountAll);
-            LinkMethods(()=>Placeholder.Count(23),Count);
-            LinkMethods(()=>Placeholder.Sum(3),Sum);
-            LinkMethods(()=>Placeholder.Max(2),Max);
-            LinkMethods(()=>Placeholder.Min(2),Min);
-            LinkMethods(()=>Placeholder.Avg(2),Avg);
-            LinkMethods(()=>Placeholder.Floor(2),Floor);
-            LinkMethods(()=>Placeholder.Ceiling(2),Ceiling);
-            LinkMethods(()=>Placeholder.Concat(),Concat);
-            LinkMethods(()=>Placeholder.Round(2,2),Round);                     
-            LinkMethods(()=>DateTime.MinValue.Between(DateTime.MinValue, DateTime.MinValue),BetweenDates);                                 
-            LinkMethods(()=>DateTimeOffset.MinValue.Between(DateTimeOffset.MinValue, DateTimeOffset.MinValue),BetweenDates);                                 
+            //LinkMethods(()=>Placeholder.Count(),CountAll);
+            //LinkMethods(()=>Placeholder.Count(23),Count);
+            //LinkMethods(()=>Placeholder.Sum(3),Sum);
+            //LinkMethods(()=>Placeholder.Max(2),Max);
+            //LinkMethods(()=>Placeholder.Min(2),Min);
+            //LinkMethods(()=>Placeholder.Avg(2),Avg);
+            //LinkMethods(()=>Placeholder.Floor(2),Floor);
+            //LinkMethods(()=>Placeholder.Ceiling(2),Ceiling);
+            //LinkMethods(()=>Placeholder.Concat(),Concat);
+            //LinkMethods(()=>Placeholder.Round(2,2),Round);                     
+            //LinkMethods(()=>DateTime.MinValue.Between(DateTime.MinValue, DateTime.MinValue),BetweenDates);                                 
+            //LinkMethods(()=>DateTimeOffset.MinValue.Between(DateTimeOffset.MinValue, DateTimeOffset.MinValue),BetweenDates);                                 
         }
 
         private void BetweenDates(MethodCallExpression arg1, StringBuilder sb, IGenerateSqlFromExpressions writer)

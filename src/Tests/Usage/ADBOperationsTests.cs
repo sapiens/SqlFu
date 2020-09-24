@@ -80,14 +80,14 @@ namespace Tests.SqlServer
             u.FirstName.Should().Be("John");
 
 
-            var count = new QueryOver<User>(() =>
-            {
-                var db = GetConnection(); 
-                db.Open();
-                return db;
-            }, _table).Build(q => q.Where(d => d.Id > 0).Select(d => d.Count())).GetValue();
+            //var count = new QueryOver<User>(() =>
+            //{
+            //    var db = GetConnection(); 
+            //    db.Open();
+            //    return db;
+            //}, _table).Build(q => q.Where(d => d.Id > 0).Select(d => d.Count())).GetValue();
 
-            count.Should().Be(_inserted.Length);
+            //count.Should().Be(_inserted.Length);
 
 
         }
@@ -165,25 +165,25 @@ namespace Tests.SqlServer
             
         }
 
-        [Fact]
-        public void get_user_with_fullname()
-        {
+        //[Fact]
+        //public void get_user_with_fullname()
+        //{
            
-            var user=_db.QueryRow(q => q.From<User>()
-                .Where(d => !d.IsDeleted && d.Category==ArticleType.Page)
-                .And(d => d.InjectSql("Posts= @no", new {no = 0}))
-                .Select(d=>new {d.Id,Fullname=d.Concat(d.FirstName," ",d.LastName)}));
-            user.Fullname.Should().Be("Jane Doe");
-            user.Id.Should().Be(3);
+        //    var user=_db.QueryRow(q => q.From<User>()
+        //        .Where(d => !d.IsDeleted && d.Category==ArticleType.Page)
+        //        .And(d => d.InjectSql("Posts= @no", new {no = 0}))
+        //        .Select(d=>new {d.Id,Fullname=d.Concat(d.FirstName," ",d.LastName)}));
+        //    user.Fullname.Should().Be("Jane Doe");
+        //    user.Id.Should().Be(3);
             
-        }
+        //}
 
-        [Fact]
-        public void count_users()
-        {
-            _db.QueryValue<int>(q => q.From<User>().Select(d => d.Count())).Should().Be(3);
-            _db.WithSql(q => q.From<User>().Select(d => d.Count())).GetValue().Should().Be(3);
-        }
+        //[Fact]
+        //public void count_users()
+        //{
+        //    _db.QueryValue<int>(q => q.From<User>().Select(d => d.Count())).Should().Be(3);
+        //    _db.WithSql(q => q.From<User>().Select(d => d.Count())).GetValue().Should().Be(3);
+        //}
 
         [Fact]
         public void update_user_where_writable_converter()
@@ -192,26 +192,26 @@ namespace Tests.SqlServer
                 .Should().Be(1);
         }
 
-        [Fact]
-        public void sum_of_posts()
-        {
-            var all=_db.QueryAs(q => q.From<User>()
-                .GroupBy(d => d.Category)
-                .Select(d => new {d.Category, total= d.Sum(d.Posts + 1)})
-                ).ToDictionary(d=>d.Category,d=>d.total);
-            all[ArticleType.Post].Should().Be(5);
-            all[ArticleType.Page].Should().Be(1);
-        }
+        //[Fact]
+        //public void sum_of_posts()
+        //{
+        //    var all=_db.QueryAs(q => q.From<User>()
+        //        .GroupBy(d => d.Category)
+        //        .Select(d => new {d.Category, total= d.Sum(d.Posts + 1)})
+        //        ).ToDictionary(d=>d.Category,d=>d.total);
+        //    all[ArticleType.Post].Should().Be(5);
+        //    all[ArticleType.Page].Should().Be(1);
+        //}
 
 
-        [Fact]
-        public void delete_anon_where()
-        {
-            _db.DeleteFromAnonymous(new {Category = ""}, _db.GetTableName<User>(),
-                d => d.Category == ArticleType.Page.ToString())
-                .Should().Be(1);
-            _db.CountRows<User>().Should().Be(2);
-        }
+        //[Fact]
+        //public void delete_anon_where()
+        //{
+        //    _db.DeleteFromAnonymous(new {Category = ""}, _db.GetTableName<User>(),
+        //        d => d.Category == ArticleType.Page.ToString())
+        //        .Should().Be(1);
+        //    _db.CountRows<User>().Should().Be(2);
+        //}
 
 
         [Fact]
@@ -230,35 +230,35 @@ namespace Tests.SqlServer
             user.Should().BeNull();
         }
 
-        [Fact]
-        public void update_one_row()
-        {
-            _db.UpdateFrom(
-                q => q.Data(new { Firstname = "John3", Id = 3 }).Ignore(d => d.Id)
-                ,o => o.SetTableName(_db.GetTableName<User>())
-                )
-                .Where(d => d.Firstname == "John")
-                .Execute().Should().Be(1);
-            _db.CountRows<User>(d => d.FirstName != "John3").Should().Be(2);         
-        }
+        //[Fact]
+        //public void update_one_row()
+        //{
+        //    _db.UpdateFrom(
+        //        q => q.Data(new { Firstname = "John3", Id = 3 }).Ignore(d => d.Id)
+        //        ,o => o.SetTableName(_db.GetTableName<User>())
+        //        )
+        //        .Where(d => d.Firstname == "John")
+        //        .Execute().Should().Be(1);
+        //    _db.CountRows<User>(d => d.FirstName != "John3").Should().Be(2);         
+        //}
 
-        [Fact]
-        public void simpler_update_from_values()
-        {
-            _db.UpdateFrom(new {FirstName = "John3"}, _db.GetTableName<User>()).Where(new {Id = 1}).Execute().Should()
-                .Be(1);
-            _db.CountRows<User>(d => d.FirstName != "John3").Should().Be(2);         
-        }
+        //[Fact]
+        //public void simpler_update_from_values()
+        //{
+        //    _db.UpdateFrom(new {FirstName = "John3"}, _db.GetTableName<User>()).Where(new {Id = 1}).Execute().Should()
+        //        .Be(1);
+        //    _db.CountRows<User>(d => d.FirstName != "John3").Should().Be(2);         
+        //}
 
-        [Fact]
-        public void simpler_update_from_values_with_criteria()
-        {
-            _db.UpdateFrom(new {FirstName = "Jane4"}, _db.GetTableName<User>())
-                .Where(new {Id = 1,FirstName=""},d=>d.FirstName=="Jane")
-                .Execute().Should().Be(1);
-            _db.CountRows<User>(d => d.FirstName != "Jane4").Should().Be(2);         
-            _db.CountRows<User>(d => d.FirstName == "Jane4").Should().Be(1);         
-        }
+        //[Fact]
+        //public void simpler_update_from_values_with_criteria()
+        //{
+        //    _db.UpdateFrom(new {FirstName = "Jane4"}, _db.GetTableName<User>())
+        //        .Where(new {Id = 1,FirstName=""},d=>d.FirstName=="Jane")
+        //        .Execute().Should().Be(1);
+        //    _db.CountRows<User>(d => d.FirstName != "Jane4").Should().Be(2);         
+        //    _db.CountRows<User>(d => d.FirstName == "Jane4").Should().Be(1);         
+        //}
 
 
 

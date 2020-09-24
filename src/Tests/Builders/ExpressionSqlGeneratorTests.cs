@@ -412,116 +412,116 @@ namespace Tests.Builders
 
     
 
-        [Fact]
-        public void sum_of_column()
-        {
-            var sql = Get(d => d.Sum(d.IsActive));
-            sql.Should().Be("sum(IsActive)");
+        //[Fact]
+        //public void sum_of_column()
+        //{
+        //    var sql = Get(d => d.Sum(d.IsActive));
+        //    sql.Should().Be("sum(IsActive)");
 
-            Get(d => d.Sum(d.SomeId + 6)).Should().Be("sum((SomeId + @0))");
-            FirstParameter.Should().Be(6);
-        }
+        //    Get(d => d.Sum(d.SomeId + 6)).Should().Be("sum((SomeId + @0))");
+        //    FirstParameter.Should().Be(6);
+        //}
 
-        [Fact]
-        public void max_of_column()
-        {
-            var sql = Get(d => d.Max(d.IsActive));
-            sql.Should().Be("max(IsActive)");           
-        }
+        //[Fact]
+        //public void max_of_column()
+        //{
+        //    var sql = Get(d => d.Max(d.IsActive));
+        //    sql.Should().Be("max(IsActive)");           
+        //}
 
-        [Fact]
-        public void avg_of_column()
-        {
-            var sql = Get(d => d.Avg(d.SomeId));
-            sql.Should().Be("avg(SomeId)");           
-        }
+        //[Fact]
+        //public void avg_of_column()
+        //{
+        //    var sql = Get(d => d.Avg(d.SomeId));
+        //    sql.Should().Be("avg(SomeId)");           
+        //}
 
-        [Fact]
-        public void min_of_expression()
-        {
-            var sql = Get(d => d.Min(d.SomeId*5));
-            sql.Should().Be("min((SomeId * @0))");
-            FirstParameter.Should().Be(5);
-        }
+        //[Fact]
+        //public void min_of_expression()
+        //{
+        //    var sql = Get(d => d.Min(d.SomeId*5));
+        //    sql.Should().Be("min((SomeId * @0))");
+        //    FirstParameter.Should().Be(5);
+        //}
 
-        [Fact]
-        public void func_count()
-        {
-            var sql = Get(d =>d.Count(d.IsActive));
-            sql.Should().Be("count(IsActive)");
+        //[Fact]
+        //public void func_count()
+        //{
+        //    var sql = Get(d =>d.Count(d.IsActive));
+        //    sql.Should().Be("count(IsActive)");
 
-            Get(d => d.Count()).Should().Be("count(*)");
+        //    Get(d => d.Count()).Should().Be("count(*)");
 
-            Get(d => new {total = d.Count()}).Should().Be("count(*) as total");
-        }
+        //    Get(d => new {total = d.Count()}).Should().Be("count(*) as total");
+        //}
 
-        [Fact]
-        public void concat_columns()
-        {
-            var sql = Get(d => d.Concat(d.SomeId,"g",d.Title));
-            sql.Should().Be("concat(SomeId,@0,Title)");
-            FirstParameter.Should().Be("g");
-        }
+        //[Fact]
+        //public void concat_columns()
+        //{
+        //    var sql = Get(d => d.Concat(d.SomeId,"g",d.Title));
+        //    sql.Should().Be("concat(SomeId,@0,Title)");
+        //    FirstParameter.Should().Be("g");
+        //}
 
-        [Fact]
-        public void round_columns()
-        {
-            var sql = Get(d => d.Round(d.SomeId,3));
-            sql.Should().Be("round(SomeId,@0)");
-            FirstParameter.Should().Be(3);
-        }
+        //[Fact]
+        //public void round_columns()
+        //{
+        //    var sql = Get(d => d.Round(d.SomeId,3));
+        //    sql.Should().Be("round(SomeId,@0)");
+        //    FirstParameter.Should().Be(3);
+        //}
 
 
-        [Fact]
-        public void floor_columns()
-        {
-            var sql = Get(d => d.Floor(d.SomeId));
-            sql.Should().Be("floor(SomeId)");
+        //[Fact]
+        //public void floor_columns()
+        //{
+        //    var sql = Get(d => d.Floor(d.SomeId));
+        //    sql.Should().Be("floor(SomeId)");
             
-        }
+        //}
 
-        [Fact]
-        public void between_datetime()
-        {
-            var start = new DateTime();
-            var end = new DateTime(100, 1, 1);
-            var sql = Get(d => d.CreatedOn.Between(start, end));
-            sql.Should().Be("CreatedOn>=@0 and CreatedOn<=@1");
-            var args = _sut.Parameters.ToArray();
-            args[0].Should().Be(start);
-            args[1].Should().Be(end);
-        }
+        //[Fact]
+        //public void between_datetime()
+        //{
+        //    var start = new DateTime();
+        //    var end = new DateTime(100, 1, 1);
+        //    var sql = Get(d => d.CreatedOn.Between(start, end));
+        //    sql.Should().Be("CreatedOn>=@0 and CreatedOn<=@1");
+        //    var args = _sut.Parameters.ToArray();
+        //    args[0].Should().Be(start);
+        //    args[1].Should().Be(end);
+        //}
 
-        [Fact]
-        public void between_datetimeoffset()
-        {
-            var start = new DateTimeOffset();
-            var end = new DateTimeOffset(new DateTime(100, 1, 1));
-            var sql = Get(d => d.RegOn.Between(start, end));
-            sql.Should().Be("RegOn>=@0 and RegOn<=@1");
-            var args = _sut.Parameters.ToArray();
-            args[0].Should().Be(start);
-            args[1].Should().Be(end);
-        }
+        //[Fact]
+        //public void between_datetimeoffset()
+        //{
+        //    var start = new DateTimeOffset();
+        //    var end = new DateTimeOffset(new DateTime(100, 1, 1));
+        //    var sql = Get(d => d.RegOn.Between(start, end));
+        //    sql.Should().Be("RegOn>=@0 and RegOn<=@1");
+        //    var args = _sut.Parameters.ToArray();
+        //    args[0].Should().Be(start);
+        //    args[1].Should().Be(end);
+        //}
 
-        [Fact]
-        public void func_ceiling_columns()
-        {
-            var sql = Get(d => d.Ceiling(d.SomeId));
-            sql.Should().Be("ceiling(SomeId)");
+        //[Fact]
+        //public void func_ceiling_columns()
+        //{
+        //    var sql = Get(d => d.Ceiling(d.SomeId));
+        //    sql.Should().Be("ceiling(SomeId)");
             
-        }
-        #endregion
+        //}
+       #endregion
 
-        [Fact]
-        public void inject_sql()
-        {
-            Get(d => d.Decimal == 23);
-            var test = "bla";
-            Get(d => d.InjectSql("bubu @id - @test", new {id = 3,test})).Should().Be("bubu @1 - @2");
-            Parameter(1).Should().Be(3);
-            Parameter(2).Should().Be("bla");
-        }
+        //[Fact]
+        //public void inject_sql()
+        //{
+        //    Get(d => d.Decimal == 23);
+        //    var test = "bla";
+        //    Get(d => d.InjectSql("bubu @id - @test", new {id = 3,test})).Should().Be("bubu @1 - @2");
+        //    Parameter(1).Should().Be(3);
+        //    Parameter(2).Should().Be("bla");
+        //}
 
         object FirstParameter => _sut.Parameters.ToArray().First();
         object Parameter(int i) => _sut.Parameters.ToArray().Skip(i).First();

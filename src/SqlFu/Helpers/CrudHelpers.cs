@@ -152,16 +152,16 @@ namespace SqlFu
 
 
 
-        public static int CountRows<T>(this DbConnection db,Expression<Func<T,bool>> condition=null)
-            => db.QueryValue(d =>
-            {
-                var q=d.From<T>().Where(c=>true);
-                if (condition != null)
-                {
-                    q = q.And(condition);
-                }
-                return q.Select(c => c.Count());
-            });
+        //public static int CountRows<T>(this DbConnection db,Expression<Func<T,bool>> condition=null)
+        //    => db.QueryValue(d =>
+        //    {
+        //        var q=d.From<T>().Where(c=>true);
+        //        if (condition != null)
+        //        {
+        //            q = q.And(condition);
+        //        }
+        //        return q.Select(c => c.Count());
+        //    });
         
 
         public static int DeleteFromAnonymous<T>(this DbConnection db,T data,TableName tableName,Expression<Func<T, bool>> criteria = null)

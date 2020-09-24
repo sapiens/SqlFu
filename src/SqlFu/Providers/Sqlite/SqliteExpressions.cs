@@ -9,7 +9,7 @@ namespace SqlFu.Providers.Sqlite
     {
         public SqliteExpressions()
         {
-            LinkMethods(() => Placeholder.Concat(), MyConcat);
+           // LinkMethods(() => Placeholder.Concat(), MyConcat);
         }
 
         private void MyConcat(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions writer)
