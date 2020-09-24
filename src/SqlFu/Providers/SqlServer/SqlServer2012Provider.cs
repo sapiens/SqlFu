@@ -4,7 +4,7 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using System.Reflection;
-using CavemanTools.Logging;
+
 using CavemanTools.Model;
 using SqlFu.Builders;
 
@@ -38,13 +38,13 @@ namespace SqlFu.Providers.SqlServer
         {
             if (_transientErrors.Any(err => ex.Message.Contains(err)))
             {
-                "SqlServer".LogWarn(ex.Message);
+                "SqlServer".LogDebug(ex.Message);
                 return true;
             }
 
           if (ex.Message.Contains("imeout"))
             {
-                "SqlServer".LogWarn("Connection timeout");
+                "SqlServer".LogDebug("Connection timeout");
                 return true;
             }
             return false;

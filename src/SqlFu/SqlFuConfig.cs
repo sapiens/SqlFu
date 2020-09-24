@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Reflection;
 using System.Reflection.Emit;
+using CavemanTools;
 using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 using SqlFu.Executors.Resilience;
@@ -126,10 +128,11 @@ namespace SqlFu
             set
             {
                 value.MustNotBeNull();
-                _onOpenConex = value;
+                _onOpenConex = value;     
             }
         }
 
+        public Action<string> DebugWriter { get; set; } = s=>Debug.WriteLine(s);
 
         #endregion
 

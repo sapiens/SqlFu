@@ -3,7 +3,6 @@ using System.Data;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
-using CavemanTools.Logging;
 using SqlFu.Executors.Resilience;
 using SqlFu.Providers;
 
@@ -37,16 +36,16 @@ namespace SqlFu.Executors
             {
                 if (provider.IsTransientError(ex))
                 {
-                    "SqlFu".LogInfo("Transient error detected");
+                    "SqlFu".LogDebug("Transient error detected");
                     if (strat.CanRetry)
                     {
                         var period = strat.GetWaitingPeriod();
-                        "SqlFu".LogInfo($"Waiting {period} before retrying");
+                        "SqlFu".LogDebug($"Waiting {period} before retrying");
                         Thread.Sleep(period);
-                        "SqlFu".LogInfo("Retrying...");
+                        "SqlFu".LogDebug("Retrying...");
                         goto start;
                     }
-                    "SqlFu".LogWarn($"No more retries left. Tried {strat.RetriesCount} times. Throwing exception");
+                    "SqlFu".LogDebug($"No more retries left. Tried {strat.RetriesCount} times. Throwing exception");
                 }
 
                 cfg.OnException(cmd, ex);
@@ -66,16 +65,16 @@ namespace SqlFu.Executors
             {
                 if (provider.IsTransientError(ex))
                 {
-                    "SqlFu".LogInfo("Transient error detected");
+                    "SqlFu".LogDebug("Transient error detected");
                     if (strat.CanRetry)
                     {
                         var period = strat.GetWaitingPeriod();
-                        "SqlFu".LogInfo($"Waiting {period} before retrying");
+                        "SqlFu".LogDebug($"Waiting {period} before retrying");
                         await Task.Delay(period,cancel).ConfigureFalse();
-                        "SqlFu".LogInfo("Retrying...");
+                        "SqlFu".LogDebug("Retrying...");
                         goto start;
                     }
-                    "SqlFu".LogWarn($"No more retries left. Tried {strat.RetriesCount} times. Throwing exception");
+                    "SqlFu".LogDebug($"No more retries left. Tried {strat.RetriesCount} times. Throwing exception");
                 }
 
                 config.OnException(cmd, ex);

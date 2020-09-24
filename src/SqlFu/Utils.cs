@@ -26,6 +26,12 @@ namespace SqlFu
             
         }
 
+
+        internal static void LogDebug<T>(this T src,string data)
+        {
+            SqlFuManager.Config.DebugWriter(data);
+        }
+
         public static Func<DbConnection> ToConnectionFactory(this IDbFactory factory)
         {
             return ()=>

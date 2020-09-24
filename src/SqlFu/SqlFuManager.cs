@@ -2,7 +2,7 @@ using System;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
-using CavemanTools.Logging;
+
 using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 using SqlFu.Executors;
@@ -30,8 +30,8 @@ namespace SqlFu
             config.OnCommand = cmd => "SqlFu".LogDebug(cmd.FormatCommand());
             config.OnException = (cmd, ex) =>
             {
-                "SqlFu".LogError("Command threw exception {0}", cmd.FormatCommand());
-                "SqlFu".LogError(ex);
+                "SqlFu".LogDebug($"[SqlFu] Command threw exception {cmd.FormatCommand()}");
+                "SqlFu".LogDebug(ex.ToString());
             };
         }
 
