@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 using SqlFu.Builders.Expressions;
-//#if NET13
-////using System.Reflection;
-//#endif
+
 
 namespace SqlFu.Providers
 {

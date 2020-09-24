@@ -3,8 +3,7 @@
   <PropertyGroup>
     <Description>Tests Class Library</Description>
     <Authors>t</Authors>
-    <TargetFrameworks>net47;netcoreapp2.1</TargetFrameworks>
-    <!--<TargetFramework>netcoreapp2.1</TargetFramework>-->
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>    
     <AssemblyName>Tests</AssemblyName>
     <PackageId>Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -29,19 +28,19 @@
 
   <ItemGroup>
   
-    <PackageReference Include="FluentAssertions" Version="5.6.0" />
+    <PackageReference Include="FluentAssertions" Version="5.10.3" />
   
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
   
-    <PackageReference Include="NSubstitute" Version="3.1.0" />
+    <PackageReference Include="NSubstitute" Version="4.2.2" />
   
-    <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
   
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.109.2" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113.1" />
   
     <PackageReference Include="xunit" Version="2.4.1" />
   
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>

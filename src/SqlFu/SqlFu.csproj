@@ -4,7 +4,7 @@
       Designed for flexibility and ease of use. 
       Full async support for operations and helpers, featuring a strongly typed sql builder</Description>
     <Authors>Mihai Mogosanu</Authors>
-    <TargetFramework>netstandard20</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>SqlFu</AssemblyName>
     <PackageId>SqlFu</PackageId>
@@ -20,13 +20,12 @@
     <IncludeSource>True</IncludeSource>
     <IncludeSymbols>True</IncludeSymbols>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-    <Version>4.0.0-alpha-1</Version>
+    <Version>5.0.0-beta-1</Version>
     <NoWarn>CS1591</NoWarn>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CavemanTools" Version="5.1.1" />
-    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
+    <PackageReference Include="CavemanTools" Version="5.2.1.52" />
   </ItemGroup>
  
   <ItemGroup>
