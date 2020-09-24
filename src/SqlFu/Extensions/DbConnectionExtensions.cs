@@ -155,6 +155,7 @@ namespace SqlFu
         /// <param name="cfg"></param>
         /// <param name="anonModel">Anonymous type</param>
         /// <returns></returns>
+        [Obsolete]
         public static T GetRow<T>(this DbConnection db, Action<IConfigureCommand> cfg, T anonModel = null) where T : class
         {
             T rez = null;
@@ -175,6 +176,7 @@ namespace SqlFu
         /// <param name="cfg"></param>
         /// <param name="token"></param>
         /// <returns></returns>
+        [Obsolete]
         public static async Task<T> GetRowAsync<T>(this DbConnection db, Action<IConfigureCommand> cfg, CancellationToken token, T anonModel = null) where T : class
         {
             T rez = null;
@@ -279,6 +281,7 @@ namespace SqlFu
         }
 
 
+
         /// <summary>
         /// Synonym for Fetch.For now, it exists for compatibility reasons
         /// </summary>
@@ -286,7 +289,8 @@ namespace SqlFu
         /// <param name="db"></param>
         /// <param name="sql"></param>
         /// <param name="args"></param>
-        /// <returns></returns>     
+        /// <returns></returns>        
+        [Obsolete]
         public static List<T> Query<T>(this DbConnection db, string sql, params object[] args) => db.Fetch<T>(c => c.Sql(sql, args));
         /// <summary>
         /// Synonym for FetchAsync.For now, it exists for compatibility reasons
@@ -297,6 +301,7 @@ namespace SqlFu
         /// <param name="sql"></param>
         /// <param name="args"></param>
         /// <returns></returns>
+        [Obsolete]
         public static Task<List<T>> QueryAsync<T>(this DbConnection db, CancellationToken token, string sql, params object[] args) => db.FetchAsync<T>(c => c.Sql(sql, args), token);
 
 
