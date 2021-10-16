@@ -27,6 +27,12 @@ namespace SqlFu
         }
 
 
+        /// <summary>
+        /// Ext method used by SqlFu to write debug information
+        /// </summary>
+        /// <param name="src"></param>
+        /// <param name="data"></param>
+        /// <typeparam name="T"></typeparam>
         internal static void LogDebug<T>(this T src,string data)
         {
             SqlFuManager.Config.DebugWriter(data);
