@@ -2,7 +2,6 @@ using System;
 using System.Data.Common;
 using System.Threading;
 using System.Threading.Tasks;
-
 using SqlFu.Configuration;
 using SqlFu.Configuration.Internals;
 using SqlFu.Executors;
@@ -24,7 +23,7 @@ namespace SqlFu
             _config=new SqlFuConfig();
         }
 
-        public static void UseLogManager(this SqlFuConfig config)
+        private static void UseLogManager(this SqlFuConfig config)
         {
             
             config.OnCommand = cmd => "SqlFu".LogDebug(cmd.FormatCommand());
@@ -77,7 +76,7 @@ namespace SqlFu
         /// <param name="profile"></param>
         public static QueryOver<T> QueryOver<T>(T anonymous, TableName name, string profile = DefaultProfile) where T : class
         {
-            var f = GetDbFactory(profile).ToConnectionFactory();
+            var f = GetDbFactory(profile).ToConnectionFactory();                  
            return new QueryOver<T>(f,name);
         }
 

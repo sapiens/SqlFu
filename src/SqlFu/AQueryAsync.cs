@@ -22,11 +22,9 @@ namespace SqlFu
         public async Task<TResult> Get(TInput i, CancellationToken? cancel)
         {
             var c = cancel ?? CancellationToken.None;
-            using (var db = await _getDb.CreateAsync(c).ConfigureFalse())
-            {
-                return await Execute(i, db,c).ConfigureFalse();
-            }
-        }
+			using var db = await _getDb.CreateAsync(c).ConfigureFalse();
+			return await Execute(i, db, c).ConfigureFalse();
+		}
 
         protected abstract Task<TResult> Execute(TInput i, DbConnection db, CancellationToken cancel);
     }

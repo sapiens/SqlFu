@@ -20,7 +20,7 @@
     <IncludeSource>True</IncludeSource>
     <IncludeSymbols>True</IncludeSymbols>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-    <Version>5.1.0</Version>
+    <Version>6.0.0-alpha-1</Version>
     <NoWarn>CS1591</NoWarn>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
