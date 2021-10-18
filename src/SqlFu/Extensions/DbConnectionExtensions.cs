@@ -518,22 +518,22 @@ namespace SqlFu
         public static DbCommand CreateAndSetupCommand(this DbConnection cnx, string sql, params object[] args) => 
             cnx.CreateAndSetupCommand(new CommandConfiguration(sql, args));
 
-        /// <summary>
-        /// Used to execute add views/sproc statements and ignore duplication messages
-        /// </summary>
-        /// <param name="db"></param>
-        /// <param name="addObjectStatement"></param>       
-        public static void AddDbObjectOrIgnore(this DbConnection db, string addObjectStatement)
-        {
-            try
-            {
-                db.Execute(addObjectStatement);
-            }
-            catch (DbException x) when (db.Provider().ObjectExists(x))
-            {
-                //already exists, move on
-            }            
-        }
+        ///// <summary>
+        ///// Used to execute add views/sproc statements and ignore duplication messages
+        ///// </summary>
+        ///// <param name="db"></param>
+        ///// <param name="addObjectStatement"></param>       
+        //public static void AddDbObjectOrIgnore(this DbConnection db, string addObjectStatement)
+        //{
+        //    try
+        //    {
+        //        db.Execute(addObjectStatement);
+        //    }
+        //    catch (DbException x) when (db.Provider().ObjectExists(x))
+        //    {
+        //        //already exists, move on
+        //    }            
+        //}
 
         /// <summary>
         /// Provides a fluent builder to specify sql, configure and execute the command 

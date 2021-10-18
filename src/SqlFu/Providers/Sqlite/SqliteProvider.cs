@@ -23,7 +23,7 @@ namespace SqlFu.Providers.Sqlite
 
         public override string ParamPrefix { get; } = "@";
 
-        public override bool IsDbBusy(DbException ex)
+        protected override bool IsDbBusy(DbException ex)
         {
             return ex.Message.Contains("locked");
         }
@@ -35,12 +35,12 @@ namespace SqlFu.Providers.Sqlite
             return ex.Message.Contains(keyName);
         }
 
-        public override bool ObjectExists(DbException ex, string name = null)
-        {
-            if (!ex.Message.Contains("already exists")) return false;
-            if (name.IsNullOrEmpty()) return true;
-            return ex.Message.Contains(name);
-        }
+        //public override bool ObjectExists(DbException ex, string name = null)
+        //{
+        //    if (!ex.Message.Contains("already exists")) return false;
+        //    if (name.IsNullOrEmpty()) return true;
+        //    return ex.Message.Contains(name);
+        //}
 
         public override string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues)
         {

@@ -11,13 +11,13 @@ namespace SqlFu.Providers
         /// <param name="ex"></param>
         /// <returns></returns>
         bool IsTransientError(DbException ex);
-        /// <summary>
-        /// true if the exception signals a transient error timeout or connection limit reached
-        /// </summary>
-        /// <param name="ex"></param>
-        /// <returns></returns>
-        [Obsolete("Use IsTransientError")]
-        bool IsDbBusy(DbException ex);
+        ///// <summary>
+        ///// true if the exception signals a transient error timeout or connection limit reached
+        ///// </summary>
+        ///// <param name="ex"></param>
+        ///// <returns></returns>
+        //[Obsolete("Use IsTransientError")]
+        //bool IsDbBusy(DbException ex);
         /// <summary>
         /// True if the exception represents a unique constraint violation
         /// </summary>
@@ -26,14 +26,14 @@ namespace SqlFu.Providers
         /// <returns></returns>
         bool IsUniqueViolation(DbException ex, string keyName = "");
 
-        /// <summary>
-        /// Returns true if exception contains a message that a table/view/sproc 
-        /// already exists
-        /// </summary>
-        /// <param name="ex"></param>
-        /// <param name="name"></param>
-        /// <returns></returns>
-      bool ObjectExists(DbException ex, string name = null);
+      //  /// <summary>
+      //  /// Returns true if exception contains a message that a table/view/sproc 
+      //  /// already exists
+      //  /// </summary>
+      //  /// <param name="ex"></param>
+      //  /// <param name="name"></param>
+      //  /// <returns></returns>
+      //bool ObjectExists(DbException ex, string name = null);
 
         SqlFuConfig SqlFuConfiguration { get; }
     }

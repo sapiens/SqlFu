@@ -9,8 +9,8 @@ namespace SqlFu.Providers.SqlServer
     {
         public SqlServer2012Expressions()
         {
-            LinkMethods(() => 1.DateDiff(TSqlDatePart.Day, DateTime.Now, DateTime.Now), DateDiff);
-            // Functions.Add(typeof(MsSqlFunctions).GetMethod("FtsContains").Name, Contains);
+           // LinkMethods(() => 1.DateDiff(TSqlDatePart.Day, DateTime.Now, DateTime.Now), DateDiff);
+            
         }
 
         private void DateDiff(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions writer)
@@ -22,20 +22,7 @@ namespace SqlFu.Providers.SqlServer
             sb.Append(")");
         }
 
-        //private void Contains(MethodCallExpression method, StringBuilder sb, SqlQueryManager manager)
-        //{
-        //    sb.Append("contains((");
-        //    var writer = manager.CreateExpressionWriter(sb);
-        //    method.Arguments[1].As<NewArrayExpression>().Expressions.ForEach(e =>
-        //    {
-        //        writer.WriteExpression(e);
-        //        sb.Append(",");
-        //    });
-        //    sb.RemoveLastIfEquals(',');
-        //    sb.Append("),");
-        //    writer.WriteExpression(method.Arguments[0]);
-        //    sb.Append(")");
-        //}
+
     }
 
     public enum TSqlDatePart

@@ -21,7 +21,7 @@ namespace SqlFu.Providers
 
         public override string ParamPrefix { get; }
 
-        public override bool IsDbBusy(DbException ex)
+        protected override bool IsDbBusy(DbException ex)
             => false;
 
         public override bool IsUniqueViolation(DbException ex, string keyName = "")
@@ -29,10 +29,10 @@ namespace SqlFu.Providers
             return ex.Message.Contains("violation");
         }
 
-        public override bool ObjectExists(DbException ex, string name = null)
-        {
-            return ex.Message.Contains("already exists");
-        }
+        //public override bool ObjectExists(DbException ex, string name = null)
+        //{
+        //    return ex.Message.Contains("already exists");
+        //}
 
         public override string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues)
         {

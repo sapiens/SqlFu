@@ -269,24 +269,7 @@ namespace SqlFu.Builders.Expressions
         {
             _sb.Append("@" + Parameters.CurrentIndex);
             var value = node.GetValue();
-            ////
-            //if (node.Type.IsEnumType())
-            //{
-            //    if (node.Type.IsEnum())
-            //    {
-                    
-            //        value= value is string?Enum.Parse(node.Type,value.ToString()): Enum.ToObject(node.Type, value);
-            //    }
-            //    else
-            //    {
-            //        //nullable
-            //        if(value!=null)                    
-            //        value= value is string?Enum.Parse(node.Type.GetGenericArgument(),value.ToString()): Enum.ToObject(node.Type.GetGenericArgument(), value);
-            //    }
-
-                
-            //}
-            //
+           
            
             if (_visitingBinary && _columnInfos.Count>0)
             {

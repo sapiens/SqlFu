@@ -34,7 +34,7 @@ namespace SqlFu.Providers.SqlServer
             "40197","40501","10053","10054","10060","40613","40143","233","64"
         };
 
-        public override bool IsDbBusy(DbException ex)
+        protected override bool IsDbBusy(DbException ex)
         {
             if (_transientErrors.Any(err => ex.Message.Contains(err)))
             {
@@ -57,8 +57,8 @@ namespace SqlFu.Providers.SqlServer
             return ex.Message.Contains(keyName);
         }
 
-        public override bool ObjectExists(DbException ex, string name = null)
-            => ex.Message.Contains("already an object named") && (ex.Message.Contains(name ?? " "));
+        //public override bool ObjectExists(DbException ex, string name = null)
+        //    => ex.Message.Contains("already an object named") && (ex.Message.Contains(name ?? " "));
 
 
 
@@ -87,11 +87,9 @@ namespace SqlFu.Providers.SqlServer
 
             if (tp == typeof (DateTime))
             {
-                //var dt = (DateTime) value;
-                //if (dt.Year < 1753)
-                //{
+               
                     param.DbType=DbType.DateTime2;
-              //  }
+            
                 return;
             }
 
