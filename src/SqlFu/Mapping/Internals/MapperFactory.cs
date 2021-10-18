@@ -52,7 +52,7 @@ namespace SqlFu.Mapping.Internals
                 return new AnonymousTypeMapper<T>();
             }
             
-            if (type == typeof (object))
+            if (type == typeof (object) || type== typeof(IDictionary<string,object>))
             {
                 return new DynamicMapper() as IMapReaderToPoco<T>;
             }

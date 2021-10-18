@@ -23,12 +23,12 @@ namespace SqlFu.Mapping.Internals
 
         public void Add(string key, object value)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public bool Remove(string key)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public bool TryGetValue(string key, out object value)
@@ -48,7 +48,7 @@ namespace SqlFu.Mapping.Internals
                 if (!TryGetValue(key, out rez)) throw new KeyNotFoundException();
                 return rez;
             }
-            set { throw new NotImplementedException(); }
+            set { throw new NotSupportedException(); }
         }
 
         public ICollection<string> Keys => _columns;
@@ -93,12 +93,12 @@ namespace SqlFu.Mapping.Internals
 
         public void Add(KeyValuePair<string, object> item)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public bool Contains(KeyValuePair<string, object> item) => Items.Contains(item);
@@ -106,12 +106,12 @@ namespace SqlFu.Mapping.Internals
 
         public void CopyTo(KeyValuePair<string, object>[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public bool Remove(KeyValuePair<string, object> item)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public int Count => _columns.Length;
