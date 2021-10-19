@@ -60,7 +60,7 @@ namespace SqlFu.Mapping.Internals
 
         public Expression AssignPropertyValue(ColumnInfo data, int i, bool justCast)
         {
-       
+            
             //arr[i]
             var valueExpr = Expression.ArrayIndex(_arr, Expression.Constant(i));
 

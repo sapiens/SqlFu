@@ -43,7 +43,7 @@ namespace SqlFu.Configuration.Internals
 
        public object ConvertWriteValue(string propertyName, object value)
         {
-            var p=this[propertyName];
+            var p=this[propertyName]; 
             return p.ConvertWritableValue(value);
         }
 

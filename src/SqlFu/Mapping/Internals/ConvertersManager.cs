@@ -33,17 +33,32 @@ namespace SqlFu.Mapping.Internals
         
         public bool HasConverter(Type type) => _converters.ContainsKey(type);
 
+		readonly List<AWriteConverterRule> _rules = new List<AWriteConverterRule>();
+
+        /// <summary>
+        /// Converts value if converters had been specified
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public object ProcessBeforeWriting(object value)
-        {
-            if (value == null) return null;
-            var act = _writeConverters.GetValueOrDefault(value.GetType());
-            if (act == null) return value;
-            return ((Func<dynamic, object>) act)((dynamic)value);
-        }
+		{
+			if (value == null) return null;
+            //checking for specific type converter
+			var act = _writeConverters.GetValueOrDefault(value.GetType());
+			if (act != null) return ((Func<dynamic, object>)act)((dynamic)value);
+            //checking generic rules
+            var rule = _rules.Find(d => d.AppliesTo(value));            
+            return rule?.Converter(value)??value;
+		}
 
-        Dictionary<Type,object> _writeConverters=new Dictionary<Type, object>();
+		Dictionary<Type,object> _writeConverters=new Dictionary<Type, object>();
 
-        public Func<object, T> GetConverter<T>()
+        /// <summary>
+        /// Add/remove rules that will convert values based on type
+        /// </summary>
+		public List<AWriteConverterRule> Rules => _rules;
+
+		public Func<object, T> GetConverter<T>()
         {
             var c = _converters.GetValueOrDefault(typeof (T));
             if (c == null)

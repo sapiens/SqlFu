@@ -66,6 +66,8 @@ namespace SqlFu
             Converters.RegisterConverter(converter);
         }
 
+        public void RegisterWriteRule(AWriteConverterRule rule) => Converters.Rules.Add(rule);
+
         public void AddNamingConvention(Func<Type, bool> match, Func<Type, TableName> convention)
         {
             TableInfoFactory.AddNamingConvention(match, convention);

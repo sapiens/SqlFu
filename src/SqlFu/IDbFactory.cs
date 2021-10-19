@@ -5,7 +5,7 @@ using SqlFu.Providers;
 
 namespace SqlFu
 {
-    public interface IDbFactory
+	public interface IDbFactory
     {
         IDbProvider Provider { get; }
         SqlFuConfig Configuration { get; }
