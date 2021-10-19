@@ -5,7 +5,7 @@ namespace SqlFu.Mapping
     public interface IManageConverters
     {
         T Convert<T>(object o);
-        bool HasConverter(Type type);
+        bool HasReadConverter(Type type);
 
         object ProcessBeforeWriting(object value);
        

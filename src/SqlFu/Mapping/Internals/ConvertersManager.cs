@@ -31,7 +31,7 @@ namespace SqlFu.Mapping.Internals
 
         Dictionary<Type,object> _converters=new Dictionary<Type, object>();
         
-        public bool HasConverter(Type type) => _converters.ContainsKey(type);
+        public bool HasReadConverter(Type type) => _converters.ContainsKey(type);
 
 		readonly List<AWriteConverterRule> _rules = new List<AWriteConverterRule>();
 

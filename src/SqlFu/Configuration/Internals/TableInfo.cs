@@ -29,7 +29,7 @@ namespace SqlFu.Configuration.Internals
                     .Select((m, idx) => new ColumnInfo(this, m)
                     {
                         PocoIdx = idx,
-                        HasConverter = converter.HasConverter(m.PropertyType)                        
+                        HasConverter = converter.HasReadConverter(m.PropertyType)                        
                     }).ToArray();
     
         }
