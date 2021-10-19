@@ -41,11 +41,30 @@ namespace SqlFu.Configuration.Internals
         public string[] GetColumnNames(IEnumerable<string> properties=null)
             => (properties??Columns.Select(d=>d.PropertyInfo.Name)).Select(p => this[p]).Where(d => !d.IgnoreRead).Select(d => d.Name).ToArray();
 
+        /// <summary>
+        /// Used by crud helpers before writing
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
        public object ConvertWriteValue(string propertyName, object value)
         {
             var p=this[propertyName]; 
             return p.ConvertWritableValue(value);
         }
+
+        /// <summary>
+        /// Used by reader/mapper
+        /// </summary>
+        /// <param name="propertyName"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public object ConvertReadValue(string propertyName,object value)
+		{
+            var p = this[propertyName];
+            if (!p.HasConverter) return value;
+            return Converter.ProcessReadValue(p.Type, value);
+		}
 
         public ColumnInfo[] Columns { get; }
 

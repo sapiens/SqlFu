@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace SqlFu.Mapping.Internals
 {
@@ -10,7 +11,7 @@ namespace SqlFu.Mapping.Internals
     {
         public ConvertersManager()
         {
-            AddCommonConverters();
+            AddCommonReadConverters();
         }
         /// <summary>
         /// Registers converter from object to specified type. If a converter exists, it replaces it
@@ -19,8 +20,10 @@ namespace SqlFu.Mapping.Internals
         /// <param name="converter"></param>
         public void RegisterConverter<T>(Func<object, T> converter)
         {
-            _converters[typeof (T)] = converter;
+            Func<object, object> f = o => converter((T)o);
+            _converters[typeof (T)] = f;
         }
+
 
         public void RegisterWriteConverter<T>(Func<T, object> writeToDb)
         {
@@ -29,7 +32,7 @@ namespace SqlFu.Mapping.Internals
         }
 
 
-        Dictionary<Type,object> _converters=new Dictionary<Type, object>();
+        Dictionary<Type,Func<object,object>> _converters=new Dictionary<Type, Func<object,object>>();
         
         public bool HasReadConverter(Type type) => _converters.ContainsKey(type);
 
@@ -66,7 +69,7 @@ namespace SqlFu.Mapping.Internals
                 return DefaultConverter<T>();
 
             }
-            return (Func<object, T>)c;
+            return o=>(T)c(o);
         }
 
         private static Func<object,T> DefaultConverter<T>() => o =>
@@ -84,7 +87,7 @@ namespace SqlFu.Mapping.Internals
         /// <summary>
         /// Adds converters for string, Guid(?), int(?) and byte[]
         /// </summary>
-        public void AddCommonConverters()
+        public void AddCommonReadConverters()
         {
             RegisterConverter(o =>
             {
@@ -112,6 +115,13 @@ namespace SqlFu.Mapping.Internals
             RegisterConverter(o=>(byte[])o);         
         }
 
+       
+        public object ProcessReadValue(Type propertyType,object value)
+		{
+            var c = _converters.GetValueOrDefault(propertyType, o => o);
+            return c(value);
+        }
+        
         public T Convert<T>(object o) => GetConverter<T>()(o);
     }
 }
