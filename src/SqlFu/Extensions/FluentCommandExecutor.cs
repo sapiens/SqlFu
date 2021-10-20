@@ -16,8 +16,7 @@ namespace SqlFu
 
         public FluentCommandExecutor(DbConnection cnx, IGenerateSql sqlGen, Action<DbCommand> cfg,bool disposeAfterQuery=false, CancellationToken? cancel=null)
         {
-            _disposeAfterQuery = disposeAfterQuery;
-
+            _disposeAfterQuery = disposeAfterQuery;                                                             
             _cancel = cancel??CancellationToken.None;
 
             var cmdConfig = sqlGen.GetCommandConfiguration();

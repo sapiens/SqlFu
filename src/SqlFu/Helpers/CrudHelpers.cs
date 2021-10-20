@@ -103,7 +103,8 @@ namespace SqlFu
         public static IBuildUpdateTable<T> Update<T>(this DbConnection db,Action<IHelperOptions> cfg=null) where T:class
         {
             var opt = new HelperOptions(db.GetPocoInfo<T>());
-            cfg?.Invoke(opt); 
+            cfg?.Invoke(opt);                                                  
+
             var executor = new CustomSqlExecutor(db);
             return new UpdateTableBuilder<T>(executor, db.GetExpressionSqlGenerator(), db.Provider(), opt);
         }

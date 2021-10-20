@@ -70,7 +70,7 @@ namespace SqlFu
 
         #region Execute
 
-        public static int Execute(this DbConnection cnx, Action<IConfigureCommand> cfg)
+        internal static int Execute(this DbConnection cnx, Action<IConfigureCommand> cfg)
         {
             var cmd = new CommandConfiguration();
             cfg(cmd);          
@@ -86,7 +86,7 @@ namespace SqlFu
             => cnx.ExecuteAsync(c => c.Sql(sql, args), token);
         
 
-        public static Task<int> ExecuteAsync(this DbConnection cnx, Action<IConfigureCommand> cfg, CancellationToken? token=null)
+        internal static Task<int> ExecuteAsync(this DbConnection cnx, Action<IConfigureCommand> cfg, CancellationToken? token=null)
         {
             var cmd = new CommandConfiguration();
             cfg(cmd);
@@ -96,7 +96,7 @@ namespace SqlFu
 
         #region  GetValue
 
-        public static T GetValue<T>(this DbConnection db, Action<IConfigureCommand> cfg)
+        internal static T GetValue<T>(this DbConnection db, Action<IConfigureCommand> cfg)
         {
             var cmd=new CommandConfiguration();
             cfg(cmd);        
@@ -111,7 +111,7 @@ namespace SqlFu
 
        
 
-        public static Task<T> GetValueAsync<T>(this DbConnection db, Action<IConfigureCommand> cfg, CancellationToken? token=null)
+        internal static Task<T> GetValueAsync<T>(this DbConnection db, Action<IConfigureCommand> cfg, CancellationToken? token=null)
         {
             var cmd=new CommandConfiguration();
             cfg(cmd);
@@ -147,46 +147,9 @@ namespace SqlFu
         #endregion
 
         #region Get row
-        /// <summary>
-        /// Gets a single row then maps it to a poco
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="db"></param>
-        /// <param name="cfg"></param>
-        /// <param name="anonModel">Anonymous type</param>
-        /// <returns></returns>
-        [Obsolete]
-        public static T GetRow<T>(this DbConnection db, Action<IConfigureCommand> cfg, T anonModel = null) where T : class
-        {
-            T rez = null;
-             db.QueryAndProcess(cfg, d =>
-            {
-                rez = d;
-                return false;
-            },anonModel,true);
-            return rez;
-        }
+       
 
-        /// <summary>
-        /// Gets a single row then maps it to a poco
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="db"></param>
-        /// <param name="anonModel">Anonymous type</param>
-        /// <param name="cfg"></param>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        [Obsolete]
-        public static async Task<T> GetRowAsync<T>(this DbConnection db, Action<IConfigureCommand> cfg, CancellationToken token, T anonModel = null) where T : class
-        {
-            T rez = null;
-            await db.QueryAndProcessAsync(cfg, d =>
-           {
-               rez = d;
-               return false;
-           }, token, anonModel,true);
-            return rez;
-        }
+
 
 
         /// <summary>
@@ -215,20 +178,36 @@ namespace SqlFu
             return db.WithSql(builder, cancel: token).GetFirstRowAsync();            
         }
 
-
+        /// <summary>
+        ///   Shortcut to get one result then map it to poco
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="db"></param>
+        /// <param name="criteria">Where</param>
+        /// <param name="orderBy">Sort</param>
+        /// <returns></returns>
         public static T GetSingleRow<T>(this DbConnection db, Expression<Func<T, bool>> criteria = null, Expression<Func<T, object>> orderBy = null)
         {
 
             return db.QueryRow(d =>
 
                 d.From<T>().Where(criteria ?? (f => true))
-                    .OrderBy(orderBy ?? (f => 1))
+                    .OrderBy(orderBy ?? (f => 1))                    
                     .Limit(1)
                     .SelectAll()
                 );
         }
 
-        public static Task<T> GetSingleRowAsync<T>(this DbConnection db, CancellationToken cancel, Expression<Func<T, bool>> criteria = null, Expression<Func<T, object>> orderBy = null)
+		/// <summary>
+		///   Shortcut to get one result then map it to poco
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="db"></param>
+		/// <param name="cancel"></param>
+		/// <param name="criteria">Where</param>
+		/// <param name="orderBy">Sort</param>
+		/// <returns></returns>
+		public static Task<T> GetSingleRowAsync<T>(this DbConnection db, CancellationToken cancel, Expression<Func<T, bool>> criteria = null, Expression<Func<T, object>> orderBy = null)
         {
             return db.QueryRowAsync(d =>
 
@@ -253,7 +232,7 @@ namespace SqlFu
         /// <param name="cfg"></param>
         /// <param name="anonModel"></param>
         /// <returns></returns>
-        public static List<T> Fetch<T>(this DbConnection cnx, Action<IConfigureCommand> cfg, T anonModel = default(T))
+        static List<T> Fetch<T>(this DbConnection cnx, Action<IConfigureCommand> cfg, T anonModel = default(T))
         {
             var list=new List<T>();
             cnx.QueryAndProcess(cfg,d=> { list.Add(d);
@@ -271,7 +250,7 @@ namespace SqlFu
         /// <param name="token"></param>
         /// <param name="anonModel"></param>
         /// <returns></returns>
-        public static async Task<List<T>> FetchAsync<T>(this DbConnection cnx, Action<IConfigureCommand> cfg,CancellationToken? token=null ,T anonModel = default(T))
+       static async Task<List<T>> FetchAsync<T>(this DbConnection cnx, Action<IConfigureCommand> cfg,CancellationToken? token=null ,T anonModel = default(T))
         {
             var list=new List<T>();
             await cnx.QueryAndProcessAsync(cfg,d=> { list.Add(d);
@@ -281,33 +260,8 @@ namespace SqlFu
         }
 
 
-
         /// <summary>
-        /// Synonym for Fetch.For now, it exists for compatibility reasons
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="db"></param>
-        /// <param name="sql"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>        
-        [Obsolete]
-        public static List<T> Query<T>(this DbConnection db, string sql, params object[] args) => db.Fetch<T>(c => c.Sql(sql, args));
-        /// <summary>
-        /// Synonym for FetchAsync.For now, it exists for compatibility reasons
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="db"></param>
-        /// <param name="token"></param>
-        /// <param name="sql"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        [Obsolete]
-        public static Task<List<T>> QueryAsync<T>(this DbConnection db, CancellationToken token, string sql, params object[] args) => db.FetchAsync<T>(c => c.Sql(sql, args), token);
-
-
-
-        /// <summary>
-        /// It's Fetch with a strongly typed builder
+        /// Query with a strongly typed builder
         /// </summary>
         /// <typeparam name="TProj"></typeparam>
         /// <param name="db"></param>
@@ -318,10 +272,9 @@ namespace SqlFu
             return db.WithSql(builder).GetRows();
         }
 
-        //public static List<T> Select<T>(this DbConnection db,Expression<Func<T,bool>> criteria)
 
         /// <summary>
-        /// It's Fetch with a strongly typed builder
+        /// Query async with a strongly typed builder
         /// </summary>
         /// <typeparam name="TProj"></typeparam>
         /// <param name="db"></param>
@@ -347,7 +300,7 @@ namespace SqlFu
         /// <param name="anonModel">Map to anonymous</param>
         /// <param name="firstRowOnly"></param>
         /// <returns></returns>
-        public static void QueryAndProcess<T>(this DbConnection cnx, Action<IConfigureCommand> cfg,
+        internal static void QueryAndProcess<T>(this DbConnection cnx, Action<IConfigureCommand> cfg,
             Func<T, bool> processor, T anonModel = default(T),
             bool firstRowOnly = false) 
         {
@@ -415,7 +368,7 @@ namespace SqlFu
 
         #region Paged queries
 
-        public static PagedResult<T> FetchPaged<T>(this DbConnection db,Action<IConfigureCommand> cfg,Pagination page,T anonModel=null) where T:class
+        static PagedResult<T> FetchPaged<T>(this DbConnection db,Action<IConfigureCommand> cfg,Pagination page,T anonModel=null) where T:class
         {
             typeof(T).Must(t=>t!=typeof(object),"Dynamic types are not supported");
             var cmd=new CommandConfiguration();
@@ -433,7 +386,10 @@ namespace SqlFu
         }
 
         /// <summary>
-        /// 
+        ///    Helper to return a paged result i.e subset rows and a count of the full set.
+        ///    For queries where you want just the result set, use
+        ///    <see cref="QueryAs{TProj}(DbConnection, Func{IBuildQueryFrom, IGenerateSql{TProj}})"/>
+        ///    with 'Limit'
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="db"></param>
@@ -447,7 +403,10 @@ namespace SqlFu
         }
 
         /// <summary>
-        /// 
+        ///    Helper to return a paged result i.e subset rows and a count of the full set.
+        ///    For queries where you want just the result set, use
+        ///    <see cref="QueryAsAsync{TProj}(DbConnection, Func{IBuildQueryFrom, IGenerateSql{TProj}}, CancellationToken)"/>
+        ///    with 'Limit'
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="db"></param>
@@ -460,7 +419,7 @@ namespace SqlFu
             return db.FetchPagedAsync<T>(c => c.Sql(cfg.SqlText, cfg.Args), page,token??CancellationToken.None);
         }
 
-         public static async Task<PagedResult<T>> FetchPagedAsync<T>(this DbConnection db,Action<IConfigureCommand> cfg,Pagination page,CancellationToken? token=null,T anonModel=null) where T:class
+        static async Task<PagedResult<T>> FetchPagedAsync<T>(this DbConnection db,Action<IConfigureCommand> cfg,Pagination page,CancellationToken? token=null,T anonModel=null) where T:class
         {
             typeof(T).Must(t => t != typeof(object), "Dynamic types are not supported");
             var cmd=new CommandConfiguration();
@@ -495,7 +454,7 @@ namespace SqlFu
         /// <param name="db"></param>
         /// <param name="sqlBuilder"></param>
         /// <returns>Configuration object containing generated sql and arguments</returns>
-        public static CommandConfiguration BuildSql<T>(this DbConnection db,
+        internal static CommandConfiguration BuildSql<T>(this DbConnection db,
             Func<IBuildQueryFrom, IGenerateSql<T>> sqlBuilder)
             => sqlBuilder(db.GetSqlBuilder()).GetCommandConfiguration();
 
