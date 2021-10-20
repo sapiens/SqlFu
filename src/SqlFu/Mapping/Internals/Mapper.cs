@@ -7,7 +7,8 @@ using SqlFu.Configuration.Internals;
 
 namespace SqlFu.Mapping.Internals
 {
-    public class Mapper<T> : IMapReaderToPoco<T>
+
+	public class Mapper<T> : IMapReaderToPoco<T>
     {
        
         public Mapper(TableInfo info, IMapToPoco customMapper, string queryId)

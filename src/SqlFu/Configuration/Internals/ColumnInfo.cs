@@ -37,8 +37,14 @@ namespace SqlFu.Configuration.Internals
         }
 
         public bool HasConverter { get; set; }
+        /// <summary>
+        /// Property index inside poco
+        /// </summary>
         public int PocoIdx { get; set; }
     }
+
+
+    
 
     public class ColumnInfo<T> : IConfigurePropertyInfo<T>
     {

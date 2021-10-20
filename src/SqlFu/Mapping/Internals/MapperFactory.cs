@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Linq;
 using System.Reflection;
 using SqlFu.Configuration;
+using SqlFu.Configuration.Internals;
 
 namespace SqlFu.Mapping.Internals
 {
@@ -61,8 +63,31 @@ namespace SqlFu.Mapping.Internals
             {
                 return new ValueTypeMapper<T>(_converters);
             }
-            return new Mapper<T>(_infoFactory.GetInfo(type),this, queryId);
+            return new MapsterMapper<T>(_infoFactory.GetInfo(type));
+           // return new Mapper<T>(_infoFactory.GetInfo(type),this, queryId);
             
+        }
+
+        static internal Dictionary<string, int> MapColumnIndexesToPoco(TableInfo info,DbDataReader reader)
+        {
+            var idxDic = new Dictionary<string, int>();
+             var cols = info.GetColumnNames(IgnoreOn.Read);
+            
+            for (var i = 0; i < reader.FieldCount; i++)
+            {
+                var name = reader.GetName(i).ToUpper();
+                var kv = cols.Where(d => d.Value.ToUpper() == name).FirstOrDefault();
+
+
+                if (kv.Key != null)
+                {
+                    idxDic[kv.Key] = i;
+                    SqlFuManager.LoggerName.LogDebug($"Property {info.TableName}.{kv.Key} is mapped from reader[{i}]({name})");
+                }
+            }
+            return idxDic;
+
+
         }
     }
 }

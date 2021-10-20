@@ -14,6 +14,7 @@ namespace SqlFu
     public static class SqlFuManager
     {
         private const string DefaultProfile = "default";
+        public const string LoggerName = "SqlFu";
         static SqlFuConfig _config=new SqlFuConfig();
 
         internal static SqlFuConfig Config => _config;
@@ -24,13 +25,12 @@ namespace SqlFu
         }
 
         private static void UseLogManager(this SqlFuConfig config)
-        {
-            
-            config.OnCommand = cmd => "SqlFu".LogDebug(cmd.FormatCommand());
+        {                 
+            config.OnCommand = cmd => LoggerName.LogDebug(cmd.FormatCommand());
             config.OnException = (cmd, ex) =>
             {
-                "SqlFu".LogDebug($"[SqlFu] Command threw exception {cmd.FormatCommand()}");
-                "SqlFu".LogDebug(ex.ToString());
+                LoggerName.LogDebug($"Sql threw exception {cmd.FormatCommand()}");
+                LoggerName.LogDebug(ex.ToString());
             };
         }
 

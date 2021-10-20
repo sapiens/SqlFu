@@ -6,6 +6,7 @@ using System.Reflection;
 using SqlFu.Builders;
 using SqlFu.Builders.Expressions;
 using SqlFu.Mapping;
+using SqlFu.Mapping.Internals;
 using SqlFu.Providers;
 
 namespace SqlFu.Configuration.Internals
@@ -38,6 +39,27 @@ namespace SqlFu.Configuration.Internals
 
         public string GetIdentityColumnName() => Columns.FirstOrDefault(d => d.IsIdentity)?.Name??null;
 
+        /// <summary>
+        /// Returns a dictionary of valid property_name => column_name
+        /// </summary>
+        /// <param name="state"></param>
+        /// <returns></returns>
+
+        internal IDictionary<string, string> GetColumnNames(IgnoreOn state)
+        =>
+
+            Columns.
+                Where(d => state switch
+                        {
+                            IgnoreOn.Read => !d.IgnoreRead,
+                            IgnoreOn.Write => !d.IgnoreWrite,
+                            _ => true
+                        }
+                        )
+            .ToDictionary(d => d.PropertyInfo.Name, d => d.Name);
+
+		
+
         public string[] GetColumnNames(IEnumerable<string> properties=null)
             => (properties??Columns.Select(d=>d.PropertyInfo.Name)).Select(p => this[p]).Where(d => !d.IgnoreRead).Select(d => d.Name).ToArray();
 
@@ -62,7 +84,7 @@ namespace SqlFu.Configuration.Internals
         public object ConvertReadValue(string propertyName,object value)
 		{
             var p = this[propertyName];
-            if (!p.HasConverter) return value;
+            if (!p.HasConverter) return ConvertersManager.DefaultConverter<dynamic>()(value);
             return Converter.ProcessReadValue(p.Type, value);
 		}
 
@@ -156,4 +178,5 @@ namespace SqlFu.Configuration.Internals
             set { _info.TableName = value; }
         }
     }
+    enum IgnoreOn { None, Read, Write }
 } 

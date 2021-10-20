@@ -72,7 +72,7 @@ namespace SqlFu.Mapping.Internals
             return o=>(T)c(o);
         }
 
-        private static Func<object,T> DefaultConverter<T>() => o =>
+        public static Func<object,T> DefaultConverter<T>() => o =>
         {
             if (o == DBNull.Value)
             {
