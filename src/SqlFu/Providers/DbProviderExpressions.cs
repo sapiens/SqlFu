@@ -13,11 +13,11 @@ namespace SqlFu.Providers
 
         public DbProviderExpressions()
         {
-			//LinkMethods(()=>Placeholder.Count(),CountAll);
-			//LinkMethods(()=>Placeholder.Count(23),Count);
-			//LinkMethods(()=>Placeholder.Sum(3),Sum);
-			//LinkMethods(()=>Placeholder.Max(2),Max);
-			//LinkMethods(()=>Placeholder.Min(2),Min);
+			LinkMethods(() => Placeholder.Sql_Count(), CountAll);
+			LinkMethods(() => Placeholder.Sql_Count(23), Count);
+			LinkMethods(() => Placeholder.Sql_Sum(3), Sum);
+			LinkMethods(() => Placeholder.Sql_Max(2), Max);
+			LinkMethods(() => Placeholder.Sql_Min(2), Min);
 			//LinkMethods(()=>Placeholder.Avg(2),Avg);
 			//LinkMethods(()=>Placeholder.Floor(2),Floor);
 			//LinkMethods(()=>Placeholder.Ceiling(2),Ceiling);
@@ -85,55 +85,55 @@ namespace SqlFu.Providers
         #region Db Functions
         protected Dictionary<string, Action<MethodCallExpression, StringBuilder,IGenerateSqlFromExpressions>> Functions =new Dictionary<string, Action<MethodCallExpression, StringBuilder, IGenerateSqlFromExpressions>>();
 
-       // private void Count(MethodCallExpression method, StringBuilder sb,IGenerateSqlFromExpressions manager)
-       //     => sb.Append($"count({manager.GetColumnsSql(method.Arguments[1])})");
-        
-       // private void CountAll(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager)
-       //     => sb.Append("count(*)");
-       
-  
-       // private void Sum(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions w)
-       //=> sb.Append($"sum({w.GetColumnsSql(method.Arguments[1])})");
+		private void Count(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager)
+			=> sb.Append($"count({manager.GetColumnsSql(method.Arguments[1])})");
 
-       // private void Min(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager)
-       //  => sb.Append($"min({manager.GetColumnsSql(method.Arguments[1])})");
-
-       // private void Max(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager) 
-       //     => sb.Append($"max({manager.GetColumnsSql(method.Arguments[1])})");
-
-       // private void Avg(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager)
-       //  => sb.Append($"avg({manager.GetColumnsSql(method.Arguments[1])})");
-
-       // private void Round(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions writer)
-       // {
-       //     sb.Append("round(");
-       //     sb.Append(writer.GetColumnsSql(method.Arguments[1]));
-       //     sb.Append(",");
-       //     sb.Append(writer.GetSql(method.Arguments[2]));
-       //     sb.Append(")"); 
-       // }
-    
-       // private void Floor(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager) 
-       //     => sb.Append($"floor({manager.GetColumnsSql(method.Arguments[1])})");
-
-       // private void Ceiling(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager)
-       // => sb.Append($"ceiling({manager.GetColumnsSql(method.Arguments[1])})");
+		private void CountAll(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager)
+			=> sb.Append("count(*)");
 
 
+		private void Sum(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions w)
+	   => sb.Append($"sum({w.GetColumnsSql(method.Arguments[1])})");
 
-       // private void Concat(MethodCallExpression method,StringBuilder sb,IGenerateSqlFromExpressions writer)
-       // {
-       //    sb.Append("concat(");
-       //     foreach (var arg in method.Arguments[1].CastAs<NewArrayExpression>().Expressions)
-       //     {
-       //         sb.Append(writer.GetColumnsSql(arg));
-       //         sb.Append(",");
-       //     }
-       //     sb.RemoveLastIfEquals(',');
-       //     sb.Append(")");           
-       // }
+		private void Min(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager)
+		 => sb.Append($"min({manager.GetColumnsSql(method.Arguments[1])})");
 
-        public string GetSql(MethodCallExpression method, IGenerateSqlFromExpressions manager)
+		private void Max(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager)
+			=> sb.Append($"max({manager.GetColumnsSql(method.Arguments[1])})");
+
+		// private void Avg(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager)
+		//  => sb.Append($"avg({manager.GetColumnsSql(method.Arguments[1])})");
+
+		// private void Round(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions writer)
+		// {
+		//     sb.Append("round(");
+		//     sb.Append(writer.GetColumnsSql(method.Arguments[1]));
+		//     sb.Append(",");
+		//     sb.Append(writer.GetSql(method.Arguments[2]));
+		//     sb.Append(")"); 
+		// }
+
+		// private void Floor(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager) 
+		//     => sb.Append($"floor({manager.GetColumnsSql(method.Arguments[1])})");
+
+		// private void Ceiling(MethodCallExpression method, StringBuilder sb, IGenerateSqlFromExpressions manager)
+		// => sb.Append($"ceiling({manager.GetColumnsSql(method.Arguments[1])})");
+
+
+
+		// private void Concat(MethodCallExpression method,StringBuilder sb,IGenerateSqlFromExpressions writer)
+		// {
+		//    sb.Append("concat(");
+		//     foreach (var arg in method.Arguments[1].CastAs<NewArrayExpression>().Expressions)
+		//     {
+		//         sb.Append(writer.GetColumnsSql(arg));
+		//         sb.Append(",");
+		//     }
+		//     sb.RemoveLastIfEquals(',');
+		//     sb.Append(")");           
+		// }
+
+		public string GetSql(MethodCallExpression method, IGenerateSqlFromExpressions manager)
         {
             var func = Functions.GetValueOrDefault(GetKey(method));
             if (func == null) throw new NotSupportedException("Unrecognized function {0}".ToFormat(method.Method.Name));

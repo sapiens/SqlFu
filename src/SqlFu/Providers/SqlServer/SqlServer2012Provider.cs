@@ -93,7 +93,7 @@ namespace SqlFu.Providers.SqlServer
                 return;
             }
 
-            if (tp.IsValueType()) return;
+            if (tp.IsValueType) return;
 
             if (tp.Name == "SqlGeography") //SqlGeography is a CLR Type
             {

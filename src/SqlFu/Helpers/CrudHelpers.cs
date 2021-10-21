@@ -75,6 +75,7 @@ namespace SqlFu
             }
         }
            //todo check column names for select to use proper mappings
+           //todo logging related
         //todo refactor Insert in a class to deconstruct and reuse parts for more insert cases
         public static async Task<InsertedId> InsertAsync<T>(this DbConnection db, T data,CancellationToken? cancel=null ,Action<IInsertableOptions<T>> cfg = null) where T:class
         {

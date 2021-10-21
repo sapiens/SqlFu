@@ -4,7 +4,7 @@
       Designed for flexibility and ease of use. 
       Full async support for operations and helpers, featuring a strongly typed sql builder</Description>
     <Authors>Mihai Mogosanu</Authors>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>SqlFu</AssemblyName>
     <PackageId>SqlFu</PackageId>
@@ -25,7 +25,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CavemanTools" Version="5.2.1.52" />
+    <PackageReference Include="CavemanTools" Version="6.0.1" />
     <PackageReference Include="Mapster" Version="7.2.0" />
   </ItemGroup>
  

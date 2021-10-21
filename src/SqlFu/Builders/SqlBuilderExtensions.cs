@@ -64,72 +64,72 @@ namespace SqlFu
 		//    throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
 		//}
 
-		///// <summary>
-		///// Sql count(*)
-		/////  It should be used _only_ inside an expression when building a query
-		///// </summary>
-		///// <typeparam name="T"></typeparam>
-		///// <param name="table"></param>
-		///// <returns></returns>
-		//public static int Count<T>(this T table)
-		//{
-		//    throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
-		//}
+		/// <summary>
+		/// Sql count(*)
+		///  It should be used _only_ inside an expression when building a query
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="table"></param>
+		/// <returns></returns>
+		public static int Sql_Count<T>(this T table)
+		{
+			throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
+		}
 
-		///// <summary>
-		///// Sql count(column)
-		/////  It should be used _only_ inside an expression when building a query
-		///// </summary>
-		///// <typeparam name="T"></typeparam>
-		///// <param name="table"></param>
-		///// <param name="expression"></param>
-		///// <returns></returns>
-		//public static int Count<T, R>(this T table, R expression)
-		//{
-		//    throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
-		//}
+		/// <summary>
+		/// Sql count(column)
+		///  It should be used _only_ inside an expression when building a query
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="table"></param>
+		/// <param name="expression"></param>
+		/// <returns></returns>
+		public static int Sql_Count<T, R>(this T table, R expression)
+		{
+			throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
+		}
 
 
-		///// <summary>
-		///// Sql sum.
-		/////  It should be used _only_ inside an expression when building a query
-		///// </summary>
-		///// <typeparam name="T"></typeparam>
-		///// <param name="table"></param>
-		///// <param name="expression"></param>
-		///// <example>
-		///// Where(table=>table.sum(table.id))
-		///// </example>
-		///// <returns></returns>
-		//public static R Sum<T, R>(this T table, R expression)
-		//{
-		//    throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
-		//}
+		/// <summary>
+		/// Sql sum.
+		///  It should be used _only_ inside an expression when building a query
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="table"></param>
+		/// <param name="expression"></param>
+		/// <example>
+		/// Where(table=>table.sum(table.id))
+		/// </example>
+		/// <returns></returns>
+		public static R Sql_Sum<T, R>(this T table, R expression)
+		{
+			throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
+		}
 
-		///// <summary>
-		///// Sql max
-		/////  It should be used _only_ inside an expression when building a query
-		///// </summary>
-		///// <typeparam name="T"></typeparam>
-		///// <param name="table"></param>
-		///// <param name="expression"></param>
-		///// <returns></returns>
-		//public static R Max<T, R>(this T table, R expression)
-		//{
-		//    throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
-		//}
-		///// <summary>
-		///// Sql min
-		/////  It should be used _only_ inside an expression when building a query
-		///// </summary>
-		///// <typeparam name="T"></typeparam>
-		///// <param name="table"></param>
-		///// <param name="expression"></param>
-		///// <returns></returns>
-		//public static R Min<T, R>(this T table, R expression)
-		//{
-		//    throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
-		//}
+		/// <summary>
+		/// Sql max
+		///  It should be used _only_ inside an expression when building a query
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="table"></param>
+		/// <param name="expression"></param>
+		/// <returns></returns>
+		public static R Sql_Max<T, R>(this T table, R expression)
+		{
+			throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
+		}
+		/// <summary>
+		/// Sql min
+		///  It should be used _only_ inside an expression when building a query
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="table"></param>
+		/// <param name="expression"></param>
+		/// <returns></returns>
+		public static R Sql_Min<T, R>(this T table, R expression)
+		{
+			throw new NotSupportedException("This shouldn't be called directly, only inside an expression of a sql builder or helper");
+		}
 
 		///// <summary>
 		///// Sql floor

@@ -59,7 +59,7 @@ namespace SqlFu.Mapping.Internals
                 return new DynamicMapper() as IMapReaderToPoco<T>;
             }
 
-            if (type.IsValueType() || type == typeof(string) || type==typeof(byte[]))
+            if (type.IsValueType || type == typeof(string) || type==typeof(byte[]))
             {
                 return new ValueTypeMapper<T>(_converters);
             }

@@ -74,7 +74,7 @@ namespace SqlFu
         {
             var cmd = new CommandConfiguration();
             cfg(cmd);          
-            return cnx.Execute(cmd);
+            return cnx.Execute(cmd);                      
         }
 
         public static int Execute(this DbConnection cnx, string sql, params object[] args)

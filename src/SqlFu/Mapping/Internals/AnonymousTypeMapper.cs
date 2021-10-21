@@ -80,7 +80,7 @@ namespace SqlFu.Mapping.Internals
 
             public override bool CanConvert(Type src, Type det)
             {
-                return src == _src && det.IsEnum();
+                return src == _src && det.IsEnum;
             }
 
             public override Expression Convert(Type src, Type dest, Expression value) 
