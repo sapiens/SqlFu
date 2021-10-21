@@ -31,7 +31,7 @@ namespace SqlFu
             {
                 LoggerName.LogDebug($"Sql threw exception {cmd.FormatCommand()}");
                 LoggerName.LogDebug(ex.ToString());
-            };
+            };                                              
         }
 
         /// <summary>

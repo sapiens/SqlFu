@@ -134,7 +134,14 @@ namespace SqlFu
             }
         }
 
-        public Action<string> DebugWriter { get; set; } = s=>Debug.WriteLine(s);
+        internal Action<string> DebugWriter { get; set; } = s=>Debug.WriteLine(s);
+
+        public SqlFuConfig LogWith(Action<string> action)
+		{
+            action.MustNotBeNull();
+            DebugWriter = action;
+            return this;
+		}
 
         #endregion
 
