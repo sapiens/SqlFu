@@ -15,7 +15,7 @@ namespace SqlFu
         static bool IsOutput(string name) => name.StartsWith("_");
 
 
-        public static SProcResult<T> QuerySProc<T>(this DbConnection db, Action<SProcInput> input)
+       static SProcResult<T> QuerySProc<T>(this DbConnection db, Action<SProcInput> input)
         {
             return HandleProc(db, input, cmd =>
             {
@@ -36,7 +36,7 @@ namespace SqlFu
         /// QuerySProc("sprocName",new{Id=1,_OutValue=""})
         /// </example>
         /// <returns></returns>
-        public static Task<SProcResult<T>> QuerySProcAsync<T>(this DbConnection db, string procName,CancellationToken cancel,object args=null)
+        public static Task<SProcResult<T>> QuerySProcAsync<T>(this DbConnection db, CancellationToken cancel, string procName,object args=null)
         {
             return db.QuerySProcAsync<T>(s =>
             {
@@ -44,7 +44,7 @@ namespace SqlFu
                 s.Arguments = args;
             },cancel);
         }
-        public static async Task<SProcResult<T>> QuerySProcAsync<T>(this DbConnection db, Action<SProcInput> input,CancellationToken cancel)
+       static async Task<SProcResult<T>> QuerySProcAsync<T>(this DbConnection db, Action<SProcInput> input,CancellationToken cancel)
         {
             var res=await HandleProcAsync(db, input, async cmd =>
             {
@@ -53,7 +53,52 @@ namespace SqlFu
                 return r;
             });
             return res as SProcResult<T>;
-        }      
+        }
+
+         /// <summary>
+         /// Use this when the SProc returns huge results sets and you want to process each row as it's read
+         /// </summary>
+         /// <typeparam name="T"></typeparam>
+         /// <param name="db"></param>
+         /// <param name="processor"></param>
+         /// <param name="procName"></param>
+         /// <param name="args"></param>
+         /// <returns></returns>
+        public static SProcResult QuerySProc<T>(this DbConnection db, Func<T,bool> processor,string procName, object args = null)
+		{
+            return 
+            db.HandleProc(i =>
+            {
+                i.ProcName = procName; i.Arguments = args;
+            },cmd=> {
+                cmd.QueryAndProcess(processor);
+                return new SProcResult();
+            });
+            
+		}
+
+		/// <summary>
+		/// Use this when the SProc returns huge results sets and you want to process each row as it's read
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="db"></param>
+		/// <param name="cancel"></param>
+		/// <param name="processor"></param>
+		/// <param name="procName"></param>
+		/// <param name="args"></param>
+		/// <returns></returns>
+		public static Task<SProcResult> QuerySProcAsync<T>(this DbConnection db,CancellationToken cancel,Func<T,bool> processor,string procName, object args = null)
+		{
+            return 
+            db.HandleProcAsync(i =>
+            {
+                i.ProcName = procName; i.Arguments = args;
+            },async cmd=> {
+                await cmd.QueryAndProcessAsync(cancel,processor);
+                return new SProcResult();
+            });
+            
+		}
 
         /// <summary>
         /// Executes sproc and maps the result. For just executing a sp, use 'ExecuteSProc'
@@ -203,7 +248,7 @@ namespace SqlFu
         /// ExecuteSProc("sprocName",new{Id=1,_OutValue=""})
         /// </example>
         /// <returns></returns>
-        public static Task<SProcResult> ExecuteSProcAsync(this DbConnection db, string procName,CancellationToken cancel,object args=null)
+        public static Task<SProcResult> ExecuteSProcAsync(this DbConnection db, CancellationToken cancel, string procName,object args=null)
         {
             return db.ExecuteSProcAsync(s =>
             {
@@ -212,7 +257,7 @@ namespace SqlFu
             },cancel);
         }
 
-        public static Task<SProcResult> ExecuteSProcAsync(this DbConnection db, Action<SProcInput> input,
+        static Task<SProcResult> ExecuteSProcAsync(this DbConnection db, Action<SProcInput> input,
             CancellationToken cancel)
         {
             return HandleProcAsync(db,input, async cmd =>
@@ -222,7 +267,7 @@ namespace SqlFu
             });
         }
 
-        public static SProcResult ExecuteSProc(this DbConnection db,Action<SProcInput> input)
+        static SProcResult ExecuteSProc(this DbConnection db,Action<SProcInput> input)
         {
             return HandleProc(db, input, c =>
             {

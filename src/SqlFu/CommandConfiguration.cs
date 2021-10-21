@@ -12,6 +12,9 @@ namespace SqlFu
 
         public bool IsStoredProcedure { get; set; }
 
+        /// <summary>
+        /// Applied just before executing the command
+        /// </summary>
         public Action<DbCommand> ApplyOptions
         {
             get { return _applyOptions; }

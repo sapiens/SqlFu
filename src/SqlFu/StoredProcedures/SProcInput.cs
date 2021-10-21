@@ -15,6 +15,9 @@ namespace SqlFu
         /// </example>
         public object Arguments { get; set; }
 
+        /// <summary>
+        /// Applied just before executing the command
+        /// </summary>
         public Action<DbCommand> Apply { get; set; } = Empty.ActionOf<DbCommand>();
     }
 }

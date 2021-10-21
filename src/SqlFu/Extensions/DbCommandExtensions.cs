@@ -35,30 +35,27 @@ namespace SqlFu
 
         public static int Execute(this DbCommand cmd)
             => cmd.ExecuteNonQuery();
-       
 
-        /// <summary>
-        /// Gets one result value
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="cmd"></param>
-        /// <param name="converter"></param>
-        /// <returns></returns>
-        public static T GetValue<T>(this DbCommand cmd, Func<object, T> converter = null)
-        {
-            return cmd.GetConverter(converter)(cmd.ExecuteScalar());            
-        }
 
-        /// <summary>
-        /// Great of huge result sets, process one row at the time
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="cmd"></param>
-        /// <param name="processor">Result processor</param>
-        /// <param name="mapper"></param>
-        /// <param name="firstRowOnly"></param>
-        /// <param name="disposeConnection">True to dispose the connection</param>
-        public static void QueryAndProcess<T>(this DbCommand cmd, Func<T, bool> processor, Func<DbDataReader, T> mapper = null,
+		/// <summary>
+		/// Gets one result value
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="cmd"></param>
+		/// <param name="converter"></param>
+		/// <returns></returns>
+		public static T GetValue<T>(this DbCommand cmd, Func<object, T> converter = null) => cmd.GetConverter(converter)(cmd.ExecuteScalar());
+
+		/// <summary>
+		/// Great for huge result sets, process one row at the time
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="cmd"></param>
+		/// <param name="processor">Result processor</param>
+		/// <param name="mapper"></param>
+		/// <param name="firstRowOnly"></param>
+		/// <param name="disposeConnection">True to dispose the connection</param>
+		public static void QueryAndProcess<T>(this DbCommand cmd, Func<T, bool> processor, Func<DbDataReader, T> mapper = null,
                                      bool firstRowOnly = false,bool disposeConnection=false)
         {
             var fuCommand = cmd.CastAs<SqlFuCommand>();
