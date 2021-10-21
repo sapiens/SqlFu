@@ -29,12 +29,12 @@ namespace SqlFu.Providers
             return ex.Message.Contains("violation");
         }
 
-        //public override bool ObjectExists(DbException ex, string name = null)
-        //{
-        //    return ex.Message.Contains("already exists");
-        //}
+		public override bool ObjectExists(DbException ex, string name = null)
+		{
+			return ex.Message.Contains("already exists");
+		}
 
-        public override string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues)
+		public override string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues)
         {
             return $"insert into {EscapeTableName(options.TableName)}({columnValues.Keys.Select(EscapeIdentifier).StringJoin()})\n values({JoinValuesAsParameters(columnValues)})";
         }

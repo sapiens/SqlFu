@@ -85,7 +85,7 @@ namespace SqlFu.Providers
 
         protected abstract bool IsDbBusy(DbException ex);
         public abstract bool IsUniqueViolation(DbException ex, string keyName = "");
-      //  public abstract bool ObjectExists(DbException ex, string name = null);
+        public abstract bool ObjectExists(DbException ex, string name = null);
 
 
         public abstract string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues);

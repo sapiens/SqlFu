@@ -35,14 +35,14 @@ namespace SqlFu.Providers.Sqlite
             return ex.Message.Contains(keyName);
         }
 
-        //public override bool ObjectExists(DbException ex, string name = null)
-        //{
-        //    if (!ex.Message.Contains("already exists")) return false;
-        //    if (name.IsNullOrEmpty()) return true;
-        //    return ex.Message.Contains(name);
-        //}
+		public override bool ObjectExists(DbException ex, string name = null)
+		{
+			if (!ex.Message.Contains("already exists")) return false;
+			if (name.IsNullOrEmpty()) return true;
+			return ex.Message.Contains(name);
+		}
 
-        public override string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues)
+		public override string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues)
         {
           return $"insert into {EscapeTableName(options.TableName)} ({columnValues.Keys.Select(EscapeIdentifier).StringJoin()})" +
                    $"\n values({JoinValuesAsParameters(columnValues)});SELECT last_insert_rowid()";

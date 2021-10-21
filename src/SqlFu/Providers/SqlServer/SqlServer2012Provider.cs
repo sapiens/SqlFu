@@ -57,12 +57,12 @@ namespace SqlFu.Providers.SqlServer
             return ex.Message.Contains(keyName);
         }
 
-        //public override bool ObjectExists(DbException ex, string name = null)
-        //    => ex.Message.Contains("already an object named") && (ex.Message.Contains(name ?? " "));
+		public override bool ObjectExists(DbException ex, string name = null)
+			=> ex.Message.Contains("already an object named") && (ex.Message.Contains(name ?? " "));
 
 
 
-      public override string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues)
+		public override string CreateInsertSql(InsertSqlOptions options, IDictionary<string, object> columnValues)
         {
             var ins = options.IdentityColumn.IsNullOrEmpty() ? "" : $"\nOUTPUT INSERTED.{options.IdentityColumn} AS ID ";
             return $"insert into {EscapeTableName(options.TableName)}({columnValues.Keys.Select(EscapeIdentifier).StringJoin()})" +ins+

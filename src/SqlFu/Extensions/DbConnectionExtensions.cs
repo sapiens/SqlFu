@@ -477,33 +477,33 @@ namespace SqlFu
         public static DbCommand CreateAndSetupCommand(this DbConnection cnx, string sql, params object[] args) => 
             cnx.CreateAndSetupCommand(new CommandConfiguration(sql, args));
 
-        ///// <summary>
-        ///// Used to execute add views/sproc statements and ignore duplication messages
-        ///// </summary>
-        ///// <param name="db"></param>
-        ///// <param name="addObjectStatement"></param>       
-        //public static void AddDbObjectOrIgnore(this DbConnection db, string addObjectStatement)
-        //{
-        //    try
-        //    {
-        //        db.Execute(addObjectStatement);
-        //    }
-        //    catch (DbException x) when (db.Provider().ObjectExists(x))
-        //    {
-        //        //already exists, move on
-        //    }            
-        //}
+		/// <summary>
+		/// Used to execute add views/sproc statements and ignore duplication messages
+		/// </summary>
+		/// <param name="db"></param>
+		/// <param name="addObjectStatement"></param>       
+		public static void AddDbObjectOrIgnore(this DbConnection db, string addObjectStatement)
+		{
+			try
+			{
+				db.Execute(addObjectStatement);
+			}
+			catch (DbException x) when (db.Provider().ObjectExists(x))
+			{
+				//already exists, move on
+			}
+		}
 
-        /// <summary>
-        /// Provides a fluent builder to specify sql, configure and execute the command 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="db">Connection</param>
-        /// <param name="sqlBuilder">Sql generator</param>
-        /// <param name="cfg">Command configuration</param>
-        /// <param name="cancel">Cancellation token for async operations</param>
-        /// <returns></returns>
-        public static IProcessEachRow<T> WithSql<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> sqlBuilder,
+		/// <summary>
+		/// Provides a fluent builder to specify sql, configure and execute the command 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="db">Connection</param>
+		/// <param name="sqlBuilder">Sql generator</param>
+		/// <param name="cfg">Command configuration</param>
+		/// <param name="cancel">Cancellation token for async operations</param>
+		/// <returns></returns>
+		public static IProcessEachRow<T> WithSql<T>(this DbConnection db, Func<IBuildQueryFrom, IGenerateSql<T>> sqlBuilder,
             Action<DbCommand> cfg = null,CancellationToken? cancel=null)
         =>new FluentCommandExecutor<T>(db,sqlBuilder(db.GetSqlBuilder()),cfg,false,cancel);
 
