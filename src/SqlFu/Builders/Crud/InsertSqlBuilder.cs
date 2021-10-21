@@ -46,7 +46,7 @@ namespace SqlFu.Builders.Crud
         }
         
         private static IEnumerable<string> GetIgnoredColumns(InsertSqlOptions options) 
-            => options.Info.Columns.Where(d=>d.IsComplex || options.IgnoreProperties.Contains(d.PropertyInfo.Name)).Select(d=>d.Name);
+            => options.Info.Columns.Where(d=>d.IsComplex ||d.IgnoreWrite || options.IgnoreProperties.Contains(d.PropertyInfo.Name)).Select(d=>d.Name);
 
        
     }
