@@ -1,12 +1,12 @@
 namespace Tests.TestData
 {
-    public class Address
-    {
-        public Address(string street)
-        {
-            Street = street;
-        }
+	public class Address
+	{
+		public Address(string street)
+		{
+			Street = street;
+		}
 
-        public string Street { get; set; }
-    }
+		public string Street { get; set; }
+	}
 }

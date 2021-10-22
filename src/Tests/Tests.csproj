@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Tests Class Library</Description>
     <Authors>t</Authors>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>    
+    <TargetFramework>net5.0</TargetFramework>    
     <AssemblyName>Tests</AssemblyName>
     <PackageId>Tests</PackageId>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -17,9 +17,11 @@
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  
+  <PropertyGroup Condition="'$(APPVEYOR)'=='TRUE'">
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
+    <DefineConstants>APPVEYOR</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,15 +30,15 @@
 
   <ItemGroup>
   
-    <PackageReference Include="FluentAssertions" Version="5.10.3" />
+    <PackageReference Include="FluentAssertions" Version="6.1.0" />
   
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
   
     <PackageReference Include="NSubstitute" Version="4.2.2" />
   
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
   
-    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113.1" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.115" />
   
     <PackageReference Include="xunit" Version="2.4.1" />
   

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Tests": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "APPVEYOR": "TRUE"
+      }
+    }
+  }
+}

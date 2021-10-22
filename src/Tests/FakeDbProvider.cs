@@ -10,6 +10,7 @@ using Tests._Fakes;
 
 namespace Tests
 {
+
     public class FakeDbProvider:DbProvider
     {
         private FakeEscapeIdentifier _e;
@@ -33,7 +34,7 @@ namespace Tests
 
        
 
-        public override bool IsDbBusy(DbException ex)
+       protected override bool IsDbBusy(DbException ex)
         {
             throw new NotImplementedException();
         }

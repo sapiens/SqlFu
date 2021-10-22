@@ -13,8 +13,8 @@
 
 //        public QueryExtensionsTests()
 //        {
-            
-            
+
+
 
 //           // _db = Setup.GetConnection();
 
@@ -35,7 +35,7 @@
 //                //res1.Count.Should().Be(1);
 //                ////res1.Items.First().Title.Should().Be("title");
 //            }
-            
+
 //        }
 
 //        public void Dispose()

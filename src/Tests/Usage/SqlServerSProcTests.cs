@@ -1,29 +1,29 @@
-﻿using System.Data.Common;
-using System.Data.SqlClient;
-using SqlFu;
+﻿using SqlFu;
 using SqlFu.Executors;
 using SqlFu.Providers.SqlServer;
-using Tests.Providers;
+using System.Data.Common;
+using System.Data.SqlClient;
 using Xunit;
 
 namespace Tests.Usage
 {
-    [Collection("SqlServer Sproc")]
-    public class SqlServerSProcTests : AStoredProcsTests
-    {
-        public SqlServerSProcTests()
-        {
-            //SqlFuManager.UseLogManager();
-        }
+	[Collection("SqlServer Sproc")]
+	public class SqlServerSProcTests : AStoredProcsTests
+	{
+		public SqlServerSProcTests()
+		{
+			
+			//SqlFuManager.UseLogManager();
+		}
 
-        protected override DbConnection GetConnection()
-        {
-            return new SqlFuConnection(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection),Setup.SqlServerConnection,new SqlFuConfig());
-        }
+		protected override DbConnection GetConnection()
+		{
+			return new SqlFuConnection(new SqlServer2012Provider(SqlClientFactory.Instance.CreateConnection), Setup.SqlServerConnection, new SqlFuConfig());
+		}
 
-        protected override void CreateSproc()
-        {
-            _db.AddDbObjectOrIgnore(@"CREATE PROCEDURE spTest
+		protected override void CreateSproc()
+		{
+			_db.AddDbObjectOrIgnore(@"CREATE PROCEDURE spTest
 	@id int,
 	@pout varchar(50) out
 AS
@@ -34,6 +34,6 @@ BEGIN
 	return 100;
 END");
 
-        }
-    }
+		}
+	}
 }
